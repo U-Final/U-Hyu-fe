@@ -1,5 +1,5 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
+@import "tailwindcss";
+@import "tw-animate-css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,72 +8,72 @@
 
 /* Pretendard 폰트 로드 - 로컬 파일 사용 */
 @font-face {
-  font-family: 'Pretendard';
-  src: url('/fonts/Pretendard-Thin.otf') format('opentype');
+  font-family: "Pretendard";
+  src: url("/fonts/Pretendard-Thin.otf") format("opentype");
   font-weight: 100;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Pretendard';
-  src: url('/fonts/Pretendard-ExtraLight.otf') format('opentype');
+  font-family: "Pretendard";
+  src: url("/fonts/Pretendard-ExtraLight.otf") format("opentype");
   font-weight: 200;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Pretendard';
-  src: url('/fonts/Pretendard-Light.otf') format('opentype');
+  font-family: "Pretendard";
+  src: url("/fonts/Pretendard-Light.otf") format("opentype");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Pretendard';
-  src: url('/fonts/Pretendard-Regular.otf') format('opentype');
+  font-family: "Pretendard";
+  src: url("/fonts/Pretendard-Regular.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Pretendard';
-  src: url('/fonts/Pretendard-Medium.otf') format('opentype');
+  font-family: "Pretendard";
+  src: url("/fonts/Pretendard-Medium.otf") format("opentype");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Pretendard';
-  src: url('/fonts/Pretendard-SemiBold.otf') format('opentype');
+  font-family: "Pretendard";
+  src: url("/fonts/Pretendard-SemiBold.otf") format("opentype");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Pretendard';
-  src: url('/fonts/Pretendard-Bold.otf') format('opentype');
+  font-family: "Pretendard";
+  src: url("/fonts/Pretendard-Bold.otf") format("opentype");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Pretendard';
-  src: url('/fonts/Pretendard-ExtraBold.otf') format('opentype');
+  font-family: "Pretendard";
+  src: url("/fonts/Pretendard-ExtraBold.otf") format("opentype");
   font-weight: 800;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Pretendard';
-  src: url('/fonts/Pretendard-Black.otf') format('opentype');
+  font-family: "Pretendard";
+  src: url("/fonts/Pretendard-Black.otf") format("opentype");
   font-weight: 900;
   font-style: normal;
   font-display: swap;
@@ -113,8 +113,8 @@
   --color-etc-TXT-gray: #4e5867;
   --color-etc-BT-blue: #d1d6da;
 
-  --font-family-pretendard: 'Pretendard', system-ui, sans-serif;
-  --font-family-sans: 'Pretendard', system-ui, sans-serif;
+  --font-family-pretendard: "Pretendard", system-ui, sans-serif;
+  --font-family-sans: "Pretendard", system-ui, sans-serif;
 
   --font-size-2xs: 0.5rem;
   --font-size-xs: 0.625rem;
@@ -151,7 +151,135 @@
 
 /* 기본 변수 설정 */
 :root {
-  --radius: 0.625rem;
+  /* BG Colors */
+  --bg-primary: #0064ff;
+  --bg-primary-hover: #0053d8;
+  --bg-primary-loading: #4d93ff;
+  --bg-black: #17171b;
+  --bg-white: #ffffff;
+  --bg-white-hover: #f2f6fc;
+  --bg-light-gray: #f2f4f6;
+  --bg-yellow: #fffbeb;
+  --bg-blue: #eff6ff;
+  --bg-purple: #faf5ff;
+  --bg-star: #ffe500;
+  --bg-secondary: #e6f0ff;
+  --bg-secondary-hover: #d6e7ff;
+  --bg-gray: #b0b8c1;
+
+  /* Border Colors */
+  --border-ghost: #f2f4f6;
+  --border-primary: #d0e4ff;
+  --border-primary-hover: #b0cce6;
+  --border-gray: #d1d6da;
+  --border-light-gray: #eceef0;
+
+  /* Text Colors */
+  --text-primary: #3182f6;
+  --text-black: #202632;
+  --text-teritary: #d9d9d9;
+  --text-secondary: #71717a;
+  --text-red: #dc2625;
+  --text-white: #ffffff;
+  --text-success: #2db745;
+  --text-warning: #feb93f;
+  --text-brown: #b4630a;
+  --text-purple: #7e22ce;
+}
+
+@layer utilities {
+  /* Text Color Utilities */
+  .text-primary {
+    color: var(--text-primary);
+  }
+  .text-black {
+    color: var(--text-black);
+  }
+  .text-teritary {
+    color: var(--text-teritary);
+  }
+  .text-secondary {
+    color: var(--text-secondary);
+  }
+  .text-red {
+    color: var(--text-red);
+  }
+  .text-white {
+    color: var(--text-white);
+  }
+  .text-success {
+    color: var(--text-success);
+  }
+  .text-warning {
+    color: var(--text-warning);
+  }
+  .text-brown {
+    color: var(--text-brown);
+  }
+  .text-purple {
+    color: var(--text-purple);
+  }
+
+  /* Background Color Utilities */
+  .bg-primary {
+    background-color: var(--bg-primary);
+  }
+  .bg-primary-hover {
+    background-color: var(--bg-primary-hover);
+  }
+  .bg-primary-loading {
+    background-color: var(--bg-primary-loading);
+  }
+  .bg-black {
+    background-color: var(--bg-black);
+  }
+  .bg-white {
+    background-color: var(--bg-white);
+  }
+  .bg-white-hover {
+    background-color: var(--bg-white-hover);
+  }
+  .bg-light-gray {
+    background-color: var(--bg-light-gray);
+  }
+  .bg-yellow {
+    background-color: var(--bg-yellow);
+  }
+  .bg-blue {
+    background-color: var(--bg-blue);
+  }
+  .bg-purple {
+    background-color: var(--bg-purple);
+  }
+  .bg-star {
+    background-color: var(--bg-star);
+  }
+  .bg-secondary {
+    background-color: var(--bg-secondary);
+  }
+  .bg-secondary-hover {
+    background-color: var(--bg-secondary-hover);
+  }
+  .bg-gray {
+    background-color: var(--bg-gray);
+  }
+
+  /* Border Color Utilities */
+  .border-ghost {
+    border-color: var(--border-ghost);
+  }
+  .border-primary {
+    border-color: var(--border-primary);
+  }
+  .border-primary-hover {
+    border-color: var(--border-primary-hover);
+  }
+  .border-gray {
+    border-color: var(--border-gray);
+  }
+  .border-light-gray {
+    border-color: var(--border-light-gray);
+  }
 }
 
 /* 다크 모드 설정 */
@@ -166,7 +294,7 @@
   }
 
   body {
-    font-family: 'Pretendard', system-ui, sans-serif;
+    font-family: "Pretendard", system-ui, sans-serif;
     background-color: var(--color-background);
     color: var(--color-text-primary);
     margin: 0;

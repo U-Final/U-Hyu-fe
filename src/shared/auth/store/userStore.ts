@@ -1,6 +1,15 @@
 import { create, type StateCreator } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { type User, type MembershipLevel } from '@/shared/auth/types/auth.type';
+import { getUserInfoFromToken } from '@/shared/auth/utils/jwtUtils';
+
+// 쿠키에서 토큰 가져오는 유틸리티
+const getCookie = (name: string): string | null => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
+  return null;
+};
 
 interface UserState {
   user: User | null;
@@ -8,7 +17,7 @@ interface UserState {
   // 액션
   setCredentials: (user: User) => void;
   removeCredentials: () => void;
-  updateTokens: (accessToken: string, refreshToken: string) => void;
+  updateUserFromToken: () => void;
   updateProfile: (profileData: Partial<User>) => void;
 
   // 상태 확인 함수들
@@ -35,7 +44,16 @@ const userStoreSlice: StateCreator<UserState> = (set, get) => ({
 
   removeCredentials: () => set({ user: null }),
 
-  updateTokens: () => {},
+  // JWT 토큰에서 사용자 정보 추출하여 스토어 업데이트
+  updateUserFromToken: () => {
+    const accessToken = getCookie('accessToken');
+    if (accessToken) {
+      const userInfo = getUserInfoFromToken(accessToken);
+      if (userInfo) {
+        set({ user: userInfo });
+      }
+    }
+  },
 
   updateProfile: (profileData) =>
     set((state) => ({
@@ -67,31 +85,12 @@ const userStoreSlice: StateCreator<UserState> = (set, get) => ({
   },
   isPremiumMember: () => {
     const level = get().user?.membershipLevel;
-    return level !== 'EXCELLENT';
+    return level === 'VIP' || level === 'VVIP'; // EXCELLENT도 포함하려면 level !== 'BASIC'
   },
 });
 
 const persistedUserStore = persist<UserState>(userStoreSlice, {
   name: 'user-auth-storage',
-  partialize: (state) => ({
-    ...state,
-    user: state.user
-      ? {
-          id: state.user.id,
-          email: state.user.email,
-          nickname: state.user.nickname,
-          role: state.user.role,
-          membershipLevel: state.user.membershipLevel,
-          profileImageUrl: state.user.profileImageUrl,
-          gender: state.user.gender,
-          interestedBrands: state.user.interestedBrands,
-          interestedCategories: state.user.interestedCategories,
-          createdAt: state.user.createdAt,
-          updatedAt: state.user.updatedAt,
-          recentBrands: state.user.recentBrands,
-        }
-      : null,
-  }),
 });
 
 export const useUserStore = create(persistedUserStore);

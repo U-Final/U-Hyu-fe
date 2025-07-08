@@ -1,22 +1,21 @@
 export type Role = 'USER' | 'ADMIN';
 
-export type MembershipLevel = 'EXCELLENT' | 'VIP' | 'VVIP';
+export type MembershipLevel = 'EXCELLENT' | 'VIP' | 'VVIP'; // 우수, vip, vvip
 
 export type Gender = 'MALE' | 'FEMALE';
-
 export interface User {
   id: string;
   email: string;
   nickname: string;
   role: Role;
   membershipLevel: MembershipLevel;
-  profileImageUrl?: string;
+  profileImageUrl?: string; // 카카오 프로필 이미지
   gender?: Gender;
-  interestedBrands: string[];
-  interestedCategories: string[];
+  interestedBrands: string[]; // 관심 브랜드
+  interestedCategories: string[]; // 관심 카테고리
   createdAt: string;
   updatedAt: string;
-  recentBrands: string[];
+  recentBrands: string[]; // 최근 이용한 브랜드
 }
 
 export interface LoginCredentials {

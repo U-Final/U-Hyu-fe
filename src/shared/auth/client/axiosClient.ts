@@ -7,7 +7,7 @@ declare module 'axios' {
   }
 }
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+const BASE_URL = import.meta.env.VITE_API_URL || '';
 
 // 쿠키에서 토큰 가져오는 유틸리티 함수
 const getCookie = (name: string): string | null => {
@@ -88,6 +88,9 @@ authClient.interceptors.response.use(
         });
 
         const { accessToken } = response.data;
+
+        // 토큰 갱신 후 사용자 정보 업데이트
+        useUserStore.getState().updateUserFromToken();
 
         // 대기 중인 요청들 처리
         onTokenRefreshed(accessToken);

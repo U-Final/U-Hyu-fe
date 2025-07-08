@@ -1,4 +1,14 @@
+import { useEffect } from 'react';
+import { useUserStore } from '@/shared/auth/store/userStore';
+
 function App() {
+  const { updateUserFromToken } = useUserStore();
+
+  useEffect(() => {
+    // 앱 시작 시 JWT 토큰에서 사용자 정보 로드
+    updateUserFromToken();
+  }, [updateUserFromToken]);
+
   return (
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-4xl mx-auto space-y-8">

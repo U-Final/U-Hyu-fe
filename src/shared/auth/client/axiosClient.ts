@@ -1,5 +1,5 @@
 import axios, { AxiosError, type AxiosResponse } from 'axios';
-import { useUserStore } from '@/shared/auth/store/userStore';
+import { useUserStore } from '@shared/auth/store/userStore';
 
 declare module 'axios' {
   interface InternalAxiosRequestConfig {
@@ -87,10 +87,7 @@ authClient.interceptors.response.use(
           refreshToken,
         });
 
-        const { accessToken, refreshToken: newRefreshToken } = response.data;
-
-        // 스토어 업데이트
-        useUserStore.getState().updateTokens(accessToken, newRefreshToken);
+        const { accessToken } = response.data;
 
         // 대기 중인 요청들 처리
         onTokenRefreshed(accessToken);

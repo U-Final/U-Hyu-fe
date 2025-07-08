@@ -35,16 +35,7 @@ const userStoreSlice: StateCreator<UserState> = (set, get) => ({
 
   removeCredentials: () => set({ user: null }),
 
-  updateTokens: (accessToken, refreshToken) =>
-    set((state) => ({
-      user: state.user
-        ? {
-            ...state.user,
-            accessToken,
-            refreshToken,
-          }
-        : null,
-    })),
+  updateTokens: () => {},
 
   updateProfile: (profileData) =>
     set((state) => ({
@@ -98,8 +89,6 @@ const persistedUserStore = persist<UserState>(userStoreSlice, {
           createdAt: state.user.createdAt,
           updatedAt: state.user.updatedAt,
           recentBrands: state.user.recentBrands,
-          accessToken: '', // 빈 문자열로 설정 (실제로는 저장되지 않음)
-          refreshToken: '', // 빈 문자열로 설정 (실제로는 저장되지 않음)
         }
       : null,
   }),

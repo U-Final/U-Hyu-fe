@@ -1,6 +1,29 @@
+import { X } from "lucide-react";
+import { GhostButton } from "./shared/components/buttons/GhostButton";
+import { IconButton } from "./shared/components/buttons/IconButton";
+import { NavButton } from "./shared/components/buttons/NavButton";
+import { PrimaryButton } from "./shared/components/buttons/PrimaryButton";
+import { FileUploadButton } from "./shared/components/buttons/FileUploadButton";
+
 function App() {
   return (
     <div className="p-6 space-y-4 bg-white">
+      <div className="flex flex-col gap-4 w-[50px]">
+        <PrimaryButton onClick={() => alert("제출 완료!")}>제출하기</PrimaryButton>
+        <NavButton onClick={() => console.log("탭 이동")}>홈</NavButton>
+        <GhostButton onClick={() => console.log("취소")}>취소</GhostButton>
+        <IconButton
+          icon={<X className="w-4 h-4 text-black" />}
+          onClick={() => console.log("닫기")}
+        />
+        <FileUploadButton
+          onFileSelect={(file) => {
+            console.log("선택된 파일:", file);
+          }}
+        >
+          hi
+        </FileUploadButton>
+      </div>
       {/* Text Colors */}
       <div className="text-primary">Primary Text</div>
       <div className="text-black">Black Text</div>

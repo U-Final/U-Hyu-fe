@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 type ButtonVariant = "primary" | "nav" | "ghost";
 type ButtonSize = "sm" | "md" | "lg";
 
-interface ButtonBaseProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonBaseProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   variant?: ButtonVariant;
   size?: ButtonSize;
@@ -14,7 +14,7 @@ interface ButtonBaseProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
 
 const variantStyles = {
   primary: "bg-primary text-white hover:bg-primary-hover",
-  nav: "bg-gray text-white hover:bg-light-gray hover:text-tertiary",
+  nav: "bg-gray text-white hover:bg-light-gray-hover hover:text-tertiary",
   ghost: "border border-light-gray text-secondary hover:bg-white-hover",
 };
 

@@ -1,5 +1,10 @@
-import { client } from '@shared/client/axiosClient';
-import { type SignupData, type AuthResponse, type User, type ProfileUpdateData } from './auth.type';
+import { client } from '@shared/auth/client/axiosClient';
+import {
+  type SignupData,
+  type AuthResponse,
+  type User,
+  type ProfileUpdateData,
+} from '@shared/auth/types/auth.type';
 
 export const authService = {
   // 카카오 로그인

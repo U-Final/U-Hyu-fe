@@ -1,5 +1,5 @@
 // hooks/auth/usePermissions.ts
-import { useUserStore } from '@shared/store/userStore';
+import { useUserStore } from '@/shared/auth/store/userStore';
 
 export const usePermissions = () => {
   const canAccessAdmin = useUserStore((state) => state.canAccessAdmin());

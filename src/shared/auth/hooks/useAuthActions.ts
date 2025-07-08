@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useUserStore } from '@shared/store/userStore';
-import { authService } from '@features/auth/authService';
-import { type SignupData, type ProfileUpdateData } from '@features/auth/auth.type';
+import { useUserStore } from '@/shared/auth/store/userStore';
+import { authService } from '@shared/auth/service/authService';
+import { type SignupData, type ProfileUpdateData } from '@/shared/auth/types/auth.type';
 
 export const useAuthActions = () => {
   const queryClient = useQueryClient();

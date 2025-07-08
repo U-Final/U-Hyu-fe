@@ -1,5 +1,5 @@
 // hooks/auth/useAuthState.ts
-import { useUserStore } from '@shared/store/userStore';
+import { useUserStore } from '@/shared/auth/store/userStore';
 
 export const useAuthState = () => {
   const user = useUserStore((state) => state.user);

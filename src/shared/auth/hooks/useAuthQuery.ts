@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useUserStore } from '@shared/store/userStore';
-import { authService } from '@features/auth/authService';
+import { useUserStore } from '@/shared/auth/store/userStore';
+import { authService } from '@shared/auth/service/authService';
 
 export const useAuthQuery = () => {
   const { user } = useUserStore();

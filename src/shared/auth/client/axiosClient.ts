@@ -1,5 +1,5 @@
 import axios, { AxiosError, type AxiosResponse } from 'axios';
-import { useUserStore } from '@shared/store/userStore';
+import { useUserStore } from '@/shared/auth/store/userStore';
 
 declare module 'axios' {
   interface InternalAxiosRequestConfig {

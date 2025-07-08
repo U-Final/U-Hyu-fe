@@ -1,6 +1,6 @@
 import { create, type StateCreator } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { type User, type MembershipLevel } from '@features/auth/auth.type';
+import { type User, type MembershipLevel } from '@/shared/auth/types/auth.type';
 
 interface UserState {
   user: User | null;

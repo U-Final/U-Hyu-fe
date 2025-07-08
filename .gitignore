@@ -27,3 +27,5 @@ dist-ssr
 storybook-static
 
 package-lock.json
+.env
+yarn.lock

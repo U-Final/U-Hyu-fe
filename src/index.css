@@ -224,7 +224,7 @@
   .bg-primary {
     background-color: var(--bg-primary);
   }
-  .bg-primary-hover {
+  .hover\:bg-primary-hover:hover {
     background-color: var(--bg-primary-hover);
   }
   .bg-primary-loading {
@@ -236,10 +236,13 @@
   .bg-white {
     background-color: var(--bg-white);
   }
-  .bg-white-hover {
+  .hover\:bg-white-hover:hover {
     background-color: var(--bg-white-hover);
   }
   .bg-light-gray {
+    background-color: var(--bg-light-gray);
+  }
+  .hover\:bg-light-gray-hover:hover {
     background-color: var(--bg-light-gray);
   }
   .bg-yellow {
@@ -257,7 +260,7 @@
   .bg-secondary {
     background-color: var(--bg-secondary);
   }
-  .bg-secondary-hover {
+  .hover\:bg-secondary-hover:hover {
     background-color: var(--bg-secondary-hover);
   }
   .bg-gray {

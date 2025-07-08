@@ -5,7 +5,7 @@ function App() {
       <div className="text-primary">Primary Text</div>
       <div className="text-black">Black Text</div>
       <div className="text-white bg-black">white Text</div>
-      <div className="text-teritary">Teritary Text</div>
+      <div className="text-tertiary">tertiary Text</div>
       <div className="text-secondary">Secondary Text</div>
       <div className="text-red">Red Text</div>
       <div className="text-success">Success Text</div>

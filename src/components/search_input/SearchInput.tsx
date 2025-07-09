@@ -3,7 +3,7 @@ import { useRef } from "react";
 
 import clsx from "clsx";
 import type { SearchInputProps } from "./SearchInput.types";
-import { searchInputVariants } from "./SearchInputVariants";
+import { SearchInputVariants } from "./SearchInputVariants";
 
 const SearchInput: FC<SearchInputProps> = ({
   value,
@@ -37,7 +37,7 @@ const SearchInput: FC<SearchInputProps> = ({
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className={clsx(searchInputVariants({ variant }))}
+        className={clsx(SearchInputVariants({ variant }))}
       />
       {value && (
         <button

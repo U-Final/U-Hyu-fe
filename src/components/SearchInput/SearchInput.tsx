@@ -5,7 +5,6 @@ import clsx from "clsx";
 import type { SearchInputProps } from "./SearchInput.types";
 import { searchInputVariants } from "./SearchInputVariants";
 
-
 const SearchInput: FC<SearchInputProps> = ({
   value,
   onChange,

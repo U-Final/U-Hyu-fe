@@ -21,10 +21,10 @@ export const filterTabVariants = {
   gray: {
     base: "px-4 py-2 rounded-lg text-sm font-bold",
     active: "bg-light-gray text-black",
-    inactive: "bg-white text-secondary",
+    inactive: "text-secondary",
   },
   white: {
-    base: "px-4 py-2 rounded-lg shadow-md text-sm font-bold ",
+    base: "px-4 py-2 bg-white rounded-lg shadow-md text-sm font-bold ",
     active: "border-black text-primary",
     inactive: "text-secondary",
   },

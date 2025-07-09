@@ -34,12 +34,22 @@ export const MembershipStep: React.FC = () => {
 
       <div className="space-y-4">
         <Select value={membershipGrade} onValueChange={setMembershipGrade}>
-          <SelectTrigger className="w-full h-12 bg-gray-50 border-gray-300">
+          <SelectTrigger
+            className="
+              w-full h-12 bg-gray-50 border border-gray-300 rounded-md
+              focus:border-blue-500 focus:ring-2 focus:ring-blue-200
+              focus:outline-none transition-all duration-200
+            "
+          >
             <SelectValue placeholder="LG U+ 멤버십 등급" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white border border-gray-200 shadow-xl z-50">
             {MEMBERSHIP_GRADES.map((grade) => (
-              <SelectItem key={grade.value} value={grade.value}>
+              <SelectItem
+                key={grade.value}
+                value={grade.value}
+                className="hover:bg-gray-100 focus:bg-gray-100"
+              >
                 {grade.label}
               </SelectItem>
             ))}

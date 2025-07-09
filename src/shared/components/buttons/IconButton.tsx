@@ -1,5 +1,5 @@
-import type { ButtonHTMLAttributes } from "react";
 import { cn } from "@/shared/utils/utils"; // twMerge 유틸
+import type { ButtonHTMLAttributes } from "react";
 
 interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon: React.ReactNode; // 꼭 아이콘만

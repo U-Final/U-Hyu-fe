@@ -1,24 +1,26 @@
 export interface Brand {
-  id: string
-  name: string
-  color: string
-  bgColor: string
-  textColor: string
+  id: string;
+  name: string;
+  color: string;
+  bgColor: string;
+  textColor: string;
+  logo: string;
+  logoAlt: string;
 }
 
 export interface MembershipGrade {
-  value: string
-  label: string
+  value: string;
+  label: string;
 }
 
 export interface SignupData {
-  membershipGrade: string
-  recentBrands: string[]
-  selectedBrands: string[]
-  email: string
+  membershipGrade: string;
+  recentBrands: string[];
+  selectedBrands: string[];
+  email: string;
 }
 
 export interface StepProps {
-  onNext: () => void
-  onBack?: () => void
+  onNext: () => void;
+  onBack?: () => void;
 }

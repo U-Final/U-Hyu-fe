@@ -4,8 +4,8 @@ export interface Brand {
   color: string;
   bgColor: string;
   textColor: string;
-  logo: string;
-  logoAlt: string;
+  logo?: string;
+  logoAlt?: string;
 }
 
 export interface MembershipGrade {

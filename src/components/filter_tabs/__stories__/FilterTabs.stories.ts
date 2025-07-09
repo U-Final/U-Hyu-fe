@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import FilterTabs from "../FilterTabs";
 import { FILTER_TABS } from "../FilterTabs.variants";
-import { createElement, useState } from "react";
+import { createElement} from "react";
 
 const meta: Meta<typeof FilterTabs> = {
   title: "UI/FilterTabs",
@@ -49,9 +49,6 @@ export const Default: Story = {
 
 export const Variants: Story = {
   render: () => {
-    const [activeGray, setActiveGray] = useState("all");
-    const [activeWhite, setActiveWhite] = useState("all");
-
     return createElement(
       "div",
       { style: { display: "flex", flexDirection: "column", gap: "32px", padding: "16px" } },
@@ -62,7 +59,7 @@ export const Variants: Story = {
         createElement(FilterTabs, {
           tabs: FILTER_TABS,
           variant: "gray",
-          onChange: setActiveGray,
+          onChange: (val) => console.log("gray variant 선택:", val),
         })
       ),
       createElement(
@@ -72,7 +69,7 @@ export const Variants: Story = {
         createElement(FilterTabs, {
           tabs: FILTER_TABS,
           variant: "white",
-          onChange: setActiveWhite,
+          onChange: (val) => console.log("White variant 선택:", val),
         })
       )
     );

@@ -151,14 +151,10 @@ export const EmailStep: React.FC = () => {
               value={email}
               onChange={handleEmailChange}
               className={`
-                flex-1 h-12 bg-white border transition-colors
-                ${
-                  isValid
-                    ? 'border-gray-300 focus:border-blue-500'
-                    : email !== ''
-                    ? 'border-red-300 focus:border-red-500'
-                    : 'border-gray-300'
-                }
+                w-full h-12 bg-gray-50 border border-gray-300 rounded-md
+                focus:border-blue-500 focus:ring-2 focus:ring-blue-200
+                focus:outline-none transition-all duration-200
+                ${email !== '' && !isValid ? 'border-red-300 focus:border-red-500' : ''}
               `}
               placeholder="이메일 주소를 입력해주세요"
             />

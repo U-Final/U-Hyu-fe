@@ -32,7 +32,7 @@ const initialState: SignupState = {
   membershipGrade: '',
   recentBrands: [],
   selectedBrands: [],
-  email: 'example@gmail.com',
+  email: '',
 };
 
 export const useSignupStore = create<SignupStore>((set, get) => ({

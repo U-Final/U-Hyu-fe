@@ -6,6 +6,7 @@ export interface Brand {
   textColor: string;
   logo?: string;
   logoAlt?: string;
+  imagePath: string;
 }
 
 export interface MembershipGrade {
@@ -20,7 +21,12 @@ export interface SignupData {
   email: string;
 }
 
-export interface StepProps {
-  onNext: () => void;
-  onBack?: () => void;
+export interface CompletedStep {
+  id: string;
+  step: number;
+  data: SignupData;
+}
+
+export interface StepValidation {
+  [key: number]: (data: SignupData) => boolean;
 }

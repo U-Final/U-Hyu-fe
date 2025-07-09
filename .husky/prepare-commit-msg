@@ -1,0 +1,16 @@
+#!/bin/sh
+
+COMMIT_MSG_FILE="$1"
+BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+JIRA_KEY=$(echo "$BRANCH_NAME" | grep -oE '[A-Z]+-[0-9]+')
+
+if [ -n "$JIRA_KEY" ]; then
+  if ! grep -q "\[$JIRA_KEY\]" "$COMMIT_MSG_FILE"; then
+    UNAME=$(uname)
+    if [ "$UNAME" = "Darwin" ]; then
+      sed -i '' "1s/^/[$JIRA_KEY] /" "$COMMIT_MSG_FILE"
+    else
+      sed -i "1s/^/[$JIRA_KEY] /" "$COMMIT_MSG_FILE"
+    fi
+  fi
+fi

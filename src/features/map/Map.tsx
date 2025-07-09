@@ -1,13 +1,22 @@
-import { NaverMap, Marker, useNavermaps } from 'react-naver-maps';
+import { Container as MapDiv, NaverMap } from 'react-naver-maps';
 
-function Map() {
-  // instead of window.naver.maps
-  const navermaps = useNavermaps();
-
+export default function Map() {
   return (
-    <NaverMap defaultCenter={new navermaps.LatLng(37.3595704, 127.105399)} defaultZoom={15}>
-      <Marker defaultPosition={new navermaps.LatLng(37.3595704, 127.105399)} />
-    </NaverMap>
+    <MapDiv
+      style={{
+        width: '100%',
+        height: '600px',
+      }}
+    >
+      <NaverMap />
+    </MapDiv>
   );
 }
-export default Map;
+<MapDiv
+  style={{
+    width: '100%',
+    height: '600px',
+  }}
+>
+  <NaverMap />
+</MapDiv>;

@@ -662,6 +662,11 @@
   resolved "https://registry.npmjs.org/@types/estree/-/estree-1.0.8.tgz"
   integrity sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==
 
+"@types/geojson@*":
+  version "7946.0.16"
+  resolved "https://registry.npmjs.org/@types/geojson/-/geojson-7946.0.16.tgz"
+  integrity sha512-6C8nqWur3j98U6+lXDfTUWIfgvZU+EumvpHKcYjujKH7woYyLj2sUmff0tRhrqM7BohUw7Pz3ZB1jj2gW9Fvmg==
+
 "@types/js-cookie@^2.2.6":
   version "2.2.7"
   resolved "https://registry.npmjs.org/@types/js-cookie/-/js-cookie-2.2.7.tgz"
@@ -676,6 +681,13 @@
   version "2.0.13"
   resolved "https://registry.npmjs.org/@types/mdx/-/mdx-2.0.13.tgz"
   integrity sha512-+OWZQfAYyio6YkJb3HLxDrvnx6SWWDbC0zVPfBRzUk0/nqoDyf6dNxQi3eArPe8rJ473nobTMQ/8Zk+LxJ+Yuw==
+
+"@types/navermaps@^3.9.1":
+  version "3.9.1"
+  resolved "https://registry.npmjs.org/@types/navermaps/-/navermaps-3.9.1.tgz"
+  integrity sha512-XCYtuJ0mYaXx5lBeB0iahk+sPG7Q9tLHQGR6AkGCOGwrRG8qowdG5/FIYlI7am59j/Hm4vaiR+eRZ31kTgMWjA==
+  dependencies:
+    "@types/geojson" "*"
 
 "@types/node@^24.0.7":
   version "24.0.10"

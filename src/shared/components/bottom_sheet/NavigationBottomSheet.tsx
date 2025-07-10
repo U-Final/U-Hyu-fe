@@ -93,7 +93,7 @@ export const NavigationBottomSheet: React.FC<NavigationBottomSheetProps> = ({
             <GhostButton
               onClick={multiSelect.clearAll}
               disabled={!hasSelections}
-              className="flex-1 py-3 rounded-xl"
+              className="flex-1 py-3 rounded-md"
             >
               초기화
             </GhostButton>
@@ -103,7 +103,7 @@ export const NavigationBottomSheet: React.FC<NavigationBottomSheetProps> = ({
             <PrimaryButton
               onClick={handleApply}
               disabled={!hasSelections}
-              className="flex-1 py-3 rounded-xl"
+              className="flex-1 py-3 rounded-md"
             >
               적용하기 {hasSelections && `(${multiSelect.getSelectionCount()})`}
             </PrimaryButton>

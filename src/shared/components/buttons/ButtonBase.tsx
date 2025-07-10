@@ -21,9 +21,9 @@ const variantStyles = {
 };
 
 const sizeStyles = {
-  sm: 'h-[36px] px-[21px] text-sm',
-  md: 'h-[40px] px-[23px] text-base',
-  lg: 'h-[44px] px-[25px] text-lg',
+  sm: 'h-[36px] px-[21px] text-sm rounded-md',
+  md: 'h-[40px] px-[23px] text-base rounded-md',
+  lg: 'h-[44px] px-[25px] text-lg rounded-md',
 };
 
 export const ButtonBase = forwardRef<HTMLButtonElement, ButtonBaseProps>(
@@ -40,7 +40,7 @@ export const ButtonBase = forwardRef<HTMLButtonElement, ButtonBaseProps>(
     ref
   ) => {
     const baseClasses =
-      'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[6px] font-semibold transition-colors disabled:pointer-events-none';
+      'inline-flex items-center justify-center gap-2 whitespace-nowrap font-semibold transition-colors disabled:pointer-events-none';
     const finalClassName = twMerge(
       baseClasses,
       variantStyles[variant],

@@ -68,7 +68,7 @@ export const BaseBottomSheet: React.FC<BaseBottomSheetProps> = ({
           />
 
           <motion.div
-            className={`fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl z-50 flex flex-col ${getHeightClass()} ${className}`}
+            className={`fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-2xl z-50 flex flex-col border border-light-gray ${getHeightClass()} ${className}`}
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
@@ -87,14 +87,14 @@ export const BaseBottomSheet: React.FC<BaseBottomSheetProps> = ({
                     <IconButton
                       icon={<ChevronLeft size={18} />}
                       onClick={onBack}
-                      className="bg-gray-100 hover:bg-gray-200"
+                      className="bg-light-gray hover:bg-gray-200 rounded-md"
                     />
                   )}
 
                   {(title || subtitle) && (
                     <div>
-                      {title && <h2 className="text-xl font-bold text-gray-900">{title}</h2>}
-                      {subtitle && <p className="text-sm text-gray-500 mt-1">{subtitle}</p>}
+                      {title && <h2 className="text-xl font-bold text-black">{title}</h2>}
+                      {subtitle && <p className="text-sm text-secondary mt-1">{subtitle}</p>}
                     </div>
                   )}
                 </div>
@@ -103,7 +103,7 @@ export const BaseBottomSheet: React.FC<BaseBottomSheetProps> = ({
                   <IconButton
                     icon={<X size={18} />}
                     onClick={onClose}
-                    className="bg-gray-100 hover:bg-gray-200"
+                    className="bg-light-gray hover:bg-gray-200 rounded-md"
                   />
                 )}
               </div>

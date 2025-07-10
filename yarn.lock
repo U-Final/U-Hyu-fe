@@ -2055,6 +2055,15 @@ fraction.js@^4.3.7:
   resolved "https://registry.npmjs.org/fraction.js/-/fraction.js-4.3.7.tgz"
   integrity sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==
 
+framer-motion@^12.23.1:
+  version "12.23.1"
+  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-12.23.1.tgz#fe08d2122e98339fd5f9e7ac2e8a390820628823"
+  integrity sha512-7P1t2DnKEUXvPxVZJu9Hd4gfdoUF6z9U3w3/MUXCVFNHiFV+iSoboqeK4/ZCCpa49/ZiVEWfaaYCPscqPPsOVQ==
+  dependencies:
+    motion-dom "^12.23.1"
+    motion-utils "^12.23.1"
+    tslib "^2.4.0"
+
 fsevents@2.3.2, fsevents@~2.3.2:
   version "2.3.2"
   resolved "https://registry.npmjs.org/fsevents/-/fsevents-2.3.2.tgz"
@@ -2677,6 +2686,18 @@ mkdirp@^3.0.1:
   version "3.0.1"
   resolved "https://registry.npmjs.org/mkdirp/-/mkdirp-3.0.1.tgz"
   integrity sha512-+NsyUUAZDmo6YVHzL/stxSu3t9YS1iljliy3BSDrXJ/dkn1KYdmtZODGGjLcc9XLgVVpH4KshHB8XmZgMhaBXg==
+
+motion-dom@^12.23.1:
+  version "12.23.1"
+  resolved "https://registry.yarnpkg.com/motion-dom/-/motion-dom-12.23.1.tgz#b528cd8e521bd5bdf09054049c351cd27dcdf7df"
+  integrity sha512-kcMDS8yhUZgO7iu3FB0UYZpHUymZlj4aoEqH0Vf0k3JtZA0xfYIrmbDlKn6X7+INXV3hDAIBUf4aT5jEUHvvWQ==
+  dependencies:
+    motion-utils "^12.23.1"
+
+motion-utils@^12.23.1:
+  version "12.23.1"
+  resolved "https://registry.yarnpkg.com/motion-utils/-/motion-utils-12.23.1.tgz#6ba0b3af4b1c810764ffd9aef69dcce93b5cf7c7"
+  integrity sha512-coqLmHUTBA1KyBNEO64sTCWlduDV5Q6Yv0szjxnHVzZmcFYpVowyP6S38iOUlhocannaCCHlZ06lyLWQe/jheQ==
 
 mrmime@^2.0.0:
   version "2.0.1"

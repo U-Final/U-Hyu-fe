@@ -5,8 +5,9 @@ import { FaMap } from "react-icons/fa";
 import { HiGift } from "react-icons/hi";
 import { FaUser } from "react-icons/fa6";
 import { LiaBarcodeSolid } from "react-icons/lia";
-import BarcodeItem from "./bacodeItem";
 import { NavLink } from "react-router-dom";
+import BarcodeItem from "./BacodeItem";
+
 
 const BottomNavigation = () => {
   const [activeTab, setActiveTab] = useState<string>("홈");

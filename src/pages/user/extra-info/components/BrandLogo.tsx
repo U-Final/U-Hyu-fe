@@ -1,15 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
-import { type Brand } from '../types';
-
-interface BrandLogoProps {
-  brand: Brand;
-  isSelected: boolean;
-  onClick?: () => void;
-  delay?: number;
-  disabled?: boolean;
-}
+import { type BrandLogoProps } from '../types';
 
 export const BrandLogo: React.FC<BrandLogoProps> = ({
   brand,

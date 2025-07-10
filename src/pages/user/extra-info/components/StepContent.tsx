@@ -4,16 +4,8 @@ import { Input } from '@shared/components/shadcn/ui/input';
 import { Label } from '@shared/components/shadcn/ui/label';
 import { SelectionBottomSheet } from '@shared/components/bottom_sheet/SelectionBottomSheet';
 import { BrandGrid } from './BrandGrid';
-import { type SignupData } from '../types';
+import { type StepContentProps } from '../types';
 import { MEMBERSHIP_GRADES, EMAIL_REGEX } from '../constants';
-
-interface StepContentProps {
-  step: number;
-  data: SignupData;
-  onUpdateData: (updates: Partial<SignupData>) => void;
-  onToggleBrand: (brandId: string, field: 'recentBrands' | 'selectedBrands') => void;
-  disabled?: boolean;
-}
 
 export const StepContent: React.FC<StepContentProps> = ({
   step,

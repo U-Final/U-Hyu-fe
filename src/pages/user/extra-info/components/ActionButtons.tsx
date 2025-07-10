@@ -2,13 +2,7 @@ import React from 'react';
 import { ChevronLeft } from 'lucide-react';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { GhostButton } from '@shared/components/buttons/GhostButton';
-
-interface ActionButtonsProps {
-  currentStep: number;
-  isStepValid: boolean;
-  onNext: () => void;
-  onPrev: () => void;
-}
+import { type ActionButtonsProps } from '../types';
 
 export const ActionButtons: React.FC<ActionButtonsProps> = ({
   currentStep,

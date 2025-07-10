@@ -1,13 +1,7 @@
 import React from 'react';
 import { BrandLogo } from './BrandLogo';
 import { BRANDS } from '../constants';
-
-interface BrandGridProps {
-  selectedBrands: string[];
-  onBrandToggle?: (brandId: string) => void;
-  title: string;
-  disabled?: boolean;
-}
+import { type BrandGridProps } from '../types';
 
 export const BrandGrid: React.FC<BrandGridProps> = ({
   selectedBrands,

@@ -31,3 +31,57 @@ export interface CompletedStep {
 export interface StepValidation {
   [key: number]: (data: SignupData) => boolean;
 }
+
+export interface StepTitleProps {
+  children: React.ReactNode;
+}
+export interface StepContentProps {
+  step: number;
+  data: SignupData;
+  onUpdateData: (updates: Partial<SignupData>) => void;
+  onToggleBrand: (brandId: string, field: 'recentBrands' | 'selectedBrands') => void;
+  disabled?: boolean;
+}
+
+export interface PrimaryButtonProps {
+  onClick: () => void;
+  disabled?: boolean;
+  children: React.ReactNode;
+  className?: string;
+}
+export interface CurrentStepProps {
+  currentStep: number;
+  data: SignupData;
+  onUpdateData: (updates: Partial<SignupData>) => void;
+  onToggleBrand: (brandId: string, field: 'recentBrands' | 'selectedBrands') => void;
+  onReset: () => void;
+  isStepValid: boolean;
+  onNext: () => void;
+  onPrev: () => void;
+}
+
+export interface CompletedStepsProps {
+  completedSteps: CompletedStep[];
+}
+
+export interface BrandLogoProps {
+  brand: Brand;
+  isSelected: boolean;
+  onClick?: () => void;
+  delay?: number;
+  disabled?: boolean;
+}
+
+export interface BrandGridProps {
+  selectedBrands: string[];
+  onBrandToggle?: (brandId: string) => void;
+  title: string;
+  disabled?: boolean;
+}
+
+export interface ActionButtonsProps {
+  currentStep: number;
+  isStepValid: boolean;
+  onNext: () => void;
+  onPrev: () => void;
+}

@@ -4,19 +4,8 @@ import { StepTitle } from '../components/StepTitle';
 import { StepContent } from '../components/StepContent';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { ActionButtons } from '../components/ActionButtons';
-import { type SignupData } from '../types';
+import { type CurrentStepProps } from '../types';
 import { STEP_TITLES } from '../constants';
-
-interface CurrentStepProps {
-  currentStep: number;
-  data: SignupData;
-  onUpdateData: (updates: Partial<SignupData>) => void;
-  onToggleBrand: (brandId: string, field: 'recentBrands' | 'selectedBrands') => void;
-  onReset: () => void;
-  isStepValid: boolean;
-  onNext: () => void;
-  onPrev: () => void;
-}
 
 export const CurrentStep: React.FC<CurrentStepProps> = ({
   currentStep,

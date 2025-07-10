@@ -1,12 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-
-interface PrimaryButtonProps {
-  onClick: () => void;
-  disabled?: boolean;
-  children: React.ReactNode;
-  className?: string;
-}
+import { type PrimaryButtonProps } from '../types';
 
 export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   onClick,

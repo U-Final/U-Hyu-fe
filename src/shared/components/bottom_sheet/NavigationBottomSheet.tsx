@@ -5,21 +5,7 @@ import { useBottomSheetNavigation } from './hooks/useBottomSheetNavigation.ts';
 import { useMultiSelect } from './hooks/useMultiSelect.ts';
 import { PrimaryButton } from '@shared/components/buttons/PrimaryButton';
 import { GhostButton } from '@shared/components/buttons/GhostButton';
-
-interface NavigationBottomSheetProps {
-  isOpen: boolean;
-  onClose: () => void;
-  steps: Record<string, { title?: string; subtitle?: string; [key: string]: unknown }>;
-  initialStep: string;
-  onApply: (data: {
-    selections: Record<string, string[]>;
-    navigationData: Record<string, unknown>;
-  }) => void;
-  renderStepContent: (stepId: string, stepData: unknown, helpers: unknown) => React.ReactNode;
-  height?: 'small' | 'medium' | 'large' | 'full' | 'auto';
-  showApplyButton?: boolean;
-  showResetButton?: boolean;
-}
+import type { NavigationBottomSheetProps } from './bottomSheet.type';
 
 export const NavigationBottomSheet: React.FC<NavigationBottomSheetProps> = ({
   isOpen,

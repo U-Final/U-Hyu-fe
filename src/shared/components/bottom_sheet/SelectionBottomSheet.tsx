@@ -3,22 +3,7 @@ import { motion } from 'framer-motion';
 import { Check, ChevronRight } from 'lucide-react';
 import { BaseBottomSheet } from './BaseBottomSheet';
 import { PrimaryButton } from '@shared/components/buttons/PrimaryButton';
-import type { SelectionItem } from './bottomSheet.type';
-
-interface SelectionBottomSheetProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title: string;
-  subtitle?: string;
-  items: SelectionItem[];
-  selectedItems: string[];
-  onItemSelect: (itemId: string) => void;
-  multiSelect?: boolean;
-  showApplyButton?: boolean;
-  onApply?: () => void;
-  height?: 'small' | 'medium' | 'large' | 'full' | 'auto';
-  autoCloseOnSelect?: boolean;
-}
+import type { SelectionBottomSheetProps, SelectionItem } from './bottomSheet.type';
 
 export const SelectionBottomSheet: React.FC<SelectionBottomSheetProps> = ({
   isOpen,

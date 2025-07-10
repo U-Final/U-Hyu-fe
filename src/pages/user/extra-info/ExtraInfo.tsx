@@ -3,7 +3,6 @@ import { LayoutGroup } from 'framer-motion';
 import { useSignupFlow } from './hooks/useSignupFlow';
 import { CurrentStep } from './components/CurrentStep';
 import { CompletedSteps } from './components/CompletedSteps';
-import { ActionButtons } from './components/ActionButtons';
 
 const ImprovedSignupFlow: React.FC = () => {
   const {
@@ -30,17 +29,13 @@ const ImprovedSignupFlow: React.FC = () => {
             onUpdateData={updateData}
             onToggleBrand={toggleBrand}
             onReset={resetFlow}
+            isStepValid={isStepValid(currentStep)}
+            onNext={goToNextStep}
+            onPrev={goToPrevStep}
           />
 
           <CompletedSteps completedSteps={completedSteps} />
         </LayoutGroup>
-
-        <ActionButtons
-          currentStep={currentStep}
-          isStepValid={isStepValid(currentStep)}
-          onNext={goToNextStep}
-          onPrev={goToPrevStep}
-        />
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { StepTitle } from '../components/StepTitle';
 import { StepContent } from '../components/StepContent';
 import { PrimaryButton } from '../components/PrimaryButton';
+import { ActionButtons } from '../components/ActionButtons';
 import { type SignupData } from '../types';
 import { STEP_TITLES } from '../constants';
 
@@ -12,6 +13,9 @@ interface CurrentStepProps {
   onUpdateData: (updates: Partial<SignupData>) => void;
   onToggleBrand: (brandId: string, field: 'recentBrands' | 'selectedBrands') => void;
   onReset: () => void;
+  isStepValid: boolean;
+  onNext: () => void;
+  onPrev: () => void;
 }
 
 export const CurrentStep: React.FC<CurrentStepProps> = ({
@@ -20,6 +24,9 @@ export const CurrentStep: React.FC<CurrentStepProps> = ({
   onUpdateData,
   onToggleBrand,
   onReset,
+  isStepValid,
+  onNext,
+  onPrev,
 }) => (
   <div className="sticky top-0 bg-white z-10 px-6 py-8">
     <AnimatePresence mode="wait">
@@ -41,6 +48,20 @@ export const CurrentStep: React.FC<CurrentStepProps> = ({
             onToggleBrand={onToggleBrand}
             disabled={false}
           />
+
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
+            className="pt-4"
+          >
+            <ActionButtons
+              currentStep={currentStep}
+              isStepValid={isStepValid}
+              onNext={onNext}
+              onPrev={onPrev}
+            />
+          </motion.div>
         </motion.div>
       ) : (
         <motion.div

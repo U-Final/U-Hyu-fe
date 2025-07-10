@@ -19,7 +19,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
   if (currentStep > 4) return null;
 
   return (
-    <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md bg-white px-6 py-4">
+    <div className="w-full bg-white">
       <div className="flex gap-3">
         {currentStep > 1 && (
           <GhostButton onClick={onPrev} className="flex items-center gap-2 h-12">

@@ -1,1 +1,1 @@
-export const PATH = { HOME: "/home" } as const;
+export const PATH = { HOME: "/home", BENEFIT: "/benefit" } as const;

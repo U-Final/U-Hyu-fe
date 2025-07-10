@@ -65,7 +65,7 @@ export const StepContent: React.FC<StepContentProps> = ({
                 onClick={handleEmailVerification}
                 className={`px-4 h-12 font-medium transition-all duration-200 ${
                   data.emailVerified
-                    ? 'bg-green-500 text-white border-green-500 hover:bg-green-600 shadow-sm'
+                    ? 'bg-gray-300 text-gray-500 border-gray-300 hover:bg-gray-300 shadow-sm'
                     : 'bg-blue-500 text-white border-blue-500 hover:bg-blue-600 shadow-sm hover:shadow-md'
                 } ${
                   disabled || !data.email || !EMAIL_REGEX.test(data.email)

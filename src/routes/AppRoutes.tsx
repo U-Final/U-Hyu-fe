@@ -7,7 +7,7 @@ export const AppRoutes = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<RootPage />} />
-        <Route path="/extra-info" element={<ExtraInfo />} />
+        <Route path="/user/extra-info" element={<ExtraInfo />} />
       </Routes>
     </BrowserRouter>
   );

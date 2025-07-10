@@ -1,14 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavButton } from '@shared/components/buttons/NavButton';
 import { Input } from '@shared/components/shadcn/ui/input';
 import { Label } from '@shared/components/shadcn/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@shared/components/shadcn/ui/select';
+import { SelectionBottomSheet } from '@shared/components/bottom_sheet/SelectionBottomSheet';
 import { BrandGrid } from './BrandGrid';
 import { type SignupData } from '../types';
 import { MEMBERSHIP_GRADES, EMAIL_REGEX } from '../constants';
@@ -28,10 +22,29 @@ export const StepContent: React.FC<StepContentProps> = ({
   onToggleBrand,
   disabled = false,
 }) => {
+  const [isMembershipSheetOpen, setIsMembershipSheetOpen] = useState(false);
+
   const handleEmailVerification = () => {
     // 테스트용: 중복확인 완료 처리
     onUpdateData({ emailVerified: true });
   };
+
+  const handleMembershipSelect = (value: string) => {
+    onUpdateData({ membershipGrade: value });
+    setIsMembershipSheetOpen(false);
+  };
+
+  const getSelectedMembershipLabel = () => {
+    const selectedGrade = MEMBERSHIP_GRADES.find((grade) => grade.value === data.membershipGrade);
+    return selectedGrade?.label || 'LG U+ 멤버십 등급을 선택해주세요';
+  };
+
+  const membershipItems = MEMBERSHIP_GRADES.map((grade) => ({
+    id: grade.value,
+    label: grade.label,
+    description: '',
+    isDisabled: false,
+  }));
 
   switch (step) {
     case 1:
@@ -82,28 +95,32 @@ export const StepContent: React.FC<StepContentProps> = ({
     case 2:
       return (
         <div className="space-y-4">
-          <Select
-            value={data.membershipGrade}
-            onValueChange={
-              disabled ? undefined : (value) => onUpdateData({ membershipGrade: value })
-            }
+          <button
+            onClick={() => !disabled && setIsMembershipSheetOpen(true)}
             disabled={disabled}
+            className={`w-full h-12 bg-gray-50 rounded-md border border-gray-300 px-4 text-left transition-all ${
+              disabled
+                ? 'opacity-50 cursor-not-allowed'
+                : 'hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500'
+            }`}
           >
-            <SelectTrigger className="w-full h-12 bg-gray-50 rounded-md shadow-none border-0 focus:ring-0 focus:outline-none placeholder:text-gray-300">
-              <SelectValue placeholder="LG U+ 멤버십 등급을 선택해주세요" />
-            </SelectTrigger>
-            <SelectContent className="bg-white border-0 shadow-none rounded-md p-0">
-              {MEMBERSHIP_GRADES.map((grade) => (
-                <SelectItem
-                  key={grade.value}
-                  value={grade.value}
-                  className="hover:bg-gray-100 focus:bg-gray-100 border-0 shadow-none px-4 py-2 text-sm pl-8"
-                >
-                  {grade.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            <span className={data.membershipGrade ? 'text-gray-900' : 'text-gray-500'}>
+              {getSelectedMembershipLabel()}
+            </span>
+          </button>
+
+          <SelectionBottomSheet
+            isOpen={isMembershipSheetOpen}
+            onClose={() => setIsMembershipSheetOpen(false)}
+            title="LG U+ 멤버십 등급"
+            subtitle="멤버십 등급을 선택해주세요"
+            items={membershipItems}
+            selectedItems={data.membershipGrade ? [data.membershipGrade] : []}
+            onItemSelect={handleMembershipSelect}
+            multiSelect={false}
+            autoCloseOnSelect={true}
+            height="medium"
+          />
         </div>
       );
 

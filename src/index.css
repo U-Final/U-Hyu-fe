@@ -116,13 +116,11 @@
   --font-family-pretendard: "Pretendard", system-ui, sans-serif;
   --font-family-sans: "Pretendard", system-ui, sans-serif;
 
-  --font-size-2xs: 0.5rem;
-  --font-size-xs: 0.625rem;
-  --font-size-sm: 0.75rem;
-  --font-size-base: 0.875rem;
-  --font-size-lg: 1rem;
-  --font-size-xl: 1.125rem;
-  --font-size-2xl: 1.25rem;
+  --font-size-h3: 1.25rem;
+  --font-size-h4: 1.125rem;
+  --font-size-body1: 1rem;
+  --font-size-body2: 0.875rem;
+  --font-size-caption: 0.75rem;
 
   --border-radius-xs: 0.125rem;
   --border-radius-sm: 0.25rem;
@@ -147,6 +145,23 @@
   --border-radius-rounded-11: 1.375rem;
   --border-radius-rounded-12: 1.5rem;
   --border-radius-rounded-13: 1.625rem;
+}
+@layer utilities {
+  .text-h3 {
+    font-size: var(--font-size-h3);
+  }
+  .text-h4 {
+    font-size: var(--font-size-h4);
+  }
+  .text-body1 {
+    font-size: var(--font-size-body1);
+  }
+  .text-body2 {
+    font-size: var(--font-size-body2);
+  }
+  .text-caption {
+    font-size: var(--font-size-caption);
+  }
 }
 
 /* 기본 변수 설정 */

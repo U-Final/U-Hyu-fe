@@ -22,6 +22,16 @@ const config: StorybookConfig = {
       '@': path.resolve(__dirname, '../src'),
     };
 
+    config.publicDir = path.resolve(__dirname, '../public');
+
+    config.assetsInclude = ['**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.svg'];
+
+    config.server = config.server || {};
+    config.server.fs = {
+      ...config.server.fs,
+      allow: ['..'],
+    };
+
     return config;
   },
   typescript: {

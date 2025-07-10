@@ -7,13 +7,14 @@ const initialData: SignupData = {
   recentBrands: [],
   selectedBrands: [],
   email: '',
+  emailVerified: false,
 };
 
 const stepValidation: StepValidation = {
-  1: (data) => data.membershipGrade !== '',
-  2: (data) => data.recentBrands.length > 0,
-  3: (data) => data.selectedBrands.length > 0,
-  4: (data) => data.email !== '' && EMAIL_REGEX.test(data.email),
+  1: (data) => data.email !== '' && EMAIL_REGEX.test(data.email) && data.emailVerified,
+  2: (data) => data.membershipGrade !== '',
+  3: (data) => data.recentBrands.length > 0,
+  4: (data) => data.selectedBrands.length > 0,
 };
 
 export const useSignupFlow = () => {
@@ -25,6 +26,20 @@ export const useSignupFlow = () => {
     setData((prev) => ({ ...prev, ...updates }));
   }, []);
 
+  // 완료된 스텝의 데이터 업데이트 처리
+  const updateCompletedStepData = useCallback(
+    (stepNumber: number, updates: Partial<SignupData>) => {
+      setCompletedSteps((prev) =>
+        prev.map((step) =>
+          step.step === stepNumber ? { ...step, data: { ...step.data, ...updates } } : step
+        )
+      );
+      // 현재 데이터도 동기화
+      setData((prev) => ({ ...prev, ...updates }));
+    },
+    []
+  );
+
   const toggleBrand = useCallback(
     (brandId: string, field: 'recentBrands' | 'selectedBrands') => {
       const currentBrands = data[field];
@@ -35,6 +50,28 @@ export const useSignupFlow = () => {
       updateData({ [field]: newBrands });
     },
     [data, updateData]
+  );
+
+  // 완료된 스텝의 브랜드 토글 처리
+  const toggleCompletedStepBrand = useCallback(
+    (stepNumber: number, brandId: string, field: 'recentBrands' | 'selectedBrands') => {
+      setCompletedSteps((prev) =>
+        prev.map((step) => {
+          if (step.step === stepNumber) {
+            const currentBrands = step.data[field];
+            const newBrands = currentBrands.includes(brandId)
+              ? currentBrands.filter((id) => id !== brandId)
+              : [...currentBrands, brandId];
+
+            return { ...step, data: { ...step.data, [field]: newBrands } };
+          }
+          return step;
+        })
+      );
+      // 현재 데이터도 동기화
+      toggleBrand(brandId, field);
+    },
+    [toggleBrand]
   );
 
   const goToNextStep = useCallback(() => {
@@ -77,7 +114,9 @@ export const useSignupFlow = () => {
     currentStep,
     completedSteps,
     updateData,
+    updateCompletedStepData,
     toggleBrand,
+    toggleCompletedStepBrand,
     goToNextStep,
     goToPrevStep,
     resetFlow,

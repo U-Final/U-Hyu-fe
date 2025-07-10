@@ -19,6 +19,7 @@ export interface SignupData {
   recentBrands: string[];
   selectedBrands: string[];
   email: string;
+  emailVerified: boolean;
 }
 
 export interface CompletedStep {

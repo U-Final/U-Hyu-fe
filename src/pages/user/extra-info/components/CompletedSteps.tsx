@@ -29,7 +29,7 @@ export const CompletedSteps: React.FC<CompletedStepsProps> = ({ completedSteps }
             y: -30,
             transition: { duration: 0.3 },
           }}
-          className="mb-6 pointer-events-none"
+          className="mb-6"
           style={{
             zIndex: completedSteps.length - index,
             transform: `translateY(${index * 2}px)`,

@@ -28,8 +28,58 @@ export const StepContent: React.FC<StepContentProps> = ({
   onToggleBrand,
   disabled = false,
 }) => {
+  const handleEmailVerification = () => {
+    // 테스트용: 중복확인 완료 처리
+    onUpdateData({ emailVerified: true });
+  };
+
   switch (step) {
     case 1:
+      return (
+        <div className="space-y-4">
+          <div>
+            <Label htmlFor="email" className="text-sm text-gray-600">
+              이메일
+            </Label>
+            <div className="flex gap-2 mt-2">
+              <Input
+                id="email"
+                type="email"
+                value={data.email}
+                onChange={
+                  disabled
+                    ? undefined
+                    : (e) => onUpdateData({ email: e.target.value, emailVerified: false })
+                }
+                className="w-full h-12 bg-gray-50 border border-gray-300 rounded-md"
+                placeholder="이메일 주소를 입력해주세요"
+                disabled={disabled}
+              />
+              <NavButton
+                disabled={disabled || !data.email || !EMAIL_REGEX.test(data.email)}
+                onClick={handleEmailVerification}
+                className={`px-4 h-12 text-white border-blue-400 hover:bg-blue-600 ${
+                  data.emailVerified ? 'bg-green-500 border-green-500 hover:bg-green-600' : ''
+                }`}
+              >
+                {data.emailVerified ? '확인완료' : '중복확인'}
+              </NavButton>
+            </div>
+            <div className="min-h-[20px] mt-1 text-xs text-red-500 transition-all">
+              {data.email !== '' && !EMAIL_REGEX.test(data.email) && !disabled ? (
+                <span>올바른 이메일 형식을 입력해주세요</span>
+              ) : (
+                ''
+              )}
+            </div>
+            {data.emailVerified && (
+              <div className="mt-1 text-xs text-green-600">✓ 이메일 중복확인이 완료되었습니다</div>
+            )}
+          </div>
+        </div>
+      );
+
+    case 2:
       return (
         <div className="space-y-4">
           <Select
@@ -57,7 +107,7 @@ export const StepContent: React.FC<StepContentProps> = ({
         </div>
       );
 
-    case 2:
+    case 3:
       return (
         <BrandGrid
           selectedBrands={data.recentBrands}
@@ -67,7 +117,7 @@ export const StepContent: React.FC<StepContentProps> = ({
         />
       );
 
-    case 3:
+    case 4:
       return (
         <BrandGrid
           selectedBrands={data.selectedBrands}
@@ -79,40 +129,6 @@ export const StepContent: React.FC<StepContentProps> = ({
         />
       );
 
-    case 4:
-      return (
-        <div className="space-y-4">
-          <div>
-            <Label htmlFor="email" className="text-sm text-gray-600">
-              이메일
-            </Label>
-            <div className="flex gap-2 mt-2">
-              <Input
-                id="email"
-                type="email"
-                value={data.email}
-                onChange={disabled ? undefined : (e) => onUpdateData({ email: e.target.value })}
-                className="w-full h-12 bg-gray-50 border border-gray-300 rounded-md"
-                placeholder="이메일 주소를 입력해주세요"
-                disabled={disabled}
-              />
-              <NavButton
-                disabled={disabled || !data.email || !EMAIL_REGEX.test(data.email)}
-                className="px-4 h-12 text-white border-blue-400 hover:bg-blue-600"
-              >
-                중복확인
-              </NavButton>
-            </div>
-            <div className="min-h-[20px] mt-1 text-xs text-red-500 transition-all">
-              {data.email !== '' && !EMAIL_REGEX.test(data.email) && !disabled ? (
-                <span>올바른 이메일 형식을 입력해주세요</span>
-              ) : (
-                ''
-              )}
-            </div>
-          </div>
-        </div>
-      );
     default:
       return null;
   }

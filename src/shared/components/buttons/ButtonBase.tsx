@@ -24,9 +24,6 @@ const sizeStyles = {
   sm: 'h-[36px] px-[21px] text-sm',
   md: 'h-[40px] px-[23px] text-base',
   lg: 'h-[44px] px-[25px] text-lg',
-  sm: 'h-[36px] px-[21px] text-sm rounded-md',
-  md: 'h-[40px] px-[23px] text-base rounded-md',
-  lg: 'h-[44px] px-[25px] text-lg rounded-md',
 };
 
 // 비활성화 상태 스타일

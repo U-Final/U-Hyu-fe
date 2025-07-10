@@ -6,7 +6,7 @@ import { HiGift } from "react-icons/hi";
 import { FaUser } from "react-icons/fa6";
 import { LiaBarcodeSolid } from "react-icons/lia";
 import { NavLink } from "react-router-dom";
-import BarcodeItem from "@shared/components/bottom_navigation/BacodeItem";
+import BarcodeItem from "@/shared/components/bottom_navigation/BarcodeItem";
 
 
 const BottomNavigation = () => {

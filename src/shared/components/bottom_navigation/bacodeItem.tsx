@@ -1,4 +1,4 @@
-import type { NavItemProps } from "./NavItem.types";
+import type { NavItemProps } from "@shared/components/bottom_navigation/NavItem.types";
 
 const BarcodeItem = ({ label, icon, onClick, isActive }: NavItemProps) => {
   return (

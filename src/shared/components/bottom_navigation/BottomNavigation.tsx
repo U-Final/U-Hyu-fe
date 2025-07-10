@@ -1,12 +1,12 @@
 import { useState } from "react";
-import NavItem from "./NavItem";
+import NavItem from "@shared/components/bottom_navigation/NavItem";
 import { MdHomeFilled } from "react-icons/md";
 import { FaMap } from "react-icons/fa";
 import { HiGift } from "react-icons/hi";
 import { FaUser } from "react-icons/fa6";
 import { LiaBarcodeSolid } from "react-icons/lia";
 import { NavLink } from "react-router-dom";
-import BarcodeItem from "./BacodeItem";
+import BarcodeItem from "@shared/components/bottom_navigation/BacodeItem";
 
 
 const BottomNavigation = () => {

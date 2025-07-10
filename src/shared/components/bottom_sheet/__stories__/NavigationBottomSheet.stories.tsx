@@ -22,36 +22,36 @@ const NavigationBottomSheetWrapper = (args: React.ComponentProps<typeof Navigati
       title: '필터',
       subtitle: '카테고리를 선택해주세요',
       items: [
-        { id: 'convenience', label: '편의점', icon: '🏪', count: 1247, hasSubCategory: true },
-        { id: 'restaurant', label: '음식점', icon: '🍽️', count: 856, hasSubCategory: true },
-        { id: 'cafe', label: '카페', icon: '☕', count: 423, hasSubCategory: true },
+        { id: 'convenience', label: '편의점', icon: '🏪', hasSubCategory: true },
+        { id: 'restaurant', label: '음식점', icon: '🍽️', hasSubCategory: true },
+        { id: 'cafe', label: '카페', icon: '☕', hasSubCategory: true },
       ],
     },
     convenience: {
       title: '편의점',
       subtitle: '브랜드를 선택해주세요',
       items: [
-        { id: 'gs25', label: 'GS25', count: 487 },
-        { id: 'cu', label: 'CU', count: 392 },
-        { id: 'seven', label: '세븐일레븐', count: 234 },
+        { id: 'gs25', label: 'GS25' },
+        { id: 'cu', label: 'CU' },
+        { id: 'seven', label: '세븐일레븐' },
       ],
     },
     restaurant: {
       title: '음식점',
       subtitle: '종류를 선택해주세요',
       items: [
-        { id: 'korean', label: '한식', count: 324 },
-        { id: 'chinese', label: '중식', count: 198 },
-        { id: 'japanese', label: '일식', count: 156 },
+        { id: 'korean', label: '한식' },
+        { id: 'chinese', label: '중식' },
+        { id: 'japanese', label: '일식' },
       ],
     },
     cafe: {
       title: '카페',
       subtitle: '브랜드를 선택해주세요',
       items: [
-        { id: 'starbucks', label: '스타벅스', count: 156 },
-        { id: 'ediya', label: '이디야', count: 98 },
-        { id: 'twosomeplace', label: '투썸플레이스', count: 67 },
+        { id: 'starbucks', label: '스타벅스' },
+        { id: 'ediya', label: '이디야' },
+        { id: 'twosomeplace', label: '투썸플레이스' },
       ],
     },
   };
@@ -71,13 +71,7 @@ const NavigationBottomSheetWrapper = (args: React.ComponentProps<typeof Navigati
     return (
       <div className="space-y-3">
         {typedStepData.items.map(
-          (item: {
-            id: string;
-            label: string;
-            icon: string;
-            count: number;
-            hasSubCategory: boolean;
-          }) => {
+          (item: { id: string; label: string; icon: string; hasSubCategory: boolean }) => {
             const isSelected = typedHelpers.isSelected(stepId, item.id);
 
             return (
@@ -109,9 +103,6 @@ const NavigationBottomSheetWrapper = (args: React.ComponentProps<typeof Navigati
                       >
                         {item.label}
                       </div>
-                      {item.count && (
-                        <div className="text-sm text-gray-500">{item.count}개 매장</div>
-                      )}
                     </div>
                   </div>
 

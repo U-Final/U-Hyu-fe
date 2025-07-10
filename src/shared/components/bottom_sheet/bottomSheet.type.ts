@@ -31,8 +31,9 @@ export interface SelectionItem {
   label: string;
   description?: string;
   icon?: React.ReactNode;
+  useCircularIcon?: boolean;
   brandImageUrl?: string;
+  iconSize?: 'small' | 'medium' | 'large';
   rightElement?: React.ReactNode;
-  count?: number;
   isDisabled?: boolean;
 }

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft } from 'lucide-react';
+import { IconButton } from '@shared/components/buttons/IconButton';
 import type { BaseBottomSheetProps } from './bottomSheet.type';
 
 export const BaseBottomSheet: React.FC<BaseBottomSheetProps> = ({
@@ -83,12 +84,11 @@ export const BaseBottomSheet: React.FC<BaseBottomSheetProps> = ({
               <div className="flex items-center justify-between px-6 pb-4 flex-shrink-0">
                 <div className="flex items-center gap-3">
                   {showBackButton && (
-                    <button
+                    <IconButton
+                      icon={<ChevronLeft size={18} />}
                       onClick={onBack}
-                      className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
-                    >
-                      <ChevronLeft size={18} />
-                    </button>
+                      className="bg-gray-100 hover:bg-gray-200"
+                    />
                   )}
 
                   {(title || subtitle) && (
@@ -100,12 +100,11 @@ export const BaseBottomSheet: React.FC<BaseBottomSheetProps> = ({
                 </div>
 
                 {showCloseButton && (
-                  <button
+                  <IconButton
+                    icon={<X size={18} />}
                     onClick={onClose}
-                    className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
-                  >
-                    <X size={18} />
-                  </button>
+                    className="bg-gray-100 hover:bg-gray-200"
+                  />
                 )}
               </div>
             )}

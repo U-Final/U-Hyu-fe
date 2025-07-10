@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { BaseBottomSheet } from './BaseBottomSheet';
 import { useBottomSheetNavigation } from './hooks/useBottomSheetNavigation.ts';
 import { useMultiSelect } from './hooks/useMultiSelect.ts';
+import { PrimaryButton } from '@shared/components/buttons/PrimaryButton';
+import { GhostButton } from '@shared/components/buttons/GhostButton';
 
 interface NavigationBottomSheetProps {
   isOpen: boolean;
@@ -88,31 +90,23 @@ export const NavigationBottomSheet: React.FC<NavigationBottomSheetProps> = ({
       {(showApplyButton || showResetButton) && (
         <div className="flex gap-3 mt-6">
           {showResetButton && (
-            <button
+            <GhostButton
               onClick={multiSelect.clearAll}
               disabled={!hasSelections}
-              className={`flex-1 py-3 rounded-xl font-medium transition-colors ${
-                hasSelections
-                  ? 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                  : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-              }`}
+              className="flex-1 py-3 rounded-xl"
             >
               초기화
-            </button>
+            </GhostButton>
           )}
 
           {showApplyButton && (
-            <button
+            <PrimaryButton
               onClick={handleApply}
               disabled={!hasSelections}
-              className={`flex-1 py-3 rounded-xl font-medium transition-colors ${
-                hasSelections
-                  ? 'bg-blue-500 hover:bg-blue-600 text-white'
-                  : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-              }`}
+              className="flex-1 py-3 rounded-xl"
             >
               적용하기 {hasSelections && `(${multiSelect.getSelectionCount()})`}
-            </button>
+            </PrimaryButton>
           )}
         </div>
       )}

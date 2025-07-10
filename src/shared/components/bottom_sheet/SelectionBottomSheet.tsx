@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Check, ChevronRight } from 'lucide-react';
 import { BaseBottomSheet } from './BaseBottomSheet';
+import { PrimaryButton } from '@shared/components/buttons/PrimaryButton';
 import type { SelectionItem } from './bottomSheet.type';
 
 interface SelectionBottomSheetProps {
@@ -41,6 +42,59 @@ export const SelectionBottomSheet: React.FC<SelectionBottomSheetProps> = ({
     }
   };
 
+  const renderBrandIcon = (item: SelectionItem) => {
+    // 브랜드 로고 렌더링 함수
+    const getSizeClasses = (size: string = 'medium') => {
+      switch (size) {
+        case 'small':
+          return 'w-8 h-8';
+        case 'large':
+          return 'w-12 h-12';
+        case 'medium':
+        default:
+          return 'w-10 h-10';
+      }
+    };
+
+    if (item.brandImageUrl) {
+      const sizeClass = getSizeClasses(item.iconSize);
+      const circularClass = item.useCircularIcon ? 'rounded-full' : 'rounded-lg';
+
+      return (
+        <div
+          className={`${sizeClass} bg-gray-100 ${circularClass} overflow-hidden flex items-center justify-center border border-gray-200 shadow-sm`}
+        >
+          <img
+            src={item.brandImageUrl}
+            alt={`${item.label} 브랜드 로고`}
+            className="w-full h-full object-cover"
+            loading="lazy"
+            onError={(e) => {
+              const target = e.currentTarget;
+              target.style.display = 'none';
+              const parent = target.parentElement;
+              if (parent) {
+                parent.innerHTML = `<span class="text-xs text-gray-400">${item.label.charAt(
+                  0
+                )}</span>`;
+              }
+            }}
+          />
+        </div>
+      );
+    }
+
+    if (item.icon) {
+      return (
+        <div className={`${getSizeClasses(item.iconSize)} flex items-center justify-center`}>
+          {typeof item.icon === 'string' ? <span className="text-xl">{item.icon}</span> : item.icon}
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <BaseBottomSheet
       isOpen={isOpen}
@@ -67,11 +121,7 @@ export const SelectionBottomSheet: React.FC<SelectionBottomSheetProps> = ({
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  {item.icon && (
-                    <div className={`text-xl ${isSelected ? 'text-blue-600' : 'text-gray-600'}`}>
-                      {item.icon}
-                    </div>
-                  )}
+                  {renderBrandIcon(item)}
                   <div>
                     <div
                       className={`font-medium ${isSelected ? 'text-blue-700' : 'text-gray-900'}`}
@@ -83,7 +133,6 @@ export const SelectionBottomSheet: React.FC<SelectionBottomSheetProps> = ({
                         {item.description}
                       </div>
                     )}
-                    {item.count && <div className="text-sm text-gray-500">{item.count}개</div>}
                   </div>
                 </div>
 
@@ -102,17 +151,13 @@ export const SelectionBottomSheet: React.FC<SelectionBottomSheetProps> = ({
 
       {showApplyButton && multiSelect && onApply && (
         <div className="mt-6">
-          <button
+          <PrimaryButton
             onClick={onApply}
             disabled={selectedItems.length === 0}
-            className={`w-full py-3 rounded-xl font-medium transition-colors ${
-              selectedItems.length > 0
-                ? 'bg-blue-500 hover:bg-blue-600 text-white'
-                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-            }`}
+            className="w-full py-3 rounded-xl"
           >
             적용하기 {selectedItems.length > 0 && `(${selectedItems.length})`}
-          </button>
+          </PrimaryButton>
         </div>
       )}
     </BaseBottomSheet>

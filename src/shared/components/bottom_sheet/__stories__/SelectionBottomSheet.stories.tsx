@@ -85,12 +85,12 @@ export const MultiSelection: Story = {
     multiSelect: true,
     showApplyButton: true,
     items: [
-      { id: 'food', label: '음식', icon: '🍽️', description: '맛집 정보', count: 245 },
-      { id: 'cafe', label: '카페', icon: '☕', description: '커피전문점', count: 128 },
-      { id: 'shopping', label: '쇼핑', icon: '🛍️', description: '쇼핑몰/매장', count: 89 },
-      { id: 'beauty', label: '뷰티', icon: '💄', description: '미용실/네일샵', count: 67 },
-      { id: 'health', label: '건강', icon: '💊', description: '병원/약국', count: 34 },
-      { id: 'education', label: '교육', icon: '📚', description: '학원/도서관', count: 78 },
+      { id: 'food', label: '음식', icon: '🍽️', description: '맛집 정보' },
+      { id: 'cafe', label: '카페', icon: '☕', description: '커피전문점' },
+      { id: 'shopping', label: '쇼핑', icon: '🛍️', description: '쇼핑몰/매장' },
+      { id: 'beauty', label: '뷰티', icon: '💄', description: '미용실/네일샵' },
+      { id: 'health', label: '건강', icon: '💊', description: '병원/약국' },
+      { id: 'education', label: '교육', icon: '📚', description: '학원/도서관' },
     ],
   },
 };
@@ -138,6 +138,120 @@ export const WithSettings: Story = {
         rightElement: '>',
       },
       { id: 'help', label: '도움말', icon: '❓', description: '사용법 및 FAQ', rightElement: '>' },
+    ],
+  },
+};
+
+export const BrandSelection: Story = {
+  render: SelectionBottomSheetWrapper,
+  args: {
+    title: '브랜드 선택',
+    subtitle: '관심있는 브랜드를 선택해주세요',
+    multiSelect: true,
+    showApplyButton: true,
+    items: [
+      {
+        id: 'gs25',
+        label: 'GS25',
+        icon: <img src="/images/brands/GS25.png" alt="GS25" className="w-6 h-6 object-contain" />,
+        description: '편의점',
+      },
+      {
+        id: 'cu',
+        label: 'CU',
+        icon: <img src="/images/brands/CU.png" alt="CU" className="w-6 h-6 object-contain" />,
+        description: '편의점',
+      },
+      {
+        id: 'seven',
+        label: '세븐일레븐',
+        icon: (
+          <img
+            src="/images/brands/세븐일레븐.png"
+            alt="세븐일레븐"
+            className="w-6 h-6 object-contain"
+          />
+        ),
+        description: '편의점',
+      },
+      {
+        id: 'cgv',
+        label: 'CGV',
+        icon: <img src="/images/brands/CGV.png" alt="CGV" className="w-6 h-6 object-contain" />,
+        description: '영화관',
+      },
+      {
+        id: 'lotte',
+        label: '롯데시네마',
+        icon: (
+          <img
+            src="/images/brands/롯데시네마.png"
+            alt="롯데시네마"
+            className="w-6 h-6 object-contain"
+          />
+        ),
+        description: '영화관',
+      },
+      {
+        id: 'goobne',
+        label: '굽네치킨',
+        icon: (
+          <img
+            src="/images/brands/굽네치킨.png"
+            alt="굽네치킨"
+            className="w-6 h-6 object-contain"
+          />
+        ),
+        description: '치킨 프랜차이즈',
+      },
+      {
+        id: 'paris',
+        label: '파리바게뜨',
+        icon: (
+          <img
+            src="/images/brands/파리바게뜨.png"
+            alt="파리바게뜨"
+            className="w-6 h-6 object-contain"
+          />
+        ),
+        description: '베이커리',
+      },
+      {
+        id: 'baskin',
+        label: '베스킨라빈스',
+        icon: (
+          <img
+            src="/images/brands/베스킨라빈스.png"
+            alt="베스킨라빈스"
+            className="w-6 h-6 object-contain"
+          />
+        ),
+        description: '아이스크림',
+      },
+      {
+        id: 'wonder',
+        label: '원더파크',
+        icon: (
+          <img
+            src="/images/brands/원더파크.png"
+            alt="원더파크"
+            className="w-6 h-6 object-contain"
+          />
+        ),
+        description: '놀이공원',
+      },
+      {
+        id: 'tous',
+        label: '뚜레쥬르',
+        icon: (
+          <img
+            src="/images/brands/뚜레쥬르.png"
+            alt="뚜레쥬르"
+            className="w-6 h-6 object-contain"
+          />
+        ),
+        description: '베이커리',
+      },
     ],
   },
 };

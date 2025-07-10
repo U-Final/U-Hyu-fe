@@ -1,9 +1,9 @@
-import { Loader2 } from "lucide-react";
-import { forwardRef } from "react";
-import { twMerge } from "tailwind-merge";
+import { Loader2 } from 'lucide-react';
+import { forwardRef } from 'react';
+import { twMerge } from 'tailwind-merge';
 
-type ButtonVariant = "primary" | "nav" | "ghost";
-type ButtonSize = "sm" | "md" | "lg";
+type ButtonVariant = 'primary' | 'nav' | 'ghost';
+type ButtonSize = 'sm' | 'md' | 'lg';
 
 export interface ButtonBaseProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
@@ -13,24 +13,34 @@ export interface ButtonBaseProps extends React.ButtonHTMLAttributes<HTMLButtonEl
 }
 
 const variantStyles = {
-  primary: "bg-primary text-white hover:bg-primary-hover",
-  nav: "bg-gray text-white hover:bg-light-gray-hover hover:text-tertiary",
-  ghost: "border border-light-gray text-secondary hover:bg-white-hover",
+  primary:
+    'bg-primary text-white hover:bg-primary-hover disabled:bg-gray-300 disabled:text-gray-500',
+  nav: 'bg-gray text-white hover:bg-light-gray-hover hover:text-tertiary disabled:bg-gray-300 disabled:text-gray-500',
+  ghost:
+    'border border-light-gray text-secondary hover:bg-white-hover disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-200',
 };
 
 const sizeStyles = {
-  sm: "h-[36px] px-[21px] text-sm",
-  md: "h-[40px] px-[23px] text-base",
-  lg: "h-[44px] px-[25px] text-lg",
+  sm: 'h-[36px] px-[21px] text-sm rounded-md',
+  md: 'h-[40px] px-[23px] text-base rounded-md',
+  lg: 'h-[44px] px-[25px] text-lg rounded-md',
 };
 
 export const ButtonBase = forwardRef<HTMLButtonElement, ButtonBaseProps>(
   (
-    { children, variant = "primary", size = "md", isLoading = false, className = "", ...props },
+    {
+      children,
+      variant = 'primary',
+      size = 'md',
+      isLoading = false,
+      className = '',
+      disabled,
+      ...props
+    },
     ref
   ) => {
     const baseClasses =
-      "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[6px] font-semibold transition-colors disabled:pointer-events-none";
+      'inline-flex items-center justify-center gap-2 whitespace-nowrap font-semibold transition-colors disabled:pointer-events-none';
     const finalClassName = twMerge(
       baseClasses,
       variantStyles[variant],
@@ -38,11 +48,11 @@ export const ButtonBase = forwardRef<HTMLButtonElement, ButtonBaseProps>(
       className
     );
     return (
-      <button ref={ref} disabled={isLoading} className={finalClassName} {...props}>
+      <button ref={ref} disabled={isLoading || disabled} className={finalClassName} {...props}>
         {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : children}
       </button>
     );
   }
 );
 
-ButtonBase.displayName = "ButtonBase";
+ButtonBase.displayName = 'ButtonBase';

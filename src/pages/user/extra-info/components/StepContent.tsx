@@ -63,11 +63,17 @@ export const StepContent: React.FC<StepContentProps> = ({
               <NavButton
                 disabled={disabled || !data.email || !EMAIL_REGEX.test(data.email)}
                 onClick={handleEmailVerification}
-                className={`px-4 h-12 text-white border-blue-400 hover:bg-blue-600 ${
-                  data.emailVerified ? 'bg-green-500 border-green-500 hover:bg-green-600' : ''
+                className={`px-4 h-12 font-medium transition-all duration-200 ${
+                  data.emailVerified
+                    ? 'bg-green-500 text-white border-green-500 hover:bg-green-600 shadow-sm'
+                    : 'bg-blue-500 text-white border-blue-500 hover:bg-blue-600 shadow-sm hover:shadow-md'
+                } ${
+                  disabled || !data.email || !EMAIL_REGEX.test(data.email)
+                    ? 'bg-gray-300 text-gray-500 border-gray-300 cursor-not-allowed hover:bg-gray-300 hover:shadow-none'
+                    : ''
                 }`}
               >
-                {data.emailVerified ? '확인완료' : '중복확인'}
+                {data.emailVerified ? '✓ 확인완료' : '중복확인'}
               </NavButton>
             </div>
             <div className="min-h-[20px] mt-1 text-xs text-red-500 transition-all">

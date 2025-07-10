@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { Checkbox } from "../shadcn/ui/checkbox";
+import { Checkbox } from "@shared/components/shadcn/ui/checkbox";
 
 const PrimaryCheckbox = ({ className, ...props }: React.ComponentProps<typeof Checkbox>) => {
   return (

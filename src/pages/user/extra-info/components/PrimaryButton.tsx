@@ -1,0 +1,24 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { type PrimaryButtonProps } from '../types';
+
+export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
+  onClick,
+  disabled = false,
+  children,
+  className = '',
+}) => (
+  <motion.button
+    onClick={onClick}
+    disabled={disabled}
+    className={`
+      w-full h-12 bg-blue-600 text-white font-medium rounded-md
+      hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed
+      transition-colors duration-200 ${className}
+    `}
+    whileHover={{ scale: disabled ? 1 : 1.02 }}
+    whileTap={{ scale: disabled ? 1 : 0.98 }}
+  >
+    {children}
+  </motion.button>
+);

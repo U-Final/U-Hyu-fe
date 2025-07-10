@@ -1283,6 +1283,11 @@ convert-source-map@^2.0.0:
   resolved "https://registry.npmjs.org/convert-source-map/-/convert-source-map-2.0.0.tgz"
   integrity sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==
 
+cookie@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.npmjs.org/cookie/-/cookie-1.0.2.tgz"
+  integrity sha512-9Kr/j4O16ISv8zBBhJoi4bXOYNTkFLOqSL3UDB0njXxCXNezjeyVrJyGOWtgfs/q2km1gwBcfH8q1yEGoMYunA==
+
 cross-spawn@^7.0.3, cross-spawn@^7.0.6:
   version "7.0.6"
   resolved "https://registry.npmjs.org/cross-spawn/-/cross-spawn-7.0.6.tgz"
@@ -1751,15 +1756,15 @@ fraction.js@^4.3.7:
   integrity sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==
 
 framer-motion@^12.23.1:
-  version "12.23.1"
-  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-12.23.1.tgz#fe08d2122e98339fd5f9e7ac2e8a390820628823"
-  integrity sha512-7P1t2DnKEUXvPxVZJu9Hd4gfdoUF6z9U3w3/MUXCVFNHiFV+iSoboqeK4/ZCCpa49/ZiVEWfaaYCPscqPPsOVQ==
+  version "12.23.3"
+  resolved "https://registry.npmjs.org/framer-motion/-/framer-motion-12.23.3.tgz"
+  integrity sha512-llmLkf44zuIZOPSrE4bl4J0UTg6bav+rlKEfMRKgvDMXqBrUtMg6cspoQeRVK3nqRLxTmAJhfGXk39UDdZD7Kw==
   dependencies:
-    motion-dom "^12.23.1"
-    motion-utils "^12.23.1"
+    motion-dom "^12.23.2"
+    motion-utils "^12.23.2"
     tslib "^2.4.0"
 
-fsevents@2.3.2, fsevents@~2.3.2:
+fsevents@~2.3.2, fsevents@2.3.2:
   version "2.3.2"
   resolved "https://registry.npmjs.org/fsevents/-/fsevents-2.3.2.tgz"
   integrity sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==
@@ -2337,17 +2342,17 @@ mkdirp@^3.0.1:
   resolved "https://registry.npmjs.org/mkdirp/-/mkdirp-3.0.1.tgz"
   integrity sha512-+NsyUUAZDmo6YVHzL/stxSu3t9YS1iljliy3BSDrXJ/dkn1KYdmtZODGGjLcc9XLgVVpH4KshHB8XmZgMhaBXg==
 
-motion-dom@^12.23.1:
-  version "12.23.1"
-  resolved "https://registry.yarnpkg.com/motion-dom/-/motion-dom-12.23.1.tgz#b528cd8e521bd5bdf09054049c351cd27dcdf7df"
-  integrity sha512-kcMDS8yhUZgO7iu3FB0UYZpHUymZlj4aoEqH0Vf0k3JtZA0xfYIrmbDlKn6X7+INXV3hDAIBUf4aT5jEUHvvWQ==
+motion-dom@^12.23.2:
+  version "12.23.2"
+  resolved "https://registry.npmjs.org/motion-dom/-/motion-dom-12.23.2.tgz"
+  integrity sha512-73j6xDHX/NvVh5L5oS1ouAVnshsvmApOq4F3VZo5MkYSD/YVsVLal4Qp9wvVgJM9uU2bLZyc0Sn8B9c/MMKk4g==
   dependencies:
-    motion-utils "^12.23.1"
+    motion-utils "^12.23.2"
 
-motion-utils@^12.23.1:
-  version "12.23.1"
-  resolved "https://registry.yarnpkg.com/motion-utils/-/motion-utils-12.23.1.tgz#6ba0b3af4b1c810764ffd9aef69dcce93b5cf7c7"
-  integrity sha512-coqLmHUTBA1KyBNEO64sTCWlduDV5Q6Yv0szjxnHVzZmcFYpVowyP6S38iOUlhocannaCCHlZ06lyLWQe/jheQ==
+motion-utils@^12.23.2:
+  version "12.23.2"
+  resolved "https://registry.npmjs.org/motion-utils/-/motion-utils-12.23.2.tgz"
+  integrity sha512-cIEXlBlXAOUyiAtR0S+QPQUM9L3Diz23Bo+zM420NvSd/oPQJwg6U+rT+WRTpp0rizMsBGQOsAwhWIfglUcZfA==
 
 mrmime@^2.0.0:
   version "2.0.1"
@@ -2610,7 +2615,7 @@ react-docgen@^8.0.0:
     resolve "^1.22.1"
     strip-indent "^4.0.0"
 
-"react-dom@^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc", "react-dom@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta", react-dom@^19.1.0:
+"react-dom@^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc", "react-dom@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta", "react-dom@^18.0.0 || ^19.0.0", react-dom@^19.1.0, react-dom@>=18:
   version "19.1.0"
   resolved "https://registry.npmjs.org/react-dom/-/react-dom-19.1.0.tgz"
   integrity sha512-Xs1hdnE+DyKgeHJeJznQmYMIBG3TKIHJJT95Q58nHLSrElKlGQqDTR2HQ9fx5CN/Gk6Vh/kupBTDLU11/nDk/g==
@@ -2632,7 +2637,22 @@ react-refresh@^0.17.0:
   resolved "https://registry.npmjs.org/react-refresh/-/react-refresh-0.17.0.tgz"
   integrity sha512-z6F7K9bV85EfseRCp2bzrpyQ0Gkw1uLoCel9XBVWPg/TjRj94SkJzUTGfOa4bs7iJvBWtQG0Wq7wnI0syw3EBQ==
 
-react@*, "react@^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react@^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc", "react@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta", react@^19.1.0, react@>=16:
+react-router-dom@^7.6.3:
+  version "7.6.3"
+  resolved "https://registry.npmjs.org/react-router-dom/-/react-router-dom-7.6.3.tgz"
+  integrity sha512-DiWJm9qdUAmiJrVWaeJdu4TKu13+iB/8IEi0EW/XgaHCjW/vWGrwzup0GVvaMteuZjKnh5bEvJP/K0MDnzawHw==
+  dependencies:
+    react-router "7.6.3"
+
+react-router@7.6.3:
+  version "7.6.3"
+  resolved "https://registry.npmjs.org/react-router/-/react-router-7.6.3.tgz"
+  integrity sha512-zf45LZp5skDC6I3jDLXQUu0u26jtuP4lEGbc7BbdyxenBN1vJSTA18czM2D+h5qyMBuMrD+9uB+mU37HIoKGRA==
+  dependencies:
+    cookie "^1.0.1"
+    set-cookie-parser "^2.6.0"
+
+react@*, "react@^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react@^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc", "react@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta", "react@^18.0.0 || ^19.0.0", react@^19.1.0, react@>=16, react@>=18:
   version "19.1.0"
   resolved "https://registry.npmjs.org/react/-/react-19.1.0.tgz"
   integrity sha512-FS+XFBNvn3GTAWq26joslQgWNoFu08F4kl0J4CgdNKADkdSGXQyTCnKteIAJy96Br6YbpEU1LSzV5dYtjMkMDg==
@@ -2748,6 +2768,11 @@ semver@^7.6.2:
   version "7.7.2"
   resolved "https://registry.npmjs.org/semver/-/semver-7.7.2.tgz"
   integrity sha512-RF0Fw+rO5AMf9MAyaRXI4AV0Ulj5lMHqVxxdSgiVbixSCXoEmmX/jk0CuJw4+3SqroYO9VoUh+HcuJivvtJemA==
+
+set-cookie-parser@^2.6.0:
+  version "2.7.1"
+  resolved "https://registry.npmjs.org/set-cookie-parser/-/set-cookie-parser-2.7.1.tgz"
+  integrity sha512-IOc8uWeOZgnb3ptbCURJWNjWUPcO3ZnTTdzsurqERrP6nPyv+paC55vJM0LpOlT2ne+Ix+9+CRG1MNLlyZ4GjQ==
 
 shebang-command@^2.0.0:
   version "2.0.0"
@@ -3053,7 +3078,7 @@ tsconfig-paths@^4.2.0:
     minimist "^1.2.6"
     strip-bom "^3.0.0"
 
-tslib@^2.0.1:
+tslib@^2.0.1, tslib@^2.4.0:
   version "2.8.1"
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.8.1.tgz"
   integrity sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==

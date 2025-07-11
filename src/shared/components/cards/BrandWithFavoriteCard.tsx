@@ -18,7 +18,7 @@ export const BrandWithFavoriteCard = ({
   return (
     <CardBase aria-label="브랜드 카드">
       <div className="flex">
-        <section className="flex flex-1 items-center">
+        <section className="flex flex-1 items-center gap-[15px]">
           <img src={logoUrl} alt={"로고"} className="w-[80px] h-[80px] object-contain" />
           {children}
         </section>

@@ -194,6 +194,7 @@
   --text-black: #202632;
   --text-tertiary: #d9d9d9;
   --text-secondary: #71717a;
+  --text-gray: #b0b8c1;
   --text-red: #dc2625;
   --text-white: #ffffff;
   --text-success: #2db745;
@@ -215,6 +216,9 @@
   }
   .text-secondary {
     color: var(--text-secondary);
+  }
+  .text-gray{
+    color: var(--text-gray);
   }
   .text-red {
     color: var(--text-red);
@@ -504,4 +508,8 @@
 }
 .scrollbar-hidden::-webkit-scrollbar {
   display: none;
+}
+
+.shadow-nav {
+  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.25);
 }

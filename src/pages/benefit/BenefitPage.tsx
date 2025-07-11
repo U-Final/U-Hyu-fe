@@ -1,9 +1,9 @@
 import { useState } from "react";
-import Pagination from "./Pagination";
+import Pagination from "@pages/benefit/components/Pagination";
 
 const BenefitPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 5;
+  const totalPages = 5; // 초기값은 api 연동 후 수정 예정
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);

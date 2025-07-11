@@ -3,7 +3,7 @@ import { NavButton } from '@shared/components/buttons/NavButton';
 import { Input } from '@shared/components/shadcn/ui/input';
 import { Label } from '@shared/components/shadcn/ui/label';
 import { SelectionBottomSheet } from '@shared/components/bottom_sheet/SelectionBottomSheet';
-import { BrandGrid } from './BrandGrid';
+import { BrandGrid } from '@shared/components/brand_grid/BrandGrid';
 import { type StepContentProps } from '../types';
 import { MEMBERSHIP_GRADES, EMAIL_REGEX } from '../constants';
 

@@ -1,6 +1,6 @@
+import { IconButton } from "@buttons/IconButton";
+import { CardBase } from "@cards/CardBase";
 import { Star } from "lucide-react";
-import { IconButton } from "../buttons/IconButton";
-import { CardBase } from "./CardBase";
 
 interface BrandWithFavoriteCardProps {
   logoUrl: string;

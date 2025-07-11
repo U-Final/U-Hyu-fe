@@ -20,6 +20,8 @@ export default defineConfig({
       "@shared": path.resolve(dirname, "src/shared"),
       "@features": path.resolve(dirname, "src/features"),
       "@pages": path.resolve(dirname, "src/pages"),
+      "@buttons": path.resolve(dirname, "src/shared/components/buttons"),
+      "@cards": path.resolve(dirname, "src/shared/components/cards"),
     },
   },
   test: {

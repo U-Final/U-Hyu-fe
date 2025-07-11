@@ -1,4 +1,4 @@
-import { CardBase } from "./CardBase";
+import { CardBase } from "@cards/CardBase";
 
 interface BrandCardProps {
   logoUrl: string;

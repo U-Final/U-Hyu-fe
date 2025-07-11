@@ -181,6 +181,7 @@
   --bg-secondary: #e6f0ff;
   --bg-secondary-hover: #d6e7ff;
   --bg-gray: #b0b8c1;
+  --bg-gray-hover: #F0F0F0;
 
   /* Border Colors */
   --border-ghost: #f2f4f6;
@@ -284,6 +285,9 @@
   }
   .bg-gray {
     background-color: var(--bg-gray);
+  }
+  .hover\:bg-gray-hover:hover {
+    background-color: var(--bg-gray-hover);
   }
 
   /* Border Color Utilities */

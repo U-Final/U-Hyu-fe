@@ -1,8 +1,8 @@
-import React from 'react';
+import { PrimaryButton } from '@shared/components/buttons/PrimaryButton';
 import { motion } from 'framer-motion';
 import { Check, ChevronRight } from 'lucide-react';
+import React from 'react';
 import { BaseBottomSheet } from './BaseBottomSheet';
-import { PrimaryButton } from '@shared/components/buttons/PrimaryButton';
 import type { SelectionBottomSheetProps, SelectionItem } from './bottomSheet.type';
 
 export const SelectionBottomSheet: React.FC<SelectionBottomSheetProps> = ({

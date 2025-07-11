@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Check, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import { NavigationBottomSheet } from '../NavigationBottomSheet';
-import { ChevronRight, Check } from 'lucide-react';
 const meta: Meta<typeof NavigationBottomSheet> = {
   title: 'Components/BottomSheet/NavigationBottomSheet',
   component: NavigationBottomSheet,

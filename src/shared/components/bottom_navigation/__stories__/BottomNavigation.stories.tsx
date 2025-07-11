@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import BottomNavigation from "../BottomNavigation";
 import { BrowserRouter } from "react-router-dom";
+import BottomNavigation from "../BottomNavigation";
 
 const meta: Meta<typeof BottomNavigation> = {
   title: "UI/BottomNavigation",

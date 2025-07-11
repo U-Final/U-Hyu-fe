@@ -1,9 +1,9 @@
-import { PATH } from "@shared/constants/path";
-import ModalRoot from "@shared/components/modal/ModalRoot";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import BottomNavigation from "@shared/components/bottom_navigation/BottomNavigation";
 import HomePage from "@pages/HomePage";
 import BenefitPage from "@pages/benefit/BenefitPage";
+import BottomNavigation from "@shared/components/bottom_navigation/BottomNavigation";
+import ModalRoot from "@shared/components/modal/ModalRoot";
+import { PATH } from "@shared/constants/path";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 export const AppRoutes = () => {
   return (
     <BrowserRouter>

@@ -181,7 +181,7 @@
   --bg-secondary: #e6f0ff;
   --bg-secondary-hover: #d6e7ff;
   --bg-gray: #b0b8c1;
-  --bg-gray-hover: #F0F0F0;
+  --bg-gray-hover: #f0f0f0;
 
   /* Border Colors */
   --border-ghost: #f2f4f6;
@@ -218,7 +218,7 @@
   .text-secondary {
     color: var(--text-secondary);
   }
-  .text-gray{
+  .text-gray {
     color: var(--text-gray);
   }
   .text-red {
@@ -305,6 +305,16 @@
   }
   .border-light-gray {
     border-color: var(--border-light-gray);
+  }
+
+  .icon-favorite {
+    fill: var(--bg-star);
+    color: var(--bg-star);
+  }
+
+  .icon-favorite-outline {
+    fill: none;
+    color: var(--border-gray);
   }
 }
 

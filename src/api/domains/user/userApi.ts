@@ -1,0 +1,37 @@
+import { authClient } from '@api/client';
+import { USER_ENDPOINTS } from './endpoints';
+import type {
+  UserExtraInfoRequest,
+  UserExtraInfoResponse,
+  CheckEmailResponse,
+  GetUserInfoResponse,
+  LogoutResponse,
+} from './types';
+
+export const userApi = {
+  // 사용자 추가 정보 입력
+  submitExtraInfo: async (data: UserExtraInfoRequest): Promise<UserExtraInfoResponse> => {
+    const response = await authClient.post<UserExtraInfoResponse>(USER_ENDPOINTS.EXTRA_INFO, data);
+    return response.data;
+  },
+
+  // 이메일 중복 확인
+  checkEmail: async (email: string): Promise<CheckEmailResponse> => {
+    const response = await authClient.get<CheckEmailResponse>(USER_ENDPOINTS.CHECK_EMAIL, {
+      params: { email },
+    });
+    return response.data;
+  },
+
+  // 유저 정보 조회
+  getUserInfo: async (): Promise<GetUserInfoResponse> => {
+    const response = await authClient.get<GetUserInfoResponse>(USER_ENDPOINTS.GET_USER_INFO);
+    return response.data;
+  },
+
+  // 로그아웃
+  logout: async (): Promise<LogoutResponse> => {
+    const response = await authClient.post<LogoutResponse>(USER_ENDPOINTS.LOGOUT);
+    return response.data;
+  },
+};

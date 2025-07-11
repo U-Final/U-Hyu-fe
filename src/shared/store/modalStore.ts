@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type ModalType = "base" | "none";
+type ModalType = "none" | "base" | "login";
 
 interface ModalStore {
   modalType: ModalType;

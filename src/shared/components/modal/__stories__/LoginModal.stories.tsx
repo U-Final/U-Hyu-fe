@@ -1,0 +1,37 @@
+// src/shared/components/modal/LoginModal.stories.tsx
+
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
+import LoginModal from "../LoginModal";
+import { BrowserRouter } from "react-router-dom";
+
+const meta: Meta<typeof LoginModal> = {
+  title: "Components/Modal/LoginModal",
+  component: LoginModal,
+};
+
+export default meta;
+
+type Story = StoryObj<typeof LoginModal>;
+
+export const Default: Story = {
+  render: () => {
+    const [visible, setVisible] = useState(true);
+
+    if (!visible)
+      return (
+        <button
+          onClick={() => setVisible(true)}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          로그인 모달 열기
+        </button>
+      );
+
+    return (
+      <BrowserRouter>
+        <LoginModal />
+      </BrowserRouter>
+    );
+  },
+};

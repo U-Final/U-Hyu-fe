@@ -20,6 +20,9 @@ export default defineConfig({
       "@shared": path.resolve(dirname, "src/shared"),
       "@features": path.resolve(dirname, "src/features"),
       "@pages": path.resolve(dirname, "src/pages"),
+      "@benefit": path.resolve(dirname, "src/pages/benefit"),
+      "@constants": path.resolve(dirname, "src/shared/constants"),
+      "@components": path.resolve(dirname, "src/shared/components"),
     },
   },
   test: {

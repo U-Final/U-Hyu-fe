@@ -1,7 +1,6 @@
+import clsx from "clsx";
 import type { FC, KeyboardEvent } from "react";
 import { useRef } from "react";
-
-import clsx from "clsx";
 import type { SearchInputProps } from "./SearchInput.types";
 import { SearchInputVariants } from "./SearchInputVariants";
 

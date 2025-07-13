@@ -1,6 +1,6 @@
 import { SelectionBottomSheet } from '@components/bottom_sheet/SelectionBottomSheet';
 import { BrandGrid } from '@components/brand_grid/BrandGrid';
-import { NavButton } from '@components/buttons/NavButton';
+import { ButtonBase } from '@components/buttons/ButtonBase';
 import { Input } from '@components/shadcn/ui/input';
 import { Label } from '@components/shadcn/ui/label';
 import React, { useState } from 'react';
@@ -66,7 +66,7 @@ export const StepContent: React.FC<StepContentProps> = ({
                 placeholder="이메일 주소를 입력해주세요"
                 disabled={disabled}
               />
-              <NavButton
+              <ButtonBase
                 disabled={
                   disabled || !data.email || !EMAIL_REGEX.test(data.email)
                 }
@@ -82,7 +82,7 @@ export const StepContent: React.FC<StepContentProps> = ({
                 }`}
               >
                 {data.emailVerified ? '✓ 확인완료' : '중복확인'}
-              </NavButton>
+              </ButtonBase>
             </div>
             <div className="min-h-[20px] mt-1 text-xs text-red-500 transition-all">
               {data.email !== '' &&

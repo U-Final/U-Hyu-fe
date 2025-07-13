@@ -26,4 +26,6 @@ dist-ssr
 *storybook.log
 storybook-static
 
+# Lock files (to prevent merge conflicts)
 package-lock.json
+pnpm-lock.yaml

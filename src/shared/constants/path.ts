@@ -1,1 +1,0 @@
-export const PATH = { HOME: "/", MAP: "/map", BENEFIT: "/benefit", MYPAGE: "mypage" } as const;

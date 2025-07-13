@@ -21,10 +21,14 @@ const variantStyles = {
 };
 
 const sizeStyles = {
-  sm: 'h-[36px] px-[21px] text-sm rounded-md',
-  md: 'h-[40px] px-[23px] text-base rounded-md',
-  lg: 'h-[44px] px-[25px] text-lg rounded-md',
+  sm: 'h-[36px] px-[21px] text-sm',
+  md: 'h-[40px] px-[23px] text-base',
+  lg: 'h-[44px] px-[25px] text-lg',
 };
+
+// 비활성화 상태 스타일
+const disabledStyles =
+  'disabled:bg-gray-300 disabled:text-gray-500 disabled:border-gray-300 disabled:cursor-not-allowed disabled:hover:bg-gray-300';
 
 export const ButtonBase = forwardRef<HTMLButtonElement, ButtonBaseProps>(
   (
@@ -39,14 +43,18 @@ export const ButtonBase = forwardRef<HTMLButtonElement, ButtonBaseProps>(
     },
     ref
   ) => {
+    // 로딩 중이거나 disabled가 true면 비활성화
+
     const baseClasses =
-      'inline-flex items-center justify-center gap-2 whitespace-nowrap font-semibold transition-colors disabled:pointer-events-none';
+      'inline-flex items-center justify-center gap-2 whitespace-nowrap font-semibold transition-colors disabled:pointer-events-none rounded-md';
     const finalClassName = twMerge(
       baseClasses,
       variantStyles[variant],
       sizeStyles[size],
+      disabledStyles,
       className
     );
+
     return (
       <button ref={ref} disabled={isLoading || disabled} className={finalClassName} {...props}>
         {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : children}

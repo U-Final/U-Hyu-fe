@@ -1,12 +1,12 @@
-import { authClient } from '@/shared/client/axiosClient';
-import { USER_ENDPOINTS } from './endpoints';
+import { authClient } from "@client/axiosClient";
+import { USER_ENDPOINTS } from "./endpoints";
 import type {
   UserExtraInfoRequest,
   UserExtraInfoResponse,
   CheckEmailResponse,
   GetUserInfoResponse,
   LogoutResponse,
-} from './types';
+} from "./types";
 
 export const userApi = {
   // 사용자 추가 정보 입력

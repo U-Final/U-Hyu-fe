@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { NavButton } from '@shared/components/buttons/NavButton';
-import { Input } from '@shared/components/shadcn/ui/input';
-import { Label } from '@shared/components/shadcn/ui/label';
-import { SelectionBottomSheet } from '@shared/components/bottom_sheet/SelectionBottomSheet';
-import { BrandGrid } from '@shared/components/brand_grid/BrandGrid';
-import { type StepContentProps } from '../types';
-import { MEMBERSHIP_GRADES, EMAIL_REGEX } from '../constants';
+import { SelectionBottomSheet } from "@components/bottom_sheet/SelectionBottomSheet";
+import { BrandGrid } from "@components/brand_grid/BrandGrid";
+import { NavButton } from "@components/buttons/NavButton";
+import { Input } from "@components/shadcn/ui/input";
+import { Label } from "@components/shadcn/ui/label";
+import React, { useState } from "react";
+import { EMAIL_REGEX, MEMBERSHIP_GRADES } from "../constants";
+import { type StepContentProps } from "../types";
 
 export const StepContent: React.FC<StepContentProps> = ({
   step,
@@ -28,13 +28,13 @@ export const StepContent: React.FC<StepContentProps> = ({
 
   const getSelectedMembershipLabel = () => {
     const selectedGrade = MEMBERSHIP_GRADES.find((grade) => grade.value === data.membershipGrade);
-    return selectedGrade?.label || 'LG U+ 멤버십 등급을 선택해주세요';
+    return selectedGrade?.label || "LG U+ 멤버십 등급을 선택해주세요";
   };
 
   const membershipItems = MEMBERSHIP_GRADES.map((grade) => ({
     id: grade.value,
     label: grade.label,
-    description: '',
+    description: "",
     isDisabled: false,
   }));
 
@@ -65,22 +65,22 @@ export const StepContent: React.FC<StepContentProps> = ({
                 onClick={handleEmailVerification}
                 className={`px-4 h-12 font-medium transition-all duration-200 ${
                   data.emailVerified
-                    ? 'bg-gray-300 text-gray-500 border-gray-300 hover:bg-gray-300 shadow-sm'
-                    : 'bg-blue-500 text-white border-blue-500 hover:bg-blue-600 shadow-sm hover:shadow-md'
+                    ? "bg-gray-300 text-gray-500 border-gray-300 hover:bg-gray-300 shadow-sm"
+                    : "bg-blue-500 text-white border-blue-500 hover:bg-blue-600 shadow-sm hover:shadow-md"
                 } ${
                   disabled || !data.email || !EMAIL_REGEX.test(data.email)
-                    ? 'bg-gray-300 text-gray-500 border-gray-300 cursor-not-allowed hover:bg-gray-300 hover:shadow-none'
-                    : ''
+                    ? "bg-gray-300 text-gray-500 border-gray-300 cursor-not-allowed hover:bg-gray-300 hover:shadow-none"
+                    : ""
                 }`}
               >
-                {data.emailVerified ? '✓ 확인완료' : '중복확인'}
+                {data.emailVerified ? "✓ 확인완료" : "중복확인"}
               </NavButton>
             </div>
             <div className="min-h-[20px] mt-1 text-xs text-red-500 transition-all">
-              {data.email !== '' && !EMAIL_REGEX.test(data.email) && !disabled ? (
+              {data.email !== "" && !EMAIL_REGEX.test(data.email) && !disabled ? (
                 <span>올바른 이메일 형식을 입력해주세요</span>
               ) : (
-                ''
+                ""
               )}
             </div>
             {data.emailVerified && (
@@ -98,11 +98,11 @@ export const StepContent: React.FC<StepContentProps> = ({
             disabled={disabled}
             className={`w-full h-12 bg-gray-50 rounded-md border border-gray-300 px-4 text-left transition-all ${
               disabled
-                ? 'opacity-50 cursor-not-allowed'
-                : 'hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
             }`}
           >
-            <span className={data.membershipGrade ? 'text-gray-900' : 'text-gray-500'}>
+            <span className={data.membershipGrade ? "text-gray-900" : "text-gray-500"}>
               {getSelectedMembershipLabel()}
             </span>
           </button>
@@ -126,7 +126,7 @@ export const StepContent: React.FC<StepContentProps> = ({
       return (
         <BrandGrid
           selectedBrands={data.recentBrands}
-          onBrandToggle={disabled ? undefined : (brandId) => onToggleBrand(brandId, 'recentBrands')}
+          onBrandToggle={disabled ? undefined : (brandId) => onToggleBrand(brandId, "recentBrands")}
           title="최근 이용한 브랜드"
           disabled={disabled}
         />
@@ -137,7 +137,7 @@ export const StepContent: React.FC<StepContentProps> = ({
         <BrandGrid
           selectedBrands={data.selectedBrands}
           onBrandToggle={
-            disabled ? undefined : (brandId) => onToggleBrand(brandId, 'selectedBrands')
+            disabled ? undefined : (brandId) => onToggleBrand(brandId, "selectedBrands")
           }
           title="관심있는 브랜드"
           disabled={disabled}

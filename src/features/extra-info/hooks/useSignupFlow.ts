@@ -1,18 +1,18 @@
-import { useState, useCallback } from 'react';
-import { type SignupData, type CompletedStep, type StepValidation } from '../types';
-import { EMAIL_REGEX } from '../constants';
+import { useCallback, useState } from "react";
+import { EMAIL_REGEX } from "../constants";
+import { type CompletedStep, type SignupData, type StepValidation } from "../types";
 
 const initialData: SignupData = {
-  membershipGrade: '',
+  membershipGrade: "",
   recentBrands: [],
   selectedBrands: [],
-  email: '',
+  email: "",
   emailVerified: false,
 };
 
 const stepValidation: StepValidation = {
-  1: (data) => data.email !== '' && EMAIL_REGEX.test(data.email) && data.emailVerified,
-  2: (data) => data.membershipGrade !== '',
+  1: (data) => data.email !== "" && EMAIL_REGEX.test(data.email) && data.emailVerified,
+  2: (data) => data.membershipGrade !== "",
   3: (data) => data.recentBrands.length > 0,
   4: (data) => data.selectedBrands.length > 0,
 };
@@ -41,7 +41,7 @@ export const useSignupFlow = () => {
   );
 
   const toggleBrand = useCallback(
-    (brandId: string, field: 'recentBrands' | 'selectedBrands') => {
+    (brandId: string, field: "recentBrands" | "selectedBrands") => {
       const currentBrands = data[field];
       const newBrands = currentBrands.includes(brandId)
         ? currentBrands.filter((id) => id !== brandId)
@@ -54,7 +54,7 @@ export const useSignupFlow = () => {
 
   // 완료된 스텝의 브랜드 토글 처리
   const toggleCompletedStepBrand = useCallback(
-    (stepNumber: number, brandId: string, field: 'recentBrands' | 'selectedBrands') => {
+    (stepNumber: number, brandId: string, field: "recentBrands" | "selectedBrands") => {
       setCompletedSteps((prev) =>
         prev.map((step) => {
           if (step.step === stepNumber) {

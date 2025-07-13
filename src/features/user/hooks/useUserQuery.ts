@@ -1,10 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
-import { userApi } from '@/features/user/api/userApi';
+import { useQuery } from "@tanstack/react-query";
+import { userApi } from "@user/api/userApi";
 
 export const userKeys = {
-  all: ['user'] as const,
-  info: () => [...userKeys.all, 'info'] as const,
-  emailCheck: (email: string) => [...userKeys.all, 'email-check', email] as const,
+  all: ["user"] as const,
+  info: () => [...userKeys.all, "info"] as const,
+  emailCheck: (email: string) => [...userKeys.all, "email-check", email] as const,
 } as const;
 
 // 이메일 중복 확인 훅 (Query)

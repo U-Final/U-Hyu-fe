@@ -28,7 +28,7 @@ export interface StepContentProps {
   step: number;
   data: SignupData;
   onUpdateData: (updates: Partial<SignupData>) => void;
-  onToggleBrand: (brandId: string, field: 'recentBrands' | 'selectedBrands') => void;
+  onToggleBrand: (brandId: string, field: "recentBrands" | "selectedBrands") => void;
   disabled?: boolean;
 }
 
@@ -42,7 +42,7 @@ export interface CurrentStepProps {
   currentStep: number;
   data: SignupData;
   onUpdateData: (updates: Partial<SignupData>) => void;
-  onToggleBrand: (brandId: string, field: 'recentBrands' | 'selectedBrands') => void;
+  onToggleBrand: (brandId: string, field: "recentBrands" | "selectedBrands") => void;
   onReset: () => void;
   isStepValid: boolean;
   onNext: () => void;

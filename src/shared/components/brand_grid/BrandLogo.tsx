@@ -1,7 +1,7 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Check } from 'lucide-react';
-import { type BrandLogoProps } from '@shared/components/brand_grid/brand.type';
+import { type BrandLogoProps } from "@components/brand_grid/brand.type";
+import { motion } from "framer-motion";
+import { Check } from "lucide-react";
+import React from "react";
 
 export const BrandLogo: React.FC<BrandLogoProps> = ({
   brand,
@@ -23,11 +23,11 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         className={`
           relative w-16 h-16 rounded-full flex items-center justify-center
           transition-all duration-200 shadow-lg overflow-hidden bg-white
-          ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-xl'}
+          ${disabled ? "opacity-50 cursor-not-allowed" : "hover:shadow-xl"}
           ${
             isSelected
-              ? 'ring-4 ring-blue-500 ring-opacity-50'
-              : 'hover:scale-105 border-2 border-gray-200'
+              ? "ring-4 ring-blue-500 ring-opacity-50"
+              : "hover:scale-105 border-2 border-gray-200"
           }
         `}
         whileHover={{ scale: disabled ? 1 : 1.05 }}
@@ -39,16 +39,16 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
           className="w-14 h-14 object-cover rounded-full bg-white"
           onError={(e) => {
             const target = e.target as HTMLImageElement;
-            target.style.display = 'none';
+            target.style.display = "none";
             const fallbackText = target.nextElementSibling as HTMLElement;
             if (fallbackText) {
-              fallbackText.style.display = 'block';
+              fallbackText.style.display = "block";
             }
           }}
         />
         <span
           className="text-xs font-bold leading-tight text-center px-1 text-gray-700 hidden"
-          style={{ display: 'none' }}
+          style={{ display: "none" }}
         >
           {brand.name}
         </span>

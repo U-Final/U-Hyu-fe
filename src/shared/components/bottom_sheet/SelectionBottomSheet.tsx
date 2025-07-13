@@ -1,9 +1,9 @@
-import { PrimaryButton } from '@components/buttons/PrimaryButton';
-import { motion } from 'framer-motion';
-import { Check, ChevronRight } from 'lucide-react';
-import React from 'react';
-import { BaseBottomSheet } from './BaseBottomSheet';
-import type { SelectionBottomSheetProps, SelectionItem } from './bottomSheet.type';
+import { PrimaryButton } from "@components/buttons/PrimaryButton";
+import { motion } from "framer-motion";
+import { Check, ChevronRight } from "lucide-react";
+import React from "react";
+import { BaseBottomSheet } from "./BaseBottomSheet";
+import type { SelectionBottomSheetProps, SelectionItem } from "./bottomSheet.type";
 
 export const SelectionBottomSheet: React.FC<SelectionBottomSheetProps> = ({
   isOpen,
@@ -16,7 +16,7 @@ export const SelectionBottomSheet: React.FC<SelectionBottomSheetProps> = ({
   multiSelect = false,
   showApplyButton = false,
   onApply,
-  height = 'medium',
+  height = "medium",
   autoCloseOnSelect = false,
 }) => {
   const handleItemClick = (itemId: string) => {
@@ -29,21 +29,21 @@ export const SelectionBottomSheet: React.FC<SelectionBottomSheetProps> = ({
 
   const renderBrandIcon = (item: SelectionItem) => {
     // 브랜드 로고 렌더링 함수
-    const getSizeClasses = (size: string = 'medium') => {
+    const getSizeClasses = (size: string = "medium") => {
       switch (size) {
-        case 'small':
-          return 'w-8 h-8';
-        case 'large':
-          return 'w-12 h-12';
-        case 'medium':
+        case "small":
+          return "w-8 h-8";
+        case "large":
+          return "w-12 h-12";
+        case "medium":
         default:
-          return 'w-10 h-10';
+          return "w-10 h-10";
       }
     };
 
     if (item.brandImageUrl) {
       const sizeClass = getSizeClasses(item.iconSize);
-      const circularClass = item.useCircularIcon ? 'rounded-full' : 'rounded-lg';
+      const circularClass = item.useCircularIcon ? "rounded-full" : "rounded-lg";
 
       return (
         <div
@@ -56,7 +56,7 @@ export const SelectionBottomSheet: React.FC<SelectionBottomSheetProps> = ({
             loading="lazy"
             onError={(e) => {
               const target = e.currentTarget;
-              target.style.display = 'none';
+              target.style.display = "none";
               const parent = target.parentElement;
               if (parent) {
                 parent.innerHTML = `<span class="text-xs text-gray-400">${item.label.charAt(
@@ -72,7 +72,7 @@ export const SelectionBottomSheet: React.FC<SelectionBottomSheetProps> = ({
     if (item.icon) {
       return (
         <div className={`${getSizeClasses(item.iconSize)} flex items-center justify-center`}>
-          {typeof item.icon === 'string' ? <span className="text-xl">{item.icon}</span> : item.icon}
+          {typeof item.icon === "string" ? <span className="text-xl">{item.icon}</span> : item.icon}
         </div>
       );
     }
@@ -99,9 +99,9 @@ export const SelectionBottomSheet: React.FC<SelectionBottomSheetProps> = ({
               disabled={item.isDisabled}
               className={`w-full p-4 rounded-xl border transition-all text-left ${
                 isSelected
-                  ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-200 bg-white hover:bg-gray-50'
-              } ${item.isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  ? "border-blue-500 bg-blue-50"
+                  : "border-gray-200 bg-white hover:bg-gray-50"
+              } ${item.isDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
               whileTap={!item.isDisabled ? { scale: 0.98 } : {}}
             >
               <div className="flex items-center justify-between">
@@ -109,12 +109,12 @@ export const SelectionBottomSheet: React.FC<SelectionBottomSheetProps> = ({
                   {renderBrandIcon(item)}
                   <div>
                     <div
-                      className={`font-medium ${isSelected ? 'text-blue-700' : 'text-gray-900'}`}
+                      className={`font-medium ${isSelected ? "text-blue-700" : "text-gray-900"}`}
                     >
                       {item.label}
                     </div>
                     {item.description && (
-                      <div className={`text-sm ${isSelected ? 'text-blue-600' : 'text-gray-500'}`}>
+                      <div className={`text-sm ${isSelected ? "text-blue-600" : "text-gray-500"}`}>
                         {item.description}
                       </div>
                     )}
@@ -123,10 +123,10 @@ export const SelectionBottomSheet: React.FC<SelectionBottomSheetProps> = ({
 
                 <div className="flex items-center gap-2">
                   {multiSelect && isSelected && <Check size={16} className="text-blue-500" />}
-                  {item.rightElement === '>' && (
+                  {item.rightElement === ">" && (
                     <ChevronRight size={16} className="text-gray-400" />
                   )}
-                  {item.rightElement && item.rightElement !== '>' && item.rightElement}
+                  {item.rightElement && item.rightElement !== ">" && item.rightElement}
                 </div>
               </div>
             </motion.button>

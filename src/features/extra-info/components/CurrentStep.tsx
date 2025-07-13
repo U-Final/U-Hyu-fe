@@ -1,11 +1,11 @@
-import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { StepTitle } from '../components/StepTitle';
-import { StepContent } from '../components/StepContent';
-import { PrimaryButton } from '../components/PrimaryButton';
-import { ActionButtons } from '../components/ActionButtons';
-import { type CurrentStepProps } from '../types';
-import { STEP_TITLES } from '../constants';
+import { AnimatePresence, motion } from "framer-motion";
+import React from "react";
+import { ActionButtons } from "../components/ActionButtons";
+import { PrimaryButton } from "../components/PrimaryButton";
+import { StepContent } from "../components/StepContent";
+import { StepTitle } from "../components/StepTitle";
+import { STEP_TITLES } from "../constants";
+import { type CurrentStepProps } from "../types";
 
 export const CurrentStep: React.FC<CurrentStepProps> = ({
   currentStep,

@@ -28,5 +28,4 @@ storybook-static
 
 # Lock files (to prevent merge conflicts)
 package-lock.json
-yarn.lock
 pnpm-lock.yaml

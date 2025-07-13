@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { userApi } from "@user/api/userApi";
-import { userKeys } from "./useUserQuery";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { userApi } from '@user/api/userApi';
+import { userKeys } from './useUserQuery';
 
 // 사용자 추가 정보 입력 훅 (Mutation)
 export const useSubmitExtraInfo = () => {
@@ -13,7 +13,7 @@ export const useSubmitExtraInfo = () => {
       queryClient.invalidateQueries({ queryKey: userKeys.info() });
     },
     onError: (error: Error) => {
-      console.error("추가 정보 입력 실패:", error);
+      console.error('추가 정보 입력 실패:', error);
     },
   });
 };
@@ -29,13 +29,13 @@ export const useLogout = () => {
       queryClient.removeQueries({ queryKey: userKeys.all });
 
       // 로컬 스토리지 정리
-      localStorage.removeItem("accessToken");
+      localStorage.removeItem('accessToken');
 
       // 로그인 페이지로 리다이렉트
-      window.location.href = "/login";
+      window.location.href = '/login';
     },
     onError: (error: Error) => {
-      console.error("로그아웃 실패:", error);
+      console.error('로그아웃 실패:', error);
     },
   });
 };

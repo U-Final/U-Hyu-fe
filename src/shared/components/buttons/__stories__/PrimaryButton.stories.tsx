@@ -1,20 +1,20 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { PrimaryButton } from "../PrimaryButton";
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { PrimaryButton } from '../PrimaryButton';
 
 const meta: Meta<typeof PrimaryButton> = {
-  title: "Buttons/PrimaryButton",
+  title: 'Buttons/PrimaryButton',
   component: PrimaryButton,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
     size: {
-      control: "select",
-      options: ["sm", "md", "lg"],
+      control: 'select',
+      options: ['sm', 'md', 'lg'],
     },
     isLoading: {
-      control: "boolean",
+      control: 'boolean',
     },
     children: {
-      control: "text",
+      control: 'text',
     },
   },
 };
@@ -24,8 +24,8 @@ type Story = StoryObj<typeof PrimaryButton>;
 
 export const Default: Story = {
   args: {
-    size: "md",
-    children: "Primary Button",
+    size: 'md',
+    children: 'Primary Button',
   },
   parameters: {
     docs: {
@@ -38,9 +38,9 @@ export const Default: Story = {
 
 export const Loading: Story = {
   args: {
-    size: "md",
+    size: 'md',
     isLoading: true,
-    children: "로딩 중...",
+    children: '로딩 중...',
   },
   parameters: {
     docs: {

@@ -1,11 +1,18 @@
-import type { FilterTabProps } from "@components/filter_tabs/FilterTabs.types";
-import { FILTER_TABS, filterTabVariants } from "@components/filter_tabs/FilterTabs.variants";
-import clsx from "clsx";
-import type { FC } from "react";
-import { useState } from "react";
+import type { FilterTabProps } from '@components/filter_tabs/FilterTabs.types';
+import {
+  FILTER_TABS,
+  filterTabVariants,
+} from '@components/filter_tabs/FilterTabs.variants';
+import clsx from 'clsx';
+import type { FC } from 'react';
+import { useState } from 'react';
 
-const FilterTabs: FC<FilterTabProps> = ({ tabs = FILTER_TABS, onChange, variant = "gray" }) => {
-  const [active, setActive] = useState(tabs[0]?.value ?? "");
+const FilterTabs: FC<FilterTabProps> = ({
+  tabs = FILTER_TABS,
+  onChange,
+  variant = 'gray',
+}) => {
+  const [active, setActive] = useState(tabs[0]?.value ?? '');
 
   const handleClick = (value: string) => {
     setActive(value);
@@ -20,7 +27,7 @@ const FilterTabs: FC<FilterTabProps> = ({ tabs = FILTER_TABS, onChange, variant 
           onClick={() => handleClick(value)}
           className={clsx(
             filterTabVariants[variant].base,
-            "cursor-pointer",
+            'cursor-pointer',
             active === value
               ? filterTabVariants[variant].active
               : filterTabVariants[variant].inactive

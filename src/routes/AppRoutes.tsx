@@ -1,9 +1,9 @@
-import BottomNavigation from "@components/bottom_navigation/BottomNavigation";
-import HomePage from "@pages/HomePage";
-import BenefitPage from "@pages/benefit/BenefitPage";
-import ExtraInfo from "@pages/user/extra-info/ExtraInfo";
-import { PATH } from "@paths";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import BottomNavigation from '@components/bottom_navigation/BottomNavigation';
+import HomePage from '@pages/HomePage';
+import BenefitPage from '@pages/benefit/BenefitPage';
+import ExtraInfo from '@pages/user/extra-info/ExtraInfo';
+import { PATH } from '@paths';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 export const AppRoutes = () => {
   return (
     <BrowserRouter>

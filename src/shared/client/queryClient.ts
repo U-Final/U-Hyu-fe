@@ -13,7 +13,7 @@ export const queryClient = new QueryClient({
       retry: 1,
 
       // 에러 발생 시 재시도 간격
-      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+      retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
 
       // 백그라운드에서 refetch 비활성화
       refetchOnWindowFocus: false,

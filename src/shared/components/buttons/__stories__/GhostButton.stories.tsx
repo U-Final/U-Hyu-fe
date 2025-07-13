@@ -1,17 +1,17 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { GhostButton } from "../GhostButton";
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { GhostButton } from '../GhostButton';
 
 const meta: Meta<typeof GhostButton> = {
-  title: "Buttons/GhostButton",
+  title: 'Buttons/GhostButton',
   component: GhostButton,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
     size: {
-      control: "select",
-      options: ["sm", "md", "lg"],
+      control: 'select',
+      options: ['sm', 'md', 'lg'],
     },
     children: {
-      control: "text",
+      control: 'text',
     },
   },
 };
@@ -21,8 +21,8 @@ type Story = StoryObj<typeof GhostButton>;
 
 export const Default: Story = {
   args: {
-    size: "md",
-    children: "Ghost Button",
+    size: 'md',
+    children: 'Ghost Button',
   },
   parameters: {
     docs: {

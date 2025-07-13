@@ -1,11 +1,11 @@
-import { GhostButton } from "@components/buttons/GhostButton";
-import { PrimaryButton } from "@components/buttons/PrimaryButton";
-import { AnimatePresence, motion } from "framer-motion";
-import React, { useEffect } from "react";
-import { BaseBottomSheet } from "./BaseBottomSheet";
-import type { NavigationBottomSheetProps } from "./bottomSheet.type";
-import { useBottomSheetNavigation } from "./hooks/useBottomSheetNavigation.ts";
-import { useMultiSelect } from "./hooks/useMultiSelect.ts";
+import { GhostButton } from '@components/buttons/GhostButton';
+import { PrimaryButton } from '@components/buttons/PrimaryButton';
+import { AnimatePresence, motion } from 'framer-motion';
+import React, { useEffect } from 'react';
+import { BaseBottomSheet } from './BaseBottomSheet';
+import type { NavigationBottomSheetProps } from './bottomSheet.type';
+import { useBottomSheetNavigation } from './hooks/useBottomSheetNavigation.ts';
+import { useMultiSelect } from './hooks/useMultiSelect.ts';
 
 export const NavigationBottomSheet: React.FC<NavigationBottomSheetProps> = ({
   isOpen,
@@ -14,7 +14,7 @@ export const NavigationBottomSheet: React.FC<NavigationBottomSheetProps> = ({
   initialStep,
   onApply,
   renderStepContent,
-  height = "large",
+  height = 'large',
   showApplyButton = true,
   showResetButton = true,
 }) => {
@@ -24,7 +24,11 @@ export const NavigationBottomSheet: React.FC<NavigationBottomSheetProps> = ({
   useEffect(() => {
     if (isOpen && !navigation.navigationState.currentStep) {
       const initialStepData = steps[initialStep];
-      navigation.reset(initialStep, initialStepData?.title || "", initialStepData?.subtitle);
+      navigation.reset(
+        initialStep,
+        initialStepData?.title || '',
+        initialStepData?.subtitle
+      );
     }
   }, [isOpen, initialStep, steps, navigation]);
 

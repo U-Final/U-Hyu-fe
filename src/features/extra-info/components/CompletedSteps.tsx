@@ -1,9 +1,11 @@
-import { AnimatePresence, motion } from "framer-motion";
-import React from "react";
-import { StepContent } from "../components/StepContent";
-import { type CompletedStepsProps } from "../types";
+import { AnimatePresence, motion } from 'framer-motion';
+import React from 'react';
+import { StepContent } from '../components/StepContent';
+import { type CompletedStepsProps } from '../types';
 
-export const CompletedSteps: React.FC<CompletedStepsProps> = ({ completedSteps }) => (
+export const CompletedSteps: React.FC<CompletedStepsProps> = ({
+  completedSteps,
+}) => (
   <div className="px-6 pb-32">
     <AnimatePresence initial={false}>
       {completedSteps.map((stepData, index) => (
@@ -17,7 +19,7 @@ export const CompletedSteps: React.FC<CompletedStepsProps> = ({ completedSteps }
             transition: {
               duration: 0.6,
               delay: 0.1,
-              ease: "easeOut",
+              ease: 'easeOut',
             },
           }}
           exit={{

@@ -1,11 +1,11 @@
-import { AnimatePresence, motion } from "framer-motion";
-import React from "react";
-import { ActionButtons } from "../components/ActionButtons";
-import { PrimaryButton } from "../components/PrimaryButton";
-import { StepContent } from "../components/StepContent";
-import { StepTitle } from "../components/StepTitle";
-import { STEP_TITLES } from "../constants";
-import { type CurrentStepProps } from "../types";
+import { AnimatePresence, motion } from 'framer-motion';
+import React from 'react';
+import { ActionButtons } from '../components/ActionButtons';
+import { PrimaryButton } from '../components/PrimaryButton';
+import { StepContent } from '../components/StepContent';
+import { StepTitle } from '../components/StepTitle';
+import { STEP_TITLES } from '../constants';
+import { type CurrentStepProps } from '../types';
 
 export const CurrentStep: React.FC<CurrentStepProps> = ({
   currentStep,
@@ -59,8 +59,12 @@ export const CurrentStep: React.FC<CurrentStepProps> = ({
           animate={{ opacity: 1, y: 0 }}
           className="text-center py-12"
         >
-          <h1 className="text-3xl font-bold text-gray-900 mb-6">🎉 회원가입이 완료되었습니다!</h1>
-          <p className="text-gray-600 mb-8">모든 정보가 성공적으로 등록되었습니다.</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-6">
+            🎉 회원가입이 완료되었습니다!
+          </h1>
+          <p className="text-gray-600 mb-8">
+            모든 정보가 성공적으로 등록되었습니다.
+          </p>
           <PrimaryButton onClick={onReset}>처음으로</PrimaryButton>
         </motion.div>
       )}

@@ -181,7 +181,7 @@
   --bg-secondary: #e6f0ff;
   --bg-secondary-hover: #d6e7ff;
   --bg-gray: #b0b8c1;
-  --bg-gray-hover: #F0F0F0;
+  --bg-gray-hover: #f0f0f0;
 
   /* Border Colors */
   --border-ghost: #f2f4f6;
@@ -218,7 +218,7 @@
   .text-secondary {
     color: var(--text-secondary);
   }
-  .text-gray{
+  .text-gray {
     color: var(--text-gray);
   }
   .text-red {
@@ -360,7 +360,9 @@
   /* 포커스 스타일 */
   :focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px var(--color-brand-blue), 0 0 0 4px white;
+    box-shadow:
+      0 0 0 2px var(--color-brand-blue),
+      0 0 0 4px white;
   }
 }
 
@@ -458,7 +460,11 @@
 
   /* 텍스트 그라데이션 */
   .text-gradient {
-    background: linear-gradient(to right, var(--color-brand-blue), var(--color-text-accent));
+    background: linear-gradient(
+      to right,
+      var(--color-brand-blue),
+      var(--color-text-accent)
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -466,7 +472,11 @@
 
   /* 배경 그라데이션 */
   .bg-gradient-primary {
-    background: linear-gradient(to right, var(--color-brand-blue), var(--color-text-accent));
+    background: linear-gradient(
+      to right,
+      var(--color-brand-blue),
+      var(--color-text-accent)
+    );
   }
 
   /* 폰트 weight 유틸리티 */

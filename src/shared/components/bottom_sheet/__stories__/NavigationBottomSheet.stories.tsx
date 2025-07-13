@@ -13,7 +13,9 @@ const meta: Meta<typeof NavigationBottomSheet> = {
 export default meta;
 type Story = StoryObj<typeof NavigationBottomSheet>;
 
-const NavigationBottomSheetWrapper = (args: React.ComponentProps<typeof NavigationBottomSheet>) => {
+const NavigationBottomSheetWrapper = (
+  args: React.ComponentProps<typeof NavigationBottomSheet>
+) => {
   const [isOpen, setIsOpen] = useState(false);
   const [appliedFilters, setAppliedFilters] = useState({});
 
@@ -22,7 +24,12 @@ const NavigationBottomSheetWrapper = (args: React.ComponentProps<typeof Navigati
       title: '필터',
       subtitle: '카테고리를 선택해주세요',
       items: [
-        { id: 'convenience', label: '편의점', icon: '🏪', hasSubCategory: true },
+        {
+          id: 'convenience',
+          label: '편의점',
+          icon: '🏪',
+          hasSubCategory: true,
+        },
         { id: 'restaurant', label: '음식점', icon: '🍽️', hasSubCategory: true },
         { id: 'cafe', label: '카페', icon: '☕', hasSubCategory: true },
       ],
@@ -56,11 +63,21 @@ const NavigationBottomSheetWrapper = (args: React.ComponentProps<typeof Navigati
     },
   };
 
-  const renderStepContent = (stepId: string, stepData: unknown, helpers: unknown) => {
+  const renderStepContent = (
+    stepId: string,
+    stepData: unknown,
+    helpers: unknown
+  ) => {
     if (!stepData) return null;
 
     const typedStepData = stepData as {
-      items: { id: string; label: string; icon: string; count: number; hasSubCategory: boolean }[];
+      items: {
+        id: string;
+        label: string;
+        icon: string;
+        count: number;
+        hasSubCategory: boolean;
+      }[];
     };
     const typedHelpers = helpers as {
       isSelected: (stepId: string, itemId: string) => boolean;
@@ -71,14 +88,22 @@ const NavigationBottomSheetWrapper = (args: React.ComponentProps<typeof Navigati
     return (
       <div className="space-y-3">
         {typedStepData.items.map(
-          (item: { id: string; label: string; icon: string; hasSubCategory: boolean }) => {
+          (item: {
+            id: string;
+            label: string;
+            icon: string;
+            hasSubCategory: boolean;
+          }) => {
             const isSelected = typedHelpers.isSelected(stepId, item.id);
 
             return (
               <div
                 key={item.id}
                 onClick={() => {
-                  if (item.hasSubCategory && steps[item.id as keyof typeof steps]) {
+                  if (
+                    item.hasSubCategory &&
+                    steps[item.id as keyof typeof steps]
+                  ) {
                     typedHelpers.navigateTo(
                       item.id,
                       item.label,
@@ -127,8 +152,12 @@ const NavigationBottomSheetWrapper = (args: React.ComponentProps<typeof Navigati
 
         {Object.keys(appliedFilters).length > 0 && (
           <div className="mb-4 p-3 bg-blue-50 rounded-lg">
-            <div className="text-sm font-medium text-blue-800">적용된 필터:</div>
-            <div className="text-sm text-blue-600">{JSON.stringify(appliedFilters, null, 2)}</div>
+            <div className="text-sm font-medium text-blue-800">
+              적용된 필터:
+            </div>
+            <div className="text-sm text-blue-600">
+              {JSON.stringify(appliedFilters, null, 2)}
+            </div>
           </div>
         )}
 
@@ -147,7 +176,7 @@ const NavigationBottomSheetWrapper = (args: React.ComponentProps<typeof Navigati
         steps={steps}
         initialStep="main"
         renderStepContent={renderStepContent}
-        onApply={(data) => {
+        onApply={data => {
           setAppliedFilters(data.selections);
           console.log('Applied filters:', data);
         }}

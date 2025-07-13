@@ -1,6 +1,6 @@
-import BarcodeItem from "@shared/components/bottom_navigation/BarcodeItem";
-import NavItem from "@shared/components/bottom_navigation/NavItem";
-import { PATH } from "@shared/constants/path";
+import BarcodeItem from "@components/bottom_navigation/BarcodeItem";
+import NavItem from "@components/bottom_navigation/NavItem";
+import { PATH } from "@constants/path";
 import { useState } from "react";
 import { FaMap } from "react-icons/fa";
 import { FaUser } from "react-icons/fa6";

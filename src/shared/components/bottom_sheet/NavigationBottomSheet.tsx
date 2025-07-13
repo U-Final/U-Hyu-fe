@@ -1,5 +1,5 @@
-import { GhostButton } from '@shared/components/buttons/GhostButton';
-import { PrimaryButton } from '@shared/components/buttons/PrimaryButton';
+import { GhostButton } from '@components/buttons/GhostButton';
+import { PrimaryButton } from '@components/buttons/PrimaryButton';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect } from 'react';
 import { BaseBottomSheet } from './BaseBottomSheet';

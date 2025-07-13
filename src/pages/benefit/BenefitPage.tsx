@@ -1,4 +1,4 @@
-import Pagination from "@pages/benefit/components/Pagination";
+import Pagination from "@benefit/components/Pagination";
 import { useState } from "react";
 
 const BenefitPage = () => {

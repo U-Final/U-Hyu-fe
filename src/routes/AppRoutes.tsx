@@ -1,7 +1,7 @@
 import HomePage from "@pages/HomePage";
 import BenefitPage from "@pages/benefit/BenefitPage";
-import BottomNavigation from "@shared/components/bottom_navigation/BottomNavigation";
-import { PATH } from "@shared/constants/path";
+import BottomNavigation from "@components/bottom_navigation/BottomNavigation";
+import { PATH } from "@constants/path";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 export const AppRoutes = () => {
   return (

@@ -1,4 +1,4 @@
-import type { NavItemProps } from "@shared/components/bottom_navigation/NavItem.types";
+import type { NavItemProps } from "@components/bottom_navigation/NavItem.types";
 
 const NavItem = ({ label, icon, onClick, isActive }: NavItemProps) => {
   return (

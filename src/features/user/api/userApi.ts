@@ -1,4 +1,4 @@
-import { authClient } from '@/shared/client';
+import { authClient } from '@/shared/client/axiosClient';
 import { USER_ENDPOINTS } from './endpoints';
 import type {
   UserExtraInfoRequest,

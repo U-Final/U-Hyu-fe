@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronLeft } from 'lucide-react';
 import { IconButton } from '@shared/components/buttons/IconButton';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ChevronLeft, X } from 'lucide-react';
+import React, { useEffect } from 'react';
 import type { BaseBottomSheetProps } from './bottomSheet.type';
 
 export const BaseBottomSheet: React.FC<BaseBottomSheetProps> = ({

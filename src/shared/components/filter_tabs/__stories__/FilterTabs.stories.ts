@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { createElement } from "react";
 import FilterTabs from "../FilterTabs";
 import { FILTER_TABS } from "../FilterTabs.variants";
-import { createElement} from "react";
 
 const meta: Meta<typeof FilterTabs> = {
   title: "UI/FilterTabs",

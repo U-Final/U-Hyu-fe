@@ -1,6 +1,6 @@
-
 The requested module '/node_modules/.cache/storybook/1c3385a5d25e538d10b518b310c74d3ca2690b6aaffeadccd74da79736171f86/sb-vite/deps/@storybook_addon-docs.js?v=6c8e802b' does not provide an export named 'Meta'
 The component failed to render properly, likely due to a configuration issue in Storybook. Here are some common causes and how you can address them:
+
 1. Missing Context/Providers: You can use decorators to supply specific contexts or providers, which are sometimes necessary for components to render correctly. For detailed instructions on using decorators, please visit the Decorators documentation.
 2. Misconfigured Webpack or Vite: Verify that Storybook picks up all necessary settings for loaders, plugins, and other relevant parameters. You can find step-by-step guides for configuring Webpack or Vite with Storybook.
 3. Missing Environment Variables: Your Storybook may require specific environment variables to function as intended. You can set up custom environment variables as outlined in the Environment Variables documentation.
@@ -29,7 +29,9 @@ import type { Meta, StoryObj } from '@storybook/addon-docs';
 2단계: 캐시 완전 정리
 
 bash
+
 # 모든 캐시 삭제
+
 rm -rf node_modules/.cache
 rm -rf .storybook/node_modules
 npx storybook@latest automigrate
@@ -61,16 +63,15 @@ addons: [
 
 어떤 Storybook 버전을 사용 중이신지, 그리고 프로젝트의 프레임워크(React, Vue 등)가 무엇인지 알려주시면 더 구체적인 해결책을 제시해드릴 수 있습니다.
 
-
-
-
 Error fetching /index.json:
 The component failed to render properly, likely due to a configuration issue in Storybook. Here are some common causes and how you can address them:
+
 1. Missing Context/Providers: You can use decorators to supply specific contexts or providers, which are sometimes necessary for components to render correctly. For detailed instructions on using decorators, please visit the Decorators documentation.
 2. Misconfigured Webpack or Vite: Verify that Storybook picks up all necessary settings for loaders, plugins, and other relevant parameters. You can find step-by-step guides for configuring Webpack or Vite with Storybook.
 3. Missing Environment Variables: Your Storybook may require specific environment variables to function as intended. You can set up custom environment variables as outlined in the Environment Variables documentation.
 
 Unable to index files:
+
 - ./src/stories/Configure.mdx: Could not parse import/exports with acorn
 - ./src/stories/Introduction.mdx: Could not parse import/exports with acorn
 
@@ -105,9 +106,6 @@ MDX 파일 구문 검증을 진행하십시오. 문제가 되는 MDX 파일들�
 
 현재 사용 중인 Storybook 및 MDX 버전과 구체적인 MDX 파일 내용을 공유해주시면 더욱 정확한 해결방안을 제시할 수 있습니다.
 
-
-
-
 import type { Meta, StoryObj } from '@storybook/react';
 
 <Meta title="프로젝트 설정 가이드" />
@@ -119,22 +117,23 @@ import type { Meta, StoryObj } from '@storybook/react';
 ## 📁 폴더 구조
 
 src/
-├── components/          # UI 컴포넌트
-│   ├── ui/             # shadcn/ui 컴포넌트
-│   ├── forms/          # 폼 관련 컴포넌트
-│   ├── layout/         # 레이아웃 컴포넌트
-│   ├── navigation/     # 네비게이션 컴포넌트
-│   └── common/         # 공통 컴포넌트
-├── features/           # 기능별 모듈
-│   ├── auth/           # 인증
-│   ├── dashboard/      # 대시보드
-│   └── profile/        # 프로필
-├── shared/             # 공유 리소스
-│   ├── hooks/          # 커스텀 훅
-│   ├── services/       # API 서비스
-│   ├── types/          # 타입 정의
-│   └── utils/          # 유틸리티
-└── stories/            # Storybook 문서
+├── components/ # UI 컴포넌트
+│ ├── ui/ # shadcn/ui 컴포넌트
+│ ├── forms/ # 폼 관련 컴포넌트
+│ ├── layout/ # 레이아웃 컴포넌트
+│ ├── navigation/ # 네비게이션 컴포넌트
+│ └── common/ # 공통 컴포넌트
+├── features/ # 기능별 모듈
+│ ├── auth/ # 인증
+│ ├── dashboard/ # 대시보드
+│ └── profile/ # 프로필
+├── shared/ # 공유 리소스
+│ ├── hooks/ # 커스텀 훅
+│ ├── services/ # API 서비스
+│ ├── types/ # 타입 정의
+│ └── utils/ # 유틸리티
+└── stories/ # Storybook 문서
+
 ## 🔧 기술 스택
 
 React 19.1.0
@@ -149,6 +148,7 @@ shadcn/ui
 고품질 컴포넌트 라이브러리
 Storybook 9.0
 컴포넌트 개발 및 문서화
+
 ## 🎯 개발 가이드라인
 
 ### Import 최적화
@@ -159,6 +159,7 @@ import { cn } from '@shared/utils/utils';
 
 // ❌ 피하기: 배럴 익스포트 (성능상 이슈)
 import { Button } from '@/components';
+
 ### 컴포넌트 개발 패턴
 
 // 1. Props 인터페이스 정의
@@ -170,6 +171,7 @@ variant?: 'default' | 'outline';
 // 2. 컴포넌트 구현
 export const Component = ({ title, variant = 'default' }: ComponentProps) => {
 return (
+
 <div className={cn('base-styles', variant === 'outline' && 'outline-styles')}>{title}</div>
 );
 };
@@ -179,24 +181,31 @@ export default {
 title: 'Components/Component',
 component: Component,
 };
+
 ## 🚀 시작하기
 
 ### 1. 개발 환경 실행
 
-npm run dev          # 개발 서버 (localhost:5173)
-npm run storybook    # Storybook (localhost:6006)
+npm run dev # 개발 서버 (localhost:5173)
+npm run storybook # Storybook (localhost:6006)
+
 ### 2. 새로운 컴포넌트 추가
 
 # shadcn/ui 컴포넌트 추가
+
 npx shadcn@latest add [component-name]
 
 # 커스텀 컴포넌트는 적절한 폴더에 생성
+
 # src/components/forms/CustomForm.tsx
+
 # src/components/layout/CustomLayout.tsx
+
 ### 3. 빌드 및 배포
 
-npm run build        # 프로덕션 빌드
-npm run preview      # 빌드 결과 미리보기
+npm run build # 프로덕션 빌드
+npm run preview # 빌드 결과 미리보기
+
 ## ⚡ 성능 최적화 팁
 
 배럴 익스포트 최소화
@@ -207,12 +216,14 @@ npm run preview      # 빌드 결과 미리보기
 코드 스플리팅 활용
 React.memo
 불필요한 리렌더링 방지
+
 ## 🔗 유용한 링크
 
 [Storybook 공식 문서](https://storybook.js.org/)
 [shadcn/ui 컴포넌트](https://ui.shadcn.com/)
 [TailwindCSS 문서](https://tailwindcss.com/)
 [Vite 가이드](https://vitejs.dev/)
+
 ---
 
 Happy Coding! 🎉
@@ -228,22 +239,23 @@ import type { Meta, StoryObj } from '@storybook/react';
 ## 🏗️ 폴더 구조
 
 src/
-├── components/          # UI 컴포넌트
-│   ├── ui/             # shadcn/ui 컴포넌트
-│   ├── forms/          # 폼 관련 컴포넌트
-│   ├── layout/         # 레이아웃 컴포넌트
-│   ├── navigation/     # 네비게이션 컴포넌트
-│   └── common/         # 공통 컴포넌트
-├── features/           # 기능별 모듈
-│   ├── auth/           # 인증
-│   ├── dashboard/      # 대시보드
-│   └── profile/        # 프로필
-├── shared/             # 공유 리소스
-│   ├── hooks/          # 커스텀 훅
-│   ├── services/       # API 서비스
-│   ├── types/          # 타입 정의
-│   └── utils/          # 유틸리티
-└── stories/            # Storybook 문서
+├── components/ # UI 컴포넌트
+│ ├── ui/ # shadcn/ui 컴포넌트
+│ ├── forms/ # 폼 관련 컴포넌트
+│ ├── layout/ # 레이아웃 컴포넌트
+│ ├── navigation/ # 네비게이션 컴포넌트
+│ └── common/ # 공통 컴포넌트
+├── features/ # 기능별 모듈
+│ ├── auth/ # 인증
+│ ├── dashboard/ # 대시보드
+│ └── profile/ # 프로필
+├── shared/ # 공유 리소스
+│ ├── hooks/ # 커스텀 훅
+│ ├── services/ # API 서비스
+│ ├── types/ # 타입 정의
+│ └── utils/ # 유틸리티
+└── stories/ # Storybook 문서
+
 ## 🚀 시작하기
 
 개발 서버 실행
@@ -262,6 +274,7 @@ npm run build
 직접 임포트 방식 권장 (성능 최적화)
 Storybook으로 문서화 및 테스트
 TypeScript 타입 정의 필수
+
 ## 🎨 디자인 시스템
 
 UI 컴포넌트: shadcn/ui 기반
@@ -296,17 +309,17 @@ import type { Meta } from '@storybook/react';
 이 프로젝트는 **React + TypeScript + Vite + Storybook + shadcn/ui + TailwindCSS**를 사용한 모던 웹 개발 템플릿입니다.
 
 ## 📁 폴더 구조
-src/
-├── components/          # UI 컴포넌트
-│   ├── ui/             # shadcn/ui 컴포넌트
-│   ├── forms/          # 폼 관련 컴포넌트
-│   ├── layout/         # 레이아웃 컴포넌트
-│   ├── navigation/     # 네비게이션 컴포넌트
-│   └── common/         # 공통 컴포넌트
-├── features/           # 기능별 모듈
-├── shared/             # 공유 리소스
-└── stories/            # Storybook 문서
 
+src/
+├── components/ # UI 컴포넌트
+│ ├── ui/ # shadcn/ui 컴포넌트
+│ ├── forms/ # 폼 관련 컴포넌트
+│ ├── layout/ # 레이아웃 컴포넌트
+│ ├── navigation/ # 네비게이션 컴포넌트
+│ └── common/ # 공통 컴포넌트
+├── features/ # 기능별 모듈
+├── shared/ # 공유 리소스
+└── stories/ # Storybook 문서
 
 (나머지 콘텐츠는 동일하게 유지)
 Introduction.mdx 수정안:
@@ -330,13 +343,9 @@ Storybook 9.0 호환성을 고려할 때, 최신 버전에서는 @storybook/bloc
 
 이러한 수정을 통해 Acorn 파서가 올바르게 import/export 구문을 인식할 수 있게 되어 인덱싱 오류가 해결될 것입니다.
 
-
-
-
 다시 개선된 파일을 제공해줘
 
 다음은 MDX 구문 오류를 해결한 개선된 파일들입니다.
-
 
 Configure.mdx - 수정된 버전
 코드
@@ -354,18 +363,16 @@ MDX 형식 표준화: JavaScript 코드 블록과 Markdown 콘텐츠 간의 구�
 
 이러한 수정을 통해 Storybook의 인덱싱 과정에서 발생하던 파싱 오류가 해결되고, 프로젝트 문서화 구조가 더욱 체계적으로 정리될 것입니다.
 
-
-
-
 Expected component Meta to be defined: you likely forgot to import, pass, or provide it.
 The component failed to render properly, likely due to a configuration issue in Storybook. Here are some common causes and how you can address them:
+
 1. Missing Context/Providers: You can use decorators to supply specific contexts or providers, which are sometimes necessary for components to render correctly. For detailed instructions on using decorators, please visit the Decorators documentation.
 2. Misconfigured Webpack or Vite: Verify that Storybook picks up all necessary settings for loaders, plugins, and other relevant parameters. You can find step-by-step guides for configuring Webpack or Vite with Storybook.
 3. Missing Environment Variables: Your Storybook may require specific environment variables to function as intended. You can set up custom environment variables as outlined in the Environment Variables documentation.
 
 Error: Expected component `Meta` to be defined: you likely forgot to import, pass, or provide it.
-at _missingMdxReference (http://localhost:6006/src/stories/Introduction.mdx?t=1751278504693:121:9)
-at _createMdxContent (http://localhost:6006/src/stories/Introduction.mdx?t=1751278504693:17:14)
+at \_missingMdxReference (http://localhost:6006/src/stories/Introduction.mdx?t=1751278504693:121:9)
+at \_createMdxContent (http://localhost:6006/src/stories/Introduction.mdx?t=1751278504693:17:14)
 at MDXContent (http://localhost:6006/src/stories/Introduction.mdx?t=1751278504693:118:8)
 at react-stack-bottom-frame (http://localhost:6006/node_modules/.cache/storybook/1c3385a5d25e538d10b518b310c74d3ca2690b6aaffeadccd74da79736171f86/sb-vite/deps/chunk-QHDNEFIP.js?v=16460aff:17424:20)
 at renderWithHooks (http://localhost:6006/node_modules/.cache/storybook/1c3385a5d25e538d10b518b310c74d3ca2690b6aaffeadccd74da79736171f86/sb-vite/deps/chunk-QHDNEFIP.js?v=16460aff:4206:24)
@@ -385,7 +392,6 @@ Storybook 9.0부터는 Meta 컴포넌트가 @storybook/react가 아닌 @storyboo
 
 해결 방안
 MDX 파일의 import 구문을 다음과 같이 수정해야 합니다.
-
 
 Configure.mdx - 수정된 버전
 코드 ∙ 버전 2
@@ -407,9 +413,6 @@ npx storybook@latest automigrate
 Storybook의 메이저 버전 업그레이드 시에는 이러한 breaking change가 자주 발생합니다. 향후 유사한 문제를 방지하기 위해서는 버전 업그레이드 전에 공식 마이그레이션 가이드를 숙지하고, 단계적으로 업그레이드를 진행하는 것이 바람직합니다.
 
 MDX 파일보다는 일반적인 스토리 파일 형식을 사용하는 것을 고려해볼 수 있습니다. 이는 버전 호환성 문제를 줄이고 유지보수성을 향상시키는 효과적인 방법입니다.
-
-
-
 
 아직도 그대로다
 
@@ -449,6 +452,7 @@ title: 'Documentation/Project Guide',
 parameters: {
 docs: {
 page: () => (
+
 <div>
 <h1>Demo Ureka 프로젝트 설정 가이드</h1>
 {/* 문서 내용 */}
@@ -468,9 +472,6 @@ rm -rf node_modules/.cache
 npm install
 npx storybook@latest automigrate
 현재 상황에서는 문제가 되는 MDX 파일들을 임시로 제거하고 프로젝트의 나머지 부분이 정상적으로 작동하는지 확인한 후, 점진적으로 문서화 방식을 재구축하는 것이 가장 실용적인 접근 방법입니다.
-
-
-
 
 import type { StorybookConfig } from '@storybook/react-vite';
 import path from 'node:path';
@@ -493,10 +494,11 @@ viteFinal: async (config) => {
 config.resolve = config.resolve || {};
 config.resolve.alias = {
 ...config.resolve.alias,
-'@': path.resolve(__dirname, '../src'),
+'@': path.resolve(\_\_dirname, '../src'),
 };
 
     return config;
+
 },
 typescript: {
 reactDocgen: 'react-docgen-typescript',
@@ -518,7 +520,6 @@ Storybook 9.x에서는 MDX 파일에서 Meta 컴포넌트를 사용하는 방식
 
 해결 방안
 MDX 파일을 Storybook 9.x 호환 형식으로 완전히 재작성해야 합니다. 다음은 새로운 형식으로 작성된 파일들입니다.
-
 
 Configure.mdx - 수정된 버전
 코드 ∙ 버전 3
@@ -544,18 +545,17 @@ addons: [
 ],
 이제 Storybook을 재시작하면 Meta 컴포넌트 관련 오류가 해결되어 정상적으로 문서가 렌더링될 것입니다. 만약 여전히 문제가 발생한다면 캐시를 완전히 정리한 후 재시작하시기 바랍니다.
 
-
-
-
 Error fetching /index.json:
 The component failed to render properly, likely due to a configuration issue in Storybook. Here are some common causes and how you can address them:
+
 1. Missing Context/Providers: You can use decorators to supply specific contexts or providers, which are sometimes necessary for components to render correctly. For detailed instructions on using decorators, please visit the Decorators documentation.
 2. Misconfigured Webpack or Vite: Verify that Storybook picks up all necessary settings for loaders, plugins, and other relevant parameters. You can find step-by-step guides for configuring Webpack or Vite with Storybook.
 3. Missing Environment Variables: Your Storybook may require specific environment variables to function as intended. You can set up custom environment variables as outlined in the Environment Variables documentation.
 
 Unable to index files:
-- ./src/stories/Configure.mdx: Unknown identifier meta
-- ./src/stories/Introduction.mdx: Unknown identifier meta
+
+- ./src/stories/Configure.mdx: Could not parse import/exports with acorn
+- ./src/stories/Introduction.mdx: Could not parse import/exports with acorn
 
 If you are in development, this likely indicates a problem with your Storybook process,
 check the terminal for errors.
@@ -571,7 +571,6 @@ Storybook 9.x 버전에서는 MDX 파일의 메타데이터 정의 방식이 완
 
 해결 방안
 가장 효과적인 해결책은 MDX 파일을 TypeScript 스토리 파일로 변환하는 것입니다. 이 접근법은 버전 호환성 문제를 완전히 회피하면서도 문서화 목적을 달성할 수 있습니다.
-
 
 Configure.stories.tsx - TypeScript 스토리 파일
 코드
@@ -593,11 +592,9 @@ MDX 파일 대체 방안
 
 이러한 접근 방식은 향후 Storybook 버전 업그레이드 시에도 안정적으로 작동할 것이며, 문서화 콘텐츠의 유지보수성을 크게 향상시킵니다.
 
-
-
-
 Couldn't find story matching '문서-소개--introduction'.
 The component failed to render properly, likely due to a configuration issue in Storybook. Here are some common causes and how you can address them:
+
 1. Missing Context/Providers: You can use decorators to supply specific contexts or providers, which are sometimes necessary for components to render correctly. For detailed instructions on using decorators, please visit the Decorators documentation.
 2. Misconfigured Webpack or Vite: Verify that Storybook picks up all necessary settings for loaders, plugins, and other relevant parameters. You can find step-by-step guides for configuring Webpack or Vite with Storybook.
 3. Missing Environment Variables: Your Storybook may require specific environment variables to function as intended. You can set up custom environment variables as outlined in the Environment Variables documentation.
@@ -611,7 +608,6 @@ The component failed to render properly, likely due to a configuration issue in 
 
 문제 해결 방안
 스토리 파일의 title을 영문으로 변경하여 URL 생성 과정에서 발생하는 인코딩 문제를 해결해야 합니다. 동시에 Storybook의 스토리 인식 시스템과 완전히 호환되는 구조로 수정하겠습니다.
-
 
 Introduction.stories.tsx - TypeScript 스토리 파일
 코드 ∙ 버전 2
@@ -630,9 +626,6 @@ Storybook은 스토리의 고유 ID를 title과 export된 스토리 이름을 �
 
 검증 및 테스트
 수정된 파일들을 적용한 후 Storybook을 재시작하면 영문 제목으로 인해 안정적인 ID 생성이 이루어집니다. 브라우저의 개발자 도구 네트워크 탭에서 /index.json 요청을 확인하여 스토리 메타데이터가 올바르게 로드되는지 검증할 수 있습니다. 정상적으로 작동하는 경우 콘솔에서 스토리 매칭 오류가 사라지고 문서 페이지가 정상적으로 렌더링됩니다.
-
-
-
 
 import type { StorybookConfig } from '@storybook/react-vite';
 import path from 'node:path';
@@ -655,10 +648,11 @@ viteFinal: async (config) => {
 config.resolve = config.resolve || {};
 config.resolve.alias = {
 ...config.resolve.alias,
-'@': path.resolve(__dirname, '../src'),
+'@': path.resolve(\_\_dirname, '../src'),
 };
 
     return config;
+
 },
 typescript: {
 reactDocgen: 'react-docgen-typescript',
@@ -695,7 +689,7 @@ Storybook 프로세스를 완전히 종료한 후 재시작하십시오. 단순�
 typescript
 const config: StorybookConfig = {
 stories: ['../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
-// MDX 패턴 제거: '../src/**/*.mdx' 삭제
+// MDX 패턴 제거: '../src/\*_/_.mdx' 삭제
 의존성 검증
 package.json에서 Storybook 관련 패키지들의 버전이 일관되게 관리되고 있는지 확인하십시오. 특히 @storybook/react-vite와 다른 Storybook 패키지들이 동일한 메이저 버전을 사용하고 있는지 점검해야 합니다. 버전 불일치로 인한 호환성 문제가 캐시 관련 오류를 야기할 수 있습니다.
 
@@ -707,18 +701,13 @@ src/stories 디렉토리를 완전히 검토하여 숨겨진 MDX 파일이나 �
 
 이러한 단계를 순차적으로 수행한 후에도 문제가 지속된다면 Storybook의 자체 진단 도구를 활용하여 추가적인 문제점을 식별할 수 있습니다. 터미널에서 더 상세한 로그 정보를 확인하여 구체적인 오류 원인을 파악하는 것이 필요합니다.
 
-
-
-
-
-@import 'tailwindcss'; @import 'tw-animate-css'; @custom-variant dark (&:is(.dark *)); :root { --radius: 0.625rem; --background: oklch(1 0 0); --foreground: oklch(0.145 0 0); --card: oklch(1 0 0); --card-foreground: oklch(0.145 0 0); --popover: oklch(1 0 0); --popover-foreground: okl
+@import 'tailwindcss'; @import 'tw-animate-css'; @custom-variant dark (&:is(.dark \*)); :root { --radius: 0.625rem; --background: oklch(1 0 0); --foreground: oklch(0.145 0 0); --card: oklch(1 0 0); --card-foreground: oklch(0.145 0 0); --popover: oklch(1 0 0); --popover-foreground: okl
 
 pasted
 
 지금 어느 프로젝트든 사용할 템플릿 구현중이다. 이 파일 또한 최소 설정만
 
 이 CSS 파일은 현재 프로덕션 환경에 적합하지 않은 여러 설정들이 포함되어 있습니다. 템플릿의 범용성과 유지보수성을 위해 다음과 같이 최적화된 최소 구성으로 개선하겠습니다.
-
 
 최적화된 global.css
 코드
@@ -736,75 +725,60 @@ Vite 특화 스타일들과 불필요한 미디어 쿼리를 제거하여 프레
 
 템플릿 사용자는 이 기본 구성을 바탕으로 프로젝트 특성에 맞는 추가 스타일링을 적용할 수 있으며, 모든 shadcn/ui 컴포넌트가 정상적으로 작동할 수 있는 기반을 제공받게 됩니다.
 
-
-
-
-
 pull_request_template.md
 11줄
 
 md
-
 
 deployment.yml
 147줄
 
 yml
 
-
 integration.yml
 263줄
 
 yml
-
 
 compressed-size.yml
 26줄
 
 yml
 
-
 ideas.md
 33줄
 
 md
-
 
 announcements.md
 33줄
 
 md
 
-
 show-and-tell.md
 33줄
 
 md
-
 
 help-wanted.md
 47줄
 
 md
 
-
 feature_request.md
 32줄
 
 md
-
 
 bug_report.md
 62줄
 
 md
 
-
 documentation.md
 32줄
 
 md
-
 
 other.md
 20줄
@@ -814,7 +788,6 @@ md
 모두 한글로 번역 하여 파일로 제공 한 파일당 하나씩 제공
 
 제공해드린 파일들을 모두 한국어로 번역하여 개별 파일로 생성하겠습니다.
-
 
 pull_request_template.md (한국어)
 코드
@@ -840,12 +813,11 @@ show-and-tell.md (한국어)
 help-wanted.md (한국어)
 코드
 
-
-
-
 ---
+
 title: 공지사항
 labels: announcement
+
 ---
 
 ## 공지사항 제목

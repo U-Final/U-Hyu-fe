@@ -1,12 +1,15 @@
-import { ButtonBase } from "@shared/components/buttons/ButtonBase";
-import { useRef } from "react";
+import { ButtonBase } from '@components/buttons/ButtonBase';
+import { useRef } from 'react';
 
 interface FileUploadButtonProps {
   onFileSelect: (file: File) => void;
   children?: React.ReactNode;
 }
 
-export const FileUploadButton = ({ onFileSelect, children }: FileUploadButtonProps) => {
+export const FileUploadButton = ({
+  onFileSelect,
+  children,
+}: FileUploadButtonProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleClick = () => fileInputRef.current?.click();
@@ -17,7 +20,12 @@ export const FileUploadButton = ({ onFileSelect, children }: FileUploadButtonPro
 
   return (
     <>
-      <input type="file" ref={fileInputRef} onChange={handleChange} className="hidden" />
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleChange}
+        className="hidden"
+      />
       <ButtonBase onClick={handleClick} variant="primary">
         {children}
       </ButtonBase>

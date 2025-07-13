@@ -32,7 +32,11 @@ const BaseBottomSheetWrapper = (args: BaseBottomSheetProps) => {
         바텀시트 열기
       </button>
 
-      <BaseBottomSheet {...args} isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <BaseBottomSheet
+        {...args}
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+      />
     </div>
   );
 };

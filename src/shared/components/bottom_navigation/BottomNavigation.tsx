@@ -1,17 +1,16 @@
-import BarcodeItem from "@shared/components/bottom_navigation/BarcodeItem";
-import NavItem from "@shared/components/bottom_navigation/NavItem";
-import { PATH } from "@shared/constants/path";
-import { useState } from "react";
-import { FaMap } from "react-icons/fa";
-import { FaUser } from "react-icons/fa6";
-import { HiGift } from "react-icons/hi";
-import { LiaBarcodeSolid } from "react-icons/lia";
-import { MdHomeFilled } from "react-icons/md";
-import { NavLink } from "react-router-dom";
-
+import BarcodeItem from '@components/bottom_navigation/BarcodeItem';
+import NavItem from '@components/bottom_navigation/NavItem';
+import { PATH } from '@paths';
+import { useState } from 'react';
+import { FaMap } from 'react-icons/fa';
+import { FaUser } from 'react-icons/fa6';
+import { HiGift } from 'react-icons/hi';
+import { LiaBarcodeSolid } from 'react-icons/lia';
+import { MdHomeFilled } from 'react-icons/md';
+import { NavLink } from 'react-router-dom';
 
 const BottomNavigation = () => {
-  const [activeTab, setActiveTab] = useState<string>("홈");
+  const [activeTab, setActiveTab] = useState<string>('홈');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleTabClick = (tab: string) => {
@@ -29,43 +28,59 @@ const BottomNavigation = () => {
   return (
     <div className="fixed bottom-0 w-full">
       <nav className="h-12 text-[0.625rem] shadow-nav flex relative justify-around bg-white gap-5 px-[1.5rem] py-[0.5rem]">
-        <NavLink to={PATH.HOME} className="flex gap-4" onClick={() => handleTabClick("홈")}>
+        <NavLink
+          to={PATH.HOME}
+          className="flex gap-4"
+          onClick={() => handleTabClick('홈')}
+        >
           <NavItem
             label="홈"
             icon={<MdHomeFilled />}
-            isActive={activeTab === "홈"}
-            onClick={() => handleTabClick("홈")}
+            isActive={activeTab === '홈'}
+            onClick={() => handleTabClick('홈')}
           />
         </NavLink>
-        <NavLink to={PATH.MAP} className="flex gap-4" onClick={() => handleTabClick("지도")}>
+        <NavLink
+          to={PATH.MAP}
+          className="flex gap-4"
+          onClick={() => handleTabClick('지도')}
+        >
           <NavItem
             label="지도"
             icon={<FaMap />}
-            isActive={activeTab === "지도"}
-            onClick={() => handleTabClick("지도")}
+            isActive={activeTab === '지도'}
+            onClick={() => handleTabClick('지도')}
           />
         </NavLink>
         <span />
         <BarcodeItem
           label="바코드"
           icon={<LiaBarcodeSolid />}
-          isActive={activeTab === "바코드"}
+          isActive={activeTab === '바코드'}
           onClick={handleBarcodeClick}
         />
-        <NavLink to={PATH.BENEFIT} className="flex gap-4" onClick={() => handleTabClick("혜택")}>
+        <NavLink
+          to={PATH.BENEFIT}
+          className="flex gap-4"
+          onClick={() => handleTabClick('혜택')}
+        >
           <NavItem
             label="혜택"
             icon={<HiGift />}
-            isActive={activeTab === "혜택"}
-            onClick={() => handleTabClick("혜택")}
+            isActive={activeTab === '혜택'}
+            onClick={() => handleTabClick('혜택')}
           />
         </NavLink>
-        <NavLink to={PATH.MYPAGE} className="flex gap-4" onClick={() => handleTabClick("마이페이지")}>
+        <NavLink
+          to={PATH.MYPAGE}
+          className="flex gap-4"
+          onClick={() => handleTabClick('마이페이지')}
+        >
           <NavItem
             label="마이페이지"
             icon={<FaUser />}
-            isActive={activeTab === "마이페이지"}
-            onClick={() => handleTabClick("마이페이지")}
+            isActive={activeTab === '마이페이지'}
+            onClick={() => handleTabClick('마이페이지')}
           />
         </NavLink>
       </nav>

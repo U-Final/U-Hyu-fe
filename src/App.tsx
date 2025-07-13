@@ -1,7 +1,15 @@
-import { AppRoutes } from "@/routes/AppRoutes";
+import { AppRoutes } from '@/routes/AppRoutes';
+import { queryClient } from '@client/queryClient';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 function App() {
-  return <AppRoutes />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AppRoutes />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
 }
 
 export default App;

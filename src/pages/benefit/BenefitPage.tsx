@@ -1,8 +1,8 @@
-import FilterTabs from "@/shared/components/filter_tabs/FilterTabs";
-import SearchInput from "@/shared/components/search_input/SearchInput";
-import Pagination from "@pages/benefit/components/Pagination";
-import { useState } from "react";
-import CheckBoxList from "./components/CheckBoxList";
+import FilterTabs from '@/shared/components/filter_tabs/FilterTabs';
+import SearchInput from '@/shared/components/search_input/SearchInput';
+import Pagination from '@benefit/components/Pagination';
+import { useState } from 'react';
+import CheckBoxList from '@benefit/components/CheckBoxList';
 
 const BenefitPage = () => {
   const [currentPage, setCurrentPage] = useState(1);

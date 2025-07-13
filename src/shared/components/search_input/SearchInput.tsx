@@ -1,28 +1,28 @@
-import clsx from "clsx";
-import type { FC, KeyboardEvent } from "react";
-import { useRef } from "react";
-import type { SearchInputProps } from "./SearchInput.types";
-import { SearchInputVariants } from "./SearchInputVariants";
+import clsx from 'clsx';
+import type { FC, KeyboardEvent } from 'react';
+import { useRef } from 'react';
+import type { SearchInputProps } from './SearchInput.types';
+import { SearchInputVariants } from './SearchInputVariants';
 
 const SearchInput: FC<SearchInputProps> = ({
   value,
   onChange,
   onSearch,
   onCancel,
-  placeholder = "브랜드 검색",
-  variant = "gray",
+  placeholder = '브랜드 검색',
+  variant = 'gray',
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       e.preventDefault();
       onSearch?.(value);
     }
   };
 
   const handleCancel = () => {
-    onChange("");
+    onChange('');
     onCancel?.();
     inputRef.current?.blur();
   };
@@ -33,7 +33,7 @@ const SearchInput: FC<SearchInputProps> = ({
         ref={inputRef}
         type="text"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={e => onChange(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         className={clsx(SearchInputVariants({ variant }))}

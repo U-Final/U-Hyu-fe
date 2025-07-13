@@ -41,13 +41,20 @@ export interface SelectionItem {
 export interface NavigationBottomSheetProps {
   isOpen: boolean;
   onClose: () => void;
-  steps: Record<string, { title?: string; subtitle?: string; [key: string]: unknown }>;
+  steps: Record<
+    string,
+    { title?: string; subtitle?: string; [key: string]: unknown }
+  >;
   initialStep: string;
   onApply: (data: {
     selections: Record<string, string[]>;
     navigationData: Record<string, unknown>;
   }) => void;
-  renderStepContent: (stepId: string, stepData: unknown, helpers: unknown) => React.ReactNode;
+  renderStepContent: (
+    stepId: string,
+    stepData: unknown,
+    helpers: unknown
+  ) => React.ReactNode;
   height?: 'small' | 'medium' | 'large' | 'full' | 'auto';
   showApplyButton?: boolean;
   showResetButton?: boolean;

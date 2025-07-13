@@ -8,16 +8,22 @@ export const useBottomSheetNavigation = () => {
     data: {},
   });
 
-  const navigateTo = useCallback((stepId: string, stepTitle: string, stepSubtitle?: string) => {
-    setNavigationState((prev) => ({
-      ...prev,
-      currentStep: stepId,
-      history: [...prev.history, { id: stepId, title: stepTitle, subtitle: stepSubtitle }],
-    }));
-  }, []);
+  const navigateTo = useCallback(
+    (stepId: string, stepTitle: string, stepSubtitle?: string) => {
+      setNavigationState(prev => ({
+        ...prev,
+        currentStep: stepId,
+        history: [
+          ...prev.history,
+          { id: stepId, title: stepTitle, subtitle: stepSubtitle },
+        ],
+      }));
+    },
+    []
+  );
 
   const goBack = useCallback(() => {
-    setNavigationState((prev) => {
+    setNavigationState(prev => {
       const newHistory = prev.history.slice(0, -1);
       return {
         ...prev,
@@ -31,7 +37,9 @@ export const useBottomSheetNavigation = () => {
     (initialStep: string, initialTitle: string, initialSubtitle?: string) => {
       setNavigationState({
         currentStep: initialStep,
-        history: [{ id: initialStep, title: initialTitle, subtitle: initialSubtitle }],
+        history: [
+          { id: initialStep, title: initialTitle, subtitle: initialSubtitle },
+        ],
         data: {},
       });
     },
@@ -39,14 +47,15 @@ export const useBottomSheetNavigation = () => {
   );
 
   const updateData = useCallback((key: string, value: unknown) => {
-    setNavigationState((prev) => ({
+    setNavigationState(prev => ({
       ...prev,
       data: { ...prev.data, [key]: value },
     }));
   }, []);
 
   const canGoBack = navigationState.history.length > 1;
-  const currentStepData = navigationState.history[navigationState.history.length - 1];
+  const currentStepData =
+    navigationState.history[navigationState.history.length - 1];
 
   return {
     navigationState,

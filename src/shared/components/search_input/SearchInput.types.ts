@@ -4,5 +4,5 @@ export interface SearchInputProps {
   onSearch?: (value: string) => void;
   onCancel?: () => void;
   placeholder?: string;
-  variant?: "gray" | "white";
+  variant?: 'gray' | 'white';
 }

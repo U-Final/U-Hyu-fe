@@ -1,5 +1,5 @@
-import React from 'react';
 import { motion } from 'framer-motion';
+import React from 'react';
 import { type PrimaryButtonProps } from '../types';
 
 export const PrimaryButton: React.FC<PrimaryButtonProps> = ({

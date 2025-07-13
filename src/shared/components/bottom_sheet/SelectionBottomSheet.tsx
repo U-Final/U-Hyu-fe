@@ -1,9 +1,12 @@
-import { PrimaryButton } from '@shared/components/buttons/PrimaryButton';
+import { PrimaryButton } from '@components/buttons/PrimaryButton';
 import { motion } from 'framer-motion';
 import { Check, ChevronRight } from 'lucide-react';
 import React from 'react';
 import { BaseBottomSheet } from './BaseBottomSheet';
-import type { SelectionBottomSheetProps, SelectionItem } from './bottomSheet.type';
+import type {
+  SelectionBottomSheetProps,
+  SelectionItem,
+} from './bottomSheet.type';
 
 export const SelectionBottomSheet: React.FC<SelectionBottomSheetProps> = ({
   isOpen,
@@ -43,7 +46,9 @@ export const SelectionBottomSheet: React.FC<SelectionBottomSheetProps> = ({
 
     if (item.brandImageUrl) {
       const sizeClass = getSizeClasses(item.iconSize);
-      const circularClass = item.useCircularIcon ? 'rounded-full' : 'rounded-lg';
+      const circularClass = item.useCircularIcon
+        ? 'rounded-full'
+        : 'rounded-lg';
 
       return (
         <div
@@ -54,7 +59,7 @@ export const SelectionBottomSheet: React.FC<SelectionBottomSheetProps> = ({
             alt={`${item.label} 브랜드 로고`}
             className="w-full h-full object-cover"
             loading="lazy"
-            onError={(e) => {
+            onError={e => {
               const target = e.currentTarget;
               target.style.display = 'none';
               const parent = target.parentElement;
@@ -71,8 +76,14 @@ export const SelectionBottomSheet: React.FC<SelectionBottomSheetProps> = ({
 
     if (item.icon) {
       return (
-        <div className={`${getSizeClasses(item.iconSize)} flex items-center justify-center`}>
-          {typeof item.icon === 'string' ? <span className="text-xl">{item.icon}</span> : item.icon}
+        <div
+          className={`${getSizeClasses(item.iconSize)} flex items-center justify-center`}
+        >
+          {typeof item.icon === 'string' ? (
+            <span className="text-xl">{item.icon}</span>
+          ) : (
+            item.icon
+          )}
         </div>
       );
     }
@@ -89,7 +100,7 @@ export const SelectionBottomSheet: React.FC<SelectionBottomSheetProps> = ({
       height={height}
     >
       <div className="space-y-1">
-        {items.map((item) => {
+        {items.map(item => {
           const isSelected = selectedItems.includes(item.id);
 
           return (
@@ -114,7 +125,9 @@ export const SelectionBottomSheet: React.FC<SelectionBottomSheetProps> = ({
                       {item.label}
                     </div>
                     {item.description && (
-                      <div className={`text-sm ${isSelected ? 'text-blue-600' : 'text-gray-500'}`}>
+                      <div
+                        className={`text-sm ${isSelected ? 'text-blue-600' : 'text-gray-500'}`}
+                      >
                         {item.description}
                       </div>
                     )}
@@ -122,11 +135,15 @@ export const SelectionBottomSheet: React.FC<SelectionBottomSheetProps> = ({
                 </div>
 
                 <div className="flex items-center gap-2">
-                  {multiSelect && isSelected && <Check size={16} className="text-blue-500" />}
+                  {multiSelect && isSelected && (
+                    <Check size={16} className="text-blue-500" />
+                  )}
                   {item.rightElement === '>' && (
                     <ChevronRight size={16} className="text-gray-400" />
                   )}
-                  {item.rightElement && item.rightElement !== '>' && item.rightElement}
+                  {item.rightElement &&
+                    item.rightElement !== '>' &&
+                    item.rightElement}
                 </div>
               </div>
             </motion.button>

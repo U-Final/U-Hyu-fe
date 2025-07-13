@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
 import { LayoutGroup } from 'framer-motion';
-import { useSignupFlow } from './hooks/useSignupFlow';
-import { CurrentStep } from './components/CurrentStep';
-import { CompletedSteps } from './components/CompletedSteps';
+import { useSignupFlow } from '@extra-info/hooks/useSignupFlow';
+import { CurrentStep } from '@extra-info/components/CurrentStep';
+import { CompletedSteps } from '@extra-info/components/CompletedSteps';
 
 const ImprovedSignupFlow: React.FC = () => {
   const {
@@ -21,7 +21,10 @@ const ImprovedSignupFlow: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-md mx-auto bg-white min-h-screen" ref={containerRef}>
+      <div
+        className="max-w-md mx-auto bg-white min-h-screen"
+        ref={containerRef}
+      >
         <LayoutGroup>
           <CurrentStep
             currentStep={currentStep}

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { userApi } from '@/features/user/api/userApi';
+import { userApi } from '@user/api/userApi';
 import { userKeys } from './useUserQuery';
 
 // 사용자 추가 정보 입력 훅 (Mutation)

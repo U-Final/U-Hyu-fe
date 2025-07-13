@@ -1,9 +1,11 @@
+import { AnimatePresence, motion } from 'framer-motion';
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { StepContent } from '../components/StepContent';
 import { type CompletedStepsProps } from '../types';
 
-export const CompletedSteps: React.FC<CompletedStepsProps> = ({ completedSteps }) => (
+export const CompletedSteps: React.FC<CompletedStepsProps> = ({
+  completedSteps,
+}) => (
   <div className="px-6 pb-32">
     <AnimatePresence initial={false}>
       {completedSteps.map((stepData, index) => (

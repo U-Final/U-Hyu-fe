@@ -1,11 +1,11 @@
+import { SelectionBottomSheet } from '@components/bottom_sheet/SelectionBottomSheet';
+import { BrandGrid } from '@components/brand_grid/BrandGrid';
+import { NavButton } from '@components/buttons/NavButton';
+import { Input } from '@components/shadcn/ui/input';
+import { Label } from '@components/shadcn/ui/label';
 import React, { useState } from 'react';
-import { NavButton } from '@shared/components/buttons/NavButton';
-import { Input } from '@shared/components/shadcn/ui/input';
-import { Label } from '@shared/components/shadcn/ui/label';
-import { SelectionBottomSheet } from '@shared/components/bottom_sheet/SelectionBottomSheet';
-import { BrandGrid } from '@shared/components/brand_grid/BrandGrid';
+import { EMAIL_REGEX, MEMBERSHIP_GRADES } from '../constants';
 import { type StepContentProps } from '../types';
-import { MEMBERSHIP_GRADES, EMAIL_REGEX } from '../constants';
 
 export const StepContent: React.FC<StepContentProps> = ({
   step,
@@ -27,11 +27,13 @@ export const StepContent: React.FC<StepContentProps> = ({
   };
 
   const getSelectedMembershipLabel = () => {
-    const selectedGrade = MEMBERSHIP_GRADES.find((grade) => grade.value === data.membershipGrade);
+    const selectedGrade = MEMBERSHIP_GRADES.find(
+      grade => grade.value === data.membershipGrade
+    );
     return selectedGrade?.label || 'LG U+ 멤버십 등급을 선택해주세요';
   };
 
-  const membershipItems = MEMBERSHIP_GRADES.map((grade) => ({
+  const membershipItems = MEMBERSHIP_GRADES.map(grade => ({
     id: grade.value,
     label: grade.label,
     description: '',
@@ -54,14 +56,20 @@ export const StepContent: React.FC<StepContentProps> = ({
                 onChange={
                   disabled
                     ? undefined
-                    : (e) => onUpdateData({ email: e.target.value, emailVerified: false })
+                    : e =>
+                        onUpdateData({
+                          email: e.target.value,
+                          emailVerified: false,
+                        })
                 }
                 className="w-full h-12 bg-gray-50 border border-gray-300 rounded-md"
                 placeholder="이메일 주소를 입력해주세요"
                 disabled={disabled}
               />
               <NavButton
-                disabled={disabled || !data.email || !EMAIL_REGEX.test(data.email)}
+                disabled={
+                  disabled || !data.email || !EMAIL_REGEX.test(data.email)
+                }
                 onClick={handleEmailVerification}
                 className={`px-4 h-12 font-medium transition-all duration-200 ${
                   data.emailVerified
@@ -77,14 +85,18 @@ export const StepContent: React.FC<StepContentProps> = ({
               </NavButton>
             </div>
             <div className="min-h-[20px] mt-1 text-xs text-red-500 transition-all">
-              {data.email !== '' && !EMAIL_REGEX.test(data.email) && !disabled ? (
+              {data.email !== '' &&
+              !EMAIL_REGEX.test(data.email) &&
+              !disabled ? (
                 <span>올바른 이메일 형식을 입력해주세요</span>
               ) : (
                 ''
               )}
             </div>
             {data.emailVerified && (
-              <div className="mt-1 text-xs text-green-600">✓ 이메일 중복확인이 완료되었습니다</div>
+              <div className="mt-1 text-xs text-green-600">
+                ✓ 이메일 중복확인이 완료되었습니다
+              </div>
             )}
           </div>
         </div>
@@ -102,7 +114,11 @@ export const StepContent: React.FC<StepContentProps> = ({
                 : 'hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500'
             }`}
           >
-            <span className={data.membershipGrade ? 'text-gray-900' : 'text-gray-500'}>
+            <span
+              className={
+                data.membershipGrade ? 'text-gray-900' : 'text-gray-500'
+              }
+            >
               {getSelectedMembershipLabel()}
             </span>
           </button>
@@ -126,7 +142,11 @@ export const StepContent: React.FC<StepContentProps> = ({
       return (
         <BrandGrid
           selectedBrands={data.recentBrands}
-          onBrandToggle={disabled ? undefined : (brandId) => onToggleBrand(brandId, 'recentBrands')}
+          onBrandToggle={
+            disabled
+              ? undefined
+              : brandId => onToggleBrand(brandId, 'recentBrands')
+          }
           title="최근 이용한 브랜드"
           disabled={disabled}
         />
@@ -137,7 +157,9 @@ export const StepContent: React.FC<StepContentProps> = ({
         <BrandGrid
           selectedBrands={data.selectedBrands}
           onBrandToggle={
-            disabled ? undefined : (brandId) => onToggleBrand(brandId, 'selectedBrands')
+            disabled
+              ? undefined
+              : brandId => onToggleBrand(brandId, 'selectedBrands')
           }
           title="관심있는 브랜드"
           disabled={disabled}

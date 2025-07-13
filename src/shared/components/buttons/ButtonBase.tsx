@@ -5,7 +5,8 @@ import { twMerge } from 'tailwind-merge';
 type ButtonVariant = 'primary' | 'nav' | 'ghost';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
-export interface ButtonBaseProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonBaseProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   variant?: ButtonVariant;
   size?: ButtonSize;
@@ -56,7 +57,12 @@ export const ButtonBase = forwardRef<HTMLButtonElement, ButtonBaseProps>(
     );
 
     return (
-      <button ref={ref} disabled={isLoading || disabled} className={finalClassName} {...props}>
+      <button
+        ref={ref}
+        disabled={isLoading || disabled}
+        className={finalClassName}
+        {...props}
+      >
         {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : children}
       </button>
     );

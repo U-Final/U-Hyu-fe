@@ -37,7 +37,7 @@ const meta: Meta<typeof BrandLogo> = {
     },
   },
   decorators: [
-    (Story) => (
+    Story => (
       <div style={{ padding: '20px' }}>
         <Story />
       </div>
@@ -71,7 +71,8 @@ export const Selected: Story = {
   parameters: {
     docs: {
       description: {
-        story: '선택된 상태의 브랜드 로고입니다. 파란색 테두리와 체크 아이콘이 표시됩니다.',
+        story:
+          '선택된 상태의 브랜드 로고입니다. 파란색 테두리와 체크 아이콘이 표시됩니다.',
       },
     },
   },
@@ -89,7 +90,8 @@ export const Disabled: Story = {
   parameters: {
     docs: {
       description: {
-        story: '비활성화된 상태의 브랜드 로고입니다. 투명도가 줄어들고 클릭할 수 없습니다.',
+        story:
+          '비활성화된 상태의 브랜드 로고입니다. 투명도가 줄어들고 클릭할 수 없습니다.',
       },
     },
   },
@@ -125,7 +127,8 @@ export const WithDelay: Story = {
   parameters: {
     docs: {
       description: {
-        story: '0.5초 지연 후 나타나는 애니메이션 효과가 적용된 브랜드 로고입니다.',
+        story:
+          '0.5초 지연 후 나타나는 애니메이션 효과가 적용된 브랜드 로고입니다.',
       },
     },
   },
@@ -143,7 +146,8 @@ export const ReadOnly: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'onClick이 없어서 클릭할 수 없는 읽기 전용 상태의 브랜드 로고입니다.',
+        story:
+          'onClick이 없어서 클릭할 수 없는 읽기 전용 상태의 브랜드 로고입니다.',
       },
     },
   },

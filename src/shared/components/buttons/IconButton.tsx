@@ -1,5 +1,5 @@
-import { cn } from "@shared/lib/utils";
-import type { ButtonHTMLAttributes } from "react";
+import { cn } from '@shared/lib/utils';
+import type { ButtonHTMLAttributes } from 'react';
 
 interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon: React.ReactNode; // 꼭 아이콘만
@@ -11,7 +11,7 @@ export const IconButton = ({ icon, className, ...props }: IconButtonProps) => {
     <button
       type="button"
       className={cn(
-        "w-8 h-8 p-0 flex items-center justify-center rounded-full hover:bg-light-gray-hover transition",
+        'w-8 h-8 p-0 flex items-center justify-center rounded-full hover:bg-light-gray-hover transition',
         className
       )}
       {...props}

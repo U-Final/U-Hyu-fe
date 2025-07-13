@@ -1,7 +1,7 @@
-import React from 'react';
+import { type BrandLogoProps } from '@components/brand_grid/brand.type';
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
-import { type BrandLogoProps } from '@shared/components/brand_grid/brand.type';
+import React from 'react';
 
 export const BrandLogo: React.FC<BrandLogoProps> = ({
   brand,
@@ -37,7 +37,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
           src={brand.imagePath}
           alt={brand.name}
           className="w-14 h-14 object-cover rounded-full bg-white"
-          onError={(e) => {
+          onError={e => {
             const target = e.target as HTMLImageElement;
             target.style.display = 'none';
             const fallbackText = target.nextElementSibling as HTMLElement;
@@ -64,6 +64,8 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         </motion.div>
       )}
     </div>
-    <span className="text-xs text-gray-600 text-center leading-tight">{brand.name}</span>
+    <span className="text-xs text-gray-600 text-center leading-tight">
+      {brand.name}
+    </span>
   </motion.div>
 );

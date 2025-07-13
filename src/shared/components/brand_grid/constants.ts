@@ -1,4 +1,4 @@
-import { type Brand } from '@shared/components/brand_grid/brand.type';
+import { type Brand } from '@components/brand_grid/brand.type';
 
 export const BRANDS: Brand[] = [
   {

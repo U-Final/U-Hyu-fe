@@ -1,5 +1,5 @@
-import Pagination from "@pages/benefit/components/Pagination";
-import { useState } from "react";
+import Pagination from '@benefit/components/Pagination';
+import { useState } from 'react';
 
 const BenefitPage = () => {
   const [currentPage, setCurrentPage] = useState(1);

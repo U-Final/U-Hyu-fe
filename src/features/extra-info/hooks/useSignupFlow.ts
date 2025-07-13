@@ -1,6 +1,10 @@
-import { useState, useCallback } from 'react';
-import { type SignupData, type CompletedStep, type StepValidation } from '../types';
+import { useCallback, useState } from 'react';
 import { EMAIL_REGEX } from '../constants';
+import {
+  type CompletedStep,
+  type SignupData,
+  type StepValidation,
+} from '../types';
 
 const initialData: SignupData = {
   membershipGrade: '',
@@ -11,10 +15,11 @@ const initialData: SignupData = {
 };
 
 const stepValidation: StepValidation = {
-  1: (data) => data.email !== '' && EMAIL_REGEX.test(data.email) && data.emailVerified,
-  2: (data) => data.membershipGrade !== '',
-  3: (data) => data.recentBrands.length > 0,
-  4: (data) => data.selectedBrands.length > 0,
+  1: data =>
+    data.email !== '' && EMAIL_REGEX.test(data.email) && data.emailVerified,
+  2: data => data.membershipGrade !== '',
+  3: data => data.recentBrands.length > 0,
+  4: data => data.selectedBrands.length > 0,
 };
 
 export const useSignupFlow = () => {
@@ -23,19 +28,21 @@ export const useSignupFlow = () => {
   const [completedSteps, setCompletedSteps] = useState<CompletedStep[]>([]);
 
   const updateData = useCallback((updates: Partial<SignupData>) => {
-    setData((prev) => ({ ...prev, ...updates }));
+    setData(prev => ({ ...prev, ...updates }));
   }, []);
 
   // 완료된 스텝의 데이터 업데이트 처리
   const updateCompletedStepData = useCallback(
     (stepNumber: number, updates: Partial<SignupData>) => {
-      setCompletedSteps((prev) =>
-        prev.map((step) =>
-          step.step === stepNumber ? { ...step, data: { ...step.data, ...updates } } : step
+      setCompletedSteps(prev =>
+        prev.map(step =>
+          step.step === stepNumber
+            ? { ...step, data: { ...step.data, ...updates } }
+            : step
         )
       );
       // 현재 데이터도 동기화
-      setData((prev) => ({ ...prev, ...updates }));
+      setData(prev => ({ ...prev, ...updates }));
     },
     []
   );
@@ -44,7 +51,7 @@ export const useSignupFlow = () => {
     (brandId: string, field: 'recentBrands' | 'selectedBrands') => {
       const currentBrands = data[field];
       const newBrands = currentBrands.includes(brandId)
-        ? currentBrands.filter((id) => id !== brandId)
+        ? currentBrands.filter(id => id !== brandId)
         : [...currentBrands, brandId];
 
       updateData({ [field]: newBrands });
@@ -54,13 +61,17 @@ export const useSignupFlow = () => {
 
   // 완료된 스텝의 브랜드 토글 처리
   const toggleCompletedStepBrand = useCallback(
-    (stepNumber: number, brandId: string, field: 'recentBrands' | 'selectedBrands') => {
-      setCompletedSteps((prev) =>
-        prev.map((step) => {
+    (
+      stepNumber: number,
+      brandId: string,
+      field: 'recentBrands' | 'selectedBrands'
+    ) => {
+      setCompletedSteps(prev =>
+        prev.map(step => {
           if (step.step === stepNumber) {
             const currentBrands = step.data[field];
             const newBrands = currentBrands.includes(brandId)
-              ? currentBrands.filter((id) => id !== brandId)
+              ? currentBrands.filter(id => id !== brandId)
               : [...currentBrands, brandId];
 
             return { ...step, data: { ...step.data, [field]: newBrands } };
@@ -81,7 +92,7 @@ export const useSignupFlow = () => {
       data: { ...data },
     };
 
-    setCompletedSteps((prev) => [completedStep, ...prev]);
+    setCompletedSteps(prev => [completedStep, ...prev]);
     setCurrentStep(currentStep + 1);
   }, [currentStep, data]);
 
@@ -90,7 +101,7 @@ export const useSignupFlow = () => {
       const lastCompleted = completedSteps[0];
       if (lastCompleted) {
         setData(lastCompleted.data);
-        setCompletedSteps((prev) => prev.slice(1));
+        setCompletedSteps(prev => prev.slice(1));
         setCurrentStep(currentStep - 1);
       }
     }

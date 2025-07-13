@@ -1,16 +1,22 @@
 // stories/BrandGrid.stories.tsx
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
-import { BrandGrid, BRANDS, type BrandGridProps } from '@shared/components/brand_grid';
+import {
+  BrandGrid,
+  BRANDS,
+  type BrandGridProps,
+} from '@shared/components/brand_grid';
 
 // 인터랙티브한 스토리를 위한 래퍼 컴포넌트
 const BrandGridWrapper = (args: BrandGridProps) => {
-  const [selectedBrands, setSelectedBrands] = useState<string[]>(args.selectedBrands || []);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>(
+    args.selectedBrands || []
+  );
 
   const handleBrandToggle = (brandId: string) => {
-    setSelectedBrands((prev) => {
+    setSelectedBrands(prev => {
       const newSelection = prev.includes(brandId)
-        ? prev.filter((id) => id !== brandId)
+        ? prev.filter(id => id !== brandId)
         : [...prev, brandId];
 
       // 콘솔에서 확인 가능
@@ -19,7 +25,13 @@ const BrandGridWrapper = (args: BrandGridProps) => {
     });
   };
 
-  return <BrandGrid {...args} selectedBrands={selectedBrands} onBrandToggle={handleBrandToggle} />;
+  return (
+    <BrandGrid
+      {...args}
+      selectedBrands={selectedBrands}
+      onBrandToggle={handleBrandToggle}
+    />
+  );
 };
 
 const meta: Meta<typeof BrandGrid> = {
@@ -54,7 +66,7 @@ const meta: Meta<typeof BrandGrid> = {
     },
   },
   decorators: [
-    (Story) => (
+    Story => (
       <div style={{ padding: '20px', maxWidth: '600px' }}>
         <Story />
       </div>
@@ -96,7 +108,7 @@ export const WithSelectedBrands: Story = {
 export const AllSelected: Story = {
   render: BrandGridWrapper,
   args: {
-    selectedBrands: BRANDS.map((brand) => brand.id),
+    selectedBrands: BRANDS.map(brand => brand.id),
     title: '관심있는 브랜드를 선택해주세요',
     disabled: false,
   },
@@ -120,7 +132,8 @@ export const Disabled: Story = {
   parameters: {
     docs: {
       description: {
-        story: '모든 브랜드 선택이 비활성화된 상태입니다. 호버 효과와 클릭이 동작하지 않습니다.',
+        story:
+          '모든 브랜드 선택이 비활성화된 상태입니다. 호버 효과와 클릭이 동작하지 않습니다.',
       },
     },
   },
@@ -137,7 +150,8 @@ export const ReadOnly: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'onBrandToggle이 없어서 클릭해도 선택 상태가 변경되지 않는 읽기 전용 상태입니다.',
+        story:
+          'onBrandToggle이 없어서 클릭해도 선택 상태가 변경되지 않는 읽기 전용 상태입니다.',
       },
     },
   },
@@ -190,14 +204,20 @@ export const WideLayout: Story = {
     layout: 'fullscreen',
     docs: {
       description: {
-        story: '넓은 화면에서 브랜드 그리드가 어떻게 표시되는지 확인할 수 있습니다.',
+        story:
+          '넓은 화면에서 브랜드 그리드가 어떻게 표시되는지 확인할 수 있습니다.',
       },
     },
   },
   decorators: [
-    (Story) => (
+    Story => (
       <div
-        style={{ padding: '40px', width: '100vw', minHeight: '100vh', backgroundColor: '#f5f5f5' }}
+        style={{
+          padding: '40px',
+          width: '100vw',
+          minHeight: '100vh',
+          backgroundColor: '#f5f5f5',
+        }}
       >
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           <Story />
@@ -209,11 +229,11 @@ export const WideLayout: Story = {
 
 // 애니메이션 확인용 (페이지 로드 시뮬레이션)
 export const AnimationDemo: Story = {
-  render: (args) => {
+  render: args => {
     const [key, setKey] = useState(0);
 
     const resetAnimation = () => {
-      setKey((prev) => prev + 1);
+      setKey(prev => prev + 1);
     };
 
     return (

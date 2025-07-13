@@ -13,14 +13,18 @@ const meta: Meta<typeof SelectionBottomSheet> = {
 export default meta;
 type Story = StoryObj<typeof SelectionBottomSheet>;
 
-const SelectionBottomSheetWrapper = (args: React.ComponentProps<typeof SelectionBottomSheet>) => {
+const SelectionBottomSheetWrapper = (
+  args: React.ComponentProps<typeof SelectionBottomSheet>
+) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   const handleItemSelect = (itemId: string) => {
     if (args.multiSelect) {
-      setSelectedItems((prev) =>
-        prev.includes(itemId) ? prev.filter((id) => id !== itemId) : [...prev, itemId]
+      setSelectedItems(prev =>
+        prev.includes(itemId)
+          ? prev.filter(id => id !== itemId)
+          : [...prev, itemId]
       );
     } else {
       setSelectedItems([itemId]);
@@ -34,8 +38,12 @@ const SelectionBottomSheetWrapper = (args: React.ComponentProps<typeof Selection
 
         {selectedItems.length > 0 && (
           <div className="mb-4 p-3 bg-green-50 rounded-lg">
-            <div className="text-sm font-medium text-green-800">선택된 항목:</div>
-            <div className="text-sm text-green-600">{selectedItems.join(', ')}</div>
+            <div className="text-sm font-medium text-green-800">
+              선택된 항목:
+            </div>
+            <div className="text-sm text-green-600">
+              {selectedItems.join(', ')}
+            </div>
           </div>
         )}
 
@@ -69,10 +77,30 @@ export const SingleSelection: Story = {
     multiSelect: false,
     autoCloseOnSelect: true,
     items: [
-      { id: 'kakao', label: '카카오톡', icon: '💬', description: '친구에게 공유' },
-      { id: 'instagram', label: '인스타그램', icon: '📸', description: '스토리에 공유' },
-      { id: 'facebook', label: '페이스북', icon: '📘', description: '타임라인에 공유' },
-      { id: 'copy', label: '링크 복사', icon: '📋', description: '클립보드에 복사' },
+      {
+        id: 'kakao',
+        label: '카카오톡',
+        icon: '💬',
+        description: '친구에게 공유',
+      },
+      {
+        id: 'instagram',
+        label: '인스타그램',
+        icon: '📸',
+        description: '스토리에 공유',
+      },
+      {
+        id: 'facebook',
+        label: '페이스북',
+        icon: '📘',
+        description: '타임라인에 공유',
+      },
+      {
+        id: 'copy',
+        label: '링크 복사',
+        icon: '📋',
+        description: '클립보드에 복사',
+      },
     ],
   },
 };
@@ -90,7 +118,12 @@ export const MultiSelection: Story = {
       { id: 'shopping', label: '쇼핑', icon: '🛍️', description: '쇼핑몰/매장' },
       { id: 'beauty', label: '뷰티', icon: '💄', description: '미용실/네일샵' },
       { id: 'health', label: '건강', icon: '💊', description: '병원/약국' },
-      { id: 'education', label: '교육', icon: '📚', description: '학원/도서관' },
+      {
+        id: 'education',
+        label: '교육',
+        icon: '📚',
+        description: '학원/도서관',
+      },
     ],
   },
 };
@@ -137,7 +170,13 @@ export const WithSettings: Story = {
         description: '데이터 및 개인정보',
         rightElement: '>',
       },
-      { id: 'help', label: '도움말', icon: '❓', description: '사용법 및 FAQ', rightElement: '>' },
+      {
+        id: 'help',
+        label: '도움말',
+        icon: '❓',
+        description: '사용법 및 FAQ',
+        rightElement: '>',
+      },
     ],
   },
 };
@@ -153,13 +192,25 @@ export const BrandSelection: Story = {
       {
         id: 'gs25',
         label: 'GS25',
-        icon: <img src="/images/brands/GS25.png" alt="GS25" className="w-6 h-6 object-contain" />,
+        icon: (
+          <img
+            src="/images/brands/GS25.png"
+            alt="GS25"
+            className="w-6 h-6 object-contain"
+          />
+        ),
         description: '편의점',
       },
       {
         id: 'cu',
         label: 'CU',
-        icon: <img src="/images/brands/CU.png" alt="CU" className="w-6 h-6 object-contain" />,
+        icon: (
+          <img
+            src="/images/brands/CU.png"
+            alt="CU"
+            className="w-6 h-6 object-contain"
+          />
+        ),
         description: '편의점',
       },
       {
@@ -177,7 +228,13 @@ export const BrandSelection: Story = {
       {
         id: 'cgv',
         label: 'CGV',
-        icon: <img src="/images/brands/CGV.png" alt="CGV" className="w-6 h-6 object-contain" />,
+        icon: (
+          <img
+            src="/images/brands/CGV.png"
+            alt="CGV"
+            className="w-6 h-6 object-contain"
+          />
+        ),
         description: '영화관',
       },
       {

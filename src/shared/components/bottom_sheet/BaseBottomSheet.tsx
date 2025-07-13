@@ -1,4 +1,4 @@
-import { IconButton } from '@shared/components/buttons/IconButton';
+import { IconButton } from '@components/buttons/IconButton';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronLeft, X } from 'lucide-react';
 import React, { useEffect } from 'react';
@@ -93,8 +93,16 @@ export const BaseBottomSheet: React.FC<BaseBottomSheetProps> = ({
 
                   {(title || subtitle) && (
                     <div>
-                      {title && <h2 className="text-xl font-bold text-black">{title}</h2>}
-                      {subtitle && <p className="text-sm text-secondary mt-1">{subtitle}</p>}
+                      {title && (
+                        <h2 className="text-xl font-bold text-black">
+                          {title}
+                        </h2>
+                      )}
+                      {subtitle && (
+                        <p className="text-sm text-secondary mt-1">
+                          {subtitle}
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>

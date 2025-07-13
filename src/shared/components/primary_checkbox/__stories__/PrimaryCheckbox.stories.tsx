@@ -1,19 +1,18 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import PrimaryCheckbox from "../PrimaryCheckbox";
-
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import PrimaryCheckbox from '../PrimaryCheckbox';
 
 const meta: Meta<typeof PrimaryCheckbox> = {
-  title: "Components/PrimaryCheckbox",
+  title: 'Components/PrimaryCheckbox',
   component: PrimaryCheckbox,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
     checked: {
-      control: "boolean",
-      description: "체크 상태 여부",
+      control: 'boolean',
+      description: '체크 상태 여부',
     },
     disabled: {
-      control: "boolean",
-      description: "비활성화 여부",
+      control: 'boolean',
+      description: '비활성화 여부',
     },
   },
 };
@@ -46,4 +45,3 @@ export const CheckedDisabled: Story = {
     disabled: true,
   },
 };
-

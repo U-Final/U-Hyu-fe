@@ -16,10 +16,16 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      "@": path.resolve(dirname, "./src"),
-      "@shared": path.resolve(dirname, "src/shared"),
-      "@features": path.resolve(dirname, "src/features"),
-      "@pages": path.resolve(dirname, "src/pages"),
+      "@": path.resolve(__dirname, "src"),
+      "@shared": path.resolve(__dirname, "src/shared"),
+      "@components": path.resolve(__dirname, "src/shared/components"),
+      "@constants": path.resolve(__dirname, "src/shared/constants"),
+      "@client": path.resolve(__dirname, "src/shared/client"),
+      "@features": path.resolve(__dirname, "src/features"),
+      "@extra-info": path.resolve(__dirname, "src/features/extra-info"),
+      "@benefit": path.resolve(__dirname, "src/features/benefit"),
+      "@pages": path.resolve(__dirname, "src/pages"),
+      "@paths": path.resolve(__dirname, "src/routes/path.ts"),
     },
   },
   test: {

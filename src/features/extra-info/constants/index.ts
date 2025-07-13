@@ -1,4 +1,4 @@
-import { type MembershipGrade } from '@pages/user/extra-info/types';
+import { type MembershipGrade } from '../types';
 
 export const MEMBERSHIP_GRADES: MembershipGrade[] = [
   { value: 'vvip', label: 'VVIP' },

@@ -1,6 +1,14 @@
-import type { ButtonBaseProps } from '@components/buttons/ButtonBase';
-import { ButtonBase } from '@components/buttons/ButtonBase';
+import { Link, type LinkProps } from 'react-router-dom';
+import { ButtonBase, type ButtonBaseProps } from './ButtonBase';
 
-export const NavButton = ({ type = 'button', ...props }: ButtonBaseProps) => {
-  return <ButtonBase variant="nav" type={type} {...props} />;
+type NavButtonProps = LinkProps & ButtonBaseProps;
+
+export const NavButton = ({ to, children, ...rest }: NavButtonProps) => {
+  return (
+    <Link to={to}>
+      <ButtonBase variant="nav" {...rest}>
+        {children}
+      </ButtonBase>
+    </Link>
+  );
 };

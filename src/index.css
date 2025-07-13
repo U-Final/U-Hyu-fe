@@ -306,6 +306,16 @@
   .border-light-gray {
     border-color: var(--border-light-gray);
   }
+
+  .icon-favorite {
+    fill: var(--bg-star);
+    color: var(--bg-star);
+  }
+
+  .icon-favorite-outline {
+    fill: none;
+    color: var(--border-gray);
+  }
 }
 
 /* 다크 모드 설정 */

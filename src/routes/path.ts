@@ -4,4 +4,5 @@ export const PATH = {
   BENEFIT: '/benefit',
   MYPAGE: 'mypage',
   EXTRA_INFO: '/user/extra-info',
+  LOGIN: '/login',
 } as const;

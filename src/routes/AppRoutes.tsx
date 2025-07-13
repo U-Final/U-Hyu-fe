@@ -1,4 +1,5 @@
 import BottomNavigation from '@components/bottom_navigation/BottomNavigation';
+import ModalRoot from '@components/modals/ModalRoot';
 import HomePage from '@pages/HomePage';
 import BenefitPage from '@pages/benefit/BenefitPage';
 import ExtraInfo from '@pages/user/extra-info/ExtraInfo';
@@ -13,6 +14,7 @@ export const AppRoutes = () => {
         <Route path={PATH.EXTRA_INFO} element={<ExtraInfo />} />
       </Routes>
       <BottomNavigation />
+      <ModalRoot />
     </BrowserRouter>
   );
 };

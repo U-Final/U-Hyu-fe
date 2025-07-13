@@ -116,13 +116,11 @@
   --font-family-pretendard: 'Pretendard', system-ui, sans-serif;
   --font-family-sans: 'Pretendard', system-ui, sans-serif;
 
-  --font-size-2xs: 0.5rem;
-  --font-size-xs: 0.625rem;
-  --font-size-sm: 0.75rem;
-  --font-size-base: 0.875rem;
-  --font-size-lg: 1rem;
-  --font-size-xl: 1.125rem;
-  --font-size-2xl: 1.25rem;
+  --font-size-h3: 1.25rem;
+  --font-size-h4: 1.125rem;
+  --font-size-body1: 1rem;
+  --font-size-body2: 0.875rem;
+  --font-size-caption: 0.75rem;
 
   --border-radius-xs: 0.125rem;
   --border-radius-sm: 0.25rem;
@@ -148,6 +146,23 @@
   --border-radius-rounded-12: 1.5rem;
   --border-radius-rounded-13: 1.625rem;
 }
+@layer utilities {
+  .text-h3 {
+    font-size: var(--font-size-h3);
+  }
+  .text-h4 {
+    font-size: var(--font-size-h4);
+  }
+  .text-body1 {
+    font-size: var(--font-size-body1);
+  }
+  .text-body2 {
+    font-size: var(--font-size-body2);
+  }
+  .text-caption {
+    font-size: var(--font-size-caption);
+  }
+}
 
 /* 기본 변수 설정 */
 :root {
@@ -166,6 +181,7 @@
   --bg-secondary: #e6f0ff;
   --bg-secondary-hover: #d6e7ff;
   --bg-gray: #b0b8c1;
+  --bg-gray-hover: #F0F0F0;
 
   /* Border Colors */
   --border-ghost: #f2f4f6;
@@ -179,6 +195,7 @@
   --text-black: #202632;
   --text-tertiary: #d9d9d9;
   --text-secondary: #71717a;
+  --text-gray: #b0b8c1;
   --text-red: #dc2625;
   --text-white: #ffffff;
   --text-success: #2db745;
@@ -200,6 +217,9 @@
   }
   .text-secondary {
     color: var(--text-secondary);
+  }
+  .text-gray{
+    color: var(--text-gray);
   }
   .text-red {
     color: var(--text-red);
@@ -265,6 +285,9 @@
   }
   .bg-gray {
     background-color: var(--bg-gray);
+  }
+  .hover\:bg-gray-hover:hover {
+    background-color: var(--bg-gray-hover);
   }
 
   /* Border Color Utilities */
@@ -489,4 +512,8 @@
 }
 .scrollbar-hidden::-webkit-scrollbar {
   display: none;
+}
+
+.shadow-nav {
+  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.25);
 }

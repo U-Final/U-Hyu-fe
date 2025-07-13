@@ -154,8 +154,8 @@ Storybook 9.0
 ### Import 최적화
 
 // ✅ 권장: 직접 import
-import { Button } from '@/components/ui/button';
-import { cn } from '@/shared/utils/utils';
+import { Button } from '@components/ui/button';
+import { cn } from '@shared/utils/utils';
 
 // ❌ 피하기: 배럴 익스포트 (성능상 이슈)
 import { Button } from '@/components';

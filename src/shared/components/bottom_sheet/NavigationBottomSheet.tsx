@@ -1,11 +1,11 @@
+import { GhostButton } from '@shared/components/buttons/GhostButton';
+import { PrimaryButton } from '@shared/components/buttons/PrimaryButton';
+import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { BaseBottomSheet } from './BaseBottomSheet';
+import type { NavigationBottomSheetProps } from './bottomSheet.type';
 import { useBottomSheetNavigation } from './hooks/useBottomSheetNavigation.ts';
 import { useMultiSelect } from './hooks/useMultiSelect.ts';
-import { PrimaryButton } from '@shared/components/buttons/PrimaryButton';
-import { GhostButton } from '@shared/components/buttons/GhostButton';
-import type { NavigationBottomSheetProps } from './bottomSheet.type';
 
 export const NavigationBottomSheet: React.FC<NavigationBottomSheetProps> = ({
   isOpen,

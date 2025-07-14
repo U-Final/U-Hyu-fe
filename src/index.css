@@ -6,6 +6,24 @@
 
 @custom-variant dark (&:is(.dark *));
 
+#root {
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* src/index.css */
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hidden {
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
 /* Pretendard 폰트 로드 - 로컬 파일 사용 */
 @font-face {
   font-family: 'Pretendard';

@@ -39,6 +39,12 @@ export const userApi = {
     return response.data;
   },
 
+  // 유저 정보 수정 - 마이페이지
+   updateUserInfo: async (data: { nickname: string; age: number; email: string }) => {
+    const response = await authClient.patch('/user', data);
+    return response.data;
+  },
+
   // 로그아웃
   logout: async (): Promise<LogoutResponse> => {
     const response = await authClient.post<LogoutResponse>(

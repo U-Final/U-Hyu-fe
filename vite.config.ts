@@ -26,6 +26,8 @@ export default defineConfig({
       "@benefit": path.resolve(__dirname, "src/features/benefit"),
       "@pages": path.resolve(__dirname, "src/pages"),
       "@paths": path.resolve(__dirname, "src/routes/path.ts"),
+      "@user": path.resolve(__dirname, "src/features/user"),
+      "@mypage": path.resolve(__dirname, "src/features/mypage"),
     },
   },
   test: {
@@ -57,3 +59,5 @@ export default defineConfig({
     ],
   },
 });
+
+import { userApi } from "@user/api/userApi";

@@ -1,9 +1,12 @@
 import FilterTabs from '@/shared/components/filter_tabs/FilterTabs';
 import SearchInput from '@/shared/components/search_input/SearchInput';
-import Pagination from '@benefit/components/Pagination';
-import { useState } from 'react';
+import BrandDetailModal from '@benefit/components/BrandDetailModal';
 import CheckBoxList from '@benefit/components/CheckBoxList';
+import Pagination from '@benefit/components/Pagination';
+import type { BrandDetail } from '@benefit/types/BrandDetail.types';
 import { BrandCard } from '@components/cards/BrandCard';
+import { useModalStore } from '@shared/store/modalStore';
+import { useState } from 'react';
 
 const BenefitPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,6 +17,8 @@ const BenefitPage = () => {
     '할인',
     '상품증정',
   ]);
+  
+  const openModal = useModalStore(state => state.openModal);
 
   const totalPages = 5;
 
@@ -49,6 +54,31 @@ const BenefitPage = () => {
 
   ];
 
+  const mockBrandDetail: BrandDetail[] = [
+    {
+      brand_id: 102,
+      brand_name: 'CGV',
+      logo_url: '/images/brands/CGV.png',
+      benefits: [
+        { grade: '우수', description: '2D 영화 2천원 할인' },
+        { grade: 'VIP', description: '2D 영화 4천원 할인' },
+        { grade: 'VVIP', description: '2D 영화 5천원 할인' },
+      ],
+      usage_limit: '월 1회',
+      usage_method: 'CGV 앱에서 쿠폰 선택 후 매표소 제시',
+    },
+  ];
+
+  const handleBrandClick = (brandId: number) => {
+    const brand = mockBrandDetail.find(b => b.brand_id === brandId);
+    if (!brand) return;
+
+    openModal('base', {
+      title: "브랜드 상세정보",
+      children: <BrandDetailModal brand={brand} />,
+    });
+  };
+
   return (
     <div className="flex flex-col bg-white px-[16px] pt-[60px] gap-[16px]">
       {/* 제목, 설명 */}
@@ -74,19 +104,24 @@ const BenefitPage = () => {
       {/* 리스트 */}
       <div>
         {mockBrands.map(brand => (
-          <BrandCard key={brand.brand_id} logoUrl={brand.logo_url}>
-            <div className="gap-[8px]">
-              <p className="text-body2 font-bold text-black">
-                {brand.brand_name}
-              </p>
-              <p
-                className="text-caption text-black"
-                dangerouslySetInnerHTML={{
-                  __html: brand.summary.replace(/\n/g, '<br />'),
-                }}
-              />
-            </div>
-          </BrandCard>
+          <div
+            key={brand.brand_id}
+            onClick={() => handleBrandClick(brand.brand_id)}
+          >
+            <BrandCard logoUrl={brand.logo_url}>
+              <div className="gap-[8px]">
+                <p className="text-body2 font-bold text-black">
+                  {brand.brand_name}
+                </p>
+                <p
+                  className="text-caption text-black"
+                  dangerouslySetInnerHTML={{
+                    __html: brand.summary.replace(/\n/g, '<br />'),
+                  }}
+                />
+              </div>
+            </BrandCard>
+          </div>
         ))}
       </div>
       {/* 페이지네이션 */}

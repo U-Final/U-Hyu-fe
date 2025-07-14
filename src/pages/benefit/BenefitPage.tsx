@@ -80,7 +80,7 @@ const BenefitPage = () => {
   };
 
   return (
-    <div className="flex flex-col bg-white px-[16px] pt-[60px] gap-[16px]">
+    <div className="flex flex-col bg-white gap-[16px] pb-10">
       {/* 제목, 설명 */}
       <div className="flex flex-col gap-[16px]">
         <p className="text-h3 font-bold text-black">기본 혜택</p>
@@ -102,7 +102,7 @@ const BenefitPage = () => {
         />
       </div>
       {/* 리스트 */}
-      <div>
+      <div className="divide-y divide-gray-200">
         {mockBrands.map(brand => (
           <div
             key={brand.brand_id}
@@ -125,7 +125,7 @@ const BenefitPage = () => {
         ))}
       </div>
       {/* 페이지네이션 */}
-      <div className="pb-20">
+      <div>
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}

@@ -20,7 +20,7 @@ const FilterTabs: FC<FilterTabProps> = ({
   };
 
   return (
-    <div className="scrollbar-hidden flex overflow-x-auto whitespace-nowrap gap-2 p-5">
+    <div className="scrollbar-hidden flex overflow-x-auto whitespace-nowrap gap-2">
       {tabs.map(({ label, value }) => (
         <button
           key={value}

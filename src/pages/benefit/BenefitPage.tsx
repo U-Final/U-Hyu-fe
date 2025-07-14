@@ -8,7 +8,12 @@ import { BrandCard } from '@components/cards/BrandCard';
 const BenefitPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([
+    '온라인',
+    '오프라인',
+    '할인',
+    '상품증정',
+  ]);
 
   const totalPages = 5;
 

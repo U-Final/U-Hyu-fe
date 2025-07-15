@@ -1,10 +1,15 @@
+export type UserGrade = 'VVIP' | 'VIP' | 'GOOD';
+
+
 export interface UserInfo {
-  userName: string;
-  nickName: string;
-  email: string;
+  name: string;
+  nickname: string;
+  gender: string;
   age: number;
-  gender: 'MALE' | 'FEMALE';
-  grade: 'VVIP' | 'VIP' | 'GENERAL';
-  profileImage: string;
+  email: string;
   updatedAt: string;
+  grade: UserGrade;
+  profileImage: string;
+  favoriteBrands: string[]; //이미지 파일명들
+  markers: string[];        //이미지 파일명들
 }

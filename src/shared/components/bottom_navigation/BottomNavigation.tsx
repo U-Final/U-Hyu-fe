@@ -24,7 +24,7 @@ const BottomNavigation = () => {
   };
 
   return (
-    <div className="fixed bottom-0 w-full">
+    <div className="fixed bottom-0 w-full z-50">
       <nav className="h-12 text-[0.625rem] shadow-nav flex relative justify-around bg-white gap-5 px-[1.5rem] py-[0.5rem]">
         <NavLink
           to={PATH.HOME}

@@ -209,6 +209,10 @@ export const createMockToggleFavoriteResponse = (storeId: number) => {
     delete MOCK_FAVORITES[storeId];
   }
 
+  if (MOCK_STORE_DETAILS[storeId]) {
+    MOCK_STORE_DETAILS[storeId].isFavorite = newStatus;
+  }
+
   return {
     statusCode: 200,
     message: '즐겨찾기가 성공적으로 업데이트되었습니다.',

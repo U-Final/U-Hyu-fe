@@ -171,6 +171,61 @@ export const MOCK_STORE_DETAILS: Record<number, StoreDetail> = {
     usageLimit: '1일 1회 사용 가능',
     usageMethod: '모바일 앱에서 쿠폰 사용',
   },
+  6: {
+    storeName: '파리바게뜨 강남점',
+    isFavorite: false,
+    favoriteCount: 156,
+    benefits: {
+      grade: 'SILVER',
+      benefitText: '모바일 앱 주문 시 15% 할인, 맥도날드 포인트 적립',
+    },
+    usageLimit: '1일 1회 사용 가능',
+    usageMethod: '모바일 앱에서 쿠폰 사용',
+  },
+  7: {
+    storeName: 'CGV 강남점',
+    isFavorite: false,
+    favoriteCount: 156,
+    benefits: {
+      grade: 'SILVER',
+      benefitText: '모바일 앱 주문 시 15% 할인, 맥도날드 포인트 적립',
+    },
+    usageLimit: '1일 1회 사용 가능',
+    usageMethod: '모바일 앱에서 쿠폰 사용',
+  },
+  8: {
+    storeName: '이마트 강남점',
+    isFavorite: false,
+    favoriteCount: 156,
+    benefits: {
+      grade: 'SILVER',
+      benefitText: '모바일 앱 주문 시 15% 할인, 맥도날드 포인트 적립',
+    },
+    usageLimit: '1일 1회 사용 가능',
+    usageMethod: '모바일 앱에서 쿠폰 사용',
+  },
+  9: {
+    storeName: '피트니스클럽 강남점',
+    isFavorite: false,
+    favoriteCount: 156,
+    benefits: {
+      grade: 'SILVER',
+      benefitText: '모바일 앱 주문 시 15% 할인, 맥도날드 포인트 적립',
+    },
+    usageLimit: '1일 1회 사용 가능',
+    usageMethod: '모바일 앱에서 쿠폰 사용',
+  },
+  10: {
+    storeName: '약국 강남점',
+    isFavorite: false,
+    favoriteCount: 156,
+    benefits: {
+      grade: 'SILVER',
+      benefitText: '모바일 앱 주문 시 15% 할인, 맥도날드 포인트 적립',
+    },
+    usageLimit: '1일 1회 사용 가능',
+    usageMethod: '모바일 앱에서 쿠폰 사용',
+  },
 };
 
 // 목데이터: 즐겨찾기 상태

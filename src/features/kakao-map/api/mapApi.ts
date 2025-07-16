@@ -17,8 +17,8 @@ import {
 
 // 개발 환경에서 목데이터 사용 여부
 const USE_MOCK_DATA =
-  process.env.NODE_ENV === 'development' &&
-  process.env.VITE_USE_MOCK_DATA === 'true';
+  import.meta.env.MODE === 'development' &&
+  import.meta.env.VITE_USE_MOCK_DATA === 'true';
 
 /**
  * 개선된 Map API 함수들

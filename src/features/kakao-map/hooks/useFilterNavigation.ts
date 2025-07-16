@@ -29,7 +29,7 @@ export const useFilterNavigation = () => {
   );
 
   const handleShowFilter = useCallback(() => {
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.MODE === 'development') {
       console.log('🔍 필터 설정 시작 - 카테고리 선택 화면으로 이동');
     }
     actions.setBottomSheetStep('category');
@@ -37,7 +37,7 @@ export const useFilterNavigation = () => {
 
   const handleCategorySelect = useCallback(
     (categoryKey: string) => {
-      if (process.env.NODE_ENV === 'development') {
+      if (import.meta.env.MODE === 'development') {
         console.log('📂 카테고리 선택:', categoryKey);
       }
       actions.setSelectedCategory(categoryKey);
@@ -48,7 +48,7 @@ export const useFilterNavigation = () => {
 
   const handleBrandSelect = useCallback(
     (brandName: string) => {
-      if (process.env.NODE_ENV === 'development') {
+      if (import.meta.env.MODE === 'development') {
         console.log('🏢 브랜드 선택:', brandName);
       }
       actions.setSelectedBrand(brandName);
@@ -59,7 +59,7 @@ export const useFilterNavigation = () => {
   );
 
   const handleBackToCategory = useCallback(() => {
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.MODE === 'development') {
       console.log('⬅️ 카테고리 선택 화면으로 돌아가기');
     }
     actions.setBottomSheetStep('category');

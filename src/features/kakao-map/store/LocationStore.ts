@@ -19,6 +19,9 @@ interface LocationState {
 
   // 마커 표시 여부
   showMarker: boolean;
+
+  // MapContext 업데이트 콜백
+  mapContextCallback: ((center: Position) => void) | null;
 }
 
 // LocationStore 액션
@@ -31,6 +34,9 @@ interface LocationActions {
 
   // 에러 클리어
   clearError: () => void;
+
+  // MapContext 업데이트 콜백 설정
+  setMapContextCallback: (callback: (center: Position) => void) => void;
 }
 
 export type { LocationState, LocationActions };
@@ -41,6 +47,7 @@ export const useLocationStore = create<LocationState & LocationActions>(
     isLoading: false,
     error: null,
     showMarker: true,
+    mapContextCallback: null as ((center: Position) => void) | null,
 
     getCurrentLocation: async () => {
       // 이미 로딩 중이면 중복 실행 방지
@@ -67,15 +74,23 @@ export const useLocationStore = create<LocationState & LocationActions>(
           }
         );
 
+        const newLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+
         // 위치 정보 저장
         set({
-          currentLocation: {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          },
+          currentLocation: newLocation,
           isLoading: false,
           error: null,
         });
+
+        // MapContext 콜백이 설정되어 있으면 지도 중심점 업데이트
+        const { mapContextCallback } = get();
+        if (mapContextCallback) {
+          mapContextCallback(newLocation);
+        }
       } catch (error) {
         let errorMessage = '위치를 가져올 수 없습니다.';
 
@@ -108,6 +123,10 @@ export const useLocationStore = create<LocationState & LocationActions>(
 
     clearError: () => {
       set({ error: null });
+    },
+
+    setMapContextCallback: (callback: (center: Position) => void) => {
+      set({ mapContextCallback: callback });
     },
   })
 );

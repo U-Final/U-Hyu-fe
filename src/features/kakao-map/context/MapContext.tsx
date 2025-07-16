@@ -3,7 +3,10 @@ import React, {
   useContext,
   useReducer,
   useCallback,
+  useEffect,
 } from 'react';
+import { useStoreList } from '../hooks/useMapQueryies';
+import { useLocationStore } from '../store/LocationStore';
 import type { Store } from '../types/store';
 
 // 상태 타입 정의
@@ -59,7 +62,7 @@ const mapReducer = (state: MapState, action: MapAction): MapState => {
       return { ...state, isLoading: action.payload };
     default:
       // 개발 환경에서만 에러 발생
-      if (process.env.NODE_ENV === 'development') {
+      if (import.meta.env.MODE === 'development') {
         throw new Error(`Unknown action type: ${(action as MapAction).type}`);
       }
       return state;
@@ -79,6 +82,7 @@ interface MapContextValue {
     setSelectedBrand: (brand: string) => void;
     setBottomSheetStep: (step: 'list' | 'category' | 'brand') => void;
     setLoading: (loading: boolean) => void;
+    fetchNearbyStores: (center: { lat: number; lng: number }) => void;
   };
 }
 
@@ -113,6 +117,48 @@ export const MapProvider: React.FC<{
   };
 
   const [state, dispatch] = useReducer(mapReducer, initialState);
+
+  // LocationStore에서 콜백 설정
+  const setMapContextCallback = useLocationStore(
+    state => state.setMapContextCallback
+  );
+
+  // API 호출을 위한 파라미터
+  const storeListParams = {
+    lat: state.center.lat,
+    lng: state.center.lng,
+    radius: 1000, // 1km 반경
+  };
+
+  // React Query를 사용한 매장 목록 조회
+  const { data: storeListData, isLoading: isStoreListLoading } =
+    useStoreList(storeListParams);
+
+  // API 응답 데이터를 상태에 반영
+  useEffect(() => {
+    if (storeListData?.data) {
+      dispatch({ type: 'SET_STORES', payload: storeListData.data });
+    }
+  }, [storeListData]);
+
+  // 로딩 상태 동기화
+  useEffect(() => {
+    dispatch({ type: 'SET_LOADING', payload: isStoreListLoading });
+  }, [isStoreListLoading]);
+
+  // LocationStore와 연동: 지도 중심점 변경 시 콜백 설정
+  useEffect(() => {
+    const handleLocationUpdate = (newCenter: { lat: number; lng: number }) => {
+      dispatch({ type: 'SET_CENTER', payload: newCenter });
+    };
+
+    setMapContextCallback(handleLocationUpdate);
+
+    // 컴포넌트 언마운트 시 콜백 제거
+    return () => {
+      setMapContextCallback(() => {});
+    };
+  }, [setMapContextCallback]);
 
   // 액션 생성자들
   const actions = {
@@ -150,6 +196,10 @@ export const MapProvider: React.FC<{
 
     setLoading: useCallback((loading: boolean) => {
       dispatch({ type: 'SET_LOADING', payload: loading });
+    }, []),
+
+    fetchNearbyStores: useCallback((center: { lat: number; lng: number }) => {
+      dispatch({ type: 'SET_CENTER', payload: center });
     }, []),
   };
 

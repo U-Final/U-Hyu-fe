@@ -62,9 +62,8 @@ export const PersistentBottomSheet: React.FC<PersistentBottomSheetProps> = ({
   const currentStep = steps.find(step => step.key === currentStepKey);
 
   const goBackToFirstStep = () => {
-    const firstStep = steps[0];
-    if (firstStep) {
-      onStepChange(firstStep.key);
+    if (steps.length > 0 && steps[0]) {
+      onStepChange(steps[0].key);
     }
   };
 

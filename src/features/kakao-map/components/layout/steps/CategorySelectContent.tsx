@@ -1,4 +1,11 @@
 import { type FC } from 'react';
+import { CATEGORIES } from '../../../constants/categories';
+
+interface CategoryType {
+  key: string;
+  name: string;
+  icon: string;
+}
 
 interface CategorySelectContentProps {
   selectedCategory: string;
@@ -9,16 +16,7 @@ const CategorySelectContent: FC<CategorySelectContentProps> = ({
   selectedCategory,
   onCategorySelect,
 }) => {
-  const categories = [
-    { key: 'lifestyle', name: '생활/편의', icon: '🏪' },
-    { key: 'food', name: '푸드', icon: '🍽️' },
-    { key: 'beauty', name: '뷰티/건강', icon: '💄' },
-    { key: 'shopping', name: '쇼핑', icon: '🛍️' },
-    { key: 'culture', name: '문화/여가', icon: '🎬' },
-    { key: 'activity', name: '액티비티', icon: '🏃' },
-    { key: 'education', name: '교육', icon: '📚' },
-    { key: 'travel', name: '여행/교통', icon: '✈️' },
-  ];
+  const categories: CategoryType[] = CATEGORIES;
 
   const handleCategoryClick = (categoryKey: string) => {
     onCategorySelect(categoryKey);
@@ -29,7 +27,7 @@ const CategorySelectContent: FC<CategorySelectContentProps> = ({
       <div className="flex-1 overflow-y-auto">
         <div className="p-4">
           <div className="grid grid-cols-2 gap-3">
-            {categories.map(category => {
+            {categories.map((category: CategoryType) => {
               const isSelected = selectedCategory === category.key;
 
               return (

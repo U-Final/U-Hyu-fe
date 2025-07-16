@@ -58,6 +58,10 @@ const mapReducer = (state: MapState, action: MapAction): MapState => {
     case 'SET_LOADING':
       return { ...state, isLoading: action.payload };
     default:
+      // 개발 환경에서만 에러 발생
+      if (process.env.NODE_ENV === 'development') {
+        throw new Error(`Unknown action type: ${(action as MapAction).type}`);
+      }
       return state;
   }
 };
@@ -81,11 +85,23 @@ interface MapContextValue {
 const MapContext = createContext<MapContextValue | null>(null);
 
 // Provider 컴포넌트
-export const MapProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const MapProvider: React.FC<{
+  children: React.ReactNode;
+  initialCenter?: { lat: number; lng: number };
+}> = ({ children, initialCenter }) => {
+  // 환경변수에서 초기 좌표 읽기
+  const envLat = Number(import.meta.env.VITE_MAP_INITIAL_LAT);
+  const envLng = Number(import.meta.env.VITE_MAP_INITIAL_LNG);
+
+  // 초기 center 결정: 프롭스 > 환경변수 > 기본값
+  const center = initialCenter
+    ? initialCenter
+    : !isNaN(envLat) && !isNaN(envLng)
+      ? { lat: envLat, lng: envLng }
+      : { lat: 37.54699, lng: 127.09598 };
+
   const initialState: MapState = {
-    center: { lat: 37.54699, lng: 127.09598 },
+    center,
     stores: [],
     selectedStore: null,
     searchValue: '',

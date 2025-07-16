@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocationStore } from '../../store/LocationStore';
-import { useMapControls } from '../../hooks/useMapContols';
+import { useMapControls } from '../../hooks/useMapControls';
 import LocationButton from './LocationButton';
 
 export const LocationControlContainer: React.FC = () => {

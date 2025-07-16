@@ -55,6 +55,9 @@ const BrandMarker: FC<BrandMarkerProps> = ({
             src={brandImageSrc}
             alt={`${store.storeName} 마커`}
             className="w-full h-full object-cover"
+            onError={e => {
+              e.currentTarget.src = '/images/brands/default-brand-logo.png';
+            }}
           />
         </div>
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useMapControls } from '../hooks/useMapContols';
+import { useMapControls } from '../hooks/useMapControls';
 import MapTopControls from './layout/MapTopControls';
 
 export const MapControlsContainer: React.FC = () => {

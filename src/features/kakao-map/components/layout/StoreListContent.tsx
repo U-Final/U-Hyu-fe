@@ -35,7 +35,7 @@ const StoreListContent: FC<StoreListContentProps> = ({
                 onClick={() => onStoreClick?.(store)}
               >
                 <BrandWithFavoriteCard
-                  logoUrl={getBrandImagePath(store.brandName)}
+                  logoUrl={getBrandImagePath(store.storeName)}
                   isStarFilled={false}
                 >
                   <div className="flex-1 min-w-0">

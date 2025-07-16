@@ -102,10 +102,23 @@ export const getStoreCategory = (storeName: string): StoreCategory => {
 
 // 카테고리별 매장 개수를 계산하는 유틸리티 함수
 export const getCategoryStats = (stores: Array<{ name: string }>) => {
-  const stats: Record<StoreCategory, number> = {} as Record<
-    StoreCategory,
-    number
-  >;
+  const stats: Record<StoreCategory, number> = {
+    all: 0,
+    activity: 0,
+    beauty: 0,
+    shopping: 0,
+    lifestyle: 0,
+    food: 0,
+    culture: 0,
+    cafe: 0,
+    restaurant: 0,
+    fastfood: 0,
+    bakery: 0,
+    convenience: 0,
+    pharmacy: 0,
+    electronics: 0,
+    default: 0,
+  };
 
   stores.forEach(store => {
     const category = getStoreCategory(store.name);

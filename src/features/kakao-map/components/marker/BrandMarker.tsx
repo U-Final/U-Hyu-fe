@@ -21,7 +21,7 @@ const BrandMarker: FC<BrandMarkerProps> = ({
   // 매장 이름으로부터 카테고리를 추출
   const category = getStoreCategory(store.storeName);
   const categoryConfig = CATEGORY_CONFIGS[category];
-  const brandImageSrc = getBrandImagePath(store.brandName);
+  const brandImageSrc = getBrandImagePath(store.storeName);
 
   return (
     <div className="relative" onClick={onClick}>
@@ -70,9 +70,9 @@ const BrandMarker: FC<BrandMarkerProps> = ({
             transform
             -translate-x-1/2
             w-0 h-0
-            border-l-6
-            border-r-6
-            border-t-10
+            border-l-[6px]
+            border-r-[6px]
+            border-t-[10px]
             border-transparent
             ${categoryConfig.color}
             drop-shadow-md

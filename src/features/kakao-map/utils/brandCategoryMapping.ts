@@ -1,4 +1,15 @@
 // utils/brandCategoryMapping.ts
+import type { StoreCategory } from '../types/category';
+
+// BRAND_CATEGORY_MAPPING에 정의된 카테고리만 사용
+type BrandCategoryKey =
+  | 'food'
+  | 'lifestyle'
+  | 'beauty'
+  | 'shopping'
+  | 'culture'
+  | 'activity';
+
 export const BRAND_CATEGORY_MAPPING = {
   food: {
     brands: [
@@ -42,29 +53,35 @@ export const BRAND_CATEGORY_MAPPING = {
     brands: ['피트니스클럽', '골프장', '볼링장', '당구장'],
     patterns: [/피트니스/i, /골프/i, /볼링/i, /당구/i],
   },
-};
+} as const;
 
 // 매장 이름으로부터 카테고리를 추출하는 함수
-export const getStoreCategory = (storeName: string): string => {
+export const getStoreCategory = (storeName: string): StoreCategory => {
   for (const [category, config] of Object.entries(BRAND_CATEGORY_MAPPING)) {
     const isMatch = config.patterns.some(pattern => pattern.test(storeName));
     if (isMatch) {
-      return category;
+      return category as StoreCategory;
     }
   }
   return 'lifestyle'; // 기본 카테고리
 };
 
 // 특정 카테고리의 브랜드 목록을 가져오는 함수
-export const getBrandsByCategory = (categoryKey: string): string[] => {
+export const getBrandsByCategory = (categoryKey: StoreCategory): string[] => {
   if (categoryKey === 'all') {
     // 전체 선택 시 모든 브랜드 반환
-    return Object.values(BRAND_CATEGORY_MAPPING).flatMap(
-      config => config.brands
-    );
+    return Object.values(BRAND_CATEGORY_MAPPING).flatMap(config => [
+      ...config.brands,
+    ]);
   }
 
-  const categoryConfig =
-    BRAND_CATEGORY_MAPPING[categoryKey as keyof typeof BRAND_CATEGORY_MAPPING];
-  return categoryConfig ? categoryConfig.brands : [];
+  // BRAND_CATEGORY_MAPPING에 정의된 카테고리인지 확인
+  if (categoryKey in BRAND_CATEGORY_MAPPING) {
+    const categoryConfig =
+      BRAND_CATEGORY_MAPPING[categoryKey as BrandCategoryKey];
+    return [...categoryConfig.brands];
+  }
+
+  console.warn(`Unknown category: ${categoryKey}`);
+  return [];
 };

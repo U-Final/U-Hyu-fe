@@ -40,7 +40,7 @@ const MapTopControls: FC<MapTopControlsProps> = ({
         </div>
         {/* 가운데: 필터탭 */}
         <div className="flex-1 flex justify-center">
-          <FilterTabs onChange={onFilterChange} variant="gray" />
+          <FilterTabs variant="white" onChange={onFilterChange} />
         </div>
       </div>
     </div>

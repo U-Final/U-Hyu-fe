@@ -1,15 +1,10 @@
 import { type FC } from 'react';
-import { CATEGORIES } from '../../../constants/categories';
-
-interface CategoryType {
-  key: string;
-  name: string;
-  icon: string;
-}
+import { CATEGORIES, type CategoryType } from '../../../constants/categories';
+import type { StoreCategory } from '../../../types/category';
 
 interface CategorySelectContentProps {
   selectedCategory: string;
-  onCategorySelect: (categoryKey: string) => void;
+  onCategorySelect: (categoryKey: StoreCategory) => void;
 }
 
 const CategorySelectContent: FC<CategorySelectContentProps> = ({
@@ -18,7 +13,7 @@ const CategorySelectContent: FC<CategorySelectContentProps> = ({
 }) => {
   const categories: CategoryType[] = CATEGORIES;
 
-  const handleCategoryClick = (categoryKey: string) => {
+  const handleCategoryClick = (categoryKey: StoreCategory) => {
     onCategorySelect(categoryKey);
   };
 

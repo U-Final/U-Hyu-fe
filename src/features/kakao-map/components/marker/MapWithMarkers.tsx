@@ -1,5 +1,4 @@
-// MapWithMarkers.tsx
-import { Map, CustomOverlayMap } from 'react-kakao-maps-sdk';
+import { Map as KakaoMap, CustomOverlayMap } from 'react-kakao-maps-sdk';
 import { type FC, useState } from 'react';
 import type { Store } from '../../types/store';
 import BrandMarker from './BrandMarker';
@@ -29,7 +28,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   };
 
   return (
-    <Map id="map" center={center} className={className} level={level}>
+    <KakaoMap id="map" center={center} className={className} level={level}>
       {/* 매장 마커들 */}
       {stores.map(store => (
         <CustomOverlayMap
@@ -63,7 +62,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
           </div>
         </CustomOverlayMap>
       )}
-    </Map>
+    </KakaoMap>
   );
 };
 

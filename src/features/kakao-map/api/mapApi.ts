@@ -8,6 +8,17 @@ import type {
   StoreListResponse,
   ToggleFavoriteResponseType,
 } from './types';
+import {
+  MOCK_STORES,
+  createMockStoreListResponse,
+  createMockStoreDetailResponse,
+  createMockToggleFavoriteResponse,
+} from './mockData';
+
+// 개발 환경에서 목데이터 사용 여부
+const USE_MOCK_DATA =
+  process.env.NODE_ENV === 'development' &&
+  process.env.VITE_USE_MOCK_DATA === 'true';
 
 /**
  * 개선된 Map API 함수들
@@ -17,6 +28,7 @@ import type {
  * 2. HTTP 메서드별 적절한 데이터 전달 방식
  * 3. 타입 안전성 강화
  * 4. 에러 처리 고려
+ * 5. 개발 환경에서 목데이터 지원
  */
 export const mapApi = {
   /**
@@ -26,6 +38,24 @@ export const mapApi = {
   getStoreList: async (
     params: GetNearbyStoresParams
   ): Promise<StoreListResponse> => {
+    if (USE_MOCK_DATA) {
+      // 목데이터 사용 시 지연 시간 시뮬레이션
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // 반경 내 매장 필터링 (간단한 거리 계산)
+      const filteredStores = MOCK_STORES.filter(store => {
+        const distance =
+          Math.sqrt(
+            Math.pow(store.latitude - params.lat, 2) +
+              Math.pow(store.longitude - params.lng, 2)
+          ) * 111000; // 대략적인 미터 단위 변환
+
+        return distance <= params.radius;
+      });
+
+      return createMockStoreListResponse(filteredStores);
+    }
+
     const response = await client.get<StoreListResponse>(
       MAP_ENDPOINTS.GET_NEARBY_STORES,
       {
@@ -42,6 +72,13 @@ export const mapApi = {
   getStoreDetail: async ({
     storeId,
   }: GetStoreDetailParams): Promise<StoreDetailResponse> => {
+    if (USE_MOCK_DATA) {
+      // 목데이터 사용 시 지연 시간 시뮬레이션
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      return createMockStoreDetailResponse(storeId);
+    }
+
     // path parameter를 URL에 직접 포함
     const url = `${MAP_ENDPOINTS.GET_STORE_DETAIL}/${storeId}`;
     const response = await client.get<StoreDetailResponse>(url);
@@ -55,6 +92,13 @@ export const mapApi = {
   toggleFavorite: async ({
     storeId,
   }: ToggleFavoriteParams): Promise<ToggleFavoriteResponseType> => {
+    if (USE_MOCK_DATA) {
+      // 목데이터 사용 시 지연 시간 시뮬레이션
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      return createMockToggleFavoriteResponse(storeId);
+    }
+
     // RESTful한 엔드포인트 구성
     const url = `${MAP_ENDPOINTS.TOGGLE_FAVORITE}/${storeId}/favorite`;
     const response = await client.post<ToggleFavoriteResponseType>(url);

@@ -33,7 +33,12 @@ export const useStoreList = (params: GetNearbyStoresParams) => {
 export const useStoreDetail = (storeId: number | null) => {
   return useQuery({
     queryKey: [QUERY_KEYS.STORE_DETAIL, storeId],
-    queryFn: () => mapApi.getStoreDetail({ storeId: storeId! }),
+    queryFn: () => {
+      if (!storeId || storeId <= 0) {
+        throw new Error('유효하지 않은 스토어 ID입니다.');
+      }
+      return mapApi.getStoreDetail({ storeId });
+    },
 
     // storeId가 유효할 때만 실행
     enabled: !!storeId && storeId > 0,

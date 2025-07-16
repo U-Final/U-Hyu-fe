@@ -1,4 +1,3 @@
-// components/AdvancedBrandMarker.tsx
 import { type FC } from 'react';
 import { getBrandImagePath } from '../../utils/brandImageMapper.ts';
 import { getStoreCategory } from '../../utils/categoryMapper.ts';

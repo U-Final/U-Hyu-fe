@@ -1,4 +1,3 @@
-// utils/brandCategoryMapping.ts
 import type { StoreCategory } from '../types/category';
 
 // BRAND_CATEGORY_MAPPING에 정의된 카테고리만 사용

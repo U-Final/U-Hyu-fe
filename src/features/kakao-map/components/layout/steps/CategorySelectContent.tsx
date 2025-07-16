@@ -1,5 +1,8 @@
 import { type FC } from 'react';
-import { CATEGORIES, type CategoryType } from '../../../constants/categories';
+import {
+  FILTERED_CATEGORIES,
+  type CategoryType,
+} from '../../../constants/categories';
 import type { StoreCategory } from '../../../types/category';
 
 interface CategorySelectContentProps {
@@ -11,7 +14,7 @@ const CategorySelectContent: FC<CategorySelectContentProps> = ({
   selectedCategory,
   onCategorySelect,
 }) => {
-  const categories: CategoryType[] = CATEGORIES;
+  const categories: CategoryType[] = FILTERED_CATEGORIES;
 
   const handleCategoryClick = (categoryKey: StoreCategory) => {
     onCategorySelect(categoryKey);

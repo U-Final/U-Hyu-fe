@@ -1,13 +1,10 @@
-import { MAIN_CATEGORIES, type StoreCategory } from '../types/category';
+import { MAIN_CATEGORIES } from '../types/category';
+import type { CategoryInfo } from '../types/category';
+
+// 기존 호환성 유지용 타입
+export type CategoryType = Pick<CategoryInfo, 'key' | 'name' | 'icon'>;
 
 // 통합된 카테고리 시스템 사용
-export const CATEGORIES = MAIN_CATEGORIES.filter(
+export const FILTERED_CATEGORIES = MAIN_CATEGORIES.filter(
   category => category.key !== 'all'
 );
-
-// 기존 호환성을 위한 타입
-export interface CategoryType {
-  key: StoreCategory;
-  name: string;
-  icon: string;
-}

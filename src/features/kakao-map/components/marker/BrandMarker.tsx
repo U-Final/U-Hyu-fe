@@ -1,9 +1,9 @@
 // components/AdvancedBrandMarker.tsx
 import { type FC } from 'react';
-import { getBrandImagePath } from '../utils/brandImageMapper.ts';
-import { getStoreCategory } from '../utils/categoryMapper.ts';
-import { CATEGORY_CONFIGS } from '../types/category.ts';
-import type { Store } from '../types/store.ts';
+import { getBrandImagePath } from '../../utils/brandImageMapper.ts';
+import { getStoreCategory } from '../../utils/categoryMapper.ts';
+import { CATEGORY_CONFIGS } from '../../types/category.ts';
+import type { Store } from '../../types/store.ts';
 
 interface BrandMarkerProps {
   store: Store;

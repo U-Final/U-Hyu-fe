@@ -1,7 +1,7 @@
 import { type FC } from 'react';
 import { BrandWithFavoriteCard } from '@components/cards/BrandWithFavoriteCard';
 import type { Store } from '@/features/kakao-map/types/store';
-import { getBrandImagePath } from '../utils/brandImageMapper';
+import { getBrandImagePath } from '../../utils/brandImageMapper';
 
 interface StoreListContentProps {
   stores: Store[];

@@ -1,7 +1,7 @@
 import { type FC } from 'react';
 import SearchInput from '@components/search_input/SearchInput';
 import FilterTabs from '@components/filter_tabs/FilterTabs';
-import RegionFilterDropdown from '@features/kakao-map/components/RegionFilterDropdown';
+import RegionFilterDropdown from '@features/kakao-map/components/layout/RegionFilterDropdown';
 
 interface MapTopControlsProps {
   searchValue: string;

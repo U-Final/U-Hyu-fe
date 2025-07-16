@@ -1,7 +1,7 @@
 // MapWithMarkers.tsx
 import { Map, CustomOverlayMap } from 'react-kakao-maps-sdk';
 import { type FC, useState } from 'react';
-import type { Store } from '../types/store';
+import type { Store } from '../../types/store';
 import BrandMarker from './BrandMarker';
 
 interface MapWithMarkersProps {

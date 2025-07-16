@@ -1,5 +1,10 @@
 import { useKakaoLoader as useKakaoLoaderOrigin } from 'react-kakao-maps-sdk';
 
+/**
+ * Initializes the Kakao Maps JavaScript SDK loader with the app key and required libraries.
+ *
+ * Loads the Kakao Maps SDK using the app key from the environment and includes the 'clusterer', 'drawing', and 'services' libraries for extended map functionality.
+ */
 export default function useKakaoLoader() {
   useKakaoLoaderOrigin({
     /**

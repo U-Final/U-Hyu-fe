@@ -24,6 +24,14 @@ const regions = [
   { label: '경북', value: 'gyeongbuk' },
 ];
 
+/**
+ * Renders a dropdown menu for selecting a region from a predefined list.
+ *
+ * Displays the current selection or a placeholder if none is selected, and calls the provided callback when the selection changes.
+ *
+ * @param value - The currently selected region value
+ * @param onChange - Callback invoked with the new region value when the selection changes
+ */
 export default function RegionFilterDropdown({
   value,
   onChange,

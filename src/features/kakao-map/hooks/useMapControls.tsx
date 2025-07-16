@@ -27,7 +27,6 @@ export const useMapControls = () => {
   );
 
   const handleLocationClick = useCallback(async () => {
-    console.log('📍 내 위치 버튼 클릭');
     try {
       actions.setLoading(true);
       await getCurrentLocation();

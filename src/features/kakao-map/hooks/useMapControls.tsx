@@ -13,13 +13,11 @@ export const useMapControls = () => {
   }, [actions]);
 
   const handleSearchCancel = useCallback(() => {
-    console.log('❌ 검색 취소');
     actions.setSearchValue('');
   }, [actions]);
 
   const handleFilterChange = useCallback(
     (filterValue: string) => {
-      console.log('🔍 필터 변경:', filterValue);
       actions.setActiveFilter(filterValue);
       // TODO: 실제 필터링 로직 구현
     },

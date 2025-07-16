@@ -1,28 +1,32 @@
 import { useCallback } from 'react';
 import { useMapContext } from '../context/MapContext';
-import { BRAND_MAPPING } from '../constants/brands';
+import { CATEGORY_CONFIGS } from '../types/category';
 
 export const useFilterNavigation = () => {
   const { state, actions } = useMapContext();
 
   const getCategoryDisplayName = useCallback((categoryKey: string): string => {
-    const categoryNames: Record<string, string> = {
-      activity: '액티비티',
-      beauty: '뷰티/건강',
-      shopping: '쇼핑',
-      lifestyle: '생활/편의',
-      food: '푸드',
-      culture: '문화/여가',
-      education: '교육',
-      travel: '여행/교통',
-    };
-    return categoryNames[categoryKey] || categoryKey;
+    const categoryConfig =
+      CATEGORY_CONFIGS[categoryKey as keyof typeof CATEGORY_CONFIGS];
+    return categoryConfig?.name || categoryKey;
   }, []);
 
-  const getBrandsByCategory = useCallback((category: string): string[] => {
-    const brandMapping = BRAND_MAPPING;
-    return brandMapping[category] || [];
-  }, []);
+  const getBrandsByCategory = useCallback(
+    (category: string): string[] => {
+      // 실제 매장 데이터에서 해당 카테고리의 브랜드 목록을 추출
+      const stores = state.stores;
+      const brands = new Set<string>();
+
+      stores.forEach(store => {
+        if (store.categoryName === category) {
+          brands.add(store.brandName);
+        }
+      });
+
+      return Array.from(brands).sort();
+    },
+    [state.stores]
+  );
 
   const handleShowFilter = useCallback(() => {
     if (process.env.NODE_ENV === 'development') {

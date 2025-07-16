@@ -1,6 +1,5 @@
 import { type FC } from 'react';
 import { getBrandImagePath } from '../../utils/brandImageMapper.ts';
-import { getStoreCategory } from '../../utils/categoryMapper.ts';
 import { CATEGORY_CONFIGS } from '../../types/category.ts';
 import type { Store } from '../../types/store.ts';
 
@@ -17,9 +16,8 @@ const BrandMarker: FC<BrandMarkerProps> = ({
   hasPromotion = false,
   onClick,
 }) => {
-  // 매장 이름으로부터 카테고리를 추출
-  const category = getStoreCategory(store.storeName);
-  const categoryConfig = CATEGORY_CONFIGS[category];
+  const category = store.categoryName as keyof typeof CATEGORY_CONFIGS;
+  const categoryConfig = CATEGORY_CONFIGS[category] || CATEGORY_CONFIGS.default;
   const brandImageSrc = getBrandImagePath(store.storeName);
 
   return (

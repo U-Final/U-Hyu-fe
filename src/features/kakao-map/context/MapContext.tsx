@@ -156,7 +156,7 @@ export const MapProvider: React.FC<{
 
     // 컴포넌트 언마운트 시 콜백 제거
     return () => {
-      setMapContextCallback(() => {});
+      setMapContextCallback(null);
     };
   }, [setMapContextCallback]);
 

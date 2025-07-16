@@ -36,7 +36,9 @@ interface LocationActions {
   clearError: () => void;
 
   // MapContext 업데이트 콜백 설정
-  setMapContextCallback: (callback: (center: Position) => void) => void;
+  setMapContextCallback: (
+    callback: ((center: Position) => void) | null
+  ) => void;
 }
 
 export type { LocationState, LocationActions };
@@ -125,7 +127,7 @@ export const useLocationStore = create<LocationState & LocationActions>(
       set({ error: null });
     },
 
-    setMapContextCallback: (callback: (center: Position) => void) => {
+    setMapContextCallback: (callback: ((center: Position) => void) | null) => {
       set({ mapContextCallback: callback });
     },
   })

@@ -47,7 +47,7 @@ export const ButtonBase = forwardRef<HTMLButtonElement, ButtonBaseProps>(
     // 로딩 중이거나 disabled가 true면 비활성화
 
     const baseClasses =
-      'inline-flex items-center justify-center gap-2 whitespace-nowrap font-semibold transition-colors disabled:pointer-events-none rounded-md';
+      'cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap font-semibold transition-colors disabled:pointer-events-none rounded-md';
     const finalClassName = twMerge(
       baseClasses,
       variantStyles[variant],

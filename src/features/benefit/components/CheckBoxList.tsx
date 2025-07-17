@@ -1,4 +1,4 @@
-import PrimaryCheckbox from "@/shared/components/primary_checkbox/PrimaryCheckbox";
+import { PrimaryCheckbox } from "@/shared/components";
 import clsx from "clsx";
 
 const options = ["온라인", "오프라인", "할인", "상품증정"];

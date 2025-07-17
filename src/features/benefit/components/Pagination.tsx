@@ -1,5 +1,5 @@
-import PaginationButton from '@benefit/components/PaginationButton';
-import type { PaginationProps } from '@benefit/types/Pagination.types';
+import { PaginationButton } from '@/features/benefit/components';
+import type { PaginationProps } from '@/features/benefit/types';
 import type { FC } from 'react';
 
 const Pagination: FC<PaginationProps> = ({

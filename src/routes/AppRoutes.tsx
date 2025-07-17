@@ -12,6 +12,7 @@ import {
   Routes,
   useLocation,
 } from 'react-router-dom';
+import MapPage from '@pages/map/MapPage';
 
 const Layout = () => {
   const { pathname } = useLocation();
@@ -26,9 +27,14 @@ const Layout = () => {
     pathname as (typeof visibleBottomNavRoutes)[number]
   );
 
+  const isMap = pathname === PATH.MAP;
+
   return (
-    <div className="w-full h-full flex flex-col">
-      <BaseLayout>
+    <div
+      className={`w-full h-full flex flex-col ${isMap ? 'items-stretch justify-start' : 'justify-center'}`}
+      style={isMap ? { minWidth: 0 } : undefined}
+    >
+      <BaseLayout isMap={isMap}>
         <Outlet />
       </BaseLayout>
       {showBottomNav && <BottomNavigation />}
@@ -42,11 +48,11 @@ export const AppRoutes = () => {
       <Routes>
         <Route element={<Layout />}>
           <Route path={PATH.HOME} element={<HomePage />} />
-          <Route path={PATH.MAP} element={<div>mapPage</div>} />
           <Route path={PATH.BENEFIT} element={<BenefitPage />} />
           <Route path={PATH.MYPAGE} element={<div>myPage</div>} />
           <Route path={PATH.EXTRA_INFO} element={<ExtraInfo />} />
           <Route path={PATH.LOGIN} element={<div>loginPage</div>} />
+          <Route path={PATH.MAP} element={<MapPage />} />
         </Route>
       </Routes>
 

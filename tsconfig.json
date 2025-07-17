@@ -15,8 +15,23 @@
     "jsx": "react-jsx",
 
     /* Path mapping */
+    // 경로가 깊은 순서대로, 최신순으로 위에서부터 추가해주세요!
     "baseUrl": ".",
     "paths": {
+      // 공통 경로 설정
+      "@components/*": ["./src/shared/components/*"],
+      "@constants/*": ["./src/shared/constants/*"],
+      "@client/*": ["./src/shared/client/*"],
+      "@shared/*": ["./src/shared/*"],
+
+      // 각 도메인 별 경로 설정
+      "@user/*": ["./src/features/user/*"],
+      "@extra-info/*": ["./src/features/extra-info/*"],
+      "@benefit/*": ["./src/features/benefit/*"],
+      "@features/*": ["./src/features/*"],
+
+      "@pages/*": ["./src/pages/*"],
+      "@paths": ["./src/routes/path.ts"],
       "@/*": ["./src/*"]
     },
 

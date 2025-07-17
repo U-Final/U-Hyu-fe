@@ -1,1 +1,12 @@
-{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/ui/button.stories.ts","./src/components/ui/button.tsx","./src/shared/utils/utils.ts","./vite.config.ts"],"version":"5.8.3"}
+{
+  "root": [
+    "./src/app.tsx",
+    "./src/main.tsx",
+    "./src/vite-env.d.ts",
+    "./src/components/ui/button.stories.ts",
+    "./src/components/ui/button.tsx",
+    "./src/shared/utils/utils.ts",
+    "./vite.config.ts"
+  ],
+  "version": "5.8.3"
+}

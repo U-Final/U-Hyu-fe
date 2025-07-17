@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { mapApi } from '../api/mapApi';
 import type {
   GetNearbyStoresParams,
@@ -44,8 +45,12 @@ export const useStoreListQuery = (params: GetNearbyStoresParams) => {
     refetchOnReconnect: true,
     retry: (failureCount, error) => {
       // 네트워크 오류는 재시도, 4xx 오류는 재시도 안함
-      if (error instanceof Error && error.message.includes('4')) {
-        return false;
+      if (error instanceof AxiosError && error.response?.status) {
+        const status = error.response.status;
+        // 4xx 클라이언트 오류는 재시도하지 않음
+        if (status >= 400 && status < 500) {
+          return false;
+        }
       }
       return failureCount < 2;
     },

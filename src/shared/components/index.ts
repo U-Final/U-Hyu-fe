@@ -11,6 +11,7 @@ export { GhostButton } from './buttons/GhostButton';
 export { IconButton } from './buttons/IconButton';
 export { NavButton } from './buttons/NavButton';
 export { PrimaryButton } from './buttons/PrimaryButton';
+export { ButtonBase } from './buttons/ButtonBase';
 export { BrandCard } from './cards/BrandCard';
 export { BrandWithFavoriteCard } from './cards/BrandWithFavoriteCard';
 export { CardBase } from './cards/CardBase';

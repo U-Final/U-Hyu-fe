@@ -1,4 +1,4 @@
-import { IconButton } from '@/shared/components';
+import { IconButton } from '@/shared/components/buttons/IconButton';
 import { useModalStore } from '@/shared/store';
 import { X } from 'lucide-react';
 import { useEffect } from 'react';

@@ -1,4 +1,4 @@
-import { IconButton } from '@components/buttons/IconButton';
+import { IconButton } from '@/shared/components';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronLeft, X } from 'lucide-react';
 import React, { useEffect } from 'react';

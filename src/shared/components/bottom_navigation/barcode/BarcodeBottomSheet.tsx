@@ -1,5 +1,5 @@
-import { PrimaryButton } from '@components/buttons/PrimaryButton';
-import { useModalStore } from '@shared/store/modalStore';
+import { PrimaryButton } from '@/shared/components';
+import { useModalStore } from '@/shared/store';
 import { X } from 'lucide-react';
 import { useRef, type FC } from 'react';
 import { useImageCropStore } from '../../../store/useImageCropStore';

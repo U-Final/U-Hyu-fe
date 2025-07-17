@@ -8,6 +8,7 @@ export interface Store {
   brandName: string; // 브랜드 이름 (백엔드에서 정규화됨)
   latitude: number; // 위도
   longitude: number; // 경도
+  isFavorite: boolean; // 즐겨찾기 여부
 }
 export interface FilterOption {
   key: string;

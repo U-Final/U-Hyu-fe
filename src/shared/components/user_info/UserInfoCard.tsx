@@ -19,11 +19,14 @@ const UserInfoCard = ({ name, nickname, gender, age, email }: Props) => {
       <p className="text-text-black text-base font-semibold mb-[1.2rem]">나의 정보</p>
 
       <button
-        onClick={() => setIsEditOpen(true)}
-        className="absolute top-[1.6rem] right-[1.6rem] text-xs text-gray-500 underline"
-      >
-        개인정보 수정
-      </button>
+  aria-label="개인정보 수정 모달 열기"  //스크린 리더용 설명
+  type="button"                          //버튼 타입 명시
+  onClick={() => setIsEditOpen(true)}
+  className="absolute top-[1.6rem] right-[1.6rem] text-xs text-gray-500 underline"
+>
+  개인정보 수정
+</button>
+
 
       <div className="space-y-[1.2rem] mt-[0.8rem]">
         <div className="flex items-center gap-[0.8rem] text-sm text-text-black">

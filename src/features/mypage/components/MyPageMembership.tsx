@@ -1,6 +1,8 @@
 import React from 'react';
 import { Crown, Star, User2 } from 'lucide-react';
 import type { UserInfo, UserGrade } from '@mypage/types';
+import { convertGrade } from '@/features/mypage/utils/gradeUtils';
+
 
 interface Props {
   user: UserInfo;
@@ -17,10 +19,6 @@ const MyPageMembership = ({ user, setUser }: Props) => {
     { grade: 'VIP', icon: <Star className="w-[0.9rem] h-[0.9rem] text-[#6B7280]" /> },
     { grade: 'GOOD', icon: <User2 className="w-[0.9rem] h-[0.9rem] text-[#6B7280]" /> },
   ];
-
-  const convertGrade = (grade: UserGrade) => {
-    return grade === 'GOOD' ? '우수' : grade;
-  };
 
   return (
     <div className="space-y-[0.75rem]">

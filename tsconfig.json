@@ -29,6 +29,7 @@
       "@extra-info/*": ["./src/features/extra-info/*"],
       "@benefit/*": ["./src/features/benefit/*"],
       "@mypage/*": ["./src/features/mypage/*"],
+      "@mypage/types": ["./src/features/mypage/types.ts"],
       "@features/*": ["./src/features/*"],
 
       "@pages/*": ["./src/pages/*"],

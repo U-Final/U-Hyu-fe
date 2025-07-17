@@ -23,13 +23,13 @@ const ActivityFavorite = () => {
       const nextItems = mockFavoriteBrands.slice(brands.length, brands.length + ITEMS_PER_LOAD);
       setBrands(prev => [...prev, ...nextItems]);
       setIsLoading(false);
-    }, 1000); // 로딩 시뮬레이션
+    }, 1000); //로딩 시뮬레이션
   };
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [brands, isLoading]);
+  window.addEventListener("scroll", handleScroll);
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);  //마운트 시 1회만 실행
 
   return (
     <div className="space-y-[1rem]">

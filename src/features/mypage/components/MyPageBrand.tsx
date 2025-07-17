@@ -33,6 +33,9 @@ const MyPageBrand: React.FC<Props> = ({ user, setUser }) => {
               <div className="relative mt-[0.5rem] p-[0.125rem]">
                 <button
                   onClick={() => handleToggle(brand.id)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleToggle(brand.id)}
+aria-label={`${brand.name} 브랜드 ${user.favoriteBrands.includes(brand.id) ? '선택됨' : '선택 안됨'}`}
+aria-pressed={user.favoriteBrands.includes(brand.id)}
                   className={`
                     relative w-[4.5rem] h-[4.5rem] rounded-full flex items-center justify-center
                     transition-all duration-200 shadow-md overflow-hidden bg-white

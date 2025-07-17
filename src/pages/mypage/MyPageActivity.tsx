@@ -3,8 +3,7 @@ import MyPageHeader from '@/features/mypage/components/MyPageHeader';
 import ActivityTabs from '@/features/mypage/components/ActivityTabs';
 import ActivityBenefit from '@/features/mypage/components/ActivityBenefit';
 import ActivityBrands from '@/features/mypage/components/ActivityBrands';
-import FavoriteBrands from '@/features/mypage/components/ActivityFavorite';
-
+import ActivityFavorite from '@/features/mypage/components/ActivityFavorite';
 import { mockUser } from '@mypage/mock/mockUser';
 
 const MyPageActivity = () => {
@@ -21,7 +20,7 @@ const MyPageActivity = () => {
             <ActivityBrands />
           </>
         ) : (
-           <FavoriteBrands />
+           <ActivityFavorite />
         )}
       </div>
     </div>

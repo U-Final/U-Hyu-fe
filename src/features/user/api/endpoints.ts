@@ -3,4 +3,5 @@ export const USER_ENDPOINTS = {
   GET_USER_INFO: '/users/user/info',
   LOGOUT: '/auth/logout',
   CHECK_EMAIL: '/user/check-email',
+  UPDATE_USER_INFO: '/user',
 } as const;

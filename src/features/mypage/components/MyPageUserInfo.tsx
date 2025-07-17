@@ -17,12 +17,15 @@ interface Props {
 const MyPageUserInfo = ({ user, setUser }: Props) => {
   const [editMode, setEditMode] = useState(false);
 
-  const handleChange = (field: keyof UserInfo, value: string) => {
-    setUser((prev) => ({
-      ...prev,
-      [field]: field === 'age' ? Number(value) : value,
-    }));
-  };
+  const handleChange = <K extends keyof UserInfo>(
+  field: K,
+  value: string
+) => {
+  setUser((prev) => ({
+    ...prev,
+    [field]: field === 'age' ? Number(value) : value,
+  }));
+};
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -30,17 +33,36 @@ const MyPageUserInfo = ({ user, setUser }: Props) => {
     }
   };
 
-  const fields: {
-    key: keyof UserInfo;
-    label: string;
-    icon: React.ReactNode;
-  }[] = [
-    { key: 'name', label: '이름', icon: <User className="w-4 h-4 text-gray-500" /> },
-    { key: 'nickname', label: '닉네임', icon: <BadgeCheck className="w-4 h-4 text-gray-500" /> },
-    { key: 'gender', label: '성별', icon: <AtSign className="w-4 h-4 text-gray-500" /> },
-    { key: 'age', label: '나이', icon: <Calendar className="w-4 h-4 text-gray-500" /> },
-    { key: 'email', label: '이메일', icon: <Mail className="w-4 h-4 text-gray-500" /> },
-  ];
+type EditableUserFields = 'name' | 'nickname' | 'gender' | 'age' | 'email';
+
+const fields: {
+  key: EditableUserFields;
+  label: string;
+  icon: React.ReactNode;
+}[] = [
+  { key: 'name', label: '이름', icon: <User className="w-4 h-4 text-gray-500" /> },
+  { key: 'nickname', label: '닉네임', icon: <BadgeCheck className="w-4 h-4 text-gray-500" /> },
+  { key: 'gender', label: '성별', icon: <AtSign className="w-4 h-4 text-gray-500" /> },
+  { key: 'age', label: '나이', icon: <Calendar className="w-4 h-4 text-gray-500" /> },
+  { key: 'email', label: '이메일', icon: <Mail className="w-4 h-4 text-gray-500" /> },
+];
+
+//검증 함수 (이메일 형식, 나이 제한)
+const validateField = (key: EditableUserFields, value: string): boolean => {
+  switch (key) {
+    case 'email': {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    }
+    case 'age': {
+      const age = Number(value);
+      return age > 0 && age < 150;
+    }
+    default: {
+      return value.trim().length > 0;
+    }
+  }
+};
+
 
   return (
     <div className="space-y-[0.75rem]">
@@ -94,12 +116,19 @@ const MyPageUserInfo = ({ user, setUser }: Props) => {
                   </div>
                 ) : (
                   <input
-                    type={key === 'age' ? 'number' : 'text'}
-                    value={user[key]}
-                    onChange={(e) => handleChange(key, e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    className="w-[10rem] rounded-[0.5rem] border border-gray-300 px-[0.5rem] py-[0.25rem] text-[0.875rem] text-right"
-                  />
+  type={key === 'age' ? 'number' : 'text'}
+  value={user[key]}
+  onChange={(e) => {
+    const value = e.target.value;
+    if (validateField(key, value)) {
+      handleChange(key, value);   // 검증 통과한 값만 반영
+    }
+  }}
+  onKeyDown={handleKeyDown}
+  className="w-[10rem] rounded-[0.5rem] border border-gray-300 px-[0.5rem] py-[0.25rem] text-[0.875rem] text-right"
+  required
+/>
+
                 )
               ) : (
                 <span className="min-h-[1.75rem] flex items-center justify-end">

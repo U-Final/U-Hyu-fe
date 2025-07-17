@@ -47,21 +47,24 @@ const MyPageMarker = ({ user, setUser }: Props) => {
 
             return (
               <button
-                key={img}
-                onClick={() => handleSelect(img)}
-                className={`flex-shrink-0 transition-transform duration-300 ${
-                  isSelected ? 'scale-125' : 'scale-100'
-                }`}
-                style={{ width: '4.5rem', height: '4.5rem' }}
-              >
-                <img
-                  src={`/images/markers/${img}`}
-                  alt={img}
-                  className={`object-contain rounded-full w-[4rem] h-[4rem] ${
-                    isSelected ? 'shadow-lg' : ''
-                  }`}
-                />
-              </button>
+  key={img}
+  onClick={() => handleSelect(img)}
+  onKeyDown={(e) => e.key === 'Enter' && handleSelect(img)}  //키보드 접근성
+  aria-label={`${img} 마커 ${isSelected ? '선택됨' : '선택 안됨'}`}  //스크린 리더
+  aria-pressed={isSelected}  //토글 상태 알림
+  className={`flex-shrink-0 transition-transform duration-300 w-[4.5rem] h-[4.5rem] ${
+    isSelected ? 'scale-125' : 'scale-100'
+  }`}  //스타일 통일
+>
+  <img
+    src={`/images/markers/${img}`}
+    alt={img}
+    className={`object-contain rounded-full w-[4rem] h-[4rem] ${
+      isSelected ? 'shadow-lg' : ''
+    }`}
+  />
+</button>
+
             );
           })}
         </div>

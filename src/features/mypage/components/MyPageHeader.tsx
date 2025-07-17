@@ -1,7 +1,9 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import type { UserGrade, UserInfo } from '@mypage/types';
+import type { UserInfo } from '@mypage/types';
+import { convertGrade } from '@/features/mypage/utils/gradeUtils';
+
 
 interface MyPageHeaderProps {
   user: UserInfo;
@@ -13,20 +15,48 @@ const MyPageHeader = ({ user }: MyPageHeaderProps) => {
 
   const [profileImage, setProfileImage] = useState<string>(user.profileImage);
 
-  const convertGrade = (grade: UserGrade): 'VIP' | 'VVIP' | '우수' => {
-    return grade === 'GOOD' ? '우수' : grade;
-  };
+  //blob URL 해제를 위한 ref
+  const previousUrlRef = useRef<string | null>(null);
+
+  //컴포넌트 언마운트 시 URL 해제
+  useEffect(() => {
+    return () => {
+      if (previousUrlRef.current?.startsWith('blob:')) {
+        URL.revokeObjectURL(previousUrlRef.current);
+      }
+    };
+  }, []);
 
   const handleImageClick = () => {
     fileInputRef.current?.click();
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const imageUrl = URL.createObjectURL(file);
-    setProfileImage(imageUrl);
-  };
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  //파일 크기 제한 (5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    alert('파일 크기는 5MB 이하여야 합니다.');
+    return;
+  }
+
+  //파일 타입 검증 (이미지 파일만)
+  if (!file.type.startsWith('image/')) {
+    alert('이미지 파일만 업로드 가능합니다.');
+    return;
+  }
+
+  //기존 URL 해제 후 새 URL 생성
+  if (previousUrlRef.current?.startsWith('blob:')) {
+    URL.revokeObjectURL(previousUrlRef.current);
+  }
+
+  const imageUrl = URL.createObjectURL(file);
+  previousUrlRef.current = imageUrl;
+  setProfileImage(imageUrl);
+};
+
 
   return (
     <div className="space-y-[1rem] pt-[3.75rem]">
@@ -47,6 +77,7 @@ const MyPageHeader = ({ user }: MyPageHeaderProps) => {
               ref={fileInputRef}
               onChange={handleFileChange}
               className="hidden"
+              aria-label="프로필 이미지 업로드"
             />
           </div>
 

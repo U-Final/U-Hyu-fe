@@ -1,5 +1,4 @@
-import { PrimaryButton } from '@components/buttons/PrimaryButton';
-import BaseModal from '@components/modals/BaseModal';
+import { BaseModal, PrimaryButton } from '@/shared/components';
 
 interface StoreDeleteModalProps {
   onConfirm: () => void;

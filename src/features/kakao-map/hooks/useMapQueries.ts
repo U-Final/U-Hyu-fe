@@ -146,7 +146,7 @@ export const useToggleFavoriteMutation = () => {
     },
 
     // 성공 시 서버 데이터로 최종 동기화
-    onSuccess: (data, variables) => {
+    onSuccess: (_, variables) => {
       const { storeId } = variables;
 
       // 관련 쿼리들 무효화하여 서버 데이터로 동기화

@@ -1,8 +1,10 @@
-import { SelectionBottomSheet } from '@components/bottom_sheet/SelectionBottomSheet';
-import { BrandGrid } from '@components/brand_grid/BrandGrid';
-import { ButtonBase } from '@components/buttons/ButtonBase';
-import { Input } from '@components/shadcn/ui/input';
-import { Label } from '@components/shadcn/ui/label';
+import {
+  BrandGrid,
+  ButtonBase,
+  SelectionBottomSheet,
+} from '@/shared/components';
+import { Input } from '@/shared/components/shadcn/ui/input';
+import { Label } from '@/shared/components/shadcn/ui/label';
 import React, { useState } from 'react';
 import { EMAIL_REGEX, MEMBERSHIP_GRADES } from '../constants';
 import { type StepContentProps } from '../types';

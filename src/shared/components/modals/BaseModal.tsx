@@ -31,7 +31,7 @@ const BaseModal = ({ title, children }: BaseModalProps) => {
       onClick={handleBackdropClick}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
     >
-      <section className="bg-white rounded-[16px] w-full px-[15px] pt-[10px] pb-[15px] min-w-[300px] max-w-lg mx-8 flex flex-col gap-[10px]">
+      <section className="bg-white rounded-[16px] w-full px-[20px] py-[20px] min-w-[300px] max-w-lg mx-8 flex flex-col gap-[10px]">
         <header className="flex justify-between items-center">
           {title && (
             <h3

@@ -1,6 +1,7 @@
 import BarcodeItem from '@components/bottom_navigation/BarcodeItem';
 import NavItem from '@components/bottom_navigation/NavItem';
 import { PATH } from '@paths';
+import { X } from 'lucide-react';
 import { useState } from 'react';
 import { FaMap } from 'react-icons/fa';
 import { FaUser } from 'react-icons/fa6';
@@ -8,25 +9,22 @@ import { HiGift } from 'react-icons/hi';
 import { LiaBarcodeSolid } from 'react-icons/lia';
 import { MdHomeFilled } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
+import { BarcodeBottomSheet } from './barcode/BarcodeBottomSheet';
 
 const BottomNavigation = () => {
   const [activeTab, setActiveTab] = useState<string>('홈');
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
   };
 
   const handleBarcodeClick = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
+    setIsOpen(prev => !prev);
   };
 
   return (
-    <div className="fixed bottom-0 w-full">
+    <div className="fixed bottom-0 w-full z-50">
       <nav className="h-12 text-[0.625rem] shadow-nav flex relative justify-around bg-white gap-5 px-[1.5rem] py-[0.5rem]">
         <NavLink
           to={PATH.HOME}
@@ -54,9 +52,9 @@ const BottomNavigation = () => {
         </NavLink>
         <span />
         <BarcodeItem
-          label="바코드"
-          icon={<LiaBarcodeSolid />}
-          isActive={activeTab === '바코드'}
+          label={isOpen ? '닫기' : '바코드'}
+          icon={isOpen ? <X size={15} /> : <LiaBarcodeSolid size={15} />}
+          isActive={isOpen}
           onClick={handleBarcodeClick}
         />
         <NavLink
@@ -84,19 +82,12 @@ const BottomNavigation = () => {
           />
         </NavLink>
       </nav>
-      {isModalOpen && (
-        // 모달 컴포넌트 완성 후 수정해야함 그전에 임시 모달
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-          {isModalOpen && (
-            <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-              <div className="bg-white p-5 rounded-lg">
-                <h2>바코드 스캔 모달</h2>
-                <button onClick={closeModal}>Close</button>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
+      <div className="fixed bottom-100 w-full">
+        <BarcodeBottomSheet
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+        ></BarcodeBottomSheet>
+      </div>
     </div>
   );
 };

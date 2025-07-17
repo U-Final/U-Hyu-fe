@@ -9,6 +9,8 @@ import {
 } from './useMapQueries';
 import type { GetNearbyStoresParams } from '../api/types';
 
+const DEFAULT_RADIUS = 1000;
+
 export const useMapData = () => {
   const mapStore = useMapStore();
   const { state: uiState } = useMapUIContext();
@@ -18,7 +20,7 @@ export const useMapData = () => {
   const storeListParams: GetNearbyStoresParams = {
     lat: mapStore.mapCenter.lat,
     lng: mapStore.mapCenter.lng,
-    radius: 1000,
+    radius: DEFAULT_RADIUS,
   };
 
   // 매장 목록 쿼리 (React Query)
@@ -45,10 +47,10 @@ export const useMapData = () => {
 
   // React Query 결과를 MapStore에 동기화
   useEffect(() => {
-    if (storeListQuery.data && !storeListQuery.isLoading) {
+    if (storeListQuery.data) {
       mapStore.setStoresFromQuery(storeListQuery.data);
     }
-  }, [storeListQuery.data, storeListQuery.isLoading]);
+  }, [storeListQuery.data]);
 
   // 매장 상세 정보 동기화
   useEffect(() => {

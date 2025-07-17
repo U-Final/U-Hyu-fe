@@ -156,8 +156,6 @@ export const useToggleFavoriteMutation = () => {
       queryClient.invalidateQueries({
         queryKey: MAP_QUERY_KEYS.stores.lists(),
       });
-
-      console.log('즐겨찾기 업데이트 완료:', data);
     },
 
     // 실패 시 이전 상태로 롤백

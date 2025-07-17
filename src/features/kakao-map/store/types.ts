@@ -39,6 +39,12 @@ export interface MapStoreState {
   // 캐시 관련 (성능 최적화)
   lastFetchParams: GetNearbyStoresParams | null;
   lastFetchTime: number | null;
+  currentFilters: {
+    category?: string;
+    brand?: string;
+    region?: string;
+    searchQuery?: string;
+  };
 }
 
 export interface MapStoreActions {

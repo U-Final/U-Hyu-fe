@@ -1,88 +1,22 @@
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
 import type { Store } from '../types/store';
-import type {
-  StoreDetail,
-  GetNearbyStoresParams,
-  StoreListResponse,
-} from '../api/types';
+import type { StoreDetail, StoreListResponse } from '../api/types';
+import type { Position, MapStoreState, MapStoreActions } from './types';
 
-export interface Position {
-  lat: number;
-  lng: number;
-}
-
-interface LoadingState {
-  location: boolean;
-  stores: boolean;
-  storeDetail: boolean;
-  favorite: boolean;
-}
-
-interface ErrorState {
-  location: string | null;
-  stores: string | null;
-  storeDetail: string | null;
-  favorite: string | null;
-}
-
-interface MapStoreState {
-  // 위치 상태
-  userLocation: Position | null;
-  mapCenter: Position;
-
-  // 매장 데이터 (React Query와 동기화)
-  stores: Store[];
-  selectedStore: Store | null;
-  storeDetail: StoreDetail | null;
-
-  // 상태 관리 (React Query 상태와 별도로 관리되는 것들만)
-  loading: LoadingState;
-  errors: ErrorState;
-
-  // 필터링 상태
-  currentFilters: {
-    category?: string;
-    brand?: string;
-    region?: string;
-    searchQuery?: string;
-  };
-
-  // 캐시 및 메타데이터
-  lastFetchParams: GetNearbyStoresParams | null;
-  lastFetchTime: number | null;
-}
-
-interface MapStoreActions {
-  // 위치 관리
-  getCurrentLocation: () => Promise<void>;
-  setMapCenter: (center: Position) => void;
-
-  // 매장 데이터 관리 (React Query 연동)
-  setStores: (stores: Store[]) => void;
-  setStoresFromQuery: (queryData: StoreListResponse | undefined) => void; // React Query 결과를 Store에 반영
-  selectStore: (store: Store | null) => void;
-  setStoreDetail: (detail: StoreDetail | null) => void;
-
-  // 필터링
-  applyFilters: (filters: MapStoreState['currentFilters']) => void;
-  getFilteredStores: () => Store[];
-
-  // 상태 관리
-  setLoading: (type: keyof LoadingState, loading: boolean) => void;
-  setError: (type: keyof ErrorState, error: string | null) => void;
-
-  //
-  clearError: (type: keyof ErrorState) => void;
-  clearAllErrors: () => void;
-  reset: () => void;
-}
+const parseCoordinate = (
+  value: string | undefined,
+  defaultValue: number
+): number => {
+  const parsed = Number(value);
+  return !isNaN(parsed) ? parsed : defaultValue;
+};
 
 const initialState: MapStoreState = {
   userLocation: null,
   mapCenter: {
-    lat: Number(import.meta.env.VITE_MAP_INITIAL_LAT) || 37.54699,
-    lng: Number(import.meta.env.VITE_MAP_INITIAL_LNG) || 127.09598,
+    lat: parseCoordinate(import.meta.env.VITE_MAP_INITIAL_LAT, 37.54699),
+    lng: parseCoordinate(import.meta.env.VITE_MAP_INITIAL_LNG, 127.09598),
   },
   stores: [],
   selectedStore: null,

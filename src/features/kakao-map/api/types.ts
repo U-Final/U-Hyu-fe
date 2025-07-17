@@ -40,6 +40,7 @@ export interface StoreSummary {
   brandName: string;
   latitude: number;
   longitude: number;
+  isFavorite: boolean; // 추가
 }
 
 /**

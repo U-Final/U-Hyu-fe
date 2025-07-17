@@ -1,5 +1,5 @@
 import useKakaoLoader from '@features/kakao-map/hooks/useKakaoLoader';
-import { MapProvider } from '@features/kakao-map/context/MapContext';
+import { MapUIProvider } from '@features/kakao-map/context/MapUIContext';
 import { MapContainer } from '@features/kakao-map/components/MapContainer';
 import { MapControlsContainer } from '@features/kakao-map/components/MapControlsContainer';
 import { LocationControlContainer } from '@features/kakao-map/components/location/LocationControlContainer';
@@ -9,7 +9,7 @@ function MapPage() {
   useKakaoLoader();
 
   return (
-    <MapProvider>
+    <MapUIProvider>
       <div className="h-screen flex flex-col">
         <div className="flex-1 relative">
           <MapContainer />
@@ -18,7 +18,7 @@ function MapPage() {
         </div>
         <BottomSheetContainer />
       </div>
-    </MapProvider>
+    </MapUIProvider>
   );
 }
 

@@ -12,6 +12,7 @@ export const MOCK_STORES: StoreSummary[] = [
     brandName: '스타벅스',
     latitude: 37.54699,
     longitude: 127.09598,
+    isFavorite: false,
   },
   {
     storeId: 2,
@@ -23,6 +24,7 @@ export const MOCK_STORES: StoreSummary[] = [
     brandName: '투썸플레이스',
     latitude: 37.5475,
     longitude: 127.0965,
+    isFavorite: false,
   },
   {
     storeId: 3,
@@ -34,6 +36,7 @@ export const MOCK_STORES: StoreSummary[] = [
     brandName: 'GS25',
     latitude: 37.548,
     longitude: 127.097,
+    isFavorite: false,
   },
   {
     storeId: 4,
@@ -45,6 +48,7 @@ export const MOCK_STORES: StoreSummary[] = [
     brandName: '올리브영',
     latitude: 37.5485,
     longitude: 127.0975,
+    isFavorite: false,
   },
   {
     storeId: 5,
@@ -56,6 +60,7 @@ export const MOCK_STORES: StoreSummary[] = [
     brandName: '맥도날드',
     latitude: 37.549,
     longitude: 127.098,
+    isFavorite: false,
   },
   {
     storeId: 6,
@@ -67,6 +72,7 @@ export const MOCK_STORES: StoreSummary[] = [
     brandName: '파리바게뜨',
     latitude: 37.5495,
     longitude: 127.0985,
+    isFavorite: false,
   },
   {
     storeId: 7,
@@ -78,6 +84,7 @@ export const MOCK_STORES: StoreSummary[] = [
     brandName: 'CGV',
     latitude: 37.55,
     longitude: 127.099,
+    isFavorite: false,
   },
   {
     storeId: 8,
@@ -89,6 +96,7 @@ export const MOCK_STORES: StoreSummary[] = [
     brandName: '이마트',
     latitude: 37.5505,
     longitude: 127.0995,
+    isFavorite: false,
   },
   {
     storeId: 9,
@@ -100,6 +108,7 @@ export const MOCK_STORES: StoreSummary[] = [
     brandName: '피트니스클럽',
     latitude: 37.551,
     longitude: 127.1,
+    isFavorite: false,
   },
   {
     storeId: 10,
@@ -111,6 +120,7 @@ export const MOCK_STORES: StoreSummary[] = [
     brandName: '약국',
     latitude: 37.5515,
     longitude: 127.1005,
+    isFavorite: false,
   },
 ];
 

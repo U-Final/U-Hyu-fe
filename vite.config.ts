@@ -8,6 +8,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 
+
 // ES Module 환경에서 __dirname 대신 사용
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -21,6 +22,8 @@ export default defineConfig({
       "@extra-info": path.resolve(__dirname, "src/features/extra-info"),
       "@benefit": path.resolve(__dirname, "src/features/benefit"),
       "@paths": path.resolve(__dirname, "src/routes/path.ts"),
+      "@user": path.resolve(__dirname, "src/features/user"),
+      "@mypage": path.resolve(__dirname, "src/features/mypage"),
     },
   },
   test: {
@@ -52,3 +55,5 @@ export default defineConfig({
     ],
   },
 });
+
+// import { userApi } from "@user/api/userApi";

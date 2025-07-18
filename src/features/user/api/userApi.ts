@@ -6,6 +6,8 @@ import type {
   CheckEmailResponse,
   GetUserInfoResponse,
   LogoutResponse,
+  UpdateUserInfoRequest,
+  UpdateUserInfoResponse,
 } from './types';
 
 export const userApi = {
@@ -35,6 +37,17 @@ export const userApi = {
   getUserInfo: async (): Promise<GetUserInfoResponse> => {
     const response = await authClient.get<GetUserInfoResponse>(
       USER_ENDPOINTS.GET_USER_INFO
+    );
+    return response.data;
+  },
+
+  // 유저 정보 수정 - 마이페이지
+   updateUserInfo: async (
+    data: UpdateUserInfoRequest
+  ): Promise<UpdateUserInfoResponse> => {
+    const response = await authClient.patch<UpdateUserInfoResponse>(
+      USER_ENDPOINTS.UPDATE_USER_INFO,
+      data
     );
     return response.data;
   },

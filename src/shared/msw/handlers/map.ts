@@ -19,6 +19,20 @@ export const mapHandlers = [
     const lng = Number(url.searchParams.get('lng'));
     const radius = Number(url.searchParams.get('radius'));
 
+    // Validate parameters
+    if (isNaN(lat) || isNaN(lng) || isNaN(radius) || radius <= 0) {
+      return HttpResponse.json(
+        {
+          status: 400,
+          message:
+            '잘못된 요청 파라미터입니다. lat, lng, radius는 유효한 숫자여야 하며, radius는 0보다 커야 합니다.',
+          data: null,
+          timestamp: new Date().toISOString(),
+        },
+        { status: 400 }
+      );
+    }
+
     // 반경 내 매장 필터링
     const filteredStores = MOCK_STORES.filter(store => {
       const distance =
@@ -37,6 +51,20 @@ export const mapHandlers = [
   // 매장 상세 정보 조회
   http.get('*/map/stores/:storeId', ({ params }) => {
     const storeId = Number(params.storeId);
+
+    // Validate storeId parameter
+    if (isNaN(storeId) || storeId <= 0) {
+      return HttpResponse.json(
+        {
+          status: 400,
+          message:
+            '잘못된 매장 ID입니다. storeId는 유효한 양의 정수여야 합니다.',
+          data: null,
+          timestamp: new Date().toISOString(),
+        },
+        { status: 400 }
+      );
+    }
 
     try {
       const response: StoreDetailResponse =
@@ -58,6 +86,21 @@ export const mapHandlers = [
   // 매장 즐겨찾기 토글
   http.post('*/map/stores/:storeId/favorite', ({ params }) => {
     const storeId = Number(params.storeId);
+
+    // Validate storeId parameter
+    if (isNaN(storeId) || storeId <= 0) {
+      return HttpResponse.json(
+        {
+          status: 400,
+          message:
+            '잘못된 매장 ID입니다. storeId는 유효한 양의 정수여야 합니다.',
+          data: null,
+          timestamp: new Date().toISOString(),
+        },
+        { status: 400 }
+      );
+    }
+
     const response: ToggleFavoriteResponseType =
       createMockToggleFavoriteResponse(storeId);
     return HttpResponse.json(response, { status: 200 });

@@ -1,4 +1,4 @@
-import { PrimaryButton } from '@components/buttons/PrimaryButton';
+import { PrimaryButton } from '@/shared/components';
 import { motion } from 'framer-motion';
 import { Check, ChevronRight } from 'lucide-react';
 import React from 'react';

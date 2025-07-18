@@ -1,22 +1,22 @@
 import useKakaoLoader from '@features/kakao-map/hooks/useKakaoLoader';
-import { MapProvider } from '@features/kakao-map/context/MapContext';
+import { MapUIProvider } from '@features/kakao-map/context/MapUIContext';
 import { MapContainer } from '@features/kakao-map/components/MapContainer';
 import { MapControlsContainer } from '@features/kakao-map/components/MapControlsContainer';
 import { LocationControlContainer } from '@features/kakao-map/components/location/LocationControlContainer';
 import { BottomSheetContainer } from '@features/kakao-map/components/BottomSheetContainer';
 
 /**
- * 카카오 맵 로더를 초기화하고, 지도와 관련된 UI 및 컨트롤을 포함하는 전체 맵 페이지를 렌더링합니다.
+ * 카카오 맵과 관련된 리소스를 로드하고, 지도 및 UI 컨트롤, 위치 제어, 하단 시트가 포함된 전체 지도 페이지를 렌더링합니다.
  *
- * 지도 영역과 하단 시트 UI를 포함하며, 맵 상태 관리를 위해 MapProvider 컨텍스트를 사용합니다.
+ * 지도 UI 상태를 제공하는 컨텍스트로 하위 컴포넌트들을 감쌉니다.
  *
- * @returns 맵과 관련된 UI가 포함된 React 요소
+ * @returns 지도와 관련된 UI가 포함된 React 요소
  */
 function MapPage() {
   useKakaoLoader();
 
   return (
-    <MapProvider>
+    <MapUIProvider>
       <div className="h-screen flex flex-col">
         <div className="flex-1 relative">
           <MapContainer />
@@ -25,7 +25,7 @@ function MapPage() {
         </div>
         <BottomSheetContainer />
       </div>
-    </MapProvider>
+    </MapUIProvider>
   );
 }
 

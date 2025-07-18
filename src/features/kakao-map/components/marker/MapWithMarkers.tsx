@@ -1,5 +1,5 @@
-import { Map as KakaoMap, CustomOverlayMap } from 'react-kakao-maps-sdk';
-import { type FC, useState } from 'react';
+import { type FC, useCallback, useState } from 'react';
+import { CustomOverlayMap, Map as KakaoMap } from 'react-kakao-maps-sdk';
 import type { Store } from '../../types/store';
 import BrandMarker from './BrandMarker';
 
@@ -10,6 +10,7 @@ interface MapWithMarkersProps {
   level?: number;
   className?: string;
   onStoreClick?: (store: Store) => void;
+  onCenterChange?: (center: { lat: number; lng: number }) => void;
 }
 
 const MapWithMarkers: FC<MapWithMarkersProps> = ({
@@ -19,6 +20,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   level = 4,
   className = 'w-full h-full',
   onStoreClick,
+  onCenterChange,
 }) => {
   const [selectedStoreId, setSelectedStoreId] = useState<number | null>(null);
 
@@ -27,8 +29,28 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
     onStoreClick?.(store);
   };
 
+  // 지도 중심점 변경 핸들러
+  const handleCenterChanged = useCallback(
+    (map: kakao.maps.Map) => {
+      const newCenter = map.getCenter();
+      if (newCenter && onCenterChange) {
+        onCenterChange({
+          lat: newCenter.getLat(),
+          lng: newCenter.getLng(),
+        });
+      }
+    },
+    [onCenterChange]
+  );
+
   return (
-    <KakaoMap id="map" center={center} className={className} level={level}>
+    <KakaoMap
+      id="map"
+      center={center}
+      className={className}
+      level={level}
+      onCenterChanged={handleCenterChanged}
+    >
       {/* 매장 마커들 */}
       {stores.map(store => (
         <CustomOverlayMap

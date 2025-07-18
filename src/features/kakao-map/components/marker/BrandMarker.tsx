@@ -1,5 +1,4 @@
 import { type FC } from 'react';
-import { getBrandImagePath } from '../../utils/brandImageMapper.ts';
 import { CATEGORY_CONFIGS } from '../../types/category.ts';
 import type { Store } from '../../types/store.ts';
 
@@ -18,7 +17,7 @@ const BrandMarker: FC<BrandMarkerProps> = ({
 }) => {
   const category = store.categoryName as keyof typeof CATEGORY_CONFIGS;
   const categoryConfig = CATEGORY_CONFIGS[category] || CATEGORY_CONFIGS.default;
-  const brandImageSrc = getBrandImagePath(store.storeName);
+  const brandImageSrc = store.logo_image;
 
   return (
     <div className="relative" onClick={onClick}>

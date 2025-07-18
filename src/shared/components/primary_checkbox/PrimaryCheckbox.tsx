@@ -1,4 +1,4 @@
-import { Checkbox } from '@components/shadcn/ui/checkbox';
+import { Checkbox } from '@/shared/components/shadcn/ui/checkbox';
 import clsx from 'clsx';
 
 const PrimaryCheckbox = ({

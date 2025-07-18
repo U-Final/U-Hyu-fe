@@ -1,6 +1,6 @@
-import { type FC } from 'react';
-import { BrandWithFavoriteCard } from '@components/cards/BrandWithFavoriteCard';
 import type { Store } from '@/features/kakao-map/types/store';
+import { BrandWithFavoriteCard } from '@/shared/components';
+import { type FC } from 'react';
 
 interface StoreListContentProps {
   stores: Store[];

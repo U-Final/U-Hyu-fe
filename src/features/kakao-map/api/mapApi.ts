@@ -1,4 +1,4 @@
-import { client } from '@client/axiosClient';
+import { client } from '@/shared/client';
 import { MAP_ENDPOINTS } from './endpoints';
 import type {
   GetNearbyStoresParams,

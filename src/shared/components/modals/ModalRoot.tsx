@@ -1,4 +1,4 @@
-import { useModalStore } from '@shared/store/modalStore';
+import { useModalStore } from '@/shared/store';
 import BaseModal from './BaseModal';
 import LoginModal from './LoginModal';
 

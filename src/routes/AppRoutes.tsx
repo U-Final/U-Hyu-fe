@@ -1,10 +1,7 @@
-import BaseLayout from '@components/BaseLayout';
-import BottomNavigation from '@components/bottom_navigation/BottomNavigation';
-import ModalRoot from '@components/modals/ModalRoot';
-import HomePage from '@pages/HomePage';
-import BenefitPage from '@pages/benefit/BenefitPage';
-import ExtraInfo from '@pages/user/extra-info/ExtraInfo';
+import { BenefitPage, ExtraInfo, HomePage, MapPage } from '@/pages';
+import { BaseLayout, BottomNavigation, ModalRoot } from '@/shared/components';
 import { PATH } from '@paths';
+
 import {
   BrowserRouter,
   Outlet,
@@ -12,7 +9,6 @@ import {
   Routes,
   useLocation,
 } from 'react-router-dom';
-import MapPage from '@pages/map/MapPage';
 
 const Layout = () => {
   const { pathname } = useLocation();

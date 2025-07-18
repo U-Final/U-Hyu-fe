@@ -1,4 +1,4 @@
-import { ButtonBase } from '@components/buttons/ButtonBase';
+import { ButtonBase } from '@/shared/components/buttons/ButtonBase';
 import { useRef } from 'react';
 
 interface FileUploadButtonProps {

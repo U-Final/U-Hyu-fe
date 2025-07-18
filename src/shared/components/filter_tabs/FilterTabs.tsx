@@ -1,8 +1,8 @@
-import type { FilterTabProps } from '@components/filter_tabs/FilterTabs.types';
+import type { FilterTabProps } from '@/shared/components/filter_tabs/FilterTabs.types';
 import {
   FILTER_TABS,
   filterTabVariants,
-} from '@components/filter_tabs/FilterTabs.variants';
+} from '@/shared/components/filter_tabs/FilterTabs.variants';
 import clsx from 'clsx';
 import type { FC } from 'react';
 import { useState } from 'react';

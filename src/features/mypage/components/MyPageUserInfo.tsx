@@ -7,7 +7,7 @@ import {
   Calendar,
   Mail,
 } from 'lucide-react';
-import type { UserInfo } from '@mypage/types';
+import type { UserInfo } from '@mypage/types/types';
 
 interface Props {
   user: UserInfo;

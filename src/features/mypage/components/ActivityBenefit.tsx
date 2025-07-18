@@ -1,4 +1,4 @@
-import { mockBenefit } from '@mypage/mock/mockActivity';
+import { mockBenefit } from '@mypage/types/mockActivity';
 
 const ActivityBenefit = () => {
   return (

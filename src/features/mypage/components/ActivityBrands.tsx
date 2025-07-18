@@ -1,4 +1,4 @@
-import { mockBrands } from '@mypage/mock/mockActivity';
+import { mockBrands } from '@mypage/types/mockActivity';
 
 const ActivityBrands = () => {
   return (

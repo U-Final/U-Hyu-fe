@@ -1,5 +1,5 @@
-import BarcodeItem from '@components/bottom_navigation/BarcodeItem';
-import NavItem from '@components/bottom_navigation/NavItem';
+import BarcodeItem from '@/shared/components/bottom_navigation/BarcodeItem';
+import NavItem from '@/shared/components/bottom_navigation/NavItem';
 import { PATH } from '@paths';
 import { X } from 'lucide-react';
 import { useState } from 'react';

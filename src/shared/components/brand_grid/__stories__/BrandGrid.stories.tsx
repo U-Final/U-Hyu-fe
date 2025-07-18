@@ -5,7 +5,7 @@ import {
   BrandGrid,
   BRANDS,
   type BrandGridProps,
-} from '@shared/components/brand_grid';
+} from '@/shared/components/brand_grid';
 
 // 인터랙티브한 스토리를 위한 래퍼 컴포넌트
 const BrandGridWrapper = (args: BrandGridProps) => {

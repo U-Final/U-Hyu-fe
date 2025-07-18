@@ -1,4 +1,4 @@
-import { GhostButton } from '@shared/components/buttons/GhostButton';
+import { GhostButton } from '@/shared/components';
 import { ChevronLeft } from 'lucide-react';
 import React from 'react';
 import { PrimaryButton } from '../components/PrimaryButton';

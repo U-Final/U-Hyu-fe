@@ -1,4 +1,4 @@
-import { type BrandLogoProps } from '@components/brand_grid/brand.type';
+import { type BrandLogoProps } from '@/shared/components/brand_grid/brand.type';
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
 import React from 'react';

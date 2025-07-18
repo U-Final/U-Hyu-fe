@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { BrandLogo, BRANDS } from '@shared/components/brand_grid';
+import { BrandLogo, BRANDS } from '@/shared/components/brand_grid';
 
 const meta: Meta<typeof BrandLogo> = {
   title: 'Components/BrandLogo',

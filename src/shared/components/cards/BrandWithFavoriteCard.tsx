@@ -1,4 +1,4 @@
-import { IconButton } from '@components/buttons/IconButton';
+import { IconButton } from '@/shared/components';
 import { Star } from 'lucide-react';
 import { CardBase } from './CardBase';
 

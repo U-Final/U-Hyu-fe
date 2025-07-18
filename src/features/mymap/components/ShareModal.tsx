@@ -1,4 +1,4 @@
-import BaseModal from '@components/modals/BaseModal';
+import { BaseModal } from '@/shared/components';
 
 export const ShareModal = () => {
   return (

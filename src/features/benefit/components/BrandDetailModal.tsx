@@ -1,4 +1,4 @@
-import type { BrandDetail } from "@benefit/types/BrandDetail.types";
+import type { BrandDetail } from '@/features/benefit/types';
 import clsx from "clsx";
 
 const BrandDetailModal = ({ brand }: { brand: BrandDetail }) => {

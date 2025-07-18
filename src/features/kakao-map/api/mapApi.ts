@@ -1,4 +1,4 @@
-import { client } from '@client/axiosClient';
+import { client } from '@/shared/client';
 import { MAP_ENDPOINTS } from './endpoints';
 import type {
   GetNearbyStoresParams,
@@ -10,13 +10,8 @@ import type {
 } from './types';
 
 /**
- * 개선된 Map API 함수들
- *
- * 주요 개선사항:
- * 1. Path parameter 올바른 처리
- * 2. HTTP 메서드별 적절한 데이터 전달 방식
- * 3. 타입 안전성 강화
- * 4. 에러 처리 고려
+ * Map API 함수들
+ * MSW가 활성화된 경우 자동으로 목 데이터를 사용합니다.
  */
 export const mapApi = {
   /**
@@ -29,7 +24,7 @@ export const mapApi = {
     const response = await client.get<StoreListResponse>(
       MAP_ENDPOINTS.GET_NEARBY_STORES,
       {
-        params, // query parameter로 전달
+        params,
       }
     );
     return response.data;
@@ -42,7 +37,6 @@ export const mapApi = {
   getStoreDetail: async ({
     storeId,
   }: GetStoreDetailParams): Promise<StoreDetailResponse> => {
-    // path parameter를 URL에 직접 포함
     const url = `${MAP_ENDPOINTS.GET_STORE_DETAIL}/${storeId}`;
     const response = await client.get<StoreDetailResponse>(url);
     return response.data;
@@ -55,7 +49,6 @@ export const mapApi = {
   toggleFavorite: async ({
     storeId,
   }: ToggleFavoriteParams): Promise<ToggleFavoriteResponseType> => {
-    // RESTful한 엔드포인트 구성
     const url = `${MAP_ENDPOINTS.TOGGLE_FAVORITE}/${storeId}/favorite`;
     const response = await client.post<ToggleFavoriteResponseType>(url);
     return response.data;

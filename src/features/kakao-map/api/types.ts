@@ -1,11 +1,4 @@
-/**
- * 공통 API 응답 구조
- */
-export interface BaseResponse<T> {
-  statusCode: number;
-  message: string;
-  data: T;
-}
+import type { ApiResponse } from '@/shared/client/client.type';
 
 /**
  * 매장 혜택 정보
@@ -40,6 +33,7 @@ export interface StoreSummary {
   brandName: string;
   latitude: number;
   longitude: number;
+  isFavorite: boolean; // 추가
 }
 
 /**
@@ -53,9 +47,9 @@ export interface ToggleFavoriteResponse {
 /**
  * API 응답 타입들
  */
-export type StoreDetailResponse = BaseResponse<StoreDetail>;
-export type StoreListResponse = BaseResponse<StoreSummary[]>;
-export type ToggleFavoriteResponseType = BaseResponse<ToggleFavoriteResponse>;
+export type StoreDetailResponse = ApiResponse<StoreDetail>;
+export type StoreListResponse = ApiResponse<StoreSummary[]>;
+export type ToggleFavoriteResponseType = ApiResponse<ToggleFavoriteResponse>;
 
 /**
  * API 요청 파라미터 타입들

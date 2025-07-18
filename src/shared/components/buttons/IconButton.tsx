@@ -1,4 +1,4 @@
-import { cn } from '@shared/lib/utils';
+import { cn } from '@/shared/lib/utils';
 import type { ButtonHTMLAttributes } from 'react';
 
 interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

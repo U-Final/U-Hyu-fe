@@ -1,12 +1,12 @@
 import {
   Select,
-  SelectTrigger,
   SelectContent,
-  SelectItem,
-  SelectValue,
   SelectGroup,
+  SelectItem,
   SelectLabel,
-} from '@shared/components/shadcn/ui/select';
+  SelectTrigger,
+  SelectValue,
+} from '@/shared/components/shadcn/ui/select';
 
 const regions = [
   { label: '전체', value: 'all' },

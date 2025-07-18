@@ -309,11 +309,11 @@ export const userHandlers = [
 
 ## ✅ CodeRabbit 리뷰 체크리스트
 
-### 파일 구조 검증
+### File Structure Verification
 
-- [ ] 기능별 폴더 구조가 올바른가?
-- [ ] 파일명이 컨벤션을 따르는가?
-- [ ] Barrel export가 적절히 사용되었는가?
+- [ ] Feature folder structure is correct?
+- [ ] File names follow conventions?
+- [ ] Barrel exports are properly used?
 
 ### Code Quality Verification
 
@@ -322,18 +322,18 @@ export const userHandlers = [
 - [ ] Depth limitation (max 2 levels) is maintained
 - [ ] TypeScript types are properly defined
 
-### API 및 상태 관리
+### API and State Management
 
-- [ ] MSW 핸들러에 성공/실패 케이스가 모두 포함되었는가?
-- [ ] API 응답 구조가 실제 명세와 일치하는가?
-- [ ] React Query 훅이 올바르게 분리되었는가?
-- [ ] Zustand 상태가 전역 UI 제어에만 사용되었는가?
+- [ ] MSW handlers include both success/failure cases?
+- [ ] API response structure matches actual specifications?
+- [ ] React Query hooks are properly separated?
+- [ ] Zustand state is used only for global UI control?
 
-### Git 및 브랜치
+### Git and Branching
 
-- [ ] 브랜치명에 JIRA 키가 포함되었는가?
-- [ ] 커밋 메시지가 컨벤션을 따르는가?
-- [ ] PR 제목이 명확하고 이해하기 쉬운가?
+- [ ] Branch names include JIRA keys?
+- [ ] Commit messages follow conventions?
+- [ ] PR titles are clear and understandable?
 
 ---
 
@@ -349,3 +349,12 @@ The following issues **MUST be flagged for correction**:
 6. **Missing JIRA Keys** - Branch names and commits without JIRA issue keys
 
 **Note**: JSDoc is recommended but not mandatory. Flag only if existing JSDoc is incorrect or incomplete.
+
+---
+
+## 🎯 마무리
+
+이 지침서는 팀의 코드 품질 일관성을 위한 최소한의 규칙입니다.
+AI와 CodeRabbit이 이 규칙을 기반으로 리뷰할 때, 팀원들은 보다 높은 품질의 코드를 작성할 수 있습니다.
+
+**모든 규칙은 "왜?"에 대한 명확한 이유가 있으므로, 예외 사항이 있다면 반드시 팀 논의를 거쳐 결정하세요.**

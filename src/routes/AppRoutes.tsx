@@ -1,6 +1,6 @@
-import { PATH } from '@paths';
-import { BaseLayout, BottomNavigation, ModalRoot } from '@/shared/components';
 import { BenefitPage, ExtraInfo, HomePage, MapPage } from '@/pages';
+import { BaseLayout, BottomNavigation, ModalRoot } from '@/shared/components';
+import { PATH } from '@paths';
 
 import {
   BrowserRouter,

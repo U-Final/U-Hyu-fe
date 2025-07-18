@@ -4,6 +4,9 @@ import type { Store } from '../types/store';
 import type { StoreDetail, StoreListResponse } from '../api/types';
 import type { Position, MapStoreState, MapStoreActions } from './types';
 
+/**
+ * 환경변수에서 좌표값을 안전하게 파싱하는 유틸리티 함수
+ */
 const parseCoordinate = (
   value: string | undefined,
   defaultValue: number
@@ -12,42 +15,62 @@ const parseCoordinate = (
   return !isNaN(parsed) ? parsed : defaultValue;
 };
 
+/**
+ * MapStore 초기 상태
+ */
 const initialState: MapStoreState = {
+  // 위치 관련 상태
   userLocation: null,
   mapCenter: {
     lat: parseCoordinate(import.meta.env.VITE_MAP_INITIAL_LAT, 37.54699),
     lng: parseCoordinate(import.meta.env.VITE_MAP_INITIAL_LNG, 127.09598),
   },
+
+  // 매장 관련 상태
   stores: [],
   selectedStore: null,
   storeDetail: null,
+
+  // 로딩 상태
   loading: {
     location: false,
     stores: false,
     storeDetail: false,
     favorite: false,
   },
+
+  // 에러 상태
   errors: {
     location: null,
     stores: null,
     storeDetail: null,
     favorite: null,
   },
+
+  // 필터 관련 상태 (백엔드 필터링으로 변경되어 사용하지 않음)
   currentFilters: {},
   lastFetchParams: null,
   lastFetchTime: null,
 };
 
+/**
+ * MapStore 생성
+ * 지도 관련 비즈니스 로직과 데이터 상태를 관리
+ */
 export const useMapStore = create<MapStoreState & MapStoreActions>()(
   devtools(
     subscribeWithSelector((set, get) => ({
       ...initialState,
 
-      // 📍 위치 관리 (기존과 동일)
+      /**
+       * 사용자의 현재 위치를 가져오는 비동기 함수
+       * GPS 권한 요청 및 에러 처리 포함
+       */
       getCurrentLocation: async () => {
         const { loading } = get();
-        if (loading.location) return;
+        if (loading.location) return; // 이미 로딩 중이면 중복 실행 방지
 
+        // 로딩 상태 시작
         set(state => ({
           loading: { ...state.loading, location: true },
           errors: { ...state.errors, location: null },
@@ -59,7 +82,7 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
               navigator.geolocation.getCurrentPosition(resolve, reject, {
                 enableHighAccuracy: true,
                 timeout: 10000,
-                maximumAge: 300000,
+                maximumAge: 300000, // 5분간 캐시된 위치 사용
               });
             }
           );
@@ -69,12 +92,14 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
             lng: position.coords.longitude,
           };
 
+          // 위치 정보 업데이트 및 지도 중심점 이동
           set(state => ({
             userLocation: newLocation,
             mapCenter: newLocation,
             loading: { ...state.loading, location: false },
           }));
         } catch (error) {
+          // 위치 접근 에러 처리
           let errorMessage = '위치를 가져올 수 없습니다.';
           if (error instanceof GeolocationPositionError) {
             switch (error.code) {
@@ -97,86 +122,123 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
         }
       },
 
+      /**
+       * 지도 중심점 설정
+       */
       setMapCenter: (center: Position) => {
         set({ mapCenter: center });
       },
 
-      // 🏪 매장 데이터 관리 (React Query 연동)
+      /**
+       * 매장 목록 직접 설정
+       */
       setStores: (stores: Store[]) => {
         set({ stores });
       },
 
+      /**
+       * React Query 응답 데이터를 매장 목록으로 변환하여 설정
+       * 중복 업데이트 방지 로직 포함
+       */
       setStoresFromQuery: (queryData: StoreListResponse | undefined) => {
-        if (queryData?.data) {
-          const stores = queryData.data.map(store => ({
-            ...store,
-          }));
-          set({ stores });
+        if (!queryData?.data) return;
+
+        const newStores = queryData.data.map(store => ({ ...store }));
+
+        // 현재 스토어와 비교해서 실제로 변경된 경우에만 업데이트
+        const currentStores = get().stores;
+        const hasChanged =
+          newStores.length !== currentStores.length ||
+          newStores.some(
+            (store, index) =>
+              !currentStores[index] ||
+              store.storeId !== currentStores[index].storeId
+          );
+
+        if (hasChanged) {
+          set({ stores: newStores });
         }
       },
 
+      /**
+       * 매장 선택 및 지도 중심점 이동
+       * 중복 선택 방지 로직 포함
+       */
       selectStore: (store: Store | null) => {
+        const currentSelected = get().selectedStore;
+
+        // 같은 스토어를 다시 선택하는 경우 중복 업데이트 방지
+        if (currentSelected?.storeId === store?.storeId) return;
+
         set({ selectedStore: store });
+
+        // 매장 선택 시 해당 위치로 지도 중심점 이동
         if (store) {
           set({ mapCenter: { lat: store.latitude, lng: store.longitude } });
         }
       },
 
+      /**
+       * 매장 상세 정보 설정
+       * 중복 업데이트 방지 로직 포함
+       */
       setStoreDetail: (detail: StoreDetail | null) => {
+        const currentDetail = get().storeDetail;
+
+        // 같은 상세 정보인 경우 중복 업데이트 방지
+        if (currentDetail === detail) return;
+
         set({ storeDetail: detail });
       },
 
-      // 🎯 필터링 로직
+      /**
+       * 현재 적용된 필터 상태 저장
+       * 실제 필터링은 백엔드 API에서 처리됨
+       */
       applyFilters: filters => {
         set({ currentFilters: filters });
       },
 
+      /**
+       * 필터링된 매장 목록 반환
+       * 백엔드에서 이미 필터링된 데이터를 그대로 반환
+       */
       getFilteredStores: () => {
-        const { stores, currentFilters } = get();
-
-        return stores.filter(store => {
-          // 카테고리 필터
-          if (currentFilters.category && currentFilters.category !== 'all') {
-            if (store.categoryName !== currentFilters.category) return false;
-          }
-
-          // 브랜드 필터
-          if (currentFilters.brand) {
-            if (store.brandName !== currentFilters.brand) return false;
-          }
-
-          // 검색어 필터
-          if (currentFilters.searchQuery) {
-            const query = currentFilters.searchQuery.toLowerCase();
-            const searchTarget =
-              `${store.storeName} ${store.brandName} ${store.addressDetail}`.toLowerCase();
-            if (!searchTarget.includes(query)) return false;
-          }
-
-          return true;
-        });
+        const { stores } = get();
+        return stores;
       },
 
-      // 📊 상태 관리
+      /**
+       * 특정 타입의 로딩 상태 설정
+       */
       setLoading: (type, loading) => {
         set(state => ({
           loading: { ...state.loading, [type]: loading },
         }));
       },
 
+      /**
+       * 특정 타입의 에러 상태 설정
+       */
       setError: (type, error) => {
         set(state => ({
           errors: { ...state.errors, [type]: error },
         }));
       },
 
-      // 🛠️ 유틸리티
+      // 🛠️ 유틸리티 액션들
+      /**
+       * 특정 타입의 에러 상태 초기화
+       */
       clearError: type => {
         set(state => ({
           errors: { ...state.errors, [type]: null },
         }));
       },
 
+      /**
+       * 모든 에러 상태 초기화
+       */
       clearAllErrors: () => {
         set(() => ({
           errors: {
@@ -188,19 +250,21 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
         }));
       },
 
+      /**
+       * 전체 상태를 초기 상태로 리셋
+       */
       reset: () => {
         set(initialState);
       },
     })),
-    { name: 'map-store' }
+    { name: 'map-store' } // Redux DevTools에서 표시될 이름
   )
 );
 
-// 🎯 선택적 Selectors (성능 최적화)
+// 특정 상태만 구독하여 불필요한 리렌더링 방지
 export const useMapCenter = () => useMapStore(state => state.mapCenter);
 export const useStores = () => useMapStore(state => state.stores);
-export const useFilteredStores = () =>
-  useMapStore(state => state.getFilteredStores());
+export const useFilteredStores = () => useMapStore(state => state.stores);
 export const useSelectedStore = () => useMapStore(state => state.selectedStore);
 export const useUserLocation = () => useMapStore(state => state.userLocation);
 export const useMapLoading = () => useMapStore(state => state.loading);

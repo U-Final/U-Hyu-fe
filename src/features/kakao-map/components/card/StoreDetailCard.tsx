@@ -31,42 +31,50 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
         </svg>
       </div>
       {/* 상단: 매장명, 즐겨찾기 */}
-      <div className="relative z-10 mb-2 flex items-center justify-between">
-        <span className="text-xl font-bold text-left leading-7">
-          {storeName}
-        </span>
-        <div className="flex items-center gap-1">
-          <motion.svg
-            width="1.5rem"
-            height="1.5rem"
-            onClick={onToggleFavorite}
-            className="cursor-pointer"
-            animate={{
-              fill: isFavorite ? '#FFD600' : '#E0E0E0',
-              scale: isFavorite ? 1.3 : 1,
-            }}
-            whileTap={{ scale: 1.6, rotate: [0, -20, 20, 0] }}
-            transition={{ type: 'spring', stiffness: 400, damping: 10 }}
-            viewBox="0 0 20 20"
-            aria-label={isFavorite ? '즐겨찾기 해제' : '즐겨찾기 추가'}
-            tabIndex={0}
-            role="button"
-            onKeyDown={e => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                onToggleFavorite?.();
-              }
-            }}
-          >
-            <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955 6.561.955-4.756 4.635 1.122 6.545z" />
-          </motion.svg>
-
-          <span className="text-sm text-gray-500">
-            {favoriteCount >= 10000
-              ? `${Math.floor(favoriteCount / 10000)}만`
-              : favoriteCount}
+      <div className="relative z-10 mb-4">
+        {/* 매장명 + 즐겨찾기 */}
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-xl font-bold text-left leading-7">
+            {storeName}
           </span>
+          <div className="flex items-center gap-1">
+            <motion.svg
+              width="1.5rem"
+              height="1.5rem"
+              onClick={onToggleFavorite}
+              className="cursor-pointer"
+              animate={{
+                fill: isFavorite ? '#FFD600' : '#E0E0E0',
+                scale: isFavorite ? 1.3 : 1,
+              }}
+              whileTap={{ scale: 1.6, rotate: [0, -20, 20, 0] }}
+              transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+              viewBox="0 0 20 20"
+              aria-label={isFavorite ? '즐겨찾기 해제' : '즐겨찾기 추가'}
+              tabIndex={0}
+              role="button"
+              onKeyDown={e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onToggleFavorite?.();
+                }
+              }}
+            >
+              <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955 6.561.955-4.756 4.635 1.122 6.545z" />
+            </motion.svg>
+
+            <span className="text-xs text-gray-500">
+              {favoriteCount >= 10000
+                ? `${Math.floor(favoriteCount / 10000)}만`
+                : favoriteCount}
+            </span>
+          </div>
         </div>
+        {/* 등급별 혜택 제목 */}
+        <div className="text-sm font-semibold text-gray-700 mb-2">
+          등급별 혜택
+        </div>
+        {/* 혜택 정보 (등급+혜택) */}
         <div className="flex flex-row w-full items-center">
           <span className="bg-yellow-50 text-yellow-700 px-2 py-1 rounded-l font-bold text-sm min-w-[48px] text-center">
             {userGrade}
@@ -77,13 +85,15 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
         </div>
       </div>
       {/* 제공 횟수 */}
-      <div className="mb-3 relative z-10">
-        <div className="text-sm font-semibold text-gray-700">제공 횟수</div>
+      <div className="mb-4 relative z-10">
+        <div className="text-sm font-semibold text-gray-700 mb-2">
+          제공 횟수
+        </div>
         <div className="text-sm">{usageLimit}</div>
       </div>
       {/* 이용방법 */}
       <div className="relative z-10">
-        <div className="text-sm font-semibold text-gray-700 mb-1">이용방법</div>
+        <div className="text-sm font-semibold text-gray-700 mb-2">이용방법</div>
         <div className="text-xs text-gray-600 whitespace-pre-line">
           {usageMethod}
         </div>

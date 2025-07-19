@@ -32,10 +32,7 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
       </div>
       {/* 상단: 매장명, 즐겨찾기 */}
       <div className="relative z-10 mb-2 flex items-center justify-between">
-        <span
-          className="text-xl font-bold text-left"
-          style={{ fontSize: '1.25rem', lineHeight: '1.75rem' }}
-        >
+        <span className="text-xl font-bold text-left leading-7">
           {storeName}
         </span>
         <div className="flex items-center gap-1">
@@ -51,23 +48,24 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
             whileTap={{ scale: 1.6, rotate: [0, -20, 20, 0] }}
             transition={{ type: 'spring', stiffness: 400, damping: 10 }}
             viewBox="0 0 20 20"
+            aria-label={isFavorite ? '즐겨찾기 해제' : '즐겨찾기 추가'}
+            tabIndex={0}
+            role="button"
+            onKeyDown={e => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onToggleFavorite?.();
+              }
+            }}
           >
             <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955 6.561.955-4.756 4.635 1.122 6.545z" />
           </motion.svg>
-          <span
-            className="text-xs text-gray-500"
-            style={{ fontSize: '0.875rem' }}
-          >
+
+          <span className="text-sm text-gray-500">
             {favoriteCount >= 10000
               ? `${Math.floor(favoriteCount / 10000)}만`
               : favoriteCount}
           </span>
-        </div>
-      </div>
-      {/* 등급별 혜택 */}
-      <div className="mb-3 relative z-10">
-        <div className="text-sm font-semibold text-gray-700 mb-1">
-          등급별 혜택
         </div>
         <div className="flex flex-row w-full items-center">
           <span className="bg-yellow-50 text-yellow-700 px-2 py-1 rounded-l font-bold text-sm min-w-[48px] text-center">

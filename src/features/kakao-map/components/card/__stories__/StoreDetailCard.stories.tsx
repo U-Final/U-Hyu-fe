@@ -1,6 +1,6 @@
 import StoreDetailCard from '../StoreDetailCard';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const meta: Meta<typeof StoreDetailCard> = {
   title: 'KakaoMap/StoreDetailCard',

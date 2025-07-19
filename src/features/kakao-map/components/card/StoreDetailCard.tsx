@@ -8,7 +8,7 @@ export interface StoreDetailCardProps {
   benefits: string;
   usageLimit: string;
   usageMethod: string;
-  userGrade: string; // "우수", "VIP" , "VVIP"
+  userGrade?: string; // "우수", "VIP" , "VVIP" - optional로 변경
   onToggleFavorite?: () => void;
 }
 
@@ -19,7 +19,7 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
   benefits,
   usageLimit,
   usageMethod,
-  userGrade,
+  userGrade = '우수', // 기본값 설정
   onToggleFavorite,
 }) => {
   return (

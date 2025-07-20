@@ -1,5 +1,12 @@
 // src/shared/error/ApiErrorResponse.ts
 import type { ApiResponse } from '@/shared/client/client.type';
+export interface ApiErrorData {
+  code: number;
+  status: number;
+  message: string;
+  timestamp?: string;
+  path?: string;
+}
 
 export class ApiErrorResponse extends Error {
   code: number;

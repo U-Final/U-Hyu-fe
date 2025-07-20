@@ -1,4 +1,5 @@
-import type { ApiErrorResponse } from '@/shared/client/client.type';
+
+import type { ApiErrorData } from '@/shared/client/ApiErrorResponse';
 import { HttpResponse } from 'msw';
 
 export const createErrorResponse = (
@@ -6,8 +7,8 @@ export const createErrorResponse = (
   status: number = 400,
   code: number = 1001,
   path?: string
-): HttpResponse<ApiErrorResponse> => {
-  return HttpResponse.json<ApiErrorResponse>(
+): HttpResponse<ApiErrorData> => {
+  return HttpResponse.json<ApiErrorData>(
     {
       message,
       status,
@@ -15,6 +16,6 @@ export const createErrorResponse = (
       timestamp: new Date().toISOString(),
       path,
     },
-    { status } // 실제 HTTP 응답 status도 일치시킴
+    { status }
   );
 };

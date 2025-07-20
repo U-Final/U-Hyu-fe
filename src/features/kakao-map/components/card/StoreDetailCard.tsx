@@ -75,13 +75,17 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
           등급별 혜택
         </div>
         {/* 혜택 정보 (등급+혜택) */}
-        <div className="flex flex-row w-full items-center">
-          <span className="bg-yellow-50 text-yellow-700 px-2 py-1 rounded-l font-bold text-sm min-w-[48px] text-center">
-            {userGrade}
-          </span>
-          <span className="bg-yellow-50 px-3 py-1 rounded-r text-sm flex-1 text-right">
-            {benefits}
-          </span>
+        <div className="flex flex-col w-full">
+          <div className="flex flex-row items-stretch">
+            <div className="bg-yellow-50 text-yellow-700 px-2 py-1 rounded-tl rounded-bl font-bold text-sm min-w-[48px] text-center shrink-0 flex items-center justify-center">
+              <span>{userGrade}</span>
+            </div>
+            <div className="bg-yellow-50 px-3 py-1 rounded-tr rounded-br text-sm flex-1 min-w-0">
+              <span className="break-words whitespace-pre-wrap text-left block">
+                {benefits}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
       {/* 제공 횟수 */}

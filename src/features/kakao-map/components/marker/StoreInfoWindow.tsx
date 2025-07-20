@@ -45,7 +45,7 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
   return (
     <CustomOverlayMap
       position={position}
-      yAnchor={1.3}
+      yAnchor={1.25}
       xAnchor={0.5}
       zIndex={1000}
     >

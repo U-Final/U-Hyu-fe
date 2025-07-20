@@ -1,4 +1,4 @@
-import { type FC, useCallback, useState } from 'react';
+import { type FC, useCallback, useState, useRef } from 'react';
 import { CustomOverlayMap, Map as KakaoMap } from 'react-kakao-maps-sdk';
 import type { Store } from '../../types/store';
 import BrandMarker from './BrandMarker';
@@ -13,6 +13,8 @@ interface MapWithMarkersProps {
   onCenterChange?: (center: { lat: number; lng: number }) => void;
 }
 
+const MINIMUM_MOVE_DISTANCE = 300; // 미터 단위
+
 const MapWithMarkers: FC<MapWithMarkersProps> = ({
   center,
   stores,
@@ -23,24 +25,71 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   onCenterChange,
 }) => {
   const [selectedStoreId, setSelectedStoreId] = useState<number | null>(null);
+  const lastApiCallPosition = useRef<{ lat: number; lng: number } | null>(null);
 
   const handleMarkerClick = (store: Store) => {
     setSelectedStoreId(store.storeId);
     onStoreClick?.(store);
   };
 
-  // 지도 중심점 변경 핸들러
-  const handleCenterChanged = useCallback(
+  // 거리 계산 함수 (Haversine formula)
+  const calculateDistance = useCallback(
+    (
+      pos1: { lat: number; lng: number },
+      pos2: { lat: number; lng: number }
+    ) => {
+      const R = 6371e3; // 지구 반지름 (미터)
+      const φ1 = (pos1.lat * Math.PI) / 180;
+      const φ2 = (pos2.lat * Math.PI) / 180;
+      const Δφ = ((pos2.lat - pos1.lat) * Math.PI) / 180;
+      const Δλ = ((pos2.lng - pos1.lng) * Math.PI) / 180;
+
+      const a =
+        Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+        Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+      return R * c; // 미터 단위 거리
+    },
+    []
+  );
+
+  const handleDragEnd = useCallback(
     (map: kakao.maps.Map) => {
       const newCenter = map.getCenter();
-      if (newCenter && onCenterChange) {
-        onCenterChange({
-          lat: newCenter.getLat(),
-          lng: newCenter.getLng(),
-        });
+      if (!newCenter || !onCenterChange) return;
+
+      const currentPosition = {
+        lat: newCenter.getLat(),
+        lng: newCenter.getLng(),
+      };
+
+      if (lastApiCallPosition.current) {
+        const distance = calculateDistance(
+          lastApiCallPosition.current,
+          currentPosition
+        );
+
+        // 최소 이동 거리를 충족하지 않으면 API 요청 스킵
+        if (distance < MINIMUM_MOVE_DISTANCE) {
+          if (import.meta.env.MODE === 'development') {
+            console.log(
+              `드래그 완료 - 거리 부족 (${Math.round(distance)}m < ${MINIMUM_MOVE_DISTANCE}m), API 요청 스킵`
+            );
+          }
+          return;
+        }
+
+        if (import.meta.env.MODE === 'development') {
+          console.log(`API 요청 실행 - 이동 거리: ${Math.round(distance)}m`);
+        }
       }
+
+      // API 요청 실행 및 위치 저장
+      lastApiCallPosition.current = currentPosition;
+      onCenterChange(currentPosition);
     },
-    [onCenterChange]
+    [onCenterChange, calculateDistance]
   );
 
   return (
@@ -49,7 +98,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
       center={center}
       className={className}
       level={level}
-      onCenterChanged={handleCenterChanged}
+      onDragEnd={handleDragEnd}
     >
       {/* 매장 마커들 */}
       {stores.map(store => (
@@ -80,7 +129,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
             <div className="w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg" />
 
             {/* 위치 정확도 표시 원 */}
-            <div className="absolute inset-0 w-12 h-12 border-2 border-blue-300 rounded-full opacity-30 animate-pulse transform -translate-x-1/2 -translate-y-1/2 translate-x-2 translate-y-2" />
+            <div className="absolute left-2 top-2 w-12 h-12 border-2 border-blue-300 rounded-full opacity-30 animate-pulse -translate-x-1/2 -translate-y-1/2" />
           </div>
         </CustomOverlayMap>
       )}

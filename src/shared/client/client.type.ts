@@ -14,7 +14,7 @@ export interface ApiError {
   path: string;
 }
 
-export interface ApiResponse<T> {
+export interface ApiResponse2<T> {
   data: T;
   message: string;
   status: number;

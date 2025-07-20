@@ -1,5 +1,7 @@
-import { IconButton } from '@/shared/components';
 import { Star } from 'lucide-react';
+
+import { IconButton } from '@/shared/components';
+
 import { CardBase } from './CardBase';
 
 interface BrandWithFavoriteCardProps {

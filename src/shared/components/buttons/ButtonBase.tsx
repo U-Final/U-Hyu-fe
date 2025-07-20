@@ -1,5 +1,6 @@
-import { Loader2 } from 'lucide-react';
 import { forwardRef } from 'react';
+
+import { Loader2 } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
 type ButtonVariant = 'primary' | 'nav' | 'ghost';

@@ -6,7 +6,7 @@ export const mockUserInfoData = {
   grade: 'VIP',
 }
 
-export const mockRecommedationData = [
+export const mockRecommendationData = [
   // 근데 일단 첫번째로는 일단 내가 브랜드 아이디를 넘기면 그거에 대한 정보를 불러오게 될거같은데 말이지 일ㄷ나
 ];
 

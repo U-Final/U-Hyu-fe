@@ -60,7 +60,7 @@ export const fetchNearbyStores = async (): Promise<NearbyStore[]> => {
 
 // ✅ 3. 추천 리스트 (브랜드 ID 또는 grade 기반)
 // export const fetchRecommendations = async (params: { brandId?: number; grade?: string }): Promise<Recommendation[]> => {
-//   const res = await client.get<ApiResponse<Recommendation[]>>(HOME_ENDPOINTS.HOME.RECOMMENDTIONS, {
+//   const res = await client.get<ApiResponse<Recommendation[]>>(HOME_ENDPOINTS.HOME.RECOMMENDATIONS, {
 //     params,
 //   });
 //   return res.data.result;

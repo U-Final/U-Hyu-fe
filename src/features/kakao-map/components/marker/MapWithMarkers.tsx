@@ -177,8 +177,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
             lat: infoWindowStore.latitude,
             lng: infoWindowStore.longitude,
           }}
-          onClose={handleInfoWindowClose}
-          onToggleFavorite={handleToggleFavorite}
+          handleToggleFavorite={handleToggleFavorite}
         />
       )}
 

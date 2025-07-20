@@ -13,3 +13,10 @@ export interface ApiError {
   timestamp: string;
   path: string;
 }
+
+export interface ApiResponse<T> {
+  data: T;
+  message: string;
+  status: number;
+  timestamp?: string;
+}

@@ -45,7 +45,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
     setInfoWindowStore(store);
 
     // 인포 윈도우가 화면 중앙에 오도록 오프셋 적용
-    const offset = 0.0011;
+    const offset = 0.0017;
     const targetLat = store.latitude + offset;
     const targetLng = store.longitude;
     const targetCenter = { lat: targetLat, lng: targetLng };

@@ -1,4 +1,5 @@
 import type { ApiResponse } from "@/shared/client/client.type";
+import { createErrorResponse } from "@/shared/utils/createErrorResponse";
 import { HOME_ENDPOINTS } from "@home/api/endpoints";
 import { mockBenefitsData, mockNearbyStoresData, mockUserInfoData } from "@home/api/mockData";
 import { http, HttpResponse } from "msw";
@@ -14,6 +15,11 @@ const createResponse = <T>(result: T, message: string): HttpResponse<ApiResponse
 
 export const homeHandlers = [
   http.get(HOME_ENDPOINTS.HOME.USER_INFO, () => {
+    const shouldFail = false;
+    if (shouldFail) { //실패시
+      return createErrorResponse('로그인된 유저가 아닙니다.', 404, 1003);
+    }
+
     return createResponse(
       mockUserInfoData,
       "유저 정보 조회 성공",
@@ -24,17 +30,25 @@ export const homeHandlers = [
   //   return HttpResponse.json(mockRecommendationData);
   // }),
 
-  // 3. 주변 매장
   http.get(HOME_ENDPOINTS.HOME.NEARBY_STORES, () => {
+    const shouldFail = false;
+    if (shouldFail) { //실패시
+      return createErrorResponse('주변매장 조회 실패', 400, 1003);
+    }
+
     return createResponse(mockNearbyStoresData, "주변 매장 조회 성공")
   }),
 
   // 4. 멤버십 혜택
   // /home/benefits?grade=VIP 같은 요청을 보냄
-  // get 요청이라서 파라미터로 넘기는거네
   http.get(HOME_ENDPOINTS.HOME.BENEFITS, ({ request }) => {
     const url = new URL(request.url);
     const grade = url.searchParams.get("grade");
+
+    const shouldFail = false;
+    if (shouldFail) { //실패시
+      return createErrorResponse('등급 혜택 조회 실패', 400, 1003);
+    }
 
     return createResponse(mockBenefitsData, `${grade} 등급 혜택 조회 성공`);
   }),

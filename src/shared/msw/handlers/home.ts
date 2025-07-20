@@ -1,17 +1,9 @@
-import type { ApiResponse } from "@/shared/client/client.type";
 import { createErrorResponse } from "@/shared/utils/createErrorResponse";
+import { createResponse } from "@/shared/utils/createResponse";
 import { HOME_ENDPOINTS } from "@home/api/endpoints";
 import { mockBenefitsData, mockNearbyStoresData, mockUserInfoData } from "@home/api/mockData";
-import { http, HttpResponse } from "msw";
+import { http } from "msw";
 
-const createResponse = <T>(result: T, message: string): HttpResponse<ApiResponse<T>> => {
-  return HttpResponse.json({
-    code: 0,
-    status: 200,
-    message,
-    result,
-  });
-};
 
 export const homeHandlers = [
   http.get(HOME_ENDPOINTS.HOME.USER_INFO, () => {

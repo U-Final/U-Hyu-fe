@@ -5,13 +5,6 @@ export interface ApiResponse<T> {
   status: number;
   timestamp?: string;
 }
-export interface ApiErrorResponse {
-  code: number;
-  status: number;
-  message: string;
-  timestamp?: string;
-  path?: string;
-}
 
 export interface ApiError {
   message: string;

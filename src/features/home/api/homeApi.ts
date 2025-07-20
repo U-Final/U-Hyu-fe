@@ -1,6 +1,7 @@
 // axios 요청 함수 모음
 import { client } from '@/shared/client';
-import type { ApiErrorResponse, ApiResponse } from '@/shared/client/client.type';
+import { ApiErrorResponse } from '@/shared/client/ApiErrorResponse';
+import type { ApiResponse } from '@/shared/client/client.type';
 import { HOME_ENDPOINTS } from '@home/api/endpoints';
 
 export interface NearbyStore {
@@ -38,7 +39,7 @@ export const fetchUserInfo = async (): Promise<UserInfo> => {
   const res = await client.get<ApiResponse<UserInfo>>(HOME_ENDPOINTS.HOME.USER_INFO);
   
   if (res.data.code !== 0 || !res.data.result) {
-    throw res.data as ApiErrorResponse;
+    throw new ApiErrorResponse(res.data);
   }
 
   return res.data.result;
@@ -49,7 +50,7 @@ export const fetchNearbyStores = async (): Promise<NearbyStore[]> => {
   const res = await client.get<ApiResponse<NearbyStore[]>>(HOME_ENDPOINTS.HOME.NEARBY_STORES);
   
   if (res.data.code !== 0 || !res.data.result) {
-    throw res.data as ApiErrorResponse;
+    throw new ApiErrorResponse(res.data);
   }
   
   return res.data.result;
@@ -71,7 +72,7 @@ export const fetchBenefits = async (grade: string): Promise<Benefit[]> => {
   });
 
   if (res.data.code !== 0 || !res.data.result) {
-    throw res.data as ApiErrorResponse;
+    throw new ApiErrorResponse(res.data);
   }
   
   return res.data.result;

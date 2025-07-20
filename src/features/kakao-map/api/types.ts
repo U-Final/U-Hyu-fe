@@ -45,18 +45,9 @@ export interface ToggleFavoriteResponse {
 }
 
 /**
- * 사용자 정의 응답 타입 (statusCode 사용)
- */
-export interface CustomApiResponse<T> {
-  statusCode: number;
-  message: string;
-  data: T;
-}
-
-/**
  * API 응답 래퍼 타입들
  */
-export type StoreDetailResponse = CustomApiResponse<StoreDetail>;
+export type StoreDetailResponse = ApiResponse<StoreDetail>;
 export type StoreListResponse = ApiResponse<StoreSummary[]>;
 export type ToggleFavoriteResponseType = ApiResponse<ToggleFavoriteResponse>;
 

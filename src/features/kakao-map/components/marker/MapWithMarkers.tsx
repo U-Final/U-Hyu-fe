@@ -40,7 +40,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   }, [center, infoWindowStore]);
   const lastApiCallPosition = useRef<{ lat: number; lng: number } | null>(null);
 
-  const handleMarkerClick = (store: Store) => {
+  const handleMarkerClick = useCallback((store: Store) => {
     setSelectedStoreId(store.storeId);
     setInfoWindowStore(store);
 
@@ -58,16 +58,16 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
     setTimeout(() => {
       setIsPanto(false);
     }, 500); // 애니메이션 시간을 500ms로 증가
-  };
+  }, []);
 
-  const handleInfoWindowClose = () => {
+  const handleInfoWindowClose = useCallback(() => {
     setSelectedStoreId(null);
     setInfoWindowStore(null);
-  };
+  }, []);
 
   const toggleFavoriteMutation = useToggleFavoriteMutation();
 
-  const handleToggleFavorite = async () => {
+  const handleToggleFavorite = useCallback(async () => {
     if (!infoWindowStore) return;
 
     try {
@@ -77,7 +77,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
     } catch (error) {
       console.error('즐겨찾기 토글 실패:', error);
     }
-  };
+  }, [infoWindowStore, toggleFavoriteMutation]);
 
   // 거리 계산 함수 (Haversine formula)
   const calculateDistance = useCallback(

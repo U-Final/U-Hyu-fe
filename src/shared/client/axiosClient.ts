@@ -40,3 +40,14 @@ export const authClient: AxiosInstance = axios.create({
   },
   withCredentials: true,
 });
+
+authClient.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response?.data?.code !== undefined) {
+      throw new ApiErrorResponse(error.response.data);
+    }
+
+    return Promise.reject(error);
+  }
+);

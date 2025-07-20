@@ -1,7 +1,9 @@
 import axios, { type AxiosInstance } from 'axios';
 
+const isMocking = import.meta.env.VITE_USE_MSW === 'true';
+
 const API_CONFIG = {
-  BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:8080',
+  BASE_URL: isMocking ? '' : import.meta.env.VITE_API_URL, // ✅ 여기서 빈 문자열이면 상대경로!
   TIMEOUT: 10000,
 } as const;
 

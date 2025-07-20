@@ -229,9 +229,10 @@ export const createMockStoreDetailResponse = (storeId: number) => {
   }
 
   return {
-    statusCode: 0,
-    message: '정상 처리 되었습니다.',
+    status: 200,
+    message: '매장 상세 정보를 성공적으로 조회했습니다.',
     data: storeDetail,
+    timestamp: new Date().toISOString(),
   };
 };
 

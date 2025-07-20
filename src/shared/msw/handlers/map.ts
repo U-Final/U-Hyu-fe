@@ -164,15 +164,11 @@ export const mapHandlers = [
         createMockStoreDetailResponse(storeId);
       return HttpResponse.json(response, { status: 200 });
     } catch {
-      return HttpResponse.json(
-        {
-          status: 404,
-          message: '매장을 찾을 수 없습니다.',
-          data: null,
-          timestamp: new Date().toISOString(),
-        },
-        { status: 404 }
-      );
+      return HttpResponse.json({
+        status: 404,
+        message: '매장을 찾을 수 없습니다.',
+        data: null,
+      });
     }
   }),
 

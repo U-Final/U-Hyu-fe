@@ -1,5 +1,5 @@
 import type { ApiResponse } from "@/shared/client/client.type";
-import { END_POINTS } from "@home/api/endpoints";
+import { HOME_ENDPOINTS } from "@home/api/endpoints";
 import { mockBenefitsData, mockNearbyStoresData, mockUserInfoData } from "@home/api/mockData";
 import { http, HttpResponse } from "msw";
 
@@ -13,27 +13,26 @@ const createResponse = <T>(result: T, message: string): HttpResponse<ApiResponse
 };
 
 export const homeHandlers = [
-  http.get(END_POINTS.HOME.USER_INFO, () => {
-    console.log('🥵🤨 [MSW] /home/user-info 핸들러 작동!');
+  http.get(HOME_ENDPOINTS.HOME.USER_INFO, () => {
     return createResponse(
       mockUserInfoData,
       "유저 정보 조회 성공",
     )
   }),
 
-  // http.get(END_POINTS.HOME.RECOMMENDTIONS, () => {
+  // http.get(HOME_ENDPOINTS.HOME.RECOMMENDTIONS, () => {
   //   return HttpResponse.json(mockRecommedationData);
   // }),
 
   // 3. 주변 매장
-  http.get(END_POINTS.HOME.NEARBY_STORES, () => {
+  http.get(HOME_ENDPOINTS.HOME.NEARBY_STORES, () => {
     return createResponse(mockNearbyStoresData, "주변 매장 조회 성공")
   }),
 
   // 4. 멤버십 혜택
   // /home/benefits?grade=VIP 같은 요청을 보냄
   // get 요청이라서 파라미터로 넘기는거네
-  http.get(END_POINTS.HOME.BENEFITS, ({ request }) => {
+  http.get(HOME_ENDPOINTS.HOME.BENEFITS, ({ request }) => {
     const url = new URL(request.url);
     const grade = url.searchParams.get("grade");
 

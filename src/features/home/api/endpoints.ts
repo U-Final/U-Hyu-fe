@@ -1,6 +1,6 @@
 const HOME = '/home';
 
-export const END_POINTS = {
+export const HOME_ENDPOINTS = {
   HOME: {
     ROOT: HOME,
     USER_INFO: `${HOME}/user-info`,

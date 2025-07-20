@@ -1,7 +1,7 @@
 // axios 요청 함수 모음
 import { client } from '@/shared/client';
 import type { ApiResponse } from '@/shared/client/client.type';
-import { END_POINTS } from '@home/api/endpoints';
+import { HOME_ENDPOINTS } from '@home/api/endpoints';
 
 export interface NearbyStore {
   store_name: string;
@@ -35,7 +35,7 @@ export interface UserInfo {
 
 // ✅ 1. 유저 정보
 export const fetchUserInfo = async (): Promise<UserInfo> => {
-  const res = await client.get<ApiResponse<UserInfo>>(END_POINTS.HOME.USER_INFO);
+  const res = await client.get<ApiResponse<UserInfo>>(HOME_ENDPOINTS.HOME.USER_INFO);
   
   if (!res.data.result) {
     throw new Error('🚨 유저 정보가 존재하지 않습니다');
@@ -48,7 +48,7 @@ export const fetchUserInfo = async (): Promise<UserInfo> => {
 
 // // ✅ 2. 주변 매장
 export const fetchNearbyStores = async (): Promise<NearbyStore[]> => {
-  const res = await client.get<ApiResponse<NearbyStore[]>>(END_POINTS.HOME.NEARBY_STORES);
+  const res = await client.get<ApiResponse<NearbyStore[]>>(HOME_ENDPOINTS.HOME.NEARBY_STORES);
   
   if (!res.data.result) {
     throw new Error('주변 매장 정보가 없습니다.');
@@ -60,7 +60,7 @@ export const fetchNearbyStores = async (): Promise<NearbyStore[]> => {
 
 // ✅ 3. 추천 리스트 (브랜드 ID 또는 grade 기반)
 // export const fetchRecommendations = async (params: { brandId?: number; grade?: string }): Promise<Recommendation[]> => {
-//   const res = await client.get<ApiResponse<Recommendation[]>>(END_POINTS.HOME.RECOMMENDTIONS, {
+//   const res = await client.get<ApiResponse<Recommendation[]>>(HOME_ENDPOINTS.HOME.RECOMMENDTIONS, {
 //     params,
 //   });
 //   return res.data.result;
@@ -68,7 +68,7 @@ export const fetchNearbyStores = async (): Promise<NearbyStore[]> => {
 
 // ✅ 4. 멤버십 혜택
 export const fetchBenefits = async (grade: string): Promise<Benefit[]> => {
-  const res = await client.get<ApiResponse<Benefit[]>>(END_POINTS.HOME.BENEFITS, {
+  const res = await client.get<ApiResponse<Benefit[]>>(HOME_ENDPOINTS.HOME.BENEFITS, {
     params: { grade },
   });
 

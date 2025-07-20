@@ -1,5 +1,5 @@
-import type { ButtonBaseProps } from '@/shared/components/buttons/ButtonBase';
 import { ButtonBase } from '@/shared/components';
+import type { ButtonBaseProps } from '@/shared/components/buttons/ButtonBase';
 
 export const GhostButton = ({
   type = 'button',

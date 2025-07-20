@@ -1,6 +1,8 @@
-import { NavButton } from '@/shared/components';
 import { PATH } from '@paths';
+
+import { NavButton } from '@/shared/components';
 import { useModalStore } from '@/shared/store';
+
 import BaseModal from './BaseModal';
 
 const LoginModal = () => {

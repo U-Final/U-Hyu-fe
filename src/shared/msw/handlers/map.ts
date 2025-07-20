@@ -1,8 +1,9 @@
-import { http, HttpResponse } from 'msw';
+import { HttpResponse, http } from 'msw';
+
 import {
   MOCK_STORES,
-  createMockStoreListResponse,
   createMockStoreDetailResponse,
+  createMockStoreListResponse,
   createMockToggleFavoriteResponse,
 } from '@/features/kakao-map/api/mockData';
 import type {

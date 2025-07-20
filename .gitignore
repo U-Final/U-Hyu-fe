@@ -32,3 +32,4 @@ pnpm-lock.yaml
 .env
 .tsbuildinfo
 .env.development
+tsconfig.tsbuildinfo

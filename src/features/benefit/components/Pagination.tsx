@@ -1,6 +1,7 @@
+import type { FC } from 'react';
+
 import { PaginationButton } from '@/features/benefit/components';
 import type { PaginationProps } from '@/features/benefit/types';
-import type { FC } from 'react';
 
 const Pagination: FC<PaginationProps> = ({
   currentPage,

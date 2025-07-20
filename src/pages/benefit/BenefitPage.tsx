@@ -1,12 +1,14 @@
+import { useState } from 'react';
+
 import {
   BrandDetailModal,
   CheckBoxList,
   Pagination,
 } from '@/features/benefit/components';
 import type { BrandDetail } from '@/features/benefit/types';
+
 import { BrandCard, FilterTabs, SearchInput } from '@/shared/components';
 import { useModalStore } from '@/shared/store';
-import { useState } from 'react';
 
 const BenefitPage = () => {
   const [currentPage, setCurrentPage] = useState(1);

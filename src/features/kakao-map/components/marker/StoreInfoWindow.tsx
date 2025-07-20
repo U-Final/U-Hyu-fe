@@ -23,8 +23,13 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
 
   if (isLoading) {
     return (
-      <CustomOverlayMap position={position} yAnchor={1.2} xAnchor={0.5}>
-        <div className="bg-white p-4 rounded-lg shadow-lg">
+      <CustomOverlayMap
+        position={position}
+        yAnchor={1.2}
+        xAnchor={0.5}
+        zIndex={1000}
+      >
+        <div className="bg-white p-4 rounded-lg shadow-lg relative z-50">
           <div className="animate-pulse">로딩 중...</div>
         </div>
       </CustomOverlayMap>
@@ -38,16 +43,23 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
   const storeDetail = storeDetailResponse.data;
 
   return (
-    <CustomOverlayMap position={position} yAnchor={1.2} xAnchor={0.5}>
-      <StoreDetailCard
-        storeName={storeDetail.storeName}
-        isFavorite={storeDetail.isFavorite}
-        favoriteCount={storeDetail.favoriteCount}
-        benefits={storeDetail.benefits}
-        usageLimit={storeDetail.usageLimit}
-        usageMethod={storeDetail.usageMethod}
-        onToggleFavorite={onToggleFavorite}
-      />
+    <CustomOverlayMap
+      position={position}
+      yAnchor={1.3}
+      xAnchor={0.5}
+      zIndex={1000}
+    >
+      <div className="relative z-50">
+        <StoreDetailCard
+          storeName={storeDetail.storeName}
+          isFavorite={storeDetail.isFavorite}
+          favoriteCount={storeDetail.favoriteCount}
+          benefits={storeDetail.benefits}
+          usageLimit={storeDetail.usageLimit}
+          usageMethod={storeDetail.usageMethod}
+          onToggleFavorite={onToggleFavorite}
+        />
+      </div>
     </CustomOverlayMap>
   );
 };

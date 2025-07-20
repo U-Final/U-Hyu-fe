@@ -3,36 +3,7 @@ import { client } from '@/shared/client';
 import { ApiErrorResponse } from '@/shared/client/ApiErrorResponse';
 import type { ApiResponse } from '@/shared/client/client.type';
 import { HOME_ENDPOINTS } from '@home/api/endpoints';
-
-export interface NearbyStore {
-  store_name: string;
-  addr_detail: string;
-  description: string;
-  logo_image?: string;        // 선택적으로 이미지 추가
-  latitude?: number;
-  longitude?: number;
-  isFavorite?: boolean;
-}
-
-export interface Benefit {
-  benefit_type: 'DISCOUNT' | 'GIFT';
-  description: string;
-  logo_image?: string;
-}
-
-export interface Recommendation {
-  brand_id: number;
-  brand_name: string;
-  benefit_title: string;
-  description: string;
-  logo_image: string;
-  tags: string[];
-}
-
-export interface UserInfo {
-  user_name: string;
-  grade: string;
-}
+import type { Benefit, NearbyStore, UserInfo } from '@home/api/home.types';
 
 // ✅ 1. 유저 정보
 export const fetchUserInfo = async (): Promise<UserInfo> => {

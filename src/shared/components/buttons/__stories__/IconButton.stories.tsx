@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Search, X } from 'lucide-react';
+
 import { IconButton } from '../IconButton';
 
 const meta: Meta<typeof IconButton> = {

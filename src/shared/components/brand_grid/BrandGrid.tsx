@@ -1,7 +1,8 @@
-import { type BrandGridProps } from '@/shared/components/brand_grid/brand.type';
-import { BrandLogo } from '@/shared/components';
-import { BRANDS } from '@/shared/components/brand_grid/constants';
 import React from 'react';
+
+import { BrandLogo } from '@/shared/components';
+import { type BrandGridProps } from '@/shared/components/brand_grid/brand.type';
+import { BRANDS } from '@/shared/components/brand_grid/constants';
 
 export const BrandGrid: React.FC<BrandGridProps> = ({
   selectedBrands,

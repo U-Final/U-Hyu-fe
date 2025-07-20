@@ -20,8 +20,8 @@ export const homeHandlers = [
     )
   }),
 
-  // http.get(HOME_ENDPOINTS.HOME.RECOMMENDTIONS, () => {
-  //   return HttpResponse.json(mockRecommedationData);
+  // http.get(HOME_ENDPOINTS.HOME.RECOMMENDATIONS, () => {
+  //   return HttpResponse.json(mockRecommendationData);
   // }),
 
   // 3. 주변 매장

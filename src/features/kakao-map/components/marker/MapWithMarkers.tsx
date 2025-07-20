@@ -23,7 +23,6 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   currentLocation,
   level = 4,
   className = 'w-full h-full',
-  onStoreClick,
   onCenterChange,
 }) => {
   const [selectedStoreId, setSelectedStoreId] = useState<number | null>(null);
@@ -32,34 +31,33 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   const [isPanto, setIsPanto] = useState(false);
   const mapRef = useRef<kakao.maps.Map | null>(null);
 
-  // center prop이 변경될 때 mapCenter 동기화
+  // center prop 동기화 useEffect를 조건부로 변경
   useEffect(() => {
-    setMapCenter(center);
-  }, [center]);
+    // 인포윈도우가 열려있지 않을 때만 center prop 동기화
+    if (!infoWindowStore) {
+      setMapCenter(center);
+    }
+  }, [center, infoWindowStore]);
   const lastApiCallPosition = useRef<{ lat: number; lng: number } | null>(null);
 
   const handleMarkerClick = (store: Store) => {
     setSelectedStoreId(store.storeId);
     setInfoWindowStore(store);
 
-    // 인포윈도우가 화면 중앙에 오도록 위치 계산
-    // StoreDetailCard 높이를 고려한 오프셋 (적절한 값으로 수정)
-    const offsetLat = 0.001; // 약 100m 위쪽으로 이동 (너무 크지 않게)
-    const targetCenter = {
-      lat: store.latitude + offsetLat,
-      lng: store.longitude,
-    };
+    // 인포 윈도우가 화면 중앙에 오도록 오프셋 적용
+    const offset = 0.0008;
+    const targetLat = store.latitude + offset;
+    const targetLng = store.longitude;
+    const targetCenter = { lat: targetLat, lng: targetLng };
 
-    // isPanto를 true로 설정하고 center 변경하여 부드럽게 이동
+    // KakaoMap의 isPanto를 사용한 부드러운 이동
     setIsPanto(true);
     setMapCenter(targetCenter);
 
     // 애니메이션 완료 후 isPanto 리셋
     setTimeout(() => {
       setIsPanto(false);
-    }, 300);
-
-    onStoreClick?.(store);
+    }, 500); // 애니메이션 시간을 500ms로 증가
   };
 
   const handleInfoWindowClose = () => {

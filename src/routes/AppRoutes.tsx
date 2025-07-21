@@ -1,5 +1,7 @@
 import { BenefitPage, ExtraInfo, HomePage, MapPage } from '@/pages';
 import { BaseLayout, BottomNavigation, ModalRoot } from '@/shared/components';
+import MyPage from '@/pages/mypage/MyPage';
+import MyPageActivity from '@/pages/mypage/MyPageActivity';
 import { PATH } from '@paths';
 
 import {
@@ -17,6 +19,7 @@ const Layout = () => {
     PATH.BENEFIT,
     PATH.MAP,
     PATH.MYPAGE,
+    PATH.MYPAGE_ACTIVITY
   ] as const;
 
   const showBottomNav = visibleBottomNavRoutes.includes(
@@ -45,13 +48,13 @@ export const AppRoutes = () => {
         <Route element={<Layout />}>
           <Route path={PATH.HOME} element={<HomePage />} />
           <Route path={PATH.BENEFIT} element={<BenefitPage />} />
-          <Route path={PATH.MYPAGE} element={<div>myPage</div>} />
+          <Route path={PATH.MYPAGE} element={<MyPage />} />
+          <Route path={PATH.MYPAGE_ACTIVITY} element={<MyPageActivity />} />
           <Route path={PATH.EXTRA_INFO} element={<ExtraInfo />} />
           <Route path={PATH.LOGIN} element={<div>loginPage</div>} />
           <Route path={PATH.MAP} element={<MapPage />} />
         </Route>
       </Routes>
-
       <ModalRoot />
     </BrowserRouter>
   );

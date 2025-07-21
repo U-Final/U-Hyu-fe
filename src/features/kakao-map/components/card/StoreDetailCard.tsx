@@ -41,7 +41,10 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
             <motion.svg
               width="1.5rem"
               height="1.5rem"
-              onClick={handleToggleFavorite}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleToggleFavorite?.();
+              }}
               className="cursor-pointer"
               animate={{
                 fill: isFavorite ? '#FFD600' : '#E0E0E0',
@@ -56,6 +59,7 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
               onKeyDown={e => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
+                  e.stopPropagation();
                   handleToggleFavorite?.();
                 }
               }}

@@ -1,7 +1,9 @@
 import React from 'react';
+
 import { CustomOverlayMap } from 'react-kakao-maps-sdk';
-import StoreDetailCard from '../card/StoreDetailCard';
+
 import { useStoreDetailQuery } from '../../hooks/useMapQueries';
+import StoreDetailCard from '../card/StoreDetailCard';
 
 interface StoreInfoWindowProps {
   storeId: number;
@@ -48,7 +50,18 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
       xAnchor={0.5}
       zIndex={1000}
     >
-      <div className="relative z-50">
+      <div
+        className="relative z-50"
+        onClick={e => {
+          e.stopPropagation();
+        }}
+        onMouseDown={e => {
+          e.stopPropagation();
+        }}
+        onMouseUp={e => {
+          e.stopPropagation();
+        }}
+      >
         <StoreDetailCard
           storeName={storeDetail.storeName}
           isFavorite={storeDetail.isFavorite}

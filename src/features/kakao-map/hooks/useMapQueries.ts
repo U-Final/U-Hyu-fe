@@ -1,5 +1,6 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
+
 import { mapApi } from '../api/mapApi';
 import type {
   GetNearbyStoresParams,
@@ -168,24 +169,11 @@ export const useToggleFavoriteMutation = () => {
       return { previousStoreDetail };
     },
 
-    // 성공 시: 서버 데이터로 최종 동기화
-    onSuccess: (_, variables) => {
-      const { storeId } = variables;
-
-      // 관련 쿼리들 무효화하여 서버 데이터로 동기화
-      queryClient.invalidateQueries({
-        queryKey: MAP_QUERY_KEYS.stores.detail(storeId),
-      });
-      queryClient.invalidateQueries({
-        queryKey: MAP_QUERY_KEYS.stores.lists(),
-      });
-    },
-
     // 실패 시: 이전 상태로 롤백
     onError: (error, variables, context) => {
       const { storeId } = variables;
 
-      // 이전 상태로 롤백
+      // 이전 상태로 롤백 (setQueryData 사용으로 InfoWindow 안정성 보장)
       if (context?.previousStoreDetail) {
         queryClient.setQueryData(
           MAP_QUERY_KEYS.stores.detail(storeId),
@@ -193,10 +181,21 @@ export const useToggleFavoriteMutation = () => {
         );
       }
 
-      // 매장 목록도 무효화하여 서버 상태로 복원
-      queryClient.invalidateQueries({
-        queryKey: MAP_QUERY_KEYS.stores.lists(),
-      });
+      // 매장 목록도 이전 상태로 롤백 (무효화 대신 직접 복원)
+      queryClient.setQueriesData(
+        { queryKey: MAP_QUERY_KEYS.stores.lists() },
+        (old: StoreListResponse | undefined) => {
+          if (!old?.data) return old;
+          return {
+            ...old,
+            data: old.data.map((store: Store) =>
+              store.storeId === storeId
+                ? { ...store, isFavorite: !store.isFavorite } // 다시 원래 상태로 되돌리기
+                : store
+            ),
+          };
+        }
+      );
 
       console.error('즐겨찾기 업데이트 실패:', error);
     },

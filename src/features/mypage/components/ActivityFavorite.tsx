@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrandWithFavoriteCard } from "@components/cards/BrandWithFavoriteCard";
+import { BrandWithFavoriteCard } from "@/shared/components/cards/BrandWithFavoriteCard";
 import { mockFavoriteBrands } from "@mypage/types/mockActivity";
 import { throttle } from "lodash";
 import { Loader2 } from "lucide-react";

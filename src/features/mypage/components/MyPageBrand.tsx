@@ -1,5 +1,5 @@
 import React from 'react';
-import { BRANDS } from '@components/brand_grid/constants';
+import { BRANDS } from '@/shared/components/brand_grid/constants';
 import { Check } from 'lucide-react';
 import type { UserInfo } from '@mypage/types/types';
 

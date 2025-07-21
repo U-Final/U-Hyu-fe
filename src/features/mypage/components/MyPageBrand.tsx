@@ -22,7 +22,7 @@ const MyPageBrand: React.FC<Props> = ({ user, setUser }) => {
     <div className="space-y-[0.75rem]">
       <div className="font-bold text-[1rem] text-black">관심 브랜드</div>
 
-      <div className="rounded-[1rem] bg-white p-[1.25rem] text-[0.875rem] text-gray-700">
+      <div className="rounded-[1rem] bg-white p-[1.25rem] text-[0.875rem] text-gray-700 border border-gray-200">
         <p className="mb-[1rem] text-[0.75rem] text-gray-500 text-center">
           관심있는 브랜드를 선택해주세요
         </p>
@@ -34,10 +34,10 @@ const MyPageBrand: React.FC<Props> = ({ user, setUser }) => {
                 <button
                   onClick={() => handleToggle(brand.id)}
                   onKeyDown={(e) => e.key === 'Enter' && handleToggle(brand.id)}
-aria-label={`${brand.name} 브랜드 ${user.favoriteBrands.includes(brand.id) ? '선택됨' : '선택 안됨'}`}
-aria-pressed={user.favoriteBrands.includes(brand.id)}
+                  aria-label={`${brand.name} 브랜드 ${user.favoriteBrands.includes(brand.id) ? '선택됨' : '선택 안됨'}`}
+                  aria-pressed={user.favoriteBrands.includes(brand.id)}
                   className={`
-                    relative w-[4.5rem] h-[4.5rem] rounded-full flex items-center justify-center
+                    relative w-[3.5rem] h-[3.5rem] rounded-full flex items-center justify-center
                     transition-all duration-200 shadow-md overflow-hidden bg-white
                     ${
                       user.favoriteBrands.includes(brand.id)
@@ -49,7 +49,7 @@ aria-pressed={user.favoriteBrands.includes(brand.id)}
                   <img
                     src={brand.imagePath}
                     alt={brand.name}
-                    className="w-[4rem] h-[4rem] object-cover rounded-full bg-white"
+                    className="w-[3rem] h-[3rem] object-cover rounded-full bg-white"
                   />
                 </button>
 

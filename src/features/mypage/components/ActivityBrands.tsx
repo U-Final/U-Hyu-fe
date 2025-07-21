@@ -2,7 +2,7 @@ import { mockBrands } from '@mypage/types/mockActivity';
 
 const ActivityBrands = () => {
   return (
-    <div className="rounded-[1rem] bg-white px-[1.25rem] py-[1.5rem]">
+    <div className="border border-gray-200 rounded-[1rem] p-[1.25rem]">
       <p className="text-[0.75rem] text-gray-500 mb-[0.5rem]">가장 많이 조회한 브랜드</p>
       <ul className="space-y-[0.75rem]">
         {mockBrands.map((brand) => (

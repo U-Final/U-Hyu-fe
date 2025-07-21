@@ -12,7 +12,7 @@ const MyPage = () => {
   const [user, setUser] = useState<UserInfo>(mockUser);
 
   return (
-    <div className="min-h-screen max-w-[22.5rem] mx-auto bg-gray-50">
+    <div className="min-h-screen max-w-[22.5rem] mx-auto">
       <div className="p-[1rem] space-y-[1.5rem] pb-[6rem]">
         <MyPageHeader user={user} />
         <MyPageUserInfo user={user} setUser={setUser} />

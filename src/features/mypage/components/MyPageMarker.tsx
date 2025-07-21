@@ -28,15 +28,7 @@ const MyPageMarker = ({ user, setUser }: Props) => {
     <div className="space-y-[0.75rem]">
       <div className="font-bold text-[1rem] text-black">나만의 마커</div>
 
-      <div className="
-        rounded-[1rem] 
-        bg-white 
-        px-[1.25rem] 
-        py-[1rem]
-        overflow-x-auto 
-        whitespace-nowrap
-        scrollbar-none
-      ">
+      <div className="rounded-[1rem] bg-white px-[1.25rem] py-[1rem] overflow-x-auto whitespace-nowrap scrollbar-none border border-gray-200">
         <p className="mb-[1rem] text-[0.75rem] text-gray-500 text-center">
           나만의 마커를 선택해주세요
         </p>

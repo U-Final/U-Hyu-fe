@@ -54,7 +54,7 @@ const MyPageHeader = ({ user }: MyPageHeaderProps) => {
   const nextPath = isActivity ? MYPAGE_PATHS.MAIN : MYPAGE_PATHS.ACTIVITY;
 
   return (
-    <div className="space-y-[1rem] pt-[3.75rem]">
+    <div className="space-y-[1rem]">
       <h2 className="font-bold text-[1.125rem] text-black">나의 유휴</h2>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-[1rem]">
@@ -78,13 +78,13 @@ const MyPageHeader = ({ user }: MyPageHeaderProps) => {
             <span className="font-bold text-[1rem] text-black leading-none">
               {user.nickname}
             </span>
-            <span className="text-[0.75rem] text-[#9CA3AF] mt-[0.25rem] leading-none">
+            <span className="text-[0.75rem] text-gray-400 mt-[0.25rem] leading-none">
               수정일 : {user.updatedAt}
             </span>
           </div>
         </div>
         <div className="flex items-center gap-[0.25rem]">
-          <span className="px-[0.625rem] py-[0.25rem] border border-gray-300 rounded-[0.5rem] text-[0.65rem] text-gray-700 bg-[#F9FAFB] font-medium">
+          <span className="px-[0.625rem] py-[0.25rem] border border-gray-300 rounded-[0.5rem] text-[0.65rem] text-gray-700 bg-light-gray font-medium">
             {convertGrade(user.grade)} 등급
           </span>
           <button

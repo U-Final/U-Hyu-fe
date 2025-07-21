@@ -78,9 +78,7 @@ const validateField = (key: EditableUserFields, value: string): boolean => {
       </div>
 
       <div
-        className={`rounded-[1rem] bg-white p-[1.25rem] text-[0.875rem] text-gray-700 transition-all duration-300 ${
-          editMode ? 'border border-gray-300' : ''
-        }`}
+        className="rounded-[1rem] bg-white p-[1.25rem] text-[0.875rem] text-gray-700 transition-all duration-300 border border-gray-200"
       >
         <div className="flex flex-col gap-[0.75rem]">
           {fields.map(({ key, label, icon }) => (

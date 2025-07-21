@@ -6,6 +6,7 @@ import type {
   GetNearbyStoresParams,
   StoreDetailResponse,
   StoreListResponse,
+  ToggleFavoriteResponseType,
 } from '../api/types';
 import type { Store } from '../types/store';
 
@@ -167,6 +168,47 @@ export const useToggleFavoriteMutation = () => {
       );
 
       return { previousStoreDetail };
+    },
+
+    // 성공 시: 서버 응답을 사용해 캐시를 올바르게 동기화
+    onSuccess: (data: ToggleFavoriteResponseType, variables) => {
+      const { storeId } = variables;
+
+      if (!data.data) return;
+
+      const { isBookmarked } = data.data;
+
+      // 서버 응답의 isBookmarked를 사용해 StoreDetail의 isFavorite 업데이트
+      queryClient.setQueryData(
+        MAP_QUERY_KEYS.stores.detail(storeId),
+        (old: StoreDetailResponse | undefined) => {
+          if (!old?.data) return old;
+          return {
+            ...old,
+            data: {
+              ...old.data,
+              isFavorite: isBookmarked,
+              // favoriteCount는 이미 optimistic update에서 올바르게 설정됨
+            },
+          };
+        }
+      );
+
+      // 매장 목록에서도 즐겨찾기 상태 동기화
+      queryClient.setQueriesData(
+        { queryKey: MAP_QUERY_KEYS.stores.lists() },
+        (old: StoreListResponse | undefined) => {
+          if (!old?.data) return old;
+          return {
+            ...old,
+            data: old.data.map((store: Store) =>
+              store.storeId === storeId
+                ? { ...store, isFavorite: isBookmarked }
+                : store
+            ),
+          };
+        }
+      );
     },
 
     // 실패 시: 이전 상태로 롤백

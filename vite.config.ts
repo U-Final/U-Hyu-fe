@@ -1,12 +1,12 @@
 /// <reference types="vitest/config" />
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
 
 // https://vite.dev/config/
+import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 
 
 // ES Module 환경에서 __dirname 대신 사용
@@ -22,6 +22,7 @@ export default defineConfig({
       "@features": path.resolve(__dirname, "src/features"),
       "@extra-info": path.resolve(__dirname, "src/features/extra-info"),
       "@benefit": path.resolve(__dirname, "src/features/benefit"),
+      "@home" : path.resolve(__dirname, "src/features/home"),
       "@paths": path.resolve(__dirname, "src/routes/path.ts"),
       "@user": path.resolve(__dirname, "src/features/user"),
       "@mypage": path.resolve(__dirname, "src/features/mypage"),

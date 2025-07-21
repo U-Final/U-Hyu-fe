@@ -76,7 +76,7 @@ export const brandHandlers = [
 
       return createResponse(
         result,
-        '응답 메시지'
+        '제휴처 리스트 목록 api 성공'
       );
     }
   }),

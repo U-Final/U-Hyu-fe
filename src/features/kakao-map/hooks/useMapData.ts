@@ -118,7 +118,7 @@ export const useMapData = () => {
    */
   useEffect(() => {
     if (storeDetailQuery.data && !storeDetailQuery.isLoading) {
-      setStoreDetail(storeDetailQuery.data.result ?? null);
+      setStoreDetail(storeDetailQuery.data.data ?? null);
     }
   }, [storeDetailQuery.data, storeDetailQuery.isLoading, setStoreDetail]);
 

@@ -1,21 +1,16 @@
 
-import type { ApiErrorData } from '@/shared/client/ApiErrorResponse';
+import type { ApiError } from '@/shared/client/client.type';
 import { HttpResponse } from 'msw';
 
 export const createErrorResponse = (
   message: string,
-  status: number = 400,
-  code: number = 1001,
-  path?: string
-): HttpResponse<ApiErrorData> => {
-  return HttpResponse.json<ApiErrorData>(
+  statusCode: number = 400
+): HttpResponse<ApiError> => {
+  return HttpResponse.json<ApiError>(
     {
       message,
-      status,
-      code,
-      timestamp: new Date().toISOString(),
-      path,
+      statusCode,
     },
-    { status }
+    { status: statusCode }
   );
 };

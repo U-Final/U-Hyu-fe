@@ -135,15 +135,15 @@ export const useToggleFavoriteMutation = () => {
       queryClient.setQueryData(
         MAP_QUERY_KEYS.stores.detail(storeId),
         (old: StoreDetailResponse | undefined) => {
-          if (!old?.result) return old;
+          if (!old?.data) return old;
           return {
             ...old,
-            result: {
-              ...old.result,
-              isFavorite: !old.result.isFavorite,
-              favoriteCount: old.result.isFavorite
-                ? old.result.favoriteCount - 1
-                : old.result.favoriteCount + 1,
+            data: {
+              ...old.data,
+              isFavorite: !old.data.isFavorite,
+              favoriteCount: old.data.isFavorite
+                ? old.data.favoriteCount - 1
+                : old.data.favoriteCount + 1,
             },
           };
         }
@@ -153,10 +153,10 @@ export const useToggleFavoriteMutation = () => {
       queryClient.setQueriesData(
         { queryKey: MAP_QUERY_KEYS.stores.lists() },
         (old: StoreListResponse | undefined) => {
-          if (!old?.result) return old;
+          if (!old?.data) return old;
           return {
             ...old,
-            result: old.result.map((store: Store) =>
+            data: old.data.map((store: Store) =>
               store.storeId === storeId
                 ? { ...store, isFavorite: !store.isFavorite }
                 : store

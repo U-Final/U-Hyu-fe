@@ -9,10 +9,10 @@ export const homeHandlers = [
   http.get(HOME_ENDPOINTS.HOME.USER_INFO, () => {
     const shouldFail = false;
     if (shouldFail) { //실패시
-      return createErrorResponse('로그인된 유저가 아닙니다.', 404, 1003);
+      return createErrorResponse('로그인된 유저가 아닙니다.', 404);
     }
 
-    return createResponse(
+    return createResponse(  
       mockUserInfoData,
       "유저 정보 조회 성공",
     )
@@ -25,7 +25,7 @@ export const homeHandlers = [
   http.get(HOME_ENDPOINTS.HOME.NEARBY_STORES, () => {
     const shouldFail = false;
     if (shouldFail) { //실패시
-      return createErrorResponse('주변매장 조회 실패', 400, 1003);
+      return createErrorResponse('주변매장 조회 실패', 400);
     }
 
     return createResponse(mockNearbyStoresData, "주변 매장 조회 성공")
@@ -39,7 +39,7 @@ export const homeHandlers = [
 
     const shouldFail = false;
     if (shouldFail) { //실패시
-      return createErrorResponse('등급 혜택 조회 실패', 400, 1003);
+      return createErrorResponse('등급 혜택 조회 실패', 400);
     }
 
     return createResponse(mockBenefitsData, `${grade} 등급 혜택 조회 성공`);

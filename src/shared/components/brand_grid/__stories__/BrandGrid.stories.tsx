@@ -1,9 +1,11 @@
 // stories/BrandGrid.stories.tsx
-import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
+
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
 import {
-  BrandGrid,
   BRANDS,
+  BrandGrid,
   type BrandGridProps,
 } from '@/shared/components/brand_grid';
 

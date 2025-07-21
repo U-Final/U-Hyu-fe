@@ -1,5 +1,19 @@
+import { DragBottomSheet } from '@/shared/components';
+import {
+  AuthHomeSheetContent,
+  GuestHomeSheetContent,
+} from '@features/home/components';
+
 const HomePage = () => {
-  return <div className="text-h3">안녕하시오. 여기는 홈페이지입니다.</div>;
+  const isLoggedIn = true; // 로그인 여부를 확인하는 로직이 필요합니다.
+  return (
+    <div>
+      <div>지도 부분</div>
+      <DragBottomSheet>
+        {isLoggedIn ? <AuthHomeSheetContent /> : <GuestHomeSheetContent />}
+      </DragBottomSheet>
+    </div>
+  );
 };
 
 export default HomePage;

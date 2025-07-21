@@ -1,8 +1,9 @@
 export interface ApiResponse<T> {
-  data: T;
+  code: number;
+  result?: T;
   message: string;
   status: number;
-  timestamp: string;
+  timestamp?: string;
 }
 
 export interface ApiError {
@@ -11,4 +12,11 @@ export interface ApiError {
   code: string;
   timestamp: string;
   path: string;
+}
+
+export interface ApiResponse2<T> {
+  data: T;
+  message: string;
+  status: number;
+  timestamp?: string;
 }

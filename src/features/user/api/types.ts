@@ -43,6 +43,18 @@ export interface UserInfo {
   profile_image: string;
 }
 
+export interface UpdateUserInfoRequest {
+  nickname: string;
+  age: number;
+  email: string;
+}
+
+export interface UpdateUserInfoResponse {
+  code: number;
+  status: number;
+  message: string;
+}
+
 export interface GetUserInfoResponse {
   code: number;
   status: number;

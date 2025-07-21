@@ -1,4 +1,4 @@
-import type { ApiResponse } from '@/shared/client/client.type';
+import type { ApiResponse2 } from '@/shared/client/client.type';
 
 /**
  * 매장 혜택 정보 타입
@@ -45,20 +45,11 @@ export interface ToggleFavoriteResponse {
 }
 
 /**
- * 사용자 정의 응답 타입 (statusCode 사용)
- */
-export interface CustomApiResponse<T> {
-  statusCode: number;
-  message: string;
-  data: T;
-}
-
-/**
  * API 응답 래퍼 타입들
  */
-export type StoreDetailResponse = CustomApiResponse<StoreDetail>;
-export type StoreListResponse = ApiResponse<StoreSummary[]>;
-export type ToggleFavoriteResponseType = ApiResponse<ToggleFavoriteResponse>;
+export type StoreDetailResponse = ApiResponse2<StoreDetail>;
+export type StoreListResponse = ApiResponse2<StoreSummary[]>;
+export type ToggleFavoriteResponseType = ApiResponse2<ToggleFavoriteResponse>;
 
 /**
  * 주변 매장 조회 API 파라미터

@@ -1,6 +1,7 @@
+import { useCallback, useEffect, useRef } from 'react';
+
 import { animated, useSpring } from '@react-spring/web';
 import { useDrag } from '@use-gesture/react';
-import { useCallback, useEffect, useRef } from 'react';
 
 interface DragBottomSheetProps {
   children: React.ReactNode;

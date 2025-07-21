@@ -68,7 +68,7 @@ export interface GetNearbyStoresParams {
   /** 위도 (필수) */
   lat: number;
   /** 경도 (필수) */
-  lng: number;
+  lon: number;
   /** 반경 (미터 단위, 필수) */
   radius: number;
   /** 카테고리 필터 (선택사항) */

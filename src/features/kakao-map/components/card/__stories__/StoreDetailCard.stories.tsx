@@ -44,7 +44,7 @@ export const InteractiveFavorite: Story = {
       <StoreDetailCard
         {...args}
         isFavorite={isFavorite}
-        onToggleFavorite={() => setIsFavorite(prev => !prev)}
+        handleToggleFavorite={() => setIsFavorite(prev => !prev)}
       />
     );
   },

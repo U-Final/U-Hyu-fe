@@ -56,15 +56,9 @@ export const BenefitList = () => {
                   <p className="text-body2 font-bold text-black">
                     {brand.brandName}
                   </p>
-                  <p
-                    className="text-caption text-black"
-                    dangerouslySetInnerHTML={{
-                      __html: (brand.description || '').replace(
-                        /\n/g,
-                        '<br />'
-                      ),
-                    }}
-                  />
+                  <p className="text-caption text-black whitespace-pre-line">
+                    {brand.description || ''}
+                  </p>
                 </div>
               </BrandCard>
             </div>

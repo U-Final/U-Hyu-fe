@@ -1,9 +1,11 @@
 import { type FC, useCallback, useEffect, useRef, useState } from 'react';
+
 import { CustomOverlayMap, Map as KakaoMap } from 'react-kakao-maps-sdk';
+
+import { useToggleFavoriteMutation } from '../../hooks/useMapQueries';
 import type { Store } from '../../types/store';
 import BrandMarker from './BrandMarker';
 import StoreInfoWindow from './StoreInfoWindow';
-import { useToggleFavoriteMutation } from '../../hooks/useMapQueries';
 
 interface MapWithMarkersProps {
   center: { lat: number; lng: number };
@@ -84,17 +86,26 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
 
   const toggleFavoriteMutation = useToggleFavoriteMutation();
 
-  const handleToggleFavorite = useCallback(async () => {
-    if (!infoWindowStore) return;
+  const handleToggleFavorite = useCallback(
+    async (event?: React.MouseEvent) => {
+      // 이벤트 전파 차단 (추가 보호)
+      if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
 
-    try {
-      await toggleFavoriteMutation.mutateAsync({
-        storeId: infoWindowStore.storeId,
-      });
-    } catch (error) {
-      console.error('즐겨찾기 토글 실패:', error);
-    }
-  }, [infoWindowStore, toggleFavoriteMutation]);
+      if (!infoWindowStore) return;
+
+      try {
+        await toggleFavoriteMutation.mutateAsync({
+          storeId: infoWindowStore.storeId,
+        });
+      } catch (error) {
+        console.error('즐겨찾기 토글 실패:', error);
+      }
+    },
+    [infoWindowStore, toggleFavoriteMutation]
+  );
 
   // 거리 계산 함수 (Haversine formula)
   const calculateDistance = useCallback(

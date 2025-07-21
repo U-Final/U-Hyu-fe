@@ -28,7 +28,7 @@ export const Default: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<GhostButton size=\"md\">Ghost Button</GhostButton>`,
+        code: `<GhostButton size="md">Ghost Button</GhostButton>`,
       },
     },
   },

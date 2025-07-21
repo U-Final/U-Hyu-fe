@@ -76,18 +76,18 @@ const ActivityFavorite = ({ scrollRef }: Props) => {
         >
           <div>
             <h3 className="font-semibold text-[0.9rem]">{brand.name}</h3>
-            <p className="text-sm text-gray-500">{brand.description}</p>
+            <p className="text-sm text-[var(--text-gray)]">{brand.description}</p>
           </div>
         </BrandWithFavoriteCard>
       ))}
 
       {isLoading && (
         <div className="flex justify-center py-[1rem]">
-          <Loader2 className="w-5 h-5 animate-spin text-gray-400" />
+          <Loader2 className="w-5 h-5 animate-spin text-[var(--text-gray)]" />
         </div>
       )}
       {!isLoading && brands.length === mockFavoriteBrands.length && (
-        <div className="text-center py-[1rem] text-sm text-gray-400">
+        <div className="text-center py-[1rem] text-sm text-[var(--text-gray)]">
           🔔 모든 즐겨찾기를 다 불러왔어요!
         </div>
       )}

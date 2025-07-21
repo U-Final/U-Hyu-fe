@@ -20,14 +20,14 @@ const MyPageBrand: React.FC<Props> = ({ user, setUser }) => {
 
   return (
     <div className="space-y-[0.75rem]">
-      <div className="font-bold text-[1rem] text-black">관심 브랜드</div>
+      <div className="font-bold text-[1rem] text-[var(--text-black)]">관심 브랜드</div>
 
-      <div className="rounded-[1rem] bg-white p-[1.25rem] text-[0.875rem] text-gray-700 border border-gray-200">
-        <p className="mb-[1rem] text-[0.75rem] text-gray-500 text-center">
+      <div className="rounded-[1rem] bg-white p-[1.25rem] text-[0.875rem] text-[var(--text-gray)] border border-gray-200">
+        <p className="mb-[1rem] text-[0.75rem] text-[var(--text-gray)] text-center">
           관심있는 브랜드를 선택해주세요
         </p>
 
-        <div className="grid grid-cols-3 gap-[1rem] max-h-[13.5rem] overflow-y-auto px-[0.25rem]">
+        <div className="grid grid-cols-3 gap-[1rem] max-h-[13.5rem] overflow-y-auto scrollbar-hidden touch-pan-y px-[0.25rem]">
           {BRANDS.map((brand) => (
             <div key={brand.id} className="flex flex-col items-center space-y-[0.5rem]">
               <div className="relative mt-[0.5rem] p-[0.125rem]">
@@ -60,7 +60,7 @@ const MyPageBrand: React.FC<Props> = ({ user, setUser }) => {
                 )}
               </div>
 
-              <span className="text-[0.75rem] text-gray-600 text-center leading-tight">
+              <span className="text-[0.75rem] text-[var(--text-gray)] text-center leading-tight">
                 {brand.name}
               </span>
             </div>

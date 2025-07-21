@@ -41,7 +41,7 @@ const ActivityTabs = ({ activeTab, setActiveTab }: Props) => {
               className={`
                 relative z-10 flex-1 rounded-[1.5rem] py-[0.625rem]
                 text-[0.875rem] font-bold transition-colors duration-200 ease-in-out
-                ${isActive ? 'text-white' : 'text-gray-500'}
+                ${isActive ? 'text-white' : 'text-[var(--text-gray)]'}
               `}
             >
               {tab}

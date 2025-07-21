@@ -55,7 +55,7 @@ const MyPageHeader = ({ user }: MyPageHeaderProps) => {
 
   return (
     <div className="space-y-[1rem]">
-      <h2 className="font-bold text-[1.125rem] text-black">나의 유휴</h2>
+      <h2 className="font-bold text-[1.125rem] text-[var(--text-black)]">나의 유휴</h2>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-[1rem]">
           <div className="relative">
@@ -75,21 +75,21 @@ const MyPageHeader = ({ user }: MyPageHeaderProps) => {
             />
           </div>
           <div className="flex flex-col justify-center">
-            <span className="font-bold text-[1rem] text-black leading-none">
+            <span className="font-bold text-[1rem] text-[var(--text-black)] leading-none">
               {user.nickname}
             </span>
-            <span className="text-[0.75rem] text-gray-400 mt-[0.25rem] leading-none">
+            <span className="text-[0.75rem] text-[var(--text-gray)] mt-[0.25rem] leading-none">
               수정일 : {user.updatedAt}
             </span>
           </div>
         </div>
         <div className="flex items-center gap-[0.25rem]">
-          <span className="px-[0.625rem] py-[0.25rem] border border-gray-300 rounded-[0.5rem] text-[0.65rem] text-gray-700 bg-light-gray font-medium">
+          <span className="px-[0.625rem] py-[0.25rem] border border-gray-300 rounded-[0.5rem] text-[0.65rem] text-[var(--text-gray)] bg-[var(--bg-light-gray)] font-medium">
             {convertGrade(user.grade)} 등급
           </span>
           <button
             onClick={() => navigate(nextPath)}
-            className="p-[0.5rem] text-gray-400 hover:text-black"
+            className="p-[0.5rem] text-[var(--text-gray)] hover:text-[var(--text-black)]"
           >
             <ChevronRight className="w-[1rem] h-[1rem]" />
           </button>

@@ -1,6 +1,7 @@
 export const USER_ENDPOINTS = {
-  EXTRA_INFO: '/user/extra-info',
-  GET_USER_INFO: '/users/user/info',
+  EXTRA_INFO: '/users/extra-info',
+  GET_USER_INFO: '/users/me',
+  UPDATE_USER_INFO: '/users/me',
+  CHECK_EMAIL: '/users/check-email',
   LOGOUT: '/auth/logout',
-  CHECK_EMAIL: '/user/check-email',
 } as const;

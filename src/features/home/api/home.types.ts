@@ -1,0 +1,29 @@
+export interface UserInfo {
+  user_name: string;
+  grade: string;
+}
+
+export interface NearbyStore {
+  store_name: string;
+  addr_detail: string;
+  description: string;
+  logo_image?: string;
+  latitude?: number;
+  longitude?: number;
+  isFavorite?: boolean;
+}
+
+export interface Benefit {
+  benefit_type: 'DISCOUNT' | 'GIFT';
+  description: string;
+  logo_image?: string;
+}
+
+export interface Recommendation {
+  brand_id: number;
+  brand_name: string;
+  benefit_title: string;
+  description: string;
+  logo_image: string;
+  tags: string[];
+}

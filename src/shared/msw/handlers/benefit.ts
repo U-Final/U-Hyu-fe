@@ -11,7 +11,7 @@ import type {
 import { createErrorResponse } from '@/shared/utils/createErrorResponse';
 import { createResponse } from '@/shared/utils/createResponse';
 
-export const brandHandlers = [
+export const benefitHandlers = [
   http.get(BENEFIT_ENDPOINTS.BENEFIT.ROOT, ({ request }) => {
     const url = new URL(request.url);
     const shouldFail = false;

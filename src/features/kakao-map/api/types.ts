@@ -15,7 +15,7 @@ export interface StoreDetail {
   storeName: string;
   isFavorite: boolean;
   favoriteCount: number;
-  benefits: StoreBenefit;
+  benefits: string;
   usageLimit: string;
   usageMethod: string;
 }

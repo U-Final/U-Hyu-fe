@@ -7,13 +7,16 @@ import ActivityFavorite from '@mypage/components/ActivityFavorite';
 import { mockUser } from '@mypage/types/mockUser';
 import type { MyPageTab } from '@mypage/types';
 import { MYPAGE_TABS } from '@mypage/constants/tabs';
+import type { MyPageTab } from '@mypage/types';
+import { mockUser } from '@mypage/types/mockUser';
+import { useRef, useState } from 'react';
 
 const MyPageActivity = () => {
   const [activeTab, setActiveTab] = useState<MyPageTab>(MYPAGE_TABS[0]);
    const scrollRef = useRef<HTMLDivElement | null>(null);
 
   return (
-    <div className="min-h-screen max-w-[22.5rem] mx-auto bg-gray-50">
+    <div className="min-h-screen max-w-[22.5rem] mx-auto">
       <div
         ref={scrollRef}
         className="p-[1rem] space-y-[1.5rem] pb-[6rem] h-[100vh] overflow-auto"

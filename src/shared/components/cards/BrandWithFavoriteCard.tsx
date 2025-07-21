@@ -9,6 +9,7 @@ interface BrandWithFavoriteCardProps {
   children: React.ReactNode;
   isStarFilled: boolean;
   onFavoriteClick?: () => void;
+  className?: string;
 }
 
 export const BrandWithFavoriteCard = ({
@@ -16,9 +17,10 @@ export const BrandWithFavoriteCard = ({
   children,
   isStarFilled,
   onFavoriteClick,
+  className,
 }: BrandWithFavoriteCardProps) => {
   return (
-    <CardBase aria-label="브랜드 카드">
+    <CardBase aria-label="브랜드 카드" className={className}>
       <div className="flex">
         <section className="flex flex-1 items-center gap-[15px]">
           <img

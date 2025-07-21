@@ -1,6 +1,7 @@
 import type { Store } from '@kakao-map/types/store';
-import { BrandWithFavoriteCard } from '@/shared/components';
 import { type FC } from 'react';
+
+import { BrandCard } from '@/shared/components';
 
 interface StoreListContentProps {
   stores: Store[];
@@ -33,10 +34,7 @@ const StoreListContent: FC<StoreListContentProps> = ({
                 className="p-4 hover:bg-gray-50 transition-colors cursor-pointer"
                 onClick={() => onStoreClick?.(store)}
               >
-                <BrandWithFavoriteCard
-                  logoUrl={store.logo_image}
-                  isStarFilled={false}
-                >
+                <BrandCard logoUrl={store.logo_image}>
                   <div className="flex-1 min-w-0">
                     <div className="font-semibold text-gray-900 truncate">
                       {store.storeName}
@@ -48,7 +46,7 @@ const StoreListContent: FC<StoreListContentProps> = ({
                       {store.benefit}
                     </div>
                   </div>
-                </BrandWithFavoriteCard>
+                </BrandCard>
               </div>
             ))}
           </div>

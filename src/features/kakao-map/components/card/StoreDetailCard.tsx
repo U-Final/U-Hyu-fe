@@ -1,6 +1,3 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-
 export interface StoreDetailCardProps {
   storeName: string;
   isFavorite: boolean;
@@ -8,7 +5,7 @@ export interface StoreDetailCardProps {
   benefits: string;
   usageLimit: string;
   usageMethod: string;
-  userGrade?: string; // "우수", "VIP" , "VVIP" - optional로 변경
+  userGrade?: string; // "우수", "VIP" , "VVIP"
   handleToggleFavorite?: () => void;
 }
 
@@ -38,30 +35,41 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
             {storeName}
           </span>
           <div className="flex items-center gap-1">
-            <motion.svg
-              width="1.5rem"
-              height="1.5rem"
-              onClick={handleToggleFavorite}
-              className="cursor-pointer"
-              animate={{
-                fill: isFavorite ? '#FFD600' : '#E0E0E0',
-                scale: isFavorite ? 1.3 : 1,
+            <div
+              onClick={e => {
+                e.stopPropagation();
+                handleToggleFavorite?.();
               }}
-              whileTap={{ scale: 1.6, rotate: [0, -20, 20, 0] }}
-              transition={{ type: 'spring', stiffness: 400, damping: 10 }}
-              viewBox="0 0 20 20"
-              aria-label={isFavorite ? '즐겨찾기 해제' : '즐겨찾기 추가'}
+              className="cursor-pointer"
               tabIndex={0}
               role="button"
+              aria-label={isFavorite ? '즐겨찾기 해제' : '즐겨찾기 추가'}
               onKeyDown={e => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
+                  e.stopPropagation();
                   handleToggleFavorite?.();
                 }
               }}
             >
-              <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955 6.561.955-4.756 4.635 1.122 6.545z" />
-            </motion.svg>
+              <svg
+                width="1.5rem"
+                height="1.5rem"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+                style={{
+                  transition: 'all 0.3s ease-in-out',
+                }}
+              >
+                <path
+                  d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955 6.561.955-4.756 4.635 1.122 6.545z"
+                  fill={isFavorite ? '#FFD600' : '#E0E0E0'}
+                  style={{
+                    transition: 'fill 0.3s ease-in-out',
+                  }}
+                />
+              </svg>
+            </div>
 
             <span className="text-xs text-gray-500">
               {favoriteCount >= 10000

@@ -216,10 +216,9 @@ export const MOCK_FAVORITES: Record<number, boolean> = {
 
 // 목데이터 응답 헬퍼 함수들
 export const createMockStoreListResponse = (stores: StoreSummary[]) => ({
-  status: 200,
-  message: '주변 매장 목록을 성공적으로 조회했습니다.',
   data: stores,
-  timestamp: new Date().toISOString(),
+  message: '주변 매장 목록을 성공적으로 조회했습니다.',
+  statusCode: 200,
 });
 
 export const createMockStoreDetailResponse = (storeId: number) => {
@@ -229,10 +228,9 @@ export const createMockStoreDetailResponse = (storeId: number) => {
   }
 
   return {
-    status: 200,
-    message: '매장 상세 정보를 성공적으로 조회했습니다.',
     data: storeDetail,
-    timestamp: new Date().toISOString(),
+    message: '매장 상세 정보를 성공적으로 조회했습니다.',
+    statusCode: 200,
   };
 };
 
@@ -251,12 +249,11 @@ export const createMockToggleFavoriteResponse = (storeId: number) => {
   }
 
   return {
-    status: 200,
-    message: '즐겨찾기가 성공적으로 업데이트되었습니다.',
     data: {
       storeId,
       isBookmarked: newStatus,
     },
-    timestamp: new Date().toISOString(),
+    message: '즐겨찾기가 성공적으로 업데이트되었습니다.',
+    statusCode: 200,
   };
 };

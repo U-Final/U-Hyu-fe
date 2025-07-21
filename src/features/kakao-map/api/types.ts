@@ -1,4 +1,4 @@
-import type { ApiResponse2 } from '@/shared/client/client.type';
+import type { ApiResponse } from '@/shared/client/client.type';
 
 /**
  * 매장 혜택 정보 타입
@@ -47,9 +47,9 @@ export interface ToggleFavoriteResponse {
 /**
  * API 응답 래퍼 타입들
  */
-export type StoreDetailResponse = ApiResponse2<StoreDetail>;
-export type StoreListResponse = ApiResponse2<StoreSummary[]>;
-export type ToggleFavoriteResponseType = ApiResponse2<ToggleFavoriteResponse>;
+export type StoreDetailResponse = ApiResponse<StoreDetail>;
+export type StoreListResponse = ApiResponse<StoreSummary[]>;
+export type ToggleFavoriteResponseType = ApiResponse<ToggleFavoriteResponse>;
 
 /**
  * 주변 매장 조회 API 파라미터
@@ -59,7 +59,7 @@ export interface GetNearbyStoresParams {
   /** 위도 (필수) */
   lat: number;
   /** 경도 (필수) */
-  lng: number;
+  lon: number;
   /** 반경 (미터 단위, 필수) */
   radius: number;
   /** 카테고리 필터 (선택사항) */

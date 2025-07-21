@@ -22,20 +22,23 @@ export const mapHandlers = [
    * GET /map/stores - 필터 파라미터 처리 포함
    */
   http.get('*/map/stores', ({ request }) => {
+    console.log('🔍 MSW 핸들러 호출됨:', request.url);
     const url = new URL(request.url);
 
     // 필수 파라미터 추출
     const lat = Number(url.searchParams.get('lat'));
-    const lng = Number(url.searchParams.get('lng'));
+    const lon = Number(url.searchParams.get('lon'));
     const radius = Number(url.searchParams.get('radius'));
 
     // 필터 파라미터 추출
     const category = url.searchParams.get('category');
     const brand = url.searchParams.get('brand');
     const search = url.searchParams.get('search');
+    
+    console.log('📊 파라미터:', { lat, lon, radius, category, brand, search });
 
     // 기본 파라미터 유효성 검증
-    if (isNaN(lat) || isNaN(lng) || isNaN(radius) || radius <= 0) {
+    if (isNaN(lat) || isNaN(lon) || isNaN(radius) || radius <= 0) {
       return HttpResponse.json(
         {
           status: 400,
@@ -52,7 +55,7 @@ export const mapHandlers = [
     let filteredStores = MOCK_STORES.filter(store => {
       const distance =
         Math.sqrt(
-          Math.pow(store.latitude - lat, 2) + Math.pow(store.longitude - lng, 2)
+          Math.pow(store.latitude - lat, 2) + Math.pow(store.longitude - lon, 2)
         ) * 111000; // 대략적인 미터 단위 변환 (1도 ≈ 111km)
 
       return distance <= radius;
@@ -108,7 +111,7 @@ export const mapHandlers = [
       console.log('🔍 MSW Store Filter Applied:', {
         originalQuery: {
           lat,
-          lng,
+          lon,
           radius,
           category,
           brand,
@@ -120,7 +123,7 @@ export const mapHandlers = [
             const distance =
               Math.sqrt(
                 Math.pow(store.latitude - lat, 2) +
-                  Math.pow(store.longitude - lng, 2)
+                  Math.pow(store.longitude - lon, 2)
               ) * 111000;
             return distance <= radius;
           }).length,
@@ -143,18 +146,18 @@ export const mapHandlers = [
    * 매장 상세 정보 조회 API 핸들러
    * GET /map/stores/:storeId
    */
-  http.get('*/map/stores/:storeId', ({ params }) => {
+  http.get('*/map/stores/:storeId', ({ params, request }) => {
+    console.log('🏪 매장 상세 정보 MSW 핸들러 호출:', request.url);
     const storeId = Number(params.storeId);
+    console.log('📋 매장 ID:', storeId);
 
     // storeId 파라미터 유효성 검증
     if (isNaN(storeId) || storeId <= 0) {
       return HttpResponse.json(
         {
-          status: 400,
           message:
             '잘못된 매장 ID입니다. storeId는 유효한 양의 정수여야 합니다.',
-          data: null,
-          timestamp: new Date().toISOString(),
+          statusCode: 400,
         },
         { status: 400 }
       );
@@ -166,10 +169,9 @@ export const mapHandlers = [
       return HttpResponse.json(response, { status: 200 });
     } catch {
       return HttpResponse.json({
-        status: 404,
         message: '매장을 찾을 수 없습니다.',
-        data: null,
-      });
+        statusCode: 404,
+      }, { status: 404 });
     }
   }),
 
@@ -184,11 +186,9 @@ export const mapHandlers = [
     if (isNaN(storeId) || storeId <= 0) {
       return HttpResponse.json(
         {
-          status: 400,
           message:
             '잘못된 매장 ID입니다. storeId는 유효한 양의 정수여야 합니다.',
-          data: null,
-          timestamp: new Date().toISOString(),
+          statusCode: 400,
         },
         { status: 400 }
       );

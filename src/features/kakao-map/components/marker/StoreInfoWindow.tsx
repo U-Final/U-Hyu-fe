@@ -6,14 +6,13 @@ import { useStoreDetailQuery } from '../../hooks/useMapQueries';
 interface StoreInfoWindowProps {
   storeId: number;
   position: { lat: number; lng: number };
-  onClose: () => void;
-  onToggleFavorite?: () => void;
+  handleToggleFavorite?: () => void;
 }
 
 const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
   storeId,
   position,
-  onToggleFavorite,
+  handleToggleFavorite,
 }) => {
   const {
     data: storeDetailResponse,
@@ -57,7 +56,7 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
           benefits={storeDetail.benefits}
           usageLimit={storeDetail.usageLimit}
           usageMethod={storeDetail.usageMethod}
-          onToggleFavorite={onToggleFavorite}
+          handleToggleFavorite={handleToggleFavorite}
         />
       </div>
     </CustomOverlayMap>

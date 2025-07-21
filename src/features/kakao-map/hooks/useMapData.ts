@@ -8,6 +8,7 @@ import {
   useInvalidateStoreQueries,
 } from './useMapQueries';
 import type { GetNearbyStoresParams } from '../api/types';
+import { getRegionInfo } from '../constants/regions';
 
 /**
  * 기본 검색 반경 (미터 단위)
@@ -73,7 +74,7 @@ export const useMapData = () => {
   const storeListParams: GetNearbyStoresParams = useMemo(() => {
     const baseParams: GetNearbyStoresParams = {
       lat: mapCenter.lat,
-      lng: mapCenter.lng,
+      lon: mapCenter.lng,
       radius: DEFAULT_RADIUS,
     };
 
@@ -117,7 +118,7 @@ export const useMapData = () => {
    */
   useEffect(() => {
     if (storeDetailQuery.data && !storeDetailQuery.isLoading) {
-      setStoreDetail(storeDetailQuery.data.data);
+      setStoreDetail(storeDetailQuery.data.data ?? null);
     }
   }, [storeDetailQuery.data, storeDetailQuery.isLoading, setStoreDetail]);
 
@@ -150,6 +151,22 @@ export const useMapData = () => {
     },
     [toggleFavoriteMutation]
   );
+
+  /**
+   * 지역 필터 변경 시 지도 중심점 이동
+   */
+  useEffect(() => {
+    const regionInfo = getRegionInfo(uiState.activeRegionFilter);
+
+    if (regionInfo && regionInfo.key !== 'all') {
+      // '전체'가 아닌 특정 지역 선택 시 해당 지역 중심으로 이동
+      setMapCenter(regionInfo.center);
+
+      if (import.meta.env.MODE === 'development') {
+        console.log(`🗺️ 지역 변경: ${regionInfo.label}`, regionInfo.center);
+      }
+    }
+  }, [uiState.activeRegionFilter, setMapCenter]);
 
   /**
    * 개발 모드에서 디버깅 정보 출력

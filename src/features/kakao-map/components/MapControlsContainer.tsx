@@ -41,8 +41,11 @@ export const MapControlsContainer: React.FC = () => {
    * RegionFilterDropdown에서 선택 시 호출됨
    */
   const handleRegionFilterChange = (region: string) => {
+    if (import.meta.env.MODE === 'development') {
+      console.log('🌍 지역 필터 변경:', region);
+    }
     setRegionFilter(region);
-    // 지역 필터 변경 시 useMapData에서 자동으로 API 호출
+    // 지역 필터 변경 시 useMapData에서 자동으로 지도 중심점 이동
   };
 
   /**

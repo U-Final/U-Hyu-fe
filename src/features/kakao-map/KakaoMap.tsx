@@ -23,7 +23,7 @@ function KakaoMap() {
         height: '350px',
       }}
       level={3}
-    />
+    ></KakaoMapComponent>
   );
 }
 

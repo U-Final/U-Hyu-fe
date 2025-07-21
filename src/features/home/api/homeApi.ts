@@ -9,22 +9,22 @@ import type { Benefit, NearbyStore, UserInfo } from '@home/api/home.types';
 export const fetchUserInfo = async (): Promise<UserInfo> => {
   const res = await client.get<ApiResponse<UserInfo>>(HOME_ENDPOINTS.HOME.USER_INFO);
   
-  if (res.data.code !== 0 || !res.data.result) {
+  if (res.data.statusCode !== 0 || !res.data.data) {
     throw new ApiErrorResponse(res.data);
   }
 
-  return res.data.result;
+  return res.data.data;
 };
 
 // ✅ 2. 주변 매장
 export const fetchNearbyStores = async (): Promise<NearbyStore[]> => {
   const res = await client.get<ApiResponse<NearbyStore[]>>(HOME_ENDPOINTS.HOME.NEARBY_STORES);
   
-  if (res.data.code !== 0 || !res.data.result) {
+  if (res.data.statusCode !== 0 || !res.data.data) {
     throw new ApiErrorResponse(res.data);
   }
   
-  return res.data.result;
+  return res.data.data;
 
 };
 
@@ -42,9 +42,9 @@ export const fetchBenefits = async (grade: string): Promise<Benefit[]> => {
     params: { grade },
   });
 
-  if (res.data.code !== 0 || !res.data.result) {
+  if (res.data.statusCode !== 0 || !res.data.data) {
     throw new ApiErrorResponse(res.data);
   }
   
-  return res.data.result;
+  return res.data.data;
 };

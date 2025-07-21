@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { BrandWithFavoriteCard } from "@/shared/components/cards/BrandWithFavoriteCard";
-import { mockFavoriteBrands } from "@mypage/types/mockActivity";
+import { useActivityFavoritesQuery } from "@features/mypage/hooks/useActivityQuery";
 import { throttle } from "lodash";
 import { Loader2 } from "lucide-react";
 
@@ -10,10 +10,25 @@ interface Props {
    scrollRef: React.RefObject<HTMLDivElement | null>;
 }
 
+interface FavoriteBrand {
+  id: number;
+  image: string;
+  name: string;
+  description: string;
+  isFavorite: boolean;
+}
 
 const ActivityFavorite = ({ scrollRef }: Props) => {
-  const [brands, setBrands] = useState(mockFavoriteBrands.slice(0, ITEMS_PER_LOAD));
+  const { data, isLoading: isQueryLoading, error } = useActivityFavoritesQuery();
+  const [brands, setBrands] = useState<FavoriteBrand[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  // 쿼리 데이터가 바뀌면 초기화
+  useEffect(() => {
+    if (data) {
+      setBrands(data.slice(0, ITEMS_PER_LOAD));
+    }
+  }, [data]);
 
   // 즐겨찾기 토글 핸들러
   const handleFavoriteToggle = (brandId: number) => {
@@ -27,14 +42,15 @@ const ActivityFavorite = ({ scrollRef }: Props) => {
   };
 
   const loadMore = useCallback(() => {
+    if (!data) return;
     setIsLoading(true);
     setTimeout(() => {
       setBrands(prevBrands => {
-        if (prevBrands.length >= mockFavoriteBrands.length) {
+        if (prevBrands.length >= data.length) {
           setIsLoading(false);
           return prevBrands;
         }
-        const nextItems = mockFavoriteBrands.slice(
+        const nextItems = data.slice(
           prevBrands.length,
           prevBrands.length + ITEMS_PER_LOAD
         );
@@ -46,7 +62,7 @@ const ActivityFavorite = ({ scrollRef }: Props) => {
         return [...prevBrands, ...nextItems];
       });
     }, 1000);
-  }, []);
+  }, [data]);
 
   useEffect(() => {
     const handleScroll = throttle(() => {
@@ -63,6 +79,9 @@ const ActivityFavorite = ({ scrollRef }: Props) => {
       if (div) div.removeEventListener("scroll", handleScroll);
     };
   }, [scrollRef, brands, isLoading, loadMore]);
+
+  if (isQueryLoading) return <div>로딩중...</div>;
+  if (error || !data) return <div>에러 발생</div>;
 
   return (
     <div className="space-y-[1rem]">
@@ -86,7 +105,7 @@ const ActivityFavorite = ({ scrollRef }: Props) => {
           <Loader2 className="w-5 h-5 animate-spin text-[var(--text-gray)]" />
         </div>
       )}
-      {!isLoading && brands.length === mockFavoriteBrands.length && (
+      {!isLoading && brands.length === data.length && (
         <div className="text-center py-[1rem] text-sm text-[var(--text-gray)]">
           🔔 모든 즐겨찾기를 다 불러왔어요!
         </div>

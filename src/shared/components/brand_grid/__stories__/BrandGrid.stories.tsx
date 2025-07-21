@@ -110,7 +110,7 @@ export const WithSelectedBrands: Story = {
 export const AllSelected: Story = {
   render: BrandGridWrapper,
   args: {
-    selectedBrands: BRANDS.map(brand => brand.id),
+    selectedBrands: BRANDS.map(brand => String(brand.id)),
     title: '관심있는 브랜드를 선택해주세요',
     disabled: false,
   },

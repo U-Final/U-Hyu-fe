@@ -1,16 +1,24 @@
 import React from 'react';
 import { Crown, Star, User2 } from 'lucide-react';
-import type { UserInfo, UserGrade } from '@mypage/types/types';
+import type { UserInfo, UserGrade } from '@features/mypage/api/types';
 import { convertGrade } from '@mypage/constants/gradeUtils';
+import { updateUserInfo } from '@features/mypage/api/mypageApi';
 
 interface Props {
   user: UserInfo;
-  setUser: React.Dispatch<React.SetStateAction<UserInfo>>;
+  setUser: React.Dispatch<React.SetStateAction<UserInfo | undefined>>;
 }
 
 const MyPageMembership = ({ user, setUser }: Props) => {
-  const handleSelect = (grade: UserGrade) => {
-    setUser(prev => ({ ...prev, grade }));
+  const handleSelect = async (grade: UserGrade) => {
+    try {
+      await updateUserInfo({ updatedGrade: grade });
+      setUser((prev) => prev ? { ...prev, grade } : prev);
+      console.log('등급 PATCH 요청 성공:', grade);
+    } catch (err) {
+      alert('등급 변경 실패');
+      console.error(err);
+    }
   };
 
   const gradeOptions: { grade: UserGrade; icon: React.ReactNode }[] = [

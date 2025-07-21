@@ -1,20 +1,27 @@
 import { convertGrade } from '@mypage/constants/gradeUtils';
 import { MYPAGE_PATHS } from '@mypage/constants/paths';
-import type { UserInfo } from '@mypage/types/types';
+import type { UserInfo } from '@features/mypage/api/types';
 import { ChevronRight } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { updateUserInfo, updateUserProfileImage } from '@features/mypage/api/mypageApi';
 
 interface MyPageHeaderProps {
   user: UserInfo;
+  onProfileImageChange?: (newImage: string) => void;
 }
 
-const MyPageHeader = ({ user }: MyPageHeaderProps) => {
+const MyPageHeader = ({ user, onProfileImageChange }: MyPageHeaderProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [profileImage, setProfileImage] = useState<string>(user.profileImage);
+
+  // user.profileImage가 바뀔 때마다 동기화
+  useEffect(() => {
+    setProfileImage(user.profileImage);
+  }, [user.profileImage]);
 
   //blob URL 해제를 위한 ref
   const previousUrlRef = useRef<string | null>(null);
@@ -31,7 +38,7 @@ const MyPageHeader = ({ user }: MyPageHeaderProps) => {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
@@ -45,9 +52,18 @@ const MyPageHeader = ({ user }: MyPageHeaderProps) => {
     if (previousUrlRef.current?.startsWith('blob:')) {
       URL.revokeObjectURL(previousUrlRef.current);
     }
-    const imageUrl = URL.createObjectURL(file);
-    previousUrlRef.current = imageUrl;
-    setProfileImage(imageUrl);
+    try {
+      // 실제 파일 업로드
+      const uploadedUrl = await updateUserProfileImage(file);
+      setProfileImage(uploadedUrl);
+      if (onProfileImageChange) onProfileImageChange(uploadedUrl);
+      // PATCH로 profileImage도 동기화
+      await updateUserInfo({ updatedProfileImage: uploadedUrl });
+      console.log('프로필 이미지 업로드 및 PATCH 성공:', uploadedUrl);
+    } catch (err) {
+      alert('프로필 이미지 변경 실패');
+      console.error(err);
+    }
   };
 
   const isActivity = location.pathname === MYPAGE_PATHS.ACTIVITY;

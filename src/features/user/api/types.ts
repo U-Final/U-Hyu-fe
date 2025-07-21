@@ -41,6 +41,10 @@ export interface UserInfo {
   status: UserStatus;
   grade: UserGrade;
   profile_image: string;
+  updatedAt: string;
+  profileImage: string;
+  favorite_brands: string[];
+  markers: string[];
 }
 
 export interface UpdateUserInfoRequest {

@@ -4,11 +4,11 @@ import type {
   UserExtraInfoRequest,
   UserExtraInfoResponse,
   CheckEmailResponse,
-  GetUserInfoResponse,
   LogoutResponse,
   UpdateUserInfoRequest,
   UpdateUserInfoResponse,
 } from './types';
+import type { UserInfoResponse } from '@/features/mypage/api/types';
 
 export const userApi = {
   // 사용자 추가 정보 입력
@@ -34,8 +34,8 @@ export const userApi = {
   },
 
   // 유저 정보 조회
-  getUserInfo: async (): Promise<GetUserInfoResponse> => {
-    const response = await authClient.get<GetUserInfoResponse>(
+  getUserInfo: async (): Promise<UserInfoResponse> => {
+    const response = await authClient.get<UserInfoResponse>(
       USER_ENDPOINTS.GET_USER_INFO
     );
     return response.data;

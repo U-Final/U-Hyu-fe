@@ -46,9 +46,9 @@ export const useStoreListQuery = (params: GetNearbyStoresParams) => {
     // 쿼리 실행 조건: 유효한 좌표값이 있을 때만 실행
     enabled:
       params.lat !== 0 &&
-      params.lng !== 0 &&
+      params.lon !== 0 &&
       !isNaN(params.lat) &&
-      !isNaN(params.lng),
+      !isNaN(params.lon),
 
     // UX 최적화 설정
     refetchOnWindowFocus: false, // 윈도우 포커스 시 재요청 비활성화
@@ -135,15 +135,15 @@ export const useToggleFavoriteMutation = () => {
       queryClient.setQueryData(
         MAP_QUERY_KEYS.stores.detail(storeId),
         (old: StoreDetailResponse | undefined) => {
-          if (!old) return old;
+          if (!old?.result) return old;
           return {
             ...old,
-            data: {
-              ...old.data,
-              isFavorite: !old.data.isFavorite,
-              favoriteCount: old.data.isFavorite
-                ? old.data.favoriteCount - 1
-                : old.data.favoriteCount + 1,
+            result: {
+              ...old.result,
+              isFavorite: !old.result.isFavorite,
+              favoriteCount: old.result.isFavorite
+                ? old.result.favoriteCount - 1
+                : old.result.favoriteCount + 1,
             },
           };
         }
@@ -153,10 +153,10 @@ export const useToggleFavoriteMutation = () => {
       queryClient.setQueriesData(
         { queryKey: MAP_QUERY_KEYS.stores.lists() },
         (old: StoreListResponse | undefined) => {
-          if (!old?.data) return old;
+          if (!old?.result) return old;
           return {
             ...old,
-            data: old.data.map((store: Store) =>
+            result: old.result.map((store: Store) =>
               store.storeId === storeId
                 ? { ...store, isFavorite: !store.isFavorite }
                 : store

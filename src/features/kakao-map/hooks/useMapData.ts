@@ -74,7 +74,7 @@ export const useMapData = () => {
   const storeListParams: GetNearbyStoresParams = useMemo(() => {
     const baseParams: GetNearbyStoresParams = {
       lat: mapCenter.lat,
-      lng: mapCenter.lng,
+      lon: mapCenter.lng,
       radius: DEFAULT_RADIUS,
     };
 
@@ -118,7 +118,7 @@ export const useMapData = () => {
    */
   useEffect(() => {
     if (storeDetailQuery.data && !storeDetailQuery.isLoading) {
-      setStoreDetail(storeDetailQuery.data.data);
+      setStoreDetail(storeDetailQuery.data.result ?? null);
     }
   }, [storeDetailQuery.data, storeDetailQuery.isLoading, setStoreDetail]);
 

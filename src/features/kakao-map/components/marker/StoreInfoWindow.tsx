@@ -35,11 +35,11 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
     );
   }
 
-  if (error || !storeDetailResponse?.data) {
+  if (error || !storeDetailResponse?.result) {
     return null;
   }
 
-  const storeDetail = storeDetailResponse.data;
+  const storeDetail = storeDetailResponse.result;
 
   return (
     <CustomOverlayMap

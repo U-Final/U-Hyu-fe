@@ -40,11 +40,11 @@ const fields: {
   label: string;
   icon: React.ReactNode;
 }[] = [
-  { key: 'name', label: '이름', icon: <User className="w-4 h-4 text-gray-500" /> },
-  { key: 'nickname', label: '닉네임', icon: <BadgeCheck className="w-4 h-4 text-gray-500" /> },
-  { key: 'gender', label: '성별', icon: <AtSign className="w-4 h-4 text-gray-500" /> },
-  { key: 'age', label: '나이', icon: <Calendar className="w-4 h-4 text-gray-500" /> },
-  { key: 'email', label: '이메일', icon: <Mail className="w-4 h-4 text-gray-500" /> },
+  { key: 'name', label: '이름', icon: <User className="w-4 h-4 text-[var(--text-gray)]" /> },
+  { key: 'nickname', label: '닉네임', icon: <BadgeCheck className="w-4 h-4 text-[var(--text-gray)]" /> },
+  { key: 'gender', label: '성별', icon: <AtSign className="w-4 h-4 text-[var(--text-gray)]" /> },
+  { key: 'age', label: '나이', icon: <Calendar className="w-4 h-4 text-[var(--text-gray)]" /> },
+  { key: 'email', label: '이메일', icon: <Mail className="w-4 h-4 text-[var(--text-gray)]" /> },
 ];
 
 //검증 함수 (이메일 형식, 나이 제한)
@@ -67,10 +67,10 @@ const validateField = (key: EditableUserFields, value: string): boolean => {
   return (
     <div className="space-y-[0.75rem]">
       <div className="flex items-center justify-between">
-        <span className="font-bold text-[1rem] text-black">나의 정보</span>
+        <span className="font-bold text-[1rem] text-[var(--text-black)]">나의 정보</span>
         <button
           onClick={() => setEditMode(!editMode)}
-          className="flex items-center gap-[0.25rem] px-[0.75rem] py-[0.25rem] text-[0.75rem] text-gray-500 border border-gray-300 rounded-[0.5rem] bg-[#F9FAFB]"
+          className="flex items-center gap-[0.25rem] px-[0.75rem] py-[0.25rem] text-[0.75rem] text-[var(--text-gray)] border border-gray-300 rounded-[0.5rem] bg-[var(--bg-light-gray)]"
         >
           <Pencil className="w-[0.75rem] h-[0.75rem]" />
           {editMode ? '수정 중' : '개인정보 수정'}
@@ -78,14 +78,12 @@ const validateField = (key: EditableUserFields, value: string): boolean => {
       </div>
 
       <div
-        className={`rounded-[1rem] bg-white p-[1.25rem] text-[0.875rem] text-gray-700 transition-all duration-300 ${
-          editMode ? 'border border-gray-300' : ''
-        }`}
+        className="rounded-[1rem] bg-white p-[1.25rem] text-[0.875rem] text-[var(--text-gray)] transition-all duration-300 border border-gray-200"
       >
         <div className="flex flex-col gap-[0.75rem]">
           {fields.map(({ key, label, icon }) => (
             <div key={key} className="flex items-center justify-between">
-              <div className="flex items-center gap-[0.5rem] text-gray-600">
+              <div className="flex items-center gap-[0.5rem] text-[var(--text-gray)]">
                 {icon}
                 <span>{label}</span>
               </div>

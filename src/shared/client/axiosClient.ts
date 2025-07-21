@@ -7,7 +7,7 @@ const API_CONFIG = {
   TIMEOUT: 10000,
 } as const;
 
-// ✅ 공통 응답 인터셉터
+// 공통 응답 인터셉터
 const responseInterceptor = (instance: AxiosInstance) => {
   instance.interceptors.response.use(
     response => response,
@@ -29,19 +29,7 @@ const responseInterceptor = (instance: AxiosInstance) => {
   );
 };
 
-// 인증이 필요하지 않은 요청용 클라이언트
 export const client: AxiosInstance = axios.create({
-  baseURL: API_CONFIG.BASE_URL,
-  timeout: API_CONFIG.TIMEOUT,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  withCredentials: false,
-});
-responseInterceptor(client);
-
-// 인증이 필요한 요청용 클라이언트 (쿠키 자동 포함)
-export const authClient: AxiosInstance = axios.create({
   baseURL: API_CONFIG.BASE_URL,
   timeout: API_CONFIG.TIMEOUT,
   headers: {
@@ -49,4 +37,4 @@ export const authClient: AxiosInstance = axios.create({
   },
   withCredentials: true,
 });
-responseInterceptor(authClient);
+responseInterceptor(client);

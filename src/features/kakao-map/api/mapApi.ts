@@ -1,11 +1,12 @@
 import { client } from '@/shared/client';
+
 import { MAP_ENDPOINTS } from './endpoints';
 import type {
   GetNearbyStoresParams,
   GetStoreDetailParams,
-  ToggleFavoriteParams,
   StoreDetailResponse,
   StoreListResponse,
+  ToggleFavoriteParams,
   ToggleFavoriteResponseType,
 } from './types';
 

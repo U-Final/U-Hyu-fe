@@ -5,10 +5,8 @@ import { mapApi } from '../api/mapApi';
 import type {
   GetNearbyStoresParams,
   StoreDetailResponse,
-  StoreListResponse,
   ToggleFavoriteResponseType,
 } from '../api/types';
-import type { Store } from '../types/store';
 
 /**
  * React Query의 키 생성을 위한 중앙 집중식 키 팩토리
@@ -116,24 +114,16 @@ export const useToggleFavoriteMutation = () => {
   return useMutation({
     mutationFn: mapApi.toggleFavorite,
 
-    // Optimistic Update: 서버 응답 전에 UI 먼저 업데이트
+    // 단순화된 Optimistic Update
     onMutate: async variables => {
       const { storeId } = variables;
 
-      // 진행 중인 관련 쿼리들 취소하여 낙관적 업데이트 보호
-      await queryClient.cancelQueries({
-        queryKey: MAP_QUERY_KEYS.stores.detail(storeId),
-      });
-      await queryClient.cancelQueries({
-        queryKey: MAP_QUERY_KEYS.stores.lists(),
-      });
-
-      // 롤백을 위한 이전 데이터 스냅샷 저장
+      // 롤백을 위한 이전 데이터 스냅샷만 저장
       const previousStoreDetail = queryClient.getQueryData(
         MAP_QUERY_KEYS.stores.detail(storeId)
       );
 
-      // 매장 상세 정보의 즐겨찾기 상태 즉시 토글
+      // 즉시 UI 업데이트 (매장 상세 정보만)
       queryClient.setQueryData(
         MAP_QUERY_KEYS.stores.detail(storeId),
         (old: StoreDetailResponse | undefined) => {
@@ -151,26 +141,10 @@ export const useToggleFavoriteMutation = () => {
         }
       );
 
-      // 매장 목록에서도 즐겨찾기 상태 업데이트
-      queryClient.setQueriesData(
-        { queryKey: MAP_QUERY_KEYS.stores.lists() },
-        (old: StoreListResponse | undefined) => {
-          if (!old?.data) return old;
-          return {
-            ...old,
-            data: old.data.map((store: Store) =>
-              store.storeId === storeId
-                ? { ...store, isFavorite: !store.isFavorite }
-                : store
-            ),
-          };
-        }
-      );
-
       return { previousStoreDetail };
     },
 
-    // 성공 시: 서버 응답을 사용해 캐시를 올바르게 동기화
+    // 성공 시: 서버 응답으로 최종 동기화
     onSuccess: (data: ToggleFavoriteResponseType, variables) => {
       const { storeId } = variables;
 
@@ -178,7 +152,7 @@ export const useToggleFavoriteMutation = () => {
 
       const { isBookmarked } = data.data;
 
-      // 서버 응답의 isBookmarked를 사용해 StoreDetail의 isFavorite 업데이트
+      // 서버 응답으로 최종 상태 확정
       queryClient.setQueryData(
         MAP_QUERY_KEYS.stores.detail(storeId),
         (old: StoreDetailResponse | undefined) => {
@@ -188,24 +162,7 @@ export const useToggleFavoriteMutation = () => {
             data: {
               ...old.data,
               isFavorite: isBookmarked,
-              // favoriteCount는 이미 optimistic update에서 올바르게 설정됨
             },
-          };
-        }
-      );
-
-      // 매장 목록에서도 즐겨찾기 상태 동기화
-      queryClient.setQueriesData(
-        { queryKey: MAP_QUERY_KEYS.stores.lists() },
-        (old: StoreListResponse | undefined) => {
-          if (!old?.data) return old;
-          return {
-            ...old,
-            data: old.data.map((store: Store) =>
-              store.storeId === storeId
-                ? { ...store, isFavorite: isBookmarked }
-                : store
-            ),
           };
         }
       );
@@ -215,29 +172,12 @@ export const useToggleFavoriteMutation = () => {
     onError: (error, variables, context) => {
       const { storeId } = variables;
 
-      // 이전 상태로 롤백 (setQueryData 사용으로 InfoWindow 안정성 보장)
       if (context?.previousStoreDetail) {
         queryClient.setQueryData(
           MAP_QUERY_KEYS.stores.detail(storeId),
           context.previousStoreDetail
         );
       }
-
-      // 매장 목록도 이전 상태로 롤백 (무효화 대신 직접 복원)
-      queryClient.setQueriesData(
-        { queryKey: MAP_QUERY_KEYS.stores.lists() },
-        (old: StoreListResponse | undefined) => {
-          if (!old?.data) return old;
-          return {
-            ...old,
-            data: old.data.map((store: Store) =>
-              store.storeId === storeId
-                ? { ...store, isFavorite: !store.isFavorite } // 다시 원래 상태로 되돌리기
-                : store
-            ),
-          };
-        }
-      );
 
       console.error('즐겨찾기 업데이트 실패:', error);
     },

@@ -13,5 +13,8 @@ export const getBrandList = async (
     { params }
   );
 
-  return res.data.data!;
+  if (!res.data.data) {
+    throw new Error('Invalid API response: missing data');
+  }
+  return res.data.data;
 };

@@ -20,5 +20,5 @@ export interface PaginationProps {
 export interface PaginationButtonProps {
   onClick: () => void;
   disabled: boolean;
-  direction: string;
+  direction: 'prev' | 'next';
 }

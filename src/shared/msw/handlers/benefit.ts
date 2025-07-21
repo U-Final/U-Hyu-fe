@@ -18,7 +18,7 @@ export const benefitHandlers = [
       // 성공 시
       // query 파라미터 파싱
       const page = Number(url.searchParams.get('page') ?? '0');
-      const size = Number(url.searchParams.get('size') ?? '3');
+      const size = Number(url.searchParams.get('size') ?? '10');
       const category = url.searchParams.get('category');
       const brandName = url.searchParams
         .get('brand_name')
@@ -52,7 +52,7 @@ export const benefitHandlers = [
       }
 
       // benefitType 필터링
-      if (benefitType) {
+      if (benefitType && ['DISCOUNT', 'GIFT'].includes(benefitType)) {
         filtered = filtered.filter(b =>
           b.benefitTypes.includes(benefitType as BenefitType)
         );

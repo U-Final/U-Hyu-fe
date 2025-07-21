@@ -6,5 +6,5 @@ export const parseQueryParams = (params: URLSearchParams): BrandListParams => ({
   benefitType: params.get('benefitType') as 'DISCOUNT' | 'GIFT' | undefined,
   brand_name: params.get('brand_name') || undefined,
   page: Number(params.get('page') || '0'),
-  size: Number(params.get('size') || '5'),
+  size: Number(params.get('size') || '10'),
 });

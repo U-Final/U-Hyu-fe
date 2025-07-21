@@ -15,16 +15,18 @@ export const useBenefitQueryParams = () => {
     params,
 
     setParam: (key: string, value: string) => {
-      searchParams.set(key, value);
-      if (key !== 'page') searchParams.set('page', '0');
-      setSearchParams(searchParams);
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set(key, value);
+      if (key !== 'page') newParams.set('page', '0');
+      setSearchParams(newParams);
     },
 
     setParams: (updates: Record<string, string>) => {
+      const newParams = new URLSearchParams(searchParams);
       Object.entries(updates).forEach(([k, v]) => {
-        searchParams.set(k, v);
+        newParams.set(k, v);
       });
-      setSearchParams(searchParams);
+      setSearchParams(newParams);
     },
   };
 };

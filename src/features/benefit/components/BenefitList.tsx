@@ -36,6 +36,7 @@ export const BenefitList = () => {
           }}
           onChange={filters => {
             setParams({
+              page: '0',
               storeType: filters.storeType || '',
               benefitType: filters.benefitType || '',
             });

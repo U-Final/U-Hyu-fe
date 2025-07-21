@@ -18,7 +18,7 @@ export const brandHandlers = [
 
     if (shouldFail) {
       //실패 시
-      return createErrorResponse('에러처리.', 404, 1003); // 에러 처리 수정 필요
+      return createErrorResponse('에러처리.', 400);
     } else {
       // 성공 시
       // query 파라미터 파싱

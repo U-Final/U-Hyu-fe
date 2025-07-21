@@ -21,6 +21,7 @@
       // 각 도메인 별 경로 설정
       "@home/*" : ["./src/features/home/*"],
       "@user/*": ["./src/features/user/*"],
+      "@kakao-map/*": ["./src/features/kakao-map/*"],
       "@extra-info/*": ["./src/features/extra-info/*"],
       "@benefit/*": ["./src/features/benefit/*"],
       "@mypage/*": ["./src/features/mypage/*"],

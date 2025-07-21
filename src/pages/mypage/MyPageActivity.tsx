@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react';
-import MyPageHeader from '@features/mypage/components/MyPageHeader';
-import ActivityTabs from '@features/mypage/components/ActivityTabs';
-import ActivityBenefit from '@features/mypage/components/ActivityBenefit';
-import ActivityBrands from '@features/mypage/components/ActivityBrands';
-import ActivityFavorite from '@features/mypage/components/ActivityFavorite';
+import MyPageHeader from '@mypage/components/MyPageHeader';
+import ActivityTabs from '@mypage/components/ActivityTabs';
+import ActivityBenefit from '@mypage/components/ActivityBenefit';
+import ActivityBrands from '@mypage/components/ActivityBrands';
+import ActivityFavorite from '@mypage/components/ActivityFavorite';
 import { mockUser } from '@mypage/types/mockUser';
 import type { MyPageTab } from '@mypage/types';
 import { MYPAGE_TABS } from '@mypage/constants/tabs';

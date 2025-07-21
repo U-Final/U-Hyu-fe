@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import type { BrandDetail } from '@/features/benefit/types';
+import type { BrandDetail } from '@benefit/types';
 
 const BrandDetailModal = ({ brand }: { brand: BrandDetail }) => {
   const gradeStyles: Record<string, { bg: string; text: string }> = {

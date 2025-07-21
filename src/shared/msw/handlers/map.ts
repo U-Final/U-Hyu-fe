@@ -5,12 +5,12 @@ import {
   createMockStoreDetailResponse,
   createMockStoreListResponse,
   createMockToggleFavoriteResponse,
-} from '@/features/kakao-map/api/mockData';
+} from '@kakao-map/api/mockData';
 import type {
   StoreDetailResponse,
   StoreListResponse,
   ToggleFavoriteResponseType,
-} from '@/features/kakao-map/api/types';
+} from '@kakao-map/api/types';
 
 /**
  * 지도 관련 API의 MSW 핸들러들

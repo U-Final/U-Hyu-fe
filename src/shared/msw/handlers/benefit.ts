@@ -1,12 +1,12 @@
 import { http } from 'msw';
 
-import { BENEFIT_ENDPOINTS } from '@/features/benefit/api/endpoints';
-import { allBrands } from '@/features/benefit/api/mockData';
+import { BENEFIT_ENDPOINTS } from '@benefit/api/endpoints';
+import { allBrands } from '@benefit/api/mockData';
 import type {
   BenefitType,
   BrandListRes,
   StoreType,
-} from '@/features/benefit/api/types';
+} from '@benefit/api/types';
 
 import { createErrorResponse } from '@/shared/utils/createErrorResponse';
 import { createResponse } from '@/shared/utils/createResponse';

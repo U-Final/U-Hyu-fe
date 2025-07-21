@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import type { PaginationButtonProps } from '@/features/benefit/types';
+import type { PaginationButtonProps } from '@benefit/types';
 
 const PaginationButton: FC<PaginationButtonProps> = ({
   onClick,

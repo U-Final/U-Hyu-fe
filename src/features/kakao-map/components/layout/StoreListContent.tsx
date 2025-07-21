@@ -1,4 +1,4 @@
-import type { Store } from '@/features/kakao-map/types/store';
+import type { Store } from '@kakao-map/types/store';
 import { BrandWithFavoriteCard } from '@/shared/components';
 import { type FC } from 'react';
 

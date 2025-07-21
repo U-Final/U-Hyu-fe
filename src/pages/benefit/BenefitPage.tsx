@@ -4,8 +4,8 @@ import {
   BrandDetailModal,
   CheckBoxList,
   Pagination,
-} from '@/features/benefit/components';
-import type { BrandDetail } from '@/features/benefit/types';
+} from '@benefit/components';
+import type { BrandDetail } from '@benefit/types';
 
 import { BrandCard, FilterTabs, SearchInput } from '@/shared/components';
 import { useModalStore } from '@/shared/store';

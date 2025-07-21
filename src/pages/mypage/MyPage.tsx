@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { mockUser } from '@mypage/types/mockUser';
 import type { UserInfo } from '@mypage/types/types';
 
-import MyPageHeader from '@features/mypage/components/MyPageHeader';
-import MyPageUserInfo from '@features/mypage/components/MyPageUserInfo';
-import MyPageMembership from '@features/mypage/components/MyPageMembership';
-import MyPageBrand from '@features/mypage/components/MyPageBrand';
-import MyPageMarker from '@features/mypage/components/MyPageMarker';
+import MyPageHeader from '@mypage/components/MyPageHeader';
+import MyPageUserInfo from '@mypage/components/MyPageUserInfo';
+import MyPageMembership from '@mypage/components/MyPageMembership';
+import MyPageBrand from '@mypage/components/MyPageBrand';
+import MyPageMarker from '@mypage/components/MyPageMarker';
 
 const MyPage = () => {
   const [user, setUser] = useState<UserInfo>(mockUser);

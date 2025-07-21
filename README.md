@@ -39,15 +39,15 @@ export const PrimaryButton = (props: ButtonBaseProps) => (
 
 ### 3. 모듈화와 생산성 향상: Alias + Barrel Export
 
-### 3.1 Alias (@components, @features, @constants 등)
+### 3.1 Alias (@benefit, @mypage 등)
 
 tsconfig.json과 Vite 설정을 통해 상대경로 대신 의미 있는 경로 사용을 유도해 가독성 및 유지보수를 향상.
 
 ```
 // tsconfig.json
 "paths": {
-  "@components/*": ["src/shared/components/*"],
-  "@features/*": ["src/features/*"]
+  "@benefit/*": ["src/features/benefit/*"],
+  "@mypage/*": ["src/features/mypage/*"]
 }
 
 ```

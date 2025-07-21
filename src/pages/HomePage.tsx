@@ -2,7 +2,7 @@ import { DragBottomSheet } from '@/shared/components';
 import {
   AuthHomeSheetContent,
   GuestHomeSheetContent,
-} from '@features/home/components';
+} from '@home/components';
 
 const HomePage = () => {
   const isLoggedIn = true; // 로그인 여부를 확인하는 로직이 필요합니다.

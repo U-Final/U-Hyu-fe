@@ -1,7 +1,11 @@
-import { IconButton } from '@components/buttons/IconButton';
+// 순환 의존성 방지: 컴포넌트 단일 경로로 직접 import
+import React, { useEffect } from 'react';
+
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronLeft, X } from 'lucide-react';
-import React, { useEffect } from 'react';
+
+import { IconButton } from '@/shared/components/buttons/IconButton';
+
 import type { BaseBottomSheetProps } from './bottomSheet.type';
 
 export const BaseBottomSheet: React.FC<BaseBottomSheetProps> = ({

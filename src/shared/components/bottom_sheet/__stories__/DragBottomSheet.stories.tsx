@@ -1,6 +1,10 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
-import { DragBottomSheet } from '../DragBottomSheet'; // 경로는 실제 위치에 맞게 수정
+
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+import { DragBottomSheet } from '../DragBottomSheet';
+
+// 경로는 실제 위치에 맞게 수정
 
 const meta: Meta<typeof DragBottomSheet> = {
   title: 'Components/BottomSheet/DragBottomSheet',

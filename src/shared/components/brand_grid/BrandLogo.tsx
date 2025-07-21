@@ -1,7 +1,9 @@
-import { type BrandLogoProps } from '@components/brand_grid/brand.type';
+import React from 'react';
+
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
-import React from 'react';
+
+import { type BrandLogoProps } from '@/shared/components/brand_grid/brand.type';
 
 export const BrandLogo: React.FC<BrandLogoProps> = ({
   brand,

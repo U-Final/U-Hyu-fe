@@ -1,6 +1,7 @@
+import { createElement, useState } from 'react';
+
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { createElement, useState } from 'react';
 import SearchInput from '../SearchInput';
 
 const meta: Meta<typeof SearchInput> = {

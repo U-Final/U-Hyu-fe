@@ -1,11 +1,13 @@
 // stories/BrandGrid.stories.tsx
-import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
+
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
 import {
-  BrandGrid,
   BRANDS,
+  BrandGrid,
   type BrandGridProps,
-} from '@shared/components/brand_grid';
+} from '@/shared/components/brand_grid';
 
 // 인터랙티브한 스토리를 위한 래퍼 컴포넌트
 const BrandGridWrapper = (args: BrandGridProps) => {

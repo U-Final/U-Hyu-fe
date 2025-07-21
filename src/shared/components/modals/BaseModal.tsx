@@ -1,7 +1,9 @@
-import { IconButton } from '@components/buttons/IconButton';
-import { useModalStore } from '@shared/store/modalStore';
-import { X } from 'lucide-react';
 import { useEffect } from 'react';
+
+import { X } from 'lucide-react';
+
+import { IconButton } from '@/shared/components/buttons/IconButton';
+import { useModalStore } from '@/shared/store';
 
 interface BaseModalProps {
   title?: React.ReactNode;

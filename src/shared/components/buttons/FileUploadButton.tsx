@@ -1,5 +1,6 @@
-import { ButtonBase } from '@components/buttons/ButtonBase';
 import { useRef } from 'react';
+
+import { ButtonBase } from '@/shared/components/buttons/ButtonBase';
 
 interface FileUploadButtonProps {
   onFileSelect: (file: File) => void;

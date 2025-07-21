@@ -1,25 +1,25 @@
 import React from 'react';
-import { useStoreSelection } from '../hooks/useStoreSelection';
-import { useFilterNavigation } from '../hooks/useFilterNavigation';
+import { useMapData } from '../hooks/useMapData';
+import { useMapUI } from '../hooks/useMapUI';
+import { useMapInteraction } from '../hooks/useMapInteraction';
 import { PersistentBottomSheet } from './layout/PersistentBottomSheet';
 import StoreListContent from './layout/StoreListContent';
 import CategorySelectContent from './layout/steps/CategorySelectContent';
 import BrandSelectContent from './layout/steps/BrandSelectContent';
 
 export const BottomSheetContainer: React.FC = () => {
-  const { stores, handleStoreClick } = useStoreSelection();
+  const { stores } = useMapData();
+  const { handleStoreSelect } = useMapInteraction();
   const {
     selectedCategory,
     selectedBrand,
     currentBottomSheetStep,
-    getCategoryDisplayName,
-    getBrandsByCategory,
-    handleShowFilter,
-    handleCategorySelect,
-    handleBrandSelect,
-    handleBackToCategory,
+    showFilter,
+    selectCategoryAndNavigate,
+    selectBrandAndReturn,
+    backToList,
     setBottomSheetStep,
-  } = useFilterNavigation();
+  } = useMapUI();
 
   const bottomSheetSteps = [
     {
@@ -27,15 +27,15 @@ export const BottomSheetContainer: React.FC = () => {
       title: '주변 제휴 매장',
       subtitle:
         selectedCategory || selectedBrand
-          ? `${getCategoryDisplayName(selectedCategory)}${selectedBrand ? ' > ' + selectedBrand : ''}`
+          ? `${selectedCategory}${selectedBrand ? ' > ' + selectedBrand : ''}`
           : undefined,
       showFilterButton: true,
-      onFilterClick: handleShowFilter,
+      onFilterClick: showFilter,
       content: (
         <StoreListContent
           stores={stores}
-          onFilterClick={handleShowFilter}
-          onStoreClick={handleStoreClick}
+          onFilterClick={showFilter}
+          onStoreClick={handleStoreSelect}
         />
       ),
     },
@@ -46,7 +46,7 @@ export const BottomSheetContainer: React.FC = () => {
       content: (
         <CategorySelectContent
           selectedCategory={selectedCategory}
-          onCategorySelect={handleCategorySelect}
+          onCategorySelect={selectCategoryAndNavigate}
         />
       ),
     },
@@ -57,11 +57,11 @@ export const BottomSheetContainer: React.FC = () => {
       content: (
         <BrandSelectContent
           categoryKey={selectedCategory}
-          categoryDisplayName={getCategoryDisplayName(selectedCategory)}
-          brands={getBrandsByCategory(selectedCategory)}
+          categoryDisplayName={selectedCategory}
+          brands={[]} // TODO: 브랜드 데이터 구현 필요
           selectedBrand={selectedBrand}
-          onBrandSelect={handleBrandSelect}
-          onBack={handleBackToCategory}
+          onBrandSelect={selectBrandAndReturn}
+          onBack={backToList}
         />
       ),
     },

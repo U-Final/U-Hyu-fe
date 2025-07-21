@@ -1,7 +1,6 @@
-import { type FC } from 'react';
-import { BrandWithFavoriteCard } from '@components/cards/BrandWithFavoriteCard';
 import type { Store } from '@/features/kakao-map/types/store';
-import { getBrandImagePath } from '../../utils/brandImageMapper';
+import { BrandWithFavoriteCard } from '@/shared/components';
+import { type FC } from 'react';
 
 interface StoreListContentProps {
   stores: Store[];
@@ -35,7 +34,7 @@ const StoreListContent: FC<StoreListContentProps> = ({
                 onClick={() => onStoreClick?.(store)}
               >
                 <BrandWithFavoriteCard
-                  logoUrl={getBrandImagePath(store.storeName)}
+                  logoUrl={store.logo_image}
                   isStarFilled={false}
                 >
                   <div className="flex-1 min-w-0">

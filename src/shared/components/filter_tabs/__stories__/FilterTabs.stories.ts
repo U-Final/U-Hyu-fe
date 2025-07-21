@@ -1,5 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
 import { createElement } from 'react';
+
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
 import FilterTabs from '../FilterTabs';
 import { FILTER_TABS } from '../FilterTabs.variants';
 

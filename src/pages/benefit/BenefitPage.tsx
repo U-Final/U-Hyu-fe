@@ -1,23 +1,25 @@
-import FilterTabs from '@/shared/components/filter_tabs/FilterTabs';
-import SearchInput from '@/shared/components/search_input/SearchInput';
-import BrandDetailModal from '@benefit/components/BrandDetailModal';
-import CheckBoxList from '@benefit/components/CheckBoxList';
-import Pagination from '@benefit/components/Pagination';
-import type { BrandDetail } from '@benefit/types/BrandDetail.types';
-import { BrandCard } from '@components/cards/BrandCard';
-import { useModalStore } from '@shared/store/modalStore';
 import { useState } from 'react';
+
+import {
+  BrandDetailModal,
+  CheckBoxList,
+  Pagination,
+} from '@/features/benefit/components';
+import type { BrandDetail } from '@/features/benefit/types';
+
+import { BrandCard, FilterTabs, SearchInput } from '@/shared/components';
+import { useModalStore } from '@/shared/store';
 
 const BenefitPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedFilters, setSelectedFilters] = useState<string[]>([
     '온라인',
     '오프라인',
     '할인',
     '상품증정',
   ]);
-  
+
   const openModal = useModalStore(state => state.openModal);
 
   const totalPages = 5;
@@ -51,7 +53,6 @@ const BenefitPage = () => {
       logo_url: '/images/brands/뚜레쥬르.png',
       summary: `VVIP : 1천원 당 150원 할인\nVIP: 1천원 당 100원 할인\n우수: 1천원 당 50원 할인`,
     },
-
   ];
 
   const mockBrandDetail: BrandDetail[] = [
@@ -74,7 +75,7 @@ const BenefitPage = () => {
     if (!brand) return;
 
     openModal('base', {
-      title: "브랜드 상세정보",
+      title: '브랜드 상세정보',
       children: <BrandDetailModal brand={brand} />,
     });
   };

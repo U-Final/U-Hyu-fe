@@ -1,7 +1,10 @@
-import { PrimaryButton } from '@components/buttons/PrimaryButton';
-import { useModalStore } from '@shared/store/modalStore';
 import { useRef } from 'react';
+
 import type { CropperRef } from 'react-advanced-cropper';
+
+import { PrimaryButton } from '@/shared/components';
+import { useModalStore } from '@/shared/store';
+
 import { useImageCropStore } from '../../../store/useImageCropStore';
 import { BarcodeCropper } from './BarcodeCropper';
 

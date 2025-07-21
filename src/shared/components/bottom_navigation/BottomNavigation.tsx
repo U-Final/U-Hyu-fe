@@ -1,14 +1,17 @@
-import BarcodeItem from '@components/bottom_navigation/BarcodeItem';
-import NavItem from '@components/bottom_navigation/NavItem';
+import { useState } from 'react';
+
 import { PATH } from '@paths';
 import { X } from 'lucide-react';
-import { useState } from 'react';
 import { FaMap } from 'react-icons/fa';
 import { FaUser } from 'react-icons/fa6';
 import { HiGift } from 'react-icons/hi';
 import { LiaBarcodeSolid } from 'react-icons/lia';
 import { MdHomeFilled } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
+
+import BarcodeItem from '@/shared/components/bottom_navigation/BarcodeItem';
+import NavItem from '@/shared/components/bottom_navigation/NavItem';
+
 import { BarcodeBottomSheet } from './barcode/BarcodeBottomSheet';
 
 const BottomNavigation = () => {

@@ -1,7 +1,10 @@
-import { PrimaryButton } from '@components/buttons/PrimaryButton';
+import React from 'react';
+
 import { motion } from 'framer-motion';
 import { Check, ChevronRight } from 'lucide-react';
-import React from 'react';
+
+import { PrimaryButton } from '@/shared/components';
+
 import { BaseBottomSheet } from './BaseBottomSheet';
 import type {
   SelectionBottomSheetProps,

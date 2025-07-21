@@ -1,19 +1,20 @@
 import { useCallback, useEffect, useMemo } from 'react';
-import { useMapStore } from '../store/MapStore';
-import { useMapUIContext } from '../context/MapUIContext';
-import {
-  useStoreListQuery,
-  useStoreDetailQuery,
-  useToggleFavoriteMutation,
-  useInvalidateStoreQueries,
-} from './useMapQueries';
+
 import type { GetNearbyStoresParams } from '../api/types';
 import { getRegionInfo } from '../constants/regions';
+import { useMapUIContext } from '../context/MapUIContext';
+import { useMapStore } from '../store/MapStore';
+import {
+  useInvalidateStoreQueries,
+  useStoreDetailQuery,
+  useStoreListQuery,
+  useToggleFavoriteMutation,
+} from './useMapQueries';
 
 /**
  * 기본 검색 반경 (미터 단위)
  */
-const DEFAULT_RADIUS = 1000;
+const DEFAULT_RADIUS = import.meta.env.VITE_DEFAULT_RADIUS || 5000;
 
 /**
  * 지도 관련 데이터 관리를 위한 메인 훅

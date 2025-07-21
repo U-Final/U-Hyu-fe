@@ -152,7 +152,7 @@ export const useToggleFavoriteMutation = () => {
 
       const { isBookmarked } = data.data;
 
-      // 서버 응답으로 최종 상태 확정
+      // 서버 응답으로 isFavorite 상태만 최종 확정
       queryClient.setQueryData(
         MAP_QUERY_KEYS.stores.detail(storeId),
         (old: StoreDetailResponse | undefined) => {
@@ -162,6 +162,7 @@ export const useToggleFavoriteMutation = () => {
             data: {
               ...old.data,
               isFavorite: isBookmarked,
+              // favoriteCount는 optimistic update에서 설정된 값 유지
             },
           };
         }

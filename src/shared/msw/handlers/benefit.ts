@@ -1,12 +1,7 @@
-import { http } from 'msw';
-
 import { BENEFIT_ENDPOINTS } from '@benefit/api/endpoints';
 import { allBrands } from '@benefit/api/mockData';
-import type {
-  BenefitType,
-  BrandListRes,
-  StoreType,
-} from '@benefit/api/types';
+import type { BenefitType, BrandListRes, StoreType } from '@benefit/api/types';
+import { http } from 'msw';
 
 import { createErrorResponse } from '@/shared/utils/createErrorResponse';
 import { createResponse } from '@/shared/utils/createResponse';
@@ -25,9 +20,12 @@ export const benefitHandlers = [
       const page = Number(url.searchParams.get('page') ?? '0');
       const size = Number(url.searchParams.get('size') ?? '3');
       const category = url.searchParams.get('category');
-      const brandName = url.searchParams.get('brandName')?.toLowerCase().trim();
-      const storeTypes = url.searchParams.getAll('storeType');
-      const benefitTypes = url.searchParams.getAll('benefitType');
+      const brandName = url.searchParams
+        .get('brand_name')
+        ?.toLowerCase()
+        .trim();
+      const storeType = url.searchParams.get('storeType');
+      const benefitType = url.searchParams.get('benefitType');
 
       // 초기 브랜드 리스트 전체 복사
       let filtered = [...allBrands];
@@ -47,16 +45,16 @@ export const benefitHandlers = [
       }
 
       // storeType 필터링
-      if (storeTypes.length > 0) {
+      if (storeType) {
         filtered = filtered.filter(b =>
-          storeTypes.some(st => b.storeTypes.includes(st as StoreType))
+          b.storeTypes.includes(storeType as StoreType)
         );
       }
 
       // benefitType 필터링
-      if (benefitTypes.length > 0) {
+      if (benefitType) {
         filtered = filtered.filter(b =>
-          benefitTypes.some(bt => b.benefitTypes.includes(bt as BenefitType))
+          b.benefitTypes.includes(benefitType as BenefitType)
         );
       }
 
@@ -74,10 +72,7 @@ export const benefitHandlers = [
         hasNext,
       };
 
-      return createResponse(
-        result,
-        '제휴처 리스트 목록 api 성공'
-      );
+      return createResponse(result, '제휴처 리스트 목록 api 성공');
     }
   }),
 ];

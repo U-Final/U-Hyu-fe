@@ -38,9 +38,9 @@ export interface BrandListRes {
  */
 export interface BrandListParams {
   category?: string;
-  storeType?: StoreType[];
-  benefitType?: BenefitType[];
-  brandName?: string;
+  storeType?: StoreType;
+  benefitType?: BenefitType;
+  brand_name?: string;
   page?: number;
   size?: number;
 }

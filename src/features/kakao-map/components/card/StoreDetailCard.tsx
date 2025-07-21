@@ -9,7 +9,7 @@ export interface StoreDetailCardProps {
   usageLimit: string;
   usageMethod: string;
   userGrade?: string; // "우수", "VIP" , "VVIP" - optional로 변경
-  onToggleFavorite?: () => void;
+  handleToggleFavorite?: () => void;
 }
 
 const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
@@ -20,7 +20,7 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
   usageLimit,
   usageMethod,
   userGrade = '우수', // 기본값 설정
-  onToggleFavorite,
+  handleToggleFavorite,
 }) => {
   return (
     <div className="relative w-[20rem] bg-white rounded-2xl shadow-lg p-6 pt-5 pb-8">
@@ -41,7 +41,7 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
             <motion.svg
               width="1.5rem"
               height="1.5rem"
-              onClick={onToggleFavorite}
+              onClick={handleToggleFavorite}
               className="cursor-pointer"
               animate={{
                 fill: isFavorite ? '#FFD600' : '#E0E0E0',
@@ -56,7 +56,7 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
               onKeyDown={e => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
-                  onToggleFavorite?.();
+                  handleToggleFavorite?.();
                 }
               }}
             >

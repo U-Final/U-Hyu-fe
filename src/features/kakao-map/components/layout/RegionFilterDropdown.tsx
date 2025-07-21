@@ -7,22 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/shadcn/ui/select';
-
-const regions = [
-  { label: '전체', value: 'all' },
-  { label: '서울', value: 'seoul' },
-  { label: '경기', value: 'gyeonggi' },
-  { label: '인천', value: 'incheon' },
-  { label: '부산', value: 'busan' },
-  { label: '제주', value: 'jeju' },
-  { label: '강원', value: 'gangwon' },
-  { label: '충청', value: 'chungcheong' },
-  { label: '전라', value: 'jeollanam' },
-  { label: '경상', value: 'gyeongsang' },
-  { label: '전북', value: 'jeonbuk' },
-  { label: '전남', value: 'jeonnam' },
-  { label: '경북', value: 'gyeongbuk' },
-];
+import { REGIONS } from '../../constants/regions';
 
 /**
  * 사용자가 지역을 선택할 수 있는 드롭다운 컴포넌트를 렌더링합니다.
@@ -51,8 +36,8 @@ export default function RegionFilterDropdown({
       >
         <SelectGroup>
           <SelectLabel>지역 선택</SelectLabel>
-          {regions.map(region => (
-            <SelectItem key={region.value} value={region.value}>
+          {REGIONS.map(region => (
+            <SelectItem key={region.key} value={region.key}>
               {region.label}
             </SelectItem>
           ))}

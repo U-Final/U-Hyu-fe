@@ -2,18 +2,16 @@ import type { ApiResponse } from '@/shared/client/client.type';
 import { HttpResponse } from 'msw';
 
 export const createResponse = <T>(
-  result: T,
+  data: T,
   message: string,
-  status: number = 200,
-  code: number = 0
+  statusCode: number = 200
 ): HttpResponse<ApiResponse<T>> => {
   return HttpResponse.json<ApiResponse<T>>(
     {
-      code,
-      status,
+      data,
       message,
-      result,
+      statusCode,
     },
-    { status }
+    { status: statusCode }
   );
 };

@@ -16,7 +16,7 @@ import type {
 export const mapApi = {
   /**
    * 주변 매장 목록 조회
-   * GET /map/stores?lat=37.123&lng=127.456&radius=1000
+   * GET /map/stores?lat=37.123&lon=127.456&radius=1000
    */
   getStoreList: async (
     params: GetNearbyStoresParams

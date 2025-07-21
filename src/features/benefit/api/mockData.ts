@@ -1,5 +1,8 @@
-import type { BenefitType, Brand, BrandListRes, StoreType } from './types';
+import type { BenefitType, Brand, StoreType } from './types';
 
+/**
+ * 브랜드 정보 목데이터 타입
+ */
 interface BrandMock extends Brand {
   category: string;
   storeTypes: StoreType[];
@@ -7,7 +10,7 @@ interface BrandMock extends Brand {
 }
 
 /**
- * 모든 브랜드를 하나의 배열에 정의 (모든 페이지 합친 버전)
+ * 목데이터: 브랜드 정보
  */
 export const allBrands: BrandMock[] = [
   {
@@ -83,15 +86,3 @@ export const allBrands: BrandMock[] = [
     benefitTypes: ['GIFT'],
   },
 ];
-
-/**
- * 공통 응답 포맷 생성 헬퍼
- */
-export const createMockBrandListResponse = (data: BrandListRes) => {
-  return {
-    status: 200,
-    message: '제휴처 목록을 성공적으로 조회했습니다.',
-    data,
-    timestamp: new Date().toISOString(),
-  };
-};

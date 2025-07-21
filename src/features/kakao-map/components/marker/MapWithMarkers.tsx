@@ -1,7 +1,9 @@
-import { type FC, useCallback, useState, useRef } from 'react';
+import { type FC, useCallback, useEffect, useRef, useState } from 'react';
 import { CustomOverlayMap, Map as KakaoMap } from 'react-kakao-maps-sdk';
 import type { Store } from '../../types/store';
 import BrandMarker from './BrandMarker';
+import StoreInfoWindow from './StoreInfoWindow';
+import { useToggleFavoriteMutation } from '../../hooks/useMapQueries';
 
 interface MapWithMarkersProps {
   center: { lat: number; lng: number };
@@ -21,16 +23,61 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   currentLocation,
   level = 4,
   className = 'w-full h-full',
-  onStoreClick,
   onCenterChange,
 }) => {
   const [selectedStoreId, setSelectedStoreId] = useState<number | null>(null);
+  const [infoWindowStore, setInfoWindowStore] = useState<Store | null>(null);
+  const [mapCenter, setMapCenter] = useState(center);
+  const [isPanto, setIsPanto] = useState(false);
+  const mapRef = useRef<kakao.maps.Map | null>(null);
+
+  // center prop 동기화 useEffect를 조건부로 변경
+  useEffect(() => {
+    // 인포윈도우가 열려있지 않을 때만 center prop 동기화
+    if (!infoWindowStore) {
+      setMapCenter(center);
+    }
+  }, [center, infoWindowStore]);
   const lastApiCallPosition = useRef<{ lat: number; lng: number } | null>(null);
 
-  const handleMarkerClick = (store: Store) => {
+  const handleMarkerClick = useCallback((store: Store) => {
     setSelectedStoreId(store.storeId);
-    onStoreClick?.(store);
-  };
+    setInfoWindowStore(store);
+
+    // 인포 윈도우가 화면 중앙에 오도록 오프셋 적용
+    const offset = 0.0017;
+    const targetLat = store.latitude + offset;
+    const targetLng = store.longitude;
+    const targetCenter = { lat: targetLat, lng: targetLng };
+
+    // KakaoMap의 isPanto를 사용한 부드러운 이동
+    setIsPanto(true);
+    setMapCenter(targetCenter);
+
+    // 애니메이션 완료 후 isPanto 리셋
+    setTimeout(() => {
+      setIsPanto(false);
+    }, 500); // 애니메이션 시간을 500ms로 증가
+  }, []);
+
+  const handleInfoWindowClose = useCallback(() => {
+    setSelectedStoreId(null);
+    setInfoWindowStore(null);
+  }, []);
+
+  const toggleFavoriteMutation = useToggleFavoriteMutation();
+
+  const handleToggleFavorite = useCallback(async () => {
+    if (!infoWindowStore) return;
+
+    try {
+      await toggleFavoriteMutation.mutateAsync({
+        storeId: infoWindowStore.storeId,
+      });
+    } catch (error) {
+      console.error('즐겨찾기 토글 실패:', error);
+    }
+  }, [infoWindowStore, toggleFavoriteMutation]);
 
   // 거리 계산 함수 (Haversine formula)
   const calculateDistance = useCallback(
@@ -95,27 +142,45 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   return (
     <KakaoMap
       id="map"
-      center={center}
+      center={mapCenter}
       className={className}
       level={level}
+      isPanto={isPanto}
       onDragEnd={handleDragEnd}
+      onClick={handleInfoWindowClose} // 지도 클릭 시 인포윈도우 닫기
+      onCreate={map => {
+        mapRef.current = map;
+      }}
     >
       {/* 매장 마커들 */}
       {stores.map(store => (
         <CustomOverlayMap
           key={store.storeId}
           position={{ lat: store.latitude, lng: store.longitude }}
-          yAnchor={1} // 마커의 아래쪽 포인트가 좌표에 위치하도록
-          xAnchor={0.5} // 마커의 중앙이 좌표에 위치하도록
+          yAnchor={1}
+          xAnchor={0.5}
         >
           <BrandMarker
             store={store}
             isSelected={selectedStoreId === store.storeId}
-            hasPromotion={store.benefit !== undefined} // 혜택이 있으면 프로모션 배지 표시
+            hasPromotion={store.benefit !== undefined}
             onClick={() => handleMarkerClick(store)}
           />
         </CustomOverlayMap>
       ))}
+
+      {/* 스토어 상세 정보 인포윈도우 */}
+      {infoWindowStore && (
+        <StoreInfoWindow
+          storeId={infoWindowStore.storeId}
+          position={{
+            lat: infoWindowStore.latitude,
+            lng: infoWindowStore.longitude,
+          }}
+          onClose={handleInfoWindowClose}
+          onToggleFavorite={handleToggleFavorite}
+        />
+      )}
 
       {/* 사용자 위치 마커 */}
       {currentLocation && (
@@ -125,11 +190,8 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
           xAnchor={0.5}
         >
           <div className="relative">
-            {/* 사용자 위치 표시 */}
             <div className="w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg" />
-
-            {/* 위치 정확도 표시 원 */}
-            <div className="absolute left-2 top-2 w-12 h-12 border-2 border-blue-300 rounded-full opacity-30 animate-pulse -translate-x-1/2 -translate-y-1/2" />
+            <div className="absolute inset-0 w-12 h-12 border-2 border-blue-300 rounded-full opacity-30 animate-pulse -translate-x-4 -translate-y-4" />
           </div>
         </CustomOverlayMap>
       )}

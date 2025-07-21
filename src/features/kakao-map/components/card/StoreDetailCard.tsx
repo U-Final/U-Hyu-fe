@@ -1,5 +1,3 @@
-import { motion } from 'framer-motion';
-
 export interface StoreDetailCardProps {
   storeName: string;
   isFavorite: boolean;
@@ -7,7 +5,7 @@ export interface StoreDetailCardProps {
   benefits: string;
   usageLimit: string;
   usageMethod: string;
-  userGrade?: string; // "우수", "VIP" , "VVIP" - optional로 변경
+  userGrade?: string; // "우수", "VIP" , "VVIP"
   handleToggleFavorite?: () => void;
 }
 
@@ -37,17 +35,12 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
             {storeName}
           </span>
           <div className="flex items-center gap-1">
-            <motion.div
+            <div
               onClick={e => {
                 e.stopPropagation();
                 handleToggleFavorite?.();
               }}
               className="cursor-pointer"
-              animate={{
-                scale: isFavorite ? 1.3 : 1,
-              }}
-              whileTap={{ scale: 1.6, rotate: [0, -20, 20, 0] }}
-              transition={{ type: 'spring', stiffness: 400, damping: 10 }}
               tabIndex={0}
               role="button"
               aria-label={isFavorite ? '즐겨찾기 해제' : '즐겨찾기 추가'}
@@ -76,7 +69,7 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
                   }}
                 />
               </svg>
-            </motion.div>
+            </div>
 
             <span className="text-xs text-gray-500">
               {favoriteCount >= 10000

@@ -1,5 +1,5 @@
 import { useBenefitsQuery } from "@home/hooks/useBenefitsQuery";
-import { useUserInfoQuery } from "@home/hooks/useUserInfo";
+import { useUserInfoQuery } from "@home/hooks/useUserInfoQuery";
 
 export const AuthBenefitsSection = () => {
   const { data: user } = useUserInfoQuery();

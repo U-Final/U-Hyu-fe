@@ -1,5 +1,5 @@
 import { getErrorMessage } from "@/shared/utils/getErrorMessage";
-import { useUserInfoQuery } from "@home/hooks/useUserInfo";
+import { useUserInfoQuery } from "@home/hooks/useUserInfoQuery";
 
 export const AuthHeader = () => {
   const { data: user, isLoading, error } = useUserInfoQuery();

@@ -30,6 +30,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   const [mapCenter, setMapCenter] = useState(center);
   const [isPanto, setIsPanto] = useState(false);
   const mapRef = useRef<kakao.maps.Map | null>(null);
+  const pantoTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // center prop 동기화 useEffect를 조건부로 변경
   useEffect(() => {
@@ -38,6 +39,16 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
       setMapCenter(center);
     }
   }, [center, infoWindowStore]);
+
+  // 컴포넌트 언마운트 시 setTimeout cleanup
+  useEffect(() => {
+    return () => {
+      if (pantoTimeoutRef.current) {
+        clearTimeout(pantoTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const lastApiCallPosition = useRef<{ lat: number; lng: number } | null>(null);
 
   const handleMarkerClick = useCallback((store: Store) => {
@@ -54,9 +65,15 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
     setIsPanto(true);
     setMapCenter(targetCenter);
 
+    // 기존 timeout이 있다면 정리
+    if (pantoTimeoutRef.current) {
+      clearTimeout(pantoTimeoutRef.current);
+    }
+
     // 애니메이션 완료 후 isPanto 리셋
-    setTimeout(() => {
+    pantoTimeoutRef.current = setTimeout(() => {
       setIsPanto(false);
+      pantoTimeoutRef.current = null;
     }, 500); // 애니메이션 시간을 500ms로 증가
   }, []);
 

@@ -4,4 +4,4 @@ export type {
   PaginationButtonProps,
 } from './component';
 
-export type { BenefitQueryParams } from './queryParams';
+export type { QueryParams } from './queryParams';

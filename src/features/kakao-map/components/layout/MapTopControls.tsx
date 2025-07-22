@@ -1,6 +1,8 @@
-import { FilterTabs, SearchInput } from '@/shared/components';
-import RegionFilterDropdown from '@kakao-map/components/layout/RegionFilterDropdown';
 import { type FC } from 'react';
+
+import RegionFilterDropdown from '@kakao-map/components/layout/RegionFilterDropdown';
+
+import { FilterTabs, SearchInput } from '@/shared/components';
 
 /**
  * MapTopControls 컴포넌트의 Props 인터페이스
@@ -50,20 +52,22 @@ const MapTopControls: FC<MapTopControlsProps> = ({
         variant="white"
       />
 
-      {/* 필터 영역 - 모바일/데스크탑 반응형 레이아웃 */}
+      {/* 필터 영역 - 모바일에서 겹침 방지 레이아웃 */}
       <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-3 sm:items-center">
-        {/* 카테고리 필터탭 - 데스크탑에서 중앙 정렬, 모바일에서 스크롤 */}
+        {/* 카테고리 필터탭 */}
         <div className="flex-1 min-w-0 sm:flex sm:justify-center">
           <div className="relative w-full sm:w-auto">
-            <FilterTabs variant="white" onChange={onCategoryFilterChange} />
+            <div className="pr-8 sm:pr-0 py-1">
+              <FilterTabs variant="white" onChange={onCategoryFilterChange} />
+            </div>
 
             {/* 그라데이션 페이드 효과 - 모바일에서만 표시 */}
             <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none sm:hidden" />
           </div>
         </div>
 
-        {/* 지역 필터 드롭다운 - 모바일에서는 전체 너비, 데스크탑에서는 고정 너비 */}
-        <div className="flex-shrink-0 w-full sm:w-auto">
+        {/* 지역 필터 드롭다운 - 최소 크기로 조정 */}
+        <div className="flex-shrink-0 w-auto">
           <RegionFilterDropdown
             value={activeRegionFilter}
             onChange={onRegionFilterChange}

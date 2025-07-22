@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/shadcn/ui/select';
+
 import { REGIONS } from '../../constants/regions';
 
 /**
@@ -26,8 +27,8 @@ export default function RegionFilterDropdown({
 }) {
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="w-32 h-10 bg-white border border-gray-200 rounded-lg shadow text-sm font-medium">
-        <SelectValue placeholder="지역별" />
+      <SelectTrigger className="w-24 h-10 bg-white border border-gray-200 rounded-lg shadow text-xs font-medium">
+        <SelectValue placeholder="지역" />
       </SelectTrigger>
       <SelectContent
         position="popper"

@@ -67,7 +67,8 @@ export const DragBottomSheet = ({ children, title }: DragBottomSheetProps) => {
   return (
     <div className="flex-1">
       {/* 바텀 시트가 열려있을 때만 보이는 배경 오버레이 - 수정됨 */}
-      <div className="fixed inset-0 z-30" onClick={close} />
+      <div className="absolute inset-0 z-30" onClick={close} />
+      {/* Sheet */}
       <animated.div
         ref={sheetRef}
         {...bind()}
@@ -75,7 +76,7 @@ export const DragBottomSheet = ({ children, title }: DragBottomSheetProps) => {
           transform: y.to(val => `translateY(${val}px)`),
           height: y.to(val => `calc(100vh - ${val}px)`),
         }}
-        className="fixed top-0 left-0 right-0 z-30 bg-white rounded-t-2xl border border-light-gray touch-none flex flex-col"
+        className="absolute top-0 left-0 right-0 z-30 bg-white rounded-t-2xl border border-light-gray touch-none flex flex-col"
       >
         <div className="flex-shrink-0 py-4 px-4">
           <div className="w-12 h-1.5 bg-gray rounded-full mx-auto" />

@@ -22,14 +22,14 @@ const FilterTabs: FC<FilterTabProps> = ({
   };
 
   return (
-    <div className="scrollbar-hidden flex overflow-x-auto whitespace-nowrap gap-2">
+    <div className="scrollbar-hidden flex overflow-x-auto whitespace-nowrap gap-2 py-1">
       {tabs.map(({ label, value }) => (
         <button
           key={value}
           onClick={() => handleClick(value)}
           className={clsx(
             filterTabVariants[variant].base,
-            'cursor-pointer',
+            'cursor-pointer flex-shrink-0',
             active === value
               ? filterTabVariants[variant].active
               : filterTabVariants[variant].inactive

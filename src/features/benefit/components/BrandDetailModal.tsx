@@ -1,15 +1,8 @@
-import { useEffect } from 'react';
-
 import { useGetBrandDetailQuery } from '@benefit/hooks/useGetBrandDetailQuery';
 import clsx from 'clsx';
 
 const BrandDetailModal = ({ brandId }: { brandId: number }) => {
   const { data: brand, isLoading, error } = useGetBrandDetailQuery(brandId);
-
-  useEffect(() => {}, [brandId]);
-
-  console.log('brand:', brand);
-  console.log('error:', error);
 
   if (isLoading) return <div>Loading...</div>;
   if (error || !brand) return <div>Error loading brand details.</div>;

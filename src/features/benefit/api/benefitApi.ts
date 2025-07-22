@@ -32,7 +32,6 @@ export const getBrandDetail = async (
   );
 
   if (!res.data.data) {
-    console.log('API Response:', res);
     throw new Error('Invalid API response: missing data');
   }
 

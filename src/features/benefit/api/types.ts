@@ -44,3 +44,23 @@ export interface BrandListParams {
   page?: number;
   size?: number;
 }
+
+/**
+ * 등급별 혜택
+ */
+export interface GradeBenefit {
+  grade: string;
+  description: string;
+}
+
+/**
+ * 제휴처 정보 상세 조회 응답
+ */
+export interface BrandDetailRes {
+  brandId: number;
+  brandName: string;
+  logoImage: string;
+  usageMethod: string;
+  usageLimit: string;
+  benefitRes: GradeBenefit[];
+}

@@ -10,7 +10,7 @@ export interface GetRecommendedStoresParams {
   radius: number;
 }
 
-export const getRecommededStores = async (
+export const getRecommendedStores = async (
   params: GetRecommendedStoresParams
 ): Promise<RecommendStore[]> => {
   const res = await client.get<ApiResponse<RecommendStore[]>>(

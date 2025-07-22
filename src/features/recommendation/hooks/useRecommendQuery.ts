@@ -1,7 +1,7 @@
 import type { RecommendStore } from '@recommendation/api/recommendedStores.types';
 import {
   type GetRecommendedStoresParams,
-  getRecommededStores,
+  getRecommendedStores,
 } from '@recommendation/api/recommendedStoresApi';
 import { useQuery } from '@tanstack/react-query';
 
@@ -10,7 +10,7 @@ export const useRecommendedStoresQuery = (
 ) => {
   return useQuery<RecommendStore[]>({
     queryKey: ['recommendStoresByLocation', params],
-    queryFn: () => getRecommededStores(params),
+    queryFn: () => getRecommendedStores(params),
     enabled: !!params.lat && !!params.lon,
   });
 };

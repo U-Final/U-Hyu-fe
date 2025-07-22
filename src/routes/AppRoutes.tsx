@@ -1,9 +1,5 @@
 import { BenefitPage, ExtraInfo, HomePage, MapPage } from '@/pages';
-import { BaseLayout, BottomNavigation, ModalRoot } from '@/shared/components';
-import MyPage from '@/pages/mypage/MyPage';
-import MyPageActivity from '@/pages/mypage/MyPageActivity';
 import { PATH } from '@paths';
-
 import {
   BrowserRouter,
   Outlet,
@@ -12,6 +8,11 @@ import {
   useLocation,
 } from 'react-router-dom';
 
+import MyPage from '@/pages/mypage/MyPage';
+import MyPageActivity from '@/pages/mypage/MyPageActivity';
+
+import { BaseLayout, BottomNavigation, ModalRoot } from '@/shared/components';
+
 const Layout = () => {
   const { pathname } = useLocation();
   const visibleBottomNavRoutes = [
@@ -19,7 +20,7 @@ const Layout = () => {
     PATH.BENEFIT,
     PATH.MAP,
     PATH.MYPAGE,
-    PATH.MYPAGE_ACTIVITY
+    PATH.MYPAGE_ACTIVITY,
   ] as const;
 
   const showBottomNav = visibleBottomNavRoutes.includes(
@@ -29,14 +30,18 @@ const Layout = () => {
   const isMap = pathname === PATH.MAP;
 
   return (
-    <div
-      className={`w-full h-full flex flex-col ${isMap ? 'items-stretch justify-start' : 'justify-center'}`}
-      style={isMap ? { minWidth: 0 } : undefined}
-    >
-      <BaseLayout isMap={isMap}>
-        <Outlet />
-      </BaseLayout>
-      {showBottomNav && <BottomNavigation />}
+    <div className="mobile-frame">
+      <div className="mobile-content">
+        <div
+          className={`w-full h-full flex flex-col relative ${isMap ? 'items-stretch justify-start' : ''}`}
+          style={isMap ? { minWidth: 0 } : undefined}
+        >
+          <BaseLayout isMap={isMap}>
+            <Outlet />
+          </BaseLayout>
+          {showBottomNav && <BottomNavigation />}
+        </div>
+      </div>
     </div>
   );
 };

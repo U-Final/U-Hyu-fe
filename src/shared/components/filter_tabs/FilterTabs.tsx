@@ -22,14 +22,25 @@ const FilterTabs: FC<FilterTabProps> = ({
   };
 
   return (
-    <div className="scrollbar-hidden flex overflow-x-auto whitespace-nowrap gap-2 py-1">
+    <div
+      className="filter-tabs-scroll flex whitespace-nowrap gap-2 py-1"
+      onWheel={e => {
+        // 마우스 휠로 좌우 스크롤 지원
+        e.preventDefault();
+        e.currentTarget.scrollLeft += e.deltaY;
+      }}
+      onTouchMove={e => {
+        // 터치 이벤트 전파 방지
+        e.stopPropagation();
+      }}
+    >
       {tabs.map(({ label, value }) => (
         <button
           key={value}
           onClick={() => handleClick(value)}
           className={clsx(
             filterTabVariants[variant].base,
-            'cursor-pointer flex-shrink-0',
+            'filter-tab-button cursor-pointer',
             active === value
               ? filterTabVariants[variant].active
               : filterTabVariants[variant].inactive

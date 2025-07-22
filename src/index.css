@@ -75,6 +75,18 @@
   scrollbar-width: none; /* Firefox */
 }
 
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  scrollbar-color: transparent transparent;
+}
+
 /* Pretendard 폰트 로드 - 로컬 파일 사용 */
 @font-face {
   font-family: 'Pretendard';
@@ -605,4 +617,40 @@
 
 .shadow-nav {
   box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* 필터탭 스크롤 강제 적용 */
+.filter-tabs-scroll {
+  overflow-x: scroll !important;
+  overflow-y: visible !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-x !important;
+  will-change: scroll-position !important;
+  position: relative !important;
+  z-index: 999 !important;
+}
+
+.filter-tabs-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-tab-button {
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  min-width: fit-content !important;
+}
+
+/* 모바일 프레임 내부에서 필터탭만 스크롤 허용 */
+.mobile-content .filter-tabs-scroll {
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-x !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+/* 필터탭 컨테이너 강제 스크롤 */
+.mobile-content .filter-tabs-scroll * {
+  pointer-events: auto !important;
 }

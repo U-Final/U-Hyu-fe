@@ -4,7 +4,6 @@
     "^react$",
     "<THIRD_PARTY_MODULES>",
     "^@/pages/(.*)$",
-    "^@/features/(.*)$",
     "^@/routes/(.*)$",
     "^@/shared/(.*)$",
     "^[./]"

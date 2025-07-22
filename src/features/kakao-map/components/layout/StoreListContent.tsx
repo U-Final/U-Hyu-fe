@@ -1,6 +1,6 @@
 import { type FC } from 'react';
 
-import type { Store } from '@/features/kakao-map/types/store';
+import type { Store } from '@kakao-map/types/store';
 
 import { BrandCard } from '@/shared/components';
 

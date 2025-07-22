@@ -1,3 +1,7 @@
-export type { BrandDetail } from './BrandDetail.types';
-export type { PaginationProps } from './Pagination.types';
-export type { PaginationButtonProps } from './PaginationButton.types';
+export type {
+  BrandDetail,
+  PaginationProps,
+  PaginationButtonProps,
+} from './component';
+
+export type { QueryParams } from './queryParams';

@@ -1,5 +1,5 @@
 import { FilterTabs, SearchInput } from '@/shared/components';
-import RegionFilterDropdown from '@/features/kakao-map/components/layout/RegionFilterDropdown';
+import RegionFilterDropdown from '@kakao-map/components/layout/RegionFilterDropdown';
 import { type FC } from 'react';
 
 /**

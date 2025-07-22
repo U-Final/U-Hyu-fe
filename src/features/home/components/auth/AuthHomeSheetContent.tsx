@@ -3,7 +3,7 @@ import {
   AuthHeader,
   AuthNearbyStoresSection,
   AuthRecommendationList,
-} from '@features/home/components';
+} from '@home/components';
 
 export const AuthHomeSheetContent = () => {
   return (

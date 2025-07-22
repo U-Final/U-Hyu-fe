@@ -1,7 +1,7 @@
 import {
   AuthHomeSheetContent,
   GuestHomeSheetContent,
-} from '@features/home/components';
+} from '@home/components';
 import { LoginButton } from '@home/components/LoginButton';
 
 import { DragBottomSheet } from '@/shared/components';

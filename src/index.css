@@ -72,16 +72,6 @@
   }
 }
 
-/* src/index.css */
-.scrollbar-hidden::-webkit-scrollbar {
-  display: none;
-}
-
-.scrollbar-hidden {
-  -ms-overflow-style: none; /* IE, Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
 .scrollbar-hidden::-webkit-scrollbar {
   display: none;
   width: 0;

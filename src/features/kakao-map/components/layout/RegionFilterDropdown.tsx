@@ -32,8 +32,9 @@ export default function RegionFilterDropdown({
       </SelectTrigger>
       <SelectContent
         position="popper"
+        side="bottom"
         sideOffset={4}
-        className="bg-white border border-gray-200 shadow-lg rounded-lg z-50"
+        className="bg-white border border-gray-200 shadow-lg rounded-lg z-[1000]"
       >
         <SelectGroup>
           <SelectLabel>지역 선택</SelectLabel>

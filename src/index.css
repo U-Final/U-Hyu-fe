@@ -49,6 +49,13 @@
 
 /* Responsive: Mobile devices use full screen */
 @media (max-width: 640px) {
+  #root {
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0;
+    background: white;
+  }
+
   .mobile-frame {
     width: 100vw;
     height: 100vh;

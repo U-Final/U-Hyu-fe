@@ -63,16 +63,16 @@ export const BaseBottomSheet: React.FC<BaseBottomSheetProps> = ({
     <AnimatePresence>
       {isOpen && (
         <>
-          <motion.div
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+          <div
+            role="button"
+            tabIndex={0}
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm z-40"
             onClick={closeOnBackdrop ? onClose : undefined}
+            onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && onClose?.()}
           />
 
           <motion.div
-            className={`fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-2xl z-50 flex flex-col border border-light-gray ${getHeightClass()} ${className}`}
+            className={`absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-2xl z-50 flex flex-col border border-light-gray ${getHeightClass()} ${className}`}
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}

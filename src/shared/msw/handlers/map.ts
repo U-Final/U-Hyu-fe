@@ -1,5 +1,3 @@
-import { HttpResponse, http } from 'msw';
-
 import {
   MOCK_STORES,
   createMockStoreDetailResponse,
@@ -11,6 +9,7 @@ import type {
   StoreListResponse,
   ToggleFavoriteResponseType,
 } from '@kakao-map/api/types';
+import { HttpResponse, http } from 'msw';
 
 /**
  * 지도 관련 API의 MSW 핸들러들
@@ -34,7 +33,7 @@ export const mapHandlers = [
     const category = url.searchParams.get('category');
     const brand = url.searchParams.get('brand');
     const search = url.searchParams.get('search');
-    
+
     console.log('📊 파라미터:', { lat, lon, radius, category, brand, search });
 
     // 기본 파라미터 유효성 검증
@@ -144,9 +143,9 @@ export const mapHandlers = [
 
   /**
    * 매장 상세 정보 조회 API 핸들러
-   * GET /map/stores/:storeId
+   * GET /map/detail/stores/:storeId
    */
-  http.get('*/map/stores/:storeId', ({ params, request }) => {
+  http.get('*/map/detail/stores/:storeId', ({ params, request }) => {
     console.log('🏪 매장 상세 정보 MSW 핸들러 호출:', request.url);
     const storeId = Number(params.storeId);
     console.log('📋 매장 ID:', storeId);
@@ -168,10 +167,13 @@ export const mapHandlers = [
         createMockStoreDetailResponse(storeId);
       return HttpResponse.json(response, { status: 200 });
     } catch {
-      return HttpResponse.json({
-        message: '매장을 찾을 수 없습니다.',
-        statusCode: 404,
-      }, { status: 404 });
+      return HttpResponse.json(
+        {
+          message: '매장을 찾을 수 없습니다.',
+          statusCode: 404,
+        },
+        { status: 404 }
+      );
     }
   }),
 

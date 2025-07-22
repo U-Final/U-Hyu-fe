@@ -33,7 +33,7 @@ export const mapApi = {
 
   /**
    * 매장 상세 정보 조회
-   * GET /map/stores/123
+   * GET /map/detail/stores/123
    */
   getStoreDetail: async ({
     storeId,

@@ -1,6 +1,8 @@
-import { FilterTabs, SearchInput } from '@/shared/components';
-import RegionFilterDropdown from '@kakao-map/components/layout/RegionFilterDropdown';
 import { type FC } from 'react';
+
+import RegionFilterDropdown from '@kakao-map/components/layout/RegionFilterDropdown';
+
+import { FilterTabs, SearchInput } from '@/shared/components';
 
 /**
  * MapTopControls 컴포넌트의 Props 인터페이스
@@ -40,35 +42,32 @@ const MapTopControls: FC<MapTopControlsProps> = ({
 }) => {
   return (
     <div className="absolute top-4 left-4 right-4 z-10 space-y-3">
-      {/* 검색바 */}
-      <SearchInput
-        value={searchValue}
-        onChange={onSearchValueChange}
-        onSearch={onSearch}
-        onCancel={onSearchCancel}
-        placeholder="장소 검색"
-        variant="white"
-      />
-
-      {/* 필터 영역 - 모바일/데스크탑 반응형 레이아웃 */}
-      <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-3 sm:items-center">
-        {/* 카테고리 필터탭 - 데스크탑에서 중앙 정렬, 모바일에서 스크롤 */}
-        <div className="flex-1 min-w-0 sm:flex sm:justify-center">
-          <div className="relative w-full sm:w-auto">
-            <FilterTabs variant="white" onChange={onCategoryFilterChange} />
-
-            {/* 그라데이션 페이드 효과 - 모바일에서만 표시 */}
-            <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none sm:hidden" />
-          </div>
+      {/* 상단 라인: 검색바 + 지역 필터 */}
+      <div className="flex items-center gap-3">
+        {/* 검색바 - 대부분 공간 사용 */}
+        <div className="flex-1">
+          <SearchInput
+            value={searchValue}
+            onChange={onSearchValueChange}
+            onSearch={onSearch}
+            onCancel={onSearchCancel}
+            placeholder="장소 검색"
+            variant="white"
+          />
         </div>
 
-        {/* 지역 필터 드롭다운 - 모바일에서는 전체 너비, 데스크탑에서는 고정 너비 */}
-        <div className="flex-shrink-0 w-full sm:w-auto">
+        {/* 지역 필터 드롭다운 - 고정 크기 */}
+        <div className="flex-shrink-0">
           <RegionFilterDropdown
             value={activeRegionFilter}
             onChange={onRegionFilterChange}
           />
         </div>
+      </div>
+
+      {/* 하단 라인: 카테고리 필터탭 전체 너비 사용 */}
+      <div className="w-full">
+        <FilterTabs variant="white" onChange={onCategoryFilterChange} />
       </div>
     </div>
   );

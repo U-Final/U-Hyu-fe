@@ -1,5 +1,6 @@
-import { AnimatePresence, motion } from 'framer-motion';
 import React, { useState } from 'react';
+
+import { AnimatePresence, motion } from 'framer-motion';
 import { FaFilter } from 'react-icons/fa';
 
 interface Step {
@@ -86,7 +87,7 @@ export const PersistentBottomSheet: React.FC<PersistentBottomSheetProps> = ({
 
   return (
     <motion.div
-      className="fixed left-0 right-0 bg-white rounded-t-2xl shadow-2xl z-40 border border-gray-200"
+      className="absolute left-0 right-0 bg-white rounded-t-2xl shadow-2xl z-40 border border-gray-200"
       style={bottomSheetStyle}
       initial={{ height: minHeight }}
       animate={{

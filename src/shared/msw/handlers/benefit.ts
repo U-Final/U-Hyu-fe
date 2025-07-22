@@ -3,14 +3,8 @@ import { allBrands, mockBrandDetails } from '@benefit/api/mockData';
 import type { BenefitType, BrandListRes, StoreType } from '@benefit/api/types';
 import { http } from 'msw';
 
-
-
 import { createErrorResponse } from '@/shared/utils/createErrorResponse';
 import { createResponse } from '@/shared/utils/createResponse';
-
-
-
-
 
 export const benefitHandlers = [
   // 제휴처 목록 조회 MSW 핸들러
@@ -84,18 +78,19 @@ export const benefitHandlers = [
   }),
 
   // 제휴처 정보 상세 조회 MSW 핸들러
-  http.get(BENEFIT_ENDPOINTS.BENEFIT.DETAIL_MSW, ({ params }) => {
+  http.get(BENEFIT_ENDPOINTS.BENEFIT.DETAIL_MSW(), ({ params }) => {
     const { brandId } = params;
 
+    const brand = mockBrandDetails.find(b => b.brandId === Number(brandId));
     const shouldFail = false;
     if (shouldFail) {
       //임시 에러메시지
       return createErrorResponse('에러메시지', 404);
     }
 
-    const brand = mockBrandDetails.find(b => b.brandId === Number(brandId));
-  if (!brand) {
-    return createResponse(mockBrandDetails, '유저 정보 조회 성공');
-  }
+    if (!brand) {
+      return createErrorResponse('에러메시지', 404);
+    }
+    return createResponse(brand, '성공');
   }),
 ];

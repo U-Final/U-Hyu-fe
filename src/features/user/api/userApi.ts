@@ -59,3 +59,8 @@ export const userApi = {
     return response.data;
   },
 };
+
+export const submitExtraInfo = async (data: UserExtraInfoRequest) => {
+  const response = await client.post(USER_ENDPOINTS.EXTRA_INFO, data);
+  return response.data;
+};

@@ -24,6 +24,7 @@ export interface StepValidation {
 export interface StepTitleProps {
   children: React.ReactNode;
 }
+
 export interface StepContentProps {
   step: number;
   data: SignupData;
@@ -41,6 +42,7 @@ export interface PrimaryButtonProps {
   children: React.ReactNode;
   className?: string;
 }
+
 export interface CurrentStepProps {
   currentStep: number;
   data: SignupData;
@@ -59,9 +61,50 @@ export interface CompletedStepsProps {
   completedSteps: CompletedStep[];
 }
 
+// 확장된 ActionButtons Props
 export interface ActionButtonsProps {
   currentStep: number;
   isStepValid: boolean;
   onNext: () => void;
   onPrev: () => void;
+  isSubmitting?: boolean;
+  submitError?: Error | null;
+}
+
+// 새로운 API 관련 타입들
+export interface SignupFlowState {
+  isSubmitting: boolean;
+  submitError: Error | null;
+  submitSuccess: boolean;
+}
+
+export interface SignupCompleteCallback {
+  (success: boolean, message?: string): void;
+}
+
+// useSignupFlow 반환 타입
+export interface UseSignupFlowReturn {
+  data: SignupData;
+  currentStep: number;
+  completedSteps: CompletedStep[];
+  updateData: (updates: Partial<SignupData>) => void;
+  updateCompletedStepData: (
+    stepNumber: number,
+    updates: Partial<SignupData>
+  ) => void;
+  toggleBrand: (
+    brandId: string,
+    field: 'recentBrands' | 'selectedBrands'
+  ) => void;
+  toggleCompletedStepBrand: (
+    stepNumber: number,
+    brandId: string,
+    field: 'recentBrands' | 'selectedBrands'
+  ) => void;
+  goToNextStep: () => Promise<void>;
+  goToPrevStep: () => void;
+  resetFlow: () => void;
+  isStepValid: (step: number) => boolean;
+  isSubmitting: boolean;
+  submitError: Error | null;
 }

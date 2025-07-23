@@ -26,7 +26,7 @@
       "@benefit/*": ["./src/features/benefit/*"],
       "@mypage/*": ["./src/features/mypage/*"],
       "@paths": ["./src/routes/path.ts"],
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
     },
 
     /* Linting */

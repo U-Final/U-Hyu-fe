@@ -192,7 +192,7 @@ export const AllBrands: Story = {
 export const ImageLoadError: Story = {
   args: {
     brand: {
-      id: 'test',
+      id: 1,
       name: '테스트 브랜드',
       color: '#000000',
       bgColor: 'bg-black',
@@ -217,7 +217,7 @@ export const ImageLoadError: Story = {
 export const LongBrandName: Story = {
   args: {
     brand: {
-      id: 'long-name',
+      id: 1,
       name: '매우 긴 브랜드 이름 테스트케이스',
       color: '#9333EA',
       bgColor: 'bg-purple-500',

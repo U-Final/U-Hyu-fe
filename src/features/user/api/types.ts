@@ -22,11 +22,11 @@ export interface CheckEmailRequest {
 }
 
 export interface CheckEmailResponse {
-  code: number;
-  status: number;
+  statusCode: number;
   message: string;
   data: {
     isAvailable: boolean; // true: 사용 가능, false: 이미 사용 중
+    email: string;
   };
 }
 
@@ -40,7 +40,10 @@ export interface UserInfo {
   role: UserRole;
   status: UserStatus;
   grade: UserGrade;
-  profile_image: string;
+  updatedAt: string;
+  profileImage: string;
+  favoriteBrands: string[];
+  markers: string[];
 }
 
 export interface UpdateUserInfoRequest {

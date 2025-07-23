@@ -8,6 +8,7 @@ import type { UserGrade } from '@user/api/types';
 import { useSubmitExtraInfo } from '@user/hooks/useUserMutation';
 import { LayoutGroup } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 // 멤버십 등급 매핑 함수
 const mapMembershipGrade = (grade: string): UserGrade => {
@@ -52,6 +53,12 @@ const ImprovedSignupFlow: React.FC = () => {
           message: '회원가입이 성공적으로 완료되었습니다!',
         });
 
+        // 성공 토스트 메시지 표시
+        toast.success('🎉 회원가입이 완료되었습니다!', {
+          description: '2초 후 홈페이지로 자동 이동됩니다.',
+          duration: 2000,
+        });
+
         // 성공 후 잠시 대기한 다음 홈으로 이동
         setTimeout(() => {
           navigate('/', { replace: true });
@@ -68,6 +75,12 @@ const ImprovedSignupFlow: React.FC = () => {
         setSubmitResult({
           success: false,
           message: errorMessage,
+        });
+
+        // 에러 토스트 메시지 표시
+        toast.error('회원가입에 실패했습니다 잠시 후 다시 시도해 주세요.', {
+          description: errorMessage,
+          duration: 4000,
         });
       }
     },
@@ -158,24 +171,6 @@ const ImprovedSignupFlow: React.FC = () => {
           <CompletedSteps completedSteps={completedSteps} />
         </LayoutGroup>
       </div>
-
-      {/* 성공 시 자동 이동 알림 */}
-      {submitSuccess && (
-        <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-40">
-          <div className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2">
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fillRule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <span className="text-sm font-medium">
-              잠시 후 홈페이지로 이동합니다
-            </span>
-          </div>
-        </div>
-      )}
 
       {/* 개발 환경 디버그 정보 */}
       {process.env.NODE_ENV === 'development' && (

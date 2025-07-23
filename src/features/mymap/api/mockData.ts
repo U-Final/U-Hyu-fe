@@ -3,7 +3,7 @@ import type { MyMapListRes } from './types';
 /**
  * 목데이터: mymap 목록 조회
  */
-export const mockMyMapList: MyMapListRes[] = [
+export const MOCK_MYMAP_LIST: MyMapListRes[] = [
   {
     myMapListId: 3,
     title: 'test1',

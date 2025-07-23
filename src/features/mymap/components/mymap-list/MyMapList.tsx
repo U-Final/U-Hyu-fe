@@ -43,7 +43,7 @@ const MyMapList: React.FC<MapListProps> = ({
           onClick={() => onSelectMap(map.myMapListId)}
         >
           <div className="flex items-center">
-            <MdStars className={`w-5 h-5 ${MYMAP_COLOR[map.markerColor as MarkerColor]}`} />
+            <MdStars className={`w-5 h-5 ${MYMAP_COLOR[map.markerColor as MarkerColor] || MYMAP_COLOR.RED}}`} />
             <span className="ml-2 text-body2 font-semibold">{map.title}</span>
           </div>
           <BsThreeDotsVertical />

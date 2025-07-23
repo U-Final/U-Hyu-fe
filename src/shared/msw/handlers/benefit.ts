@@ -1,5 +1,5 @@
 import { BENEFIT_ENDPOINTS } from '@benefit/api/endpoints';
-import { mockAllBrands, mockBrandDetails } from '@benefit/api/mockData';
+import { MOCK_ALL_BRANDS, MOCK_BRAND_DETAILS } from '@benefit/api/mockData';
 import type { BenefitType, BrandListRes, StoreType } from '@benefit/api/types';
 import { http } from 'msw';
 
@@ -29,7 +29,7 @@ export const benefitHandlers = [
       const benefitType = url.searchParams.get('benefitType');
 
       // 초기 브랜드 리스트 전체 복사
-      let filtered = [...mockAllBrands];
+      let filtered = [...MOCK_ALL_BRANDS];
 
       // category 필터링
       if (category && category !== 'all') {
@@ -81,7 +81,7 @@ export const benefitHandlers = [
   http.get(BENEFIT_ENDPOINTS.BENEFIT.DETAIL_MSW(), ({ params }) => {
     const { brandId } = params;
 
-    const brand = mockBrandDetails.find(b => b.brandId === Number(brandId));
+    const brand = MOCK_BRAND_DETAILS.find(b => b.brandId === Number(brandId));
     const shouldFail = false;
     if (shouldFail) {
       //임시 에러메시지

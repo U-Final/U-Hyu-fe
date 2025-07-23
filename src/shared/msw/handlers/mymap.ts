@@ -1,5 +1,5 @@
 import { MYMAP_ENDPOINTS } from '@/features/mymap/api/endpoint';
-import { mockMyMapList } from '@/features/mymap/api/mockData';
+import { MOCK_MYMAP_LIST } from '@/features/mymap/api/mockData';
 import { http } from 'msw';
 
 import { createErrorResponse } from '@/shared/utils/createErrorResponse';
@@ -14,6 +14,6 @@ export const mymapHandlers = [
       //실패 시
       return createErrorResponse('에러처리.', 400);
     }
-    return createResponse(mockMyMapList, '성공');
+    return createResponse(MOCK_MYMAP_LIST, '성공');
   }),
 ];

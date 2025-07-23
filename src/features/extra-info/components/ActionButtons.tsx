@@ -7,13 +7,7 @@ import { GhostButton } from '@/shared/components';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { type ActionButtonsProps } from '../types';
 
-// 확장된 Props 타입
-interface EnhancedActionButtonsProps extends ActionButtonsProps {
-  isSubmitting?: boolean;
-  submitError?: Error | null;
-}
-
-export const ActionButtons: React.FC<EnhancedActionButtonsProps> = ({
+export const ActionButtons: React.FC<ActionButtonsProps> = ({
   currentStep,
   isStepValid,
   onNext,

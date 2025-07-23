@@ -21,20 +21,22 @@ export const StepContent: React.FC<StepContentProps> = ({
   disabled = false,
 }) => {
   const [isMembershipSheetOpen, setIsMembershipSheetOpen] = useState(false);
+  const [emailError, setEmailError] = useState<string>('');
   const checkEmailMutation = useCheckEmailMutation();
 
   const handleEmailVerification = async () => {
     try {
+      setEmailError(''); // 에러 메시지 초기화
       const result = await checkEmailMutation.mutateAsync(data.email);
       if (result.data?.isAvailable) {
         onUpdateData({ emailVerified: true });
       } else {
         // 이미 사용중인 이메일인 경우
-        alert('이미 사용중인 이메일입니다.');
+        setEmailError('이미 사용중인 이메일입니다.');
       }
     } catch (error) {
       console.error('이메일 중복확인 오류:', error);
-      alert('이메일 중복확인 중 오류가 발생했습니다.');
+      setEmailError('이메일 중복확인 중 오류가 발생했습니다.');
     }
   };
 
@@ -73,11 +75,13 @@ export const StepContent: React.FC<StepContentProps> = ({
                 onChange={
                   disabled
                     ? undefined
-                    : e =>
+                    : e => {
+                        setEmailError(''); // 이메일 변경 시 에러 메시지 초기화
                         onUpdateData({
                           email: e.target.value,
                           emailVerified: false,
-                        })
+                        });
+                      }
                 }
                 className="w-full h-12 bg-gray-50 border border-gray-300 rounded-md"
                 placeholder="이메일 주소를 입력해주세요"
@@ -116,6 +120,8 @@ export const StepContent: React.FC<StepContentProps> = ({
               !EMAIL_REGEX.test(data.email) &&
               !disabled ? (
                 <span>올바른 이메일 형식을 입력해주세요</span>
+              ) : emailError ? (
+                <span>{emailError}</span>
               ) : (
                 ''
               )}

@@ -39,7 +39,10 @@ export interface UserInfo {
   age: number | null;
   gender: UserGender;
   grade: UserGrade | null;
-  updatedAt: string;
+  role: UserRole;
+  status: UserStatus;
+  favoriteBrands: string[];
+  markers: string[];
 }
 
 export interface UpdateUserInfoRequest {

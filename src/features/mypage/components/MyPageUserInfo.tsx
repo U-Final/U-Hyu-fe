@@ -7,8 +7,8 @@ import {
   Calendar,
   Mail,
 } from 'lucide-react';
-import type { UserInfo } from '@features/mypage/api/types';
-import { updateUserInfo } from '@features/mypage/api/mypageApi';
+import type { UserInfo } from '@mypage/api/types';
+import { updateUserInfo } from '@mypage/api/mypageApi';
 
 interface Props {
   user: UserInfo;
@@ -27,7 +27,7 @@ const MyPageUserInfo = ({ user, setUser }: Props) => {
     field: K,
     value: string
   ) => {
-    setLocalEdit((prev) => ({ ...prev, [field]: value }));
+    setLocalEdit((prev: UserInfo) => ({ ...prev, [field]: value }));
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

@@ -1,4 +1,4 @@
-import type { UserInfo } from '@features/mypage/api/types';
+import type { UserInfo } from '@mypage/api/types';
 
 export const mockUser: UserInfo = {
   id: 1,

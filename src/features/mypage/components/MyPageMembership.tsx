@@ -1,8 +1,8 @@
 import React from 'react';
 import { Crown, Star, User2 } from 'lucide-react';
-import type { UserInfo, UserGrade } from '@features/mypage/api/types';
+import type { UserInfo, UserGrade } from '@mypage/api/types';
 import { convertGrade } from '@mypage/constants/gradeUtils';
-import { updateUserInfo } from '@features/mypage/api/mypageApi';
+import { updateUserInfo } from  '@mypage/api/mypageApi';
 
 interface Props {
   user: UserInfo;

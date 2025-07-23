@@ -1,5 +1,5 @@
-import type { UserInfo } from '@features/mypage/api/types';
-import { updateUserInfo } from '@features/mypage/api/mypageApi';
+import type { UserInfo } from '@mypage/api/types';
+import { updateUserInfo } from '@mypage/api/mypageApi';
 
 interface Props {
   user: UserInfo;
@@ -19,14 +19,14 @@ const MARKERS = [
 
 const MyPageMarker = ({ user, setUser }: Props) => {
   const handleSelect = async (markerId: number) => {
-    setUser((prev) => {
+    setUser((prev: UserInfo | undefined) => {
       if (!prev) return prev;
       if (prev.marker.id === markerId) return prev; // 이미 선택된 마커면 아무 동작 안함
       updateUserInfo({ markerId })
         .then(() => {
           console.log('마커 PATCH 요청 성공:', markerId);
         })
-        .catch((err) => {
+        .catch((err: Error) => {
           alert('마커 변경 실패');
           console.error(err);
         });

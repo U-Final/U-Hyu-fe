@@ -1,8 +1,8 @@
 import React from 'react';
 import { BRANDS } from '@/shared/components/brand_grid/constants';
 import { Check } from 'lucide-react';
-import type { UserInfo } from '@features/mypage/api/types';
-import { updateUserInfo } from '@features/mypage/api/mypageApi';
+import type { UserInfo } from '@mypage/api/types';
+import { updateUserInfo } from '@mypage/api/mypageApi';
 
 interface Props {
   user: UserInfo;
@@ -10,6 +10,8 @@ interface Props {
 }
 
 const MyPageBrand: React.FC<Props> = ({ user, setUser }) => {
+  if (!user || !user.brandIds) return null;
+
   const handleToggle = (brandId: number) => {
     setUser((prev) => {
       if (!prev) return prev;

@@ -1,4 +1,4 @@
-import { useActivityBenefitQuery } from '@features/mypage/hooks/useActivityQuery';
+import { useActivityBenefitQuery } from '@mypage/hooks/useActivityQuery';
 
 const ActivityBenefit = () => {
   const { data, isLoading, error } = useActivityBenefitQuery();

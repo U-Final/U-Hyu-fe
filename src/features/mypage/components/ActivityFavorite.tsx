@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { BrandWithFavoriteCard } from "@/shared/components/cards/BrandWithFavoriteCard";
-import { useActivityFavoritesQuery } from "@features/mypage/hooks/useActivityQuery";
+import { useActivityFavoritesQuery } from "@mypage/hooks/useActivityQuery";
 import { throttle } from "lodash";
 import { Loader2 } from "lucide-react";
 

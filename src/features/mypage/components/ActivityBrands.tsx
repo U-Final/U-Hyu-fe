@@ -1,4 +1,4 @@
-import { useActivityBrandsQuery } from '@features/mypage/hooks/useActivityQuery';
+import { useActivityBrandsQuery } from '@mypage/hooks/useActivityQuery';
 
 const ActivityBrands = () => {
   const { data, isLoading, error } = useActivityBrandsQuery();

@@ -1,10 +1,10 @@
 import { convertGrade } from '@mypage/constants/gradeUtils';
 import { MYPAGE_PATHS } from '@mypage/constants/paths';
-import type { UserInfo } from '@features/mypage/api/types';
+import type { UserInfo } from '@mypage/api/types';
 import { ChevronRight } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { updateUserInfo, updateUserProfileImage } from '@features/mypage/api/mypageApi';
+import { updateUserInfo, updateUserProfileImage } from '@mypage/api/mypageApi';
 
 interface MyPageHeaderProps {
   user: UserInfo;
@@ -27,9 +27,10 @@ const MyPageHeader = ({ user, onProfileImageChange }: MyPageHeaderProps) => {
   const previousUrlRef = useRef<string | null>(null);
 
   useEffect(() => {
+    const previousUrl = previousUrlRef.current;
     return () => {
-      if (previousUrlRef.current?.startsWith('blob:')) {
-        URL.revokeObjectURL(previousUrlRef.current);
+      if (previousUrl?.startsWith('blob:')) {
+        URL.revokeObjectURL(previousUrl);
       }
     };
   }, []);

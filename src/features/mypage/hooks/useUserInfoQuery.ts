@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchUserInfo } from '@features/mypage/api/mypageApi';
-import type { UserInfo } from '@features/mypage/api/types';
+import { fetchUserInfo } from '@mypage/api/mypageApi';
+import type { UserInfo } from '@mypage/api/types';
 
 export const useUserInfoQuery = () => {
   return useQuery<UserInfo>({

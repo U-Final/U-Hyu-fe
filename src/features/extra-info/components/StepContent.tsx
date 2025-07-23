@@ -24,6 +24,12 @@ export const StepContent: React.FC<StepContentProps> = ({
   const [emailError, setEmailError] = useState<string>('');
   const checkEmailMutation = useCheckEmailMutation();
 
+  const getButtonText = () => {
+    if (checkEmailMutation.isPending) return '확인중...';
+    if (data.emailVerified) return '✓ 확인완료';
+    return '중복확인';
+  };
+
   const handleEmailVerification = async () => {
     try {
       setEmailError(''); // 에러 메시지 초기화
@@ -108,11 +114,7 @@ export const StepContent: React.FC<StepContentProps> = ({
                     : ''
                 }`}
               >
-                {checkEmailMutation.isPending
-                  ? '확인중...'
-                  : data.emailVerified
-                    ? '✓ 확인완료'
-                    : '중복확인'}
+                {getButtonText()}
               </ButtonBase>
             </div>
             <div className="min-h-[20px] mt-1 text-xs text-red-500 transition-all">

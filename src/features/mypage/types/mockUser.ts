@@ -21,7 +21,5 @@ export const mockUser: UserInfo = {
     updatedAt: '2025-07-21T05:49:15.658Z',
     markerImage: 'marker8.png',
   },
-  userRole: 'USER',
-  userGrade: 'VVIP',
   brandIds: [1, 4, 3],
 };

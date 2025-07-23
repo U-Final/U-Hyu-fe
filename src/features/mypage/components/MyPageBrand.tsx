@@ -12,16 +12,28 @@ interface Props {
 const MyPageBrand: React.FC<Props> = ({ user, setUser }) => {
   if (!user || !user.brandIds) return null;
 
-  const handleToggle = (brandId: number) => {
+  const handleToggle = async (brandId: number) => {
+    // optimistic update
     setUser((prev) => {
       if (!prev) return prev;
       const alreadySelected = prev.brandIds.includes(brandId);
       const newBrandIds = alreadySelected
         ? prev.brandIds.filter(id => id !== brandId)
         : [...prev.brandIds, brandId];
-      updateUserInfo({ updatedBrandIdList: newBrandIds });
       return { ...prev, brandIds: newBrandIds };
     });
+
+    try {
+      const alreadySelected = user.brandIds.includes(brandId);
+      const newBrandIds = alreadySelected
+        ? user.brandIds.filter(id => id !== brandId)
+        : [...user.brandIds, brandId];
+      await updateUserInfo({ updatedBrandIdList: newBrandIds });
+    } catch (error) {
+      setUser(user); // 롤백
+      console.error('브랜드 업데이트 실패:', error);
+      // 필요시 사용자에게 에러 알림 표시
+    }
   };
 
   return (

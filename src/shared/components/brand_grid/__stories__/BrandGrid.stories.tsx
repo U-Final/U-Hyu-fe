@@ -11,11 +11,9 @@ import {
 
 // 인터랙티브한 스토리를 위한 래퍼 컴포넌트
 const BrandGridWrapper = (args: BrandGridProps) => {
-  const [selectedBrands, setSelectedBrands] = useState<string[]>(
-    args.selectedBrands || []
-  );
+  const [selectedBrands, setSelectedBrands] = useState<number[]>([]);
 
-  const handleBrandToggle = (brandId: string) => {
+  const handleBrandToggle = (brandId: number) => {
     setSelectedBrands(prev => {
       const newSelection = prev.includes(brandId)
         ? prev.filter(id => id !== brandId)
@@ -83,7 +81,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: BrandGridWrapper,
   args: {
-    selectedBrands: [],
+    selectedBrands: [] as number[],
     title: '브랜드를 선택해주세요',
     disabled: false,
   },
@@ -93,7 +91,7 @@ export const Default: Story = {
 export const WithSelectedBrands: Story = {
   render: BrandGridWrapper,
   args: {
-    selectedBrands: ['cgv', 'baskin', 'paris'],
+    selectedBrands: [1, 2, 3], // 실제 브랜드 id 숫자 리스트로 변경
     title: '최근 이용한 브랜드를 선택해주세요',
     disabled: false,
   },
@@ -110,7 +108,7 @@ export const WithSelectedBrands: Story = {
 export const AllSelected: Story = {
   render: BrandGridWrapper,
   args: {
-    selectedBrands: BRANDS.map(brand => String(brand.id)),
+    selectedBrands: BRANDS.map(brand => brand.id),
     title: '관심있는 브랜드를 선택해주세요',
     disabled: false,
   },
@@ -127,7 +125,7 @@ export const AllSelected: Story = {
 export const Disabled: Story = {
   render: BrandGridWrapper,
   args: {
-    selectedBrands: ['cgv', 'lotte'],
+    selectedBrands: [1, 2], // 'cgv', 'lotte'에 해당하는 실제 id로 변경
     title: '선택이 완료되었습니다',
     disabled: true,
   },
@@ -144,7 +142,7 @@ export const Disabled: Story = {
 // 클릭 불가능한 상태 (읽기 전용)
 export const ReadOnly: Story = {
   args: {
-    selectedBrands: ['baskin', 'paris', 'gs25'],
+    selectedBrands: [3, 4, 5], // 예시
     title: '선택된 브랜드 (읽기 전용)',
     onBrandToggle: undefined, // 클릭 핸들러 없음
     disabled: false,
@@ -181,7 +179,7 @@ export const LongTitle: Story = {
 export const WithoutTitle: Story = {
   render: BrandGridWrapper,
   args: {
-    selectedBrands: ['cgv'],
+    selectedBrands: [1], // 예시
     title: '',
     disabled: false,
   },
@@ -198,7 +196,7 @@ export const WithoutTitle: Story = {
 export const WideLayout: Story = {
   render: BrandGridWrapper,
   args: {
-    selectedBrands: ['goobne', 'touslesjours'],
+    selectedBrands: [6, 7], // 예시
     title: '와이드 레이아웃에서의 브랜드 그리드',
     disabled: false,
   },

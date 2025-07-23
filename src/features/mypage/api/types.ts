@@ -26,8 +26,6 @@ export interface UserInfo {
   profileImage: string;
   age_range?: string;
   marker: Marker;
-  userRole: UserRole;
-  userGrade: UserGrade;
   brandIds: number[];
 }
 
@@ -37,7 +35,6 @@ export interface UpdateUserRequest {
   updatedGrade?: UserGrade;
   updatedBrandIdList?: number[];
   markerId?: number;
-  updatedAge?: string;
 }
 
 export interface UserInfoResponse {

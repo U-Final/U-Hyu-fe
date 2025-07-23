@@ -11,16 +11,22 @@ export const fetchUserInfo = async (): Promise<UserInfo> => {
   return res.data.data;
 };
 
-export const updateUserInfo = async (update: Partial<UpdateUserRequest>) => {
-  const res = await axios.patch(MYPAGE_ENDPOINTS.USER_INFO, update);
-  return res.data;
+export const updateUserInfo = async (update: Partial<UpdateUserRequest>): Promise<UserInfo> => {
+  try {
+    const res = await axios.patch<ApiResponse<UserInfo>>(MYPAGE_ENDPOINTS.USER_INFO, update);
+    if (!res.data.data) throw new Error('업데이트된 사용자 정보가 없습니다');
+    return res.data.data;
+  } catch (error) {
+    console.error('사용자 정보 업데이트 실패:', error);
+    throw error;
+  }
 };
 
 export const updateUserProfileImage = async (file: File): Promise<string> => {
   const formData = new FormData();
   formData.append('profileImage', file);
   // 실제 엔드포인트는 백엔드 명세에 맞게 수정 필요
-  const res = await axios.post('/user/profile-image', formData, {
+  const res = await axios.post(MYPAGE_ENDPOINTS.UPLOAD_PROFILE_IMAGE, formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
   // 서버는 업로드된 이미지의 URL을 반환한다고 가정

@@ -38,14 +38,10 @@ const MyPageUserInfo = ({ user, setUser }: Props) => {
 
   const handleSave = async () => {
     try {
-      await updateUserInfo({
-        updatedNickName: localEdit.nickname,
-        updatedAge: localEdit.age,
-        //나중에 이메일까지는 추가할 예정
-      });
-      setUser((prev) => prev ? { ...prev, nickname: localEdit.nickname, age: localEdit.age } : prev);
+      await updateUserInfo({ updatedNickName: localEdit.nickname });
+      setUser((prev) => prev ? { ...prev, nickname: localEdit.nickname } : prev);
       setEditMode(false);
-      console.log('개인정보 PATCH 요청 성공:', localEdit.nickname, localEdit.age);
+      console.log('개인정보 PATCH 요청 성공:', localEdit.nickname);
     } catch (err) {
       alert('개인정보 수정 실패');
       console.error(err);
@@ -66,7 +62,7 @@ const fields: {
   { key: 'email', label: '이메일', icon: <Mail className="w-4 h-4 text-[var(--text-gray)]" /> },
 ];
 
-const editableFields: EditableUserFields[] = ['nickname', 'age'];
+const editableFields: EditableUserFields[] = ['nickname'];
 
 
   return (

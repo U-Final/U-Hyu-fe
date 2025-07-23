@@ -7,34 +7,38 @@ interface Props {
 }
 
 const MARKERS = [
-  'marker1.png',
-  'marker8.png',
-  'marker2.png',
-  'marker3.png',
-  'marker4.png',
-  'marker5.png',
-  'marker6.png',
-  'marker7.png',  
+  { id: 1, filename: 'marker1.png' },
+  { id: 2, filename: 'marker2.png' },
+  { id: 3, filename: 'marker3.png' },
+  { id: 4, filename: 'marker4.png' },
+  { id: 5, filename: 'marker5.png' },
+  { id: 6, filename: 'marker6.png' },
+  { id: 7, filename: 'marker7.png' },
+  { id: 8, filename: 'marker8.png' },
 ];
 
 const MyPageMarker = ({ user, setUser }: Props) => {
   const handleSelect = async (markerId: number) => {
+    const previousMarkerId = user.marker.id;
+    if (previousMarkerId === markerId) return; // 이미 선택된 마커면 아무 동작 안함
+
     setUser((prev: UserInfo | undefined) => {
       if (!prev) return prev;
-      if (prev.marker.id === markerId) return prev; // 이미 선택된 마커면 아무 동작 안함
-      updateUserInfo({ markerId })
-        .then(() => {
-          console.log('마커 PATCH 요청 성공:', markerId);
-        })
-        .catch((err: Error) => {
-          alert('마커 변경 실패');
-          console.error(err);
-        });
       return {
         ...prev,
         marker: { ...prev.marker, id: markerId },
       };
     });
+
+    try {
+      await updateUserInfo({ markerId });
+      console.log('마커 PATCH 요청 성공:', markerId);
+    } catch (err) {
+      alert('마커 변경 실패');
+      console.error(err);
+      // 실패 시 이전 상태로 롤백
+      setUser((prev) => prev ? { ...prev, marker: { ...prev.marker, id: previousMarkerId } } : prev);
+    }
   };
 
   return (
@@ -47,23 +51,23 @@ const MyPageMarker = ({ user, setUser }: Props) => {
         </p>
         <div className="overflow-x-auto whitespace-nowrap scrollbar-none" style={{ overflowY: 'hidden', maxHeight: '6rem' }}>
           <div className="inline-flex gap-[1rem] items-center h-[4.5rem]">
-            {MARKERS.map((img) => {
-              const markerId = Number(img.replace(/[^0-9]/g, ''));
+            {MARKERS.map((marker) => {
+              const markerId = marker.id;
               const isSelected = user.marker.id === markerId;
               return (
                 <button
-                  key={img}
+                  key={marker.filename}
                   onClick={() => handleSelect(markerId)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && !isSelected) handleSelect(markerId);
                   }}
-                  aria-label={`${img} 마커 ${isSelected ? '선택됨' : '선택 안됨'}`}
+                  aria-label={`${marker.filename} 마커 ${isSelected ? '선택됨' : '선택 안됨'}`}
                   aria-pressed={isSelected}
                   className={`flex-shrink-0 transition-transform duration-300 w-[4.5rem] h-[4.5rem] bg-transparent ${isSelected ? 'scale-125' : 'scale-100'}`}
                 >
                   <img
-                    src={`/images/markers/${img}`}
-                    alt={img}
+                    src={`/images/markers/${marker.filename}`}
+                    alt={marker.filename}
                     className={`object-contain rounded-full w-[4rem] h-[4rem] bg-white`}
                   />
                 </button>

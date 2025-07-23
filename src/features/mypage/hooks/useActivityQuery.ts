@@ -11,6 +11,14 @@ export interface ActivityBrand {
   image: string;
 }
 
+interface FavoriteBrand {
+  id: number;
+  image: string;
+  name: string;
+  description: string;
+  isFavorite: boolean;
+}
+
 export const useActivityBenefitQuery = () => {
   return useQuery<ActivityBenefit>({
     queryKey: ['activityBenefit'],
@@ -26,7 +34,7 @@ export const useActivityBrandsQuery = () => {
 };
 
 export const useActivityFavoritesQuery = () => {
-  return useQuery({
+  return useQuery<FavoriteBrand[]>({
     queryKey: ['activityFavorites'],
     queryFn: fetchActivityFavorites,
   });

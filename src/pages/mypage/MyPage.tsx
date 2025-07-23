@@ -18,6 +18,7 @@ const MyPage = () => {
 
   if (isLoading) return <div>로딩중...</div>;
   if (error || !localUser) return <div>에러 발생</div>;
+  if (localUser.status === 'DELETED') return <div>로그인해주세요.</div>;
 
   return (
     <div className="min-h-screen max-w-[22.5rem] mx-auto">

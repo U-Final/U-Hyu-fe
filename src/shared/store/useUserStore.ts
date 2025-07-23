@@ -194,5 +194,6 @@ export const useUserActions = () => {
     updateUser: state.updateUser,
     refreshUserInfo: state.refreshUserInfo,
     logout: state.logout,
+    initializeAuth: state.initializeAuth,
   }));
 };

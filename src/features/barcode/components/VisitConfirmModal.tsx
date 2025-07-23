@@ -1,4 +1,5 @@
 import type { NearbyStore } from '@barcode/api/barcode.type';
+import { useVisitConfirmMutation } from '@barcode/hooks/useVisitConfirmMutation';
 
 import { BaseModal } from '@/shared/components';
 import { useModalStore } from '@/shared/store';
@@ -7,15 +8,22 @@ interface Props {
   store: NearbyStore;
 }
 
-// 임시 UI
+// 임시 UI, 추후 ui 수정 예정
 
 export const VisitConfirmModal = ({ store }: Props) => {
   const closeModal = useModalStore(state => state.closeModal);
+  const { mutate: confirmVisit, isPending } = useVisitConfirmMutation();
 
   const handleVisitConfirm = () => {
-    // 추후 방문 처리 API 연결
-    alert(`${store.store_name} 방문 처리 완료`);
-    closeModal();
+    confirmVisit(store.store_id, {
+      onSuccess: () => {
+        alert(`${store.store_name} 방문 처리 완료`);
+        closeModal();
+      },
+      onError: () => {
+        alert('방문 처리 중 오류 발생');
+      },
+    });
   };
 
   return (
@@ -27,7 +35,7 @@ export const VisitConfirmModal = ({ store }: Props) => {
         onClick={handleVisitConfirm}
         className="mt-4 w-full bg-black text-white py-2 rounded-md hover:bg-gray-800"
       >
-        방문했어요
+        {isPending ? '처리중 ..' : '방문 했어요!'}
       </button>
     </BaseModal>
   );

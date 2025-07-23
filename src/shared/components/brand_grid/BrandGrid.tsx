@@ -18,8 +18,8 @@ export const BrandGrid: React.FC<BrandGridProps> = ({
           <BrandLogo
             key={brand.id}
             brand={brand}
-            isSelected={selectedBrands.includes(brand.id)}
-            onClick={onBrandToggle ? () => onBrandToggle(brand.id) : undefined}
+            isSelected={selectedBrands.includes(String(brand.id))}
+            onClick={onBrandToggle ? () => onBrandToggle(String(brand.id)) : undefined}
             delay={index * 0.1}
             disabled={disabled}
           />

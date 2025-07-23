@@ -3,12 +3,12 @@ import { client } from '@/shared/client';
 import { USER_ENDPOINTS } from './endpoints';
 import type {
   CheckEmailResponse,
-  GetUserInfoResponse,
   LogoutResponse,
   UpdateUserInfoRequest,
   UpdateUserInfoResponse,
   UserExtraInfoRequest,
   UserExtraInfoResponse,
+  GetUserInfoResponse
 } from './types';
 
 export const userApi = {

@@ -1,15 +1,11 @@
 /// <reference types="vitest/config" />
 // https://vite.dev/config/
-import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
-import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import { defineConfig } from "vite";
-
-
-
-
+import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
+import tailwindcss from '@tailwindcss/vite';
+import react from '@vitejs/plugin-react';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { defineConfig } from 'vite';
 
 // ES Module 환경에서 __dirname 대신 사용
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -19,6 +15,12 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
+      // 전역 스토어 별칭
+      '@useUserStore': path.resolve(
+        __dirname,
+        'src/shared/auth/useUserStore.ts'
+      ),
+
       '@': path.resolve(__dirname, 'src'),
       '@extra-info': path.resolve(__dirname, 'src/features/extra-info'),
       '@benefit': path.resolve(__dirname, 'src/features/benefit'),

@@ -2,10 +2,10 @@ import { useEffect } from 'react';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { useUserStore } from '@useUserStore';
 
 import { AppRoutes } from '@/routes/AppRoutes';
 
-import { useUserStore } from '@/shared/auth/useUserStore';
 import { queryClient } from '@/shared/client';
 
 function App() {

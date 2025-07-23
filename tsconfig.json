@@ -18,8 +18,11 @@
     // 경로가 깊은 순서대로, 최신순으로 위에서부터 추가해주세요!
     "baseUrl": ".",
     "paths": {
+      // 전역 스토어 별칭
+      "@useUserStore": ["./src/shared/auth/useUserStore.ts"],
+
       // 각 도메인 별 경로 설정
-      "@home/*" : ["./src/features/home/*"],
+      "@home/*": ["./src/features/home/*"],
       "@user/*": ["./src/features/user/*"],
       "@kakao-map/*": ["./src/features/kakao-map/*"],
       "@extra-info/*": ["./src/features/extra-info/*"],

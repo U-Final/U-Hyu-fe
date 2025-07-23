@@ -23,7 +23,6 @@ import { ShareModal } from '../ShareModal';
 const MyMapList: React.FC = () => {
   const { data, isLoading, isError } = useMyMapListQuery();
   const openModal = useModalStore(state => state.openModal);
-  const uuid = 'd9f8a4b2-7c35-489f-b74e-7f91f1e6f4a9';
   const navigate = useNavigate();
 
   if (isLoading) return <div>로딩 중...</div>;
@@ -72,7 +71,7 @@ const MyMapList: React.FC = () => {
     });
   };
 
-  //
+  // 마이페이지 이동
   const handleGoToMypage = () => {
     navigate('/mypage/activity');
   };
@@ -93,7 +92,7 @@ const MyMapList: React.FC = () => {
         <div
           key={map.myMapListId}
           className="flex items-center justify-between py-3 cursor-pointer hover:bg-light-gray-hover rounded"
-          //map.myMapListId
+          onClick={() => navigate(`/map/${map.uuid}`)}
         >
           <div className="flex items-center">
             <MdStars
@@ -123,7 +122,7 @@ const MyMapList: React.FC = () => {
               <DropdownMenuItem
                 onClick={e => {
                   e.stopPropagation();
-                  handleShare(uuid);
+                  handleShare(map.uuid);
                 }}
                 className="flex justify-between font-medium"
               >

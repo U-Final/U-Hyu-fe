@@ -274,7 +274,10 @@
   --text-tertiary: #d9d9d9;
   --text-secondary: #71717a;
   --text-gray: #b0b8c1;
-  --text-red: #dc2625;
+  --text-red: #FF3B30;
+  --text-orange:#FF9500;
+  --text-yellow: #FFCC00;
+  --text-green: #34C759;
   --text-white: #ffffff;
   --text-success: #2db745;
   --text-warning: #feb93f;

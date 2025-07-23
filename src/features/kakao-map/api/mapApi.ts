@@ -1,11 +1,12 @@
 import { client } from '@/shared/client';
+
 import { MAP_ENDPOINTS } from './endpoints';
 import type {
   GetNearbyStoresParams,
   GetStoreDetailParams,
-  ToggleFavoriteParams,
   StoreDetailResponse,
   StoreListResponse,
+  ToggleFavoriteParams,
   ToggleFavoriteResponseType,
 } from './types';
 
@@ -32,7 +33,7 @@ export const mapApi = {
 
   /**
    * 매장 상세 정보 조회
-   * GET /map/stores/123
+   * GET /map/detail/stores/123
    */
   getStoreDetail: async ({
     storeId,

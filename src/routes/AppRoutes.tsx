@@ -1,9 +1,7 @@
-import { BenefitPage, ExtraInfo, HomePage, MapPage } from '@/pages';
-import { BaseLayout, BottomNavigation, ModalRoot } from '@/shared/components';
-import MyPage from '@/pages/mypage/MyPage';
-import MyPageActivity from '@/pages/mypage/MyPageActivity';
-import { PATH } from '@paths';
+import { useEffect, useState } from 'react';
 
+import { BenefitPage, ExtraInfo, HomePage, MapPage } from '@/pages';
+import { PATH } from '@paths';
 import {
   BrowserRouter,
   Outlet,
@@ -12,14 +10,32 @@ import {
   useLocation,
 } from 'react-router-dom';
 
+import MyPage from '@/pages/mypage/MyPage';
+import MyPageActivity from '@/pages/mypage/MyPageActivity';
+
+import { BaseLayout, BottomNavigation, ModalRoot } from '@/shared/components';
+
 const Layout = () => {
   const { pathname } = useLocation();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 640);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const visibleBottomNavRoutes = [
     PATH.HOME,
     PATH.BENEFIT,
     PATH.MAP,
     PATH.MYPAGE,
-    PATH.MYPAGE_ACTIVITY
+    PATH.MYPAGE_ACTIVITY,
   ] as const;
 
   const showBottomNav = visibleBottomNavRoutes.includes(
@@ -28,15 +44,28 @@ const Layout = () => {
 
   const isMap = pathname === PATH.MAP;
 
-  return (
+  // 모바일에서는 프레임 없이 직접 렌더링
+  const content = (
     <div
-      className={`w-full h-full flex flex-col ${isMap ? 'items-stretch justify-start' : 'justify-center'}`}
+      className={`w-full h-full flex flex-col relative ${isMap ? 'items-stretch justify-start' : ''}`}
       style={isMap ? { minWidth: 0 } : undefined}
     >
       <BaseLayout isMap={isMap}>
         <Outlet />
       </BaseLayout>
       {showBottomNav && <BottomNavigation />}
+    </div>
+  );
+
+  // 모바일에서는 모바일 프레임 없이 렌더링
+  if (isMobile) {
+    return content;
+  }
+
+  // 데스크톱에서는 모바일 프레임 적용
+  return (
+    <div className="mobile-frame">
+      <div className="mobile-content">{content}</div>
     </div>
   );
 };

@@ -2,7 +2,7 @@ import {
   GuestHeader,
   GuestNearbyStoresSection,
   GuestRecommendationList,
-} from '@features/home/components';
+} from '@home/components';
 
 export const GuestHomeSheetContent = () => {
   return (

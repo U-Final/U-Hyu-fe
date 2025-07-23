@@ -27,7 +27,7 @@ const BottomNavigation = () => {
   };
 
   return (
-    <div className="fixed bottom-0 w-full z-50">
+    <div className="absolute bottom-0 left-0 right-0 z-50">
       <nav className="h-12 text-[0.625rem] shadow-nav flex relative justify-around bg-white gap-5 px-[1.5rem] py-[0.5rem]">
         <NavLink
           to={PATH.HOME}
@@ -85,7 +85,7 @@ const BottomNavigation = () => {
           />
         </NavLink>
       </nav>
-      <div className="fixed bottom-100 w-full">
+      <div className="absolute bottom-full w-full">
         <BarcodeBottomSheet
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}

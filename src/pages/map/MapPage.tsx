@@ -1,9 +1,9 @@
-import useKakaoLoader from '@features/kakao-map/hooks/useKakaoLoader';
-import { MapUIProvider } from '@features/kakao-map/context/MapUIContext';
-import { MapContainer } from '@features/kakao-map/components/MapContainer';
-import { MapControlsContainer } from '@features/kakao-map/components/MapControlsContainer';
-import { LocationControlContainer } from '@features/kakao-map/components/location/LocationControlContainer';
-import { BottomSheetContainer } from '@features/kakao-map/components/BottomSheetContainer';
+import useKakaoLoader from '@kakao-map/hooks/useKakaoLoader';
+import { MapUIProvider } from '@kakao-map/context/MapUIContext';
+import { MapContainer } from '@kakao-map/components/MapContainer';
+import { MapControlsContainer } from '@kakao-map/components/MapControlsContainer';
+import { LocationControlContainer } from '@kakao-map/components/location/LocationControlContainer';
+import { BottomSheetContainer } from '@kakao-map/components/BottomSheetContainer';
 
 /**
  * 카카오 맵과 관련된 리소스를 로드하고, 지도 및 UI 컨트롤, 위치 제어, 하단 시트가 포함된 전체 지도 페이지를 렌더링합니다.

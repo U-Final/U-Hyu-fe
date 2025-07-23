@@ -22,11 +22,11 @@ export interface CheckEmailRequest {
 }
 
 export interface CheckEmailResponse {
-  code: number;
-  status: number;
+  statusCode: number;
   message: string;
   data: {
     isAvailable: boolean; // true: 사용 가능, false: 이미 사용 중
+    email: string;
   };
 }
 

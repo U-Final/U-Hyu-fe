@@ -44,7 +44,7 @@ export const BarcodeBottomSheet: FC<BarcodeBottomSheetProps> = ({
     <div
       role="dialog"
       aria-label="바코드 업로드 바텀시트"
-      className="fixed bottom-12 w-full z-10"
+      className="absolute bottom-12 left-0 right-0 z-10"
     >
       <div className="bg-white rounded-t-2xl shadow-2xl z-50 flex flex-col border border-light-gray p-4">
         <header className="flex justify-between items-center mb-4">

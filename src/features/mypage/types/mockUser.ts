@@ -5,7 +5,7 @@ export const mockUser: UserInfo = {
   createdAt: '2025-07-21T05:49:15.658Z',
   updatedAt: '2025-07-21T05:49:15.658Z',
   userName: '김민수',
-  nickname: 'GOOD4',
+  nickName: 'GOOD4',
   kakaoId: 12345,
   email: 'minsu.kim@email.com',
   age: '28',

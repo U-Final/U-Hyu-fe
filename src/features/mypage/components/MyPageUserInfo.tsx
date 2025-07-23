@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { userApi } from '@/features/user';
-import type { UserInfo } from '@mypage/types/types';
+import type { UserInfo } from '@mypage/api/types';
 import { AtSign, BadgeCheck, Calendar, Mail, Pencil, User } from 'lucide-react';
 
 interface Props {
@@ -55,7 +55,7 @@ const MyPageUserInfo = ({ user, setUser }: Props) => {
     try {
       await userApi.updateUserInfo({
         nickname: localEdit.nickName || '',
-        age: localEdit.age || 0,
+        age: Number(localEdit.age) || 0,
         email: localEdit.email,
       });
       setUser(prev =>

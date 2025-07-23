@@ -43,7 +43,7 @@ export interface UserInfo {
 }
 
 export interface UpdateUserInfoRequest {
-  nickname: string;
+  nickName: string;
   age: number;
   email: string;
 }

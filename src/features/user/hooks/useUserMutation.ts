@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { UpdateUserInfoRequest } from '@user/api/types';
 import { userApi } from '@user/api/userApi';
 
 import { userKeys } from './useUserQuery';
@@ -25,6 +26,22 @@ export const useSubmitExtraInfo = () => {
     },
     onError: (error: Error) => {
       console.error('추가 정보 입력 실패:', error);
+    },
+  });
+};
+
+// 사용자 정보 수정 훅 (Mutation)
+export const useUpdateUserInfo = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: UpdateUserInfoRequest) => userApi.updateUserInfo(data),
+    onSuccess: () => {
+      // 사용자 정보 수정 성공 시 캐시 무효화
+      queryClient.invalidateQueries({ queryKey: userKeys.info() });
+    },
+    onError: (error: Error) => {
+      console.error('사용자 정보 수정 실패:', error);
     },
   });
 };

@@ -1,22 +1,32 @@
 import React from 'react';
-import { Crown, Star, User2 } from 'lucide-react';
-import type { UserInfo, UserGrade } from '@mypage/types/types';
+
 import { convertGrade } from '@mypage/constants/gradeUtils';
+import type { UserGrade, UserInfo } from '@mypage/types/types';
+import { Crown, Star, User2 } from 'lucide-react';
 
 interface Props {
   user: UserInfo;
-  setUser: React.Dispatch<React.SetStateAction<UserInfo>>;
 }
 
-const MyPageMembership = ({ user, setUser }: Props) => {
+const MyPageMembership = ({ user }: Props) => {
   const handleSelect = (grade: UserGrade) => {
-    setUser(prev => ({ ...prev, grade }));
+    // TODO: 실제 API 호출로 등급 업데이트
+    console.log('등급 선택:', grade);
   };
 
   const gradeOptions: { grade: UserGrade; icon: React.ReactNode }[] = [
-    { grade: 'VVIP', icon: <Crown className="w-[0.9rem] h-[0.9rem] text-[var(--text-gray)]" /> },
-    { grade: 'VIP', icon: <Star className="w-[0.9rem] h-[0.9rem] text-[var(--text-gray)]" /> },
-    { grade: 'GOOD', icon: <User2 className="w-[0.9rem] h-[0.9rem] text-[var(--text-gray)]" /> },
+    {
+      grade: 'VVIP',
+      icon: <Crown className="w-[0.9rem] h-[0.9rem] text-[var(--text-gray)]" />,
+    },
+    {
+      grade: 'VIP',
+      icon: <Star className="w-[0.9rem] h-[0.9rem] text-[var(--text-gray)]" />,
+    },
+    {
+      grade: 'GOOD',
+      icon: <User2 className="w-[0.9rem] h-[0.9rem] text-[var(--text-gray)]" />,
+    },
   ];
 
   const handleKeyDown = (grade: UserGrade, e: React.KeyboardEvent) => {
@@ -43,13 +53,15 @@ const MyPageMembership = ({ user, setUser }: Props) => {
             <button
               key={grade}
               onClick={() => handleSelect(grade)}
-              onKeyDown={(e) => handleKeyDown(grade, e)}
+              onKeyDown={e => handleKeyDown(grade, e)}
               role="radio"
               aria-checked={user.grade === grade}
               aria-label={`${convertGrade(grade)} 등급`}
               tabIndex={user.grade === grade ? 0 : -1}
               className={`flex items-center justify-center gap-[0.25rem] w-[10rem] py-[0.4rem] rounded-[0.5rem] border border-gray-300 text-[0.75rem] ${
-                user.grade === grade ? 'bg-[var(--bg-light-gray)] font-bold' : ''
+                user.grade === grade
+                  ? 'bg-[var(--bg-light-gray)] font-bold'
+                  : ''
               }`}
             >
               {icon}

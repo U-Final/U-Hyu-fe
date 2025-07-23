@@ -4,7 +4,49 @@ import { createErrorResponse } from '@/shared/utils/createErrorResponse';
 import { createResponse } from '@/shared/utils/createResponse';
 
 export const userHandlers = [
-  http.post('/users/check-email', async ({ request }) => {
+  // 사용자 정보 조회
+  http.get('/user', () => {
+    // 실제 API 응답 구조에 맞춘 목업 데이터
+    const mockUserData = {
+      profileImage:
+        'http://img1.kakaocdn.net/thumb/R640x640.q70/?fname=http://t1.kakaocdn.net/account_images/default_profile.jpeg',
+      userName: '김민수',
+      nickName: 'GOOD4',
+      email: 'minsu.kim@email.com',
+      age: 28,
+      gender: 'MALE',
+      grade: 'VIP',
+      updatedAt: '2025-07-20T05:17:08.734511',
+    };
+
+    return createResponse(mockUserData, '사용자 정보 조회 성공', 0);
+  }),
+
+  // 사용자 정보 수정
+  http.patch('/user', async ({ request }) => {
+    try {
+      const body = (await request.json()) as {
+        nickname?: string;
+        age?: number;
+        email?: string;
+      };
+
+      // 간단한 유효성 검사
+      if (body.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)) {
+        return createErrorResponse('올바른 이메일 형식이 아닙니다', 400);
+      }
+
+      if (body.age && (body.age < 1 || body.age > 150)) {
+        return createErrorResponse('올바른 나이를 입력해주세요', 400);
+      }
+
+      return createResponse('SUCCESS', '사용자 정보 수정 성공', 0);
+    } catch (error) {
+      console.error('User info update error:', error);
+      return createErrorResponse('서버 내부 오류가 발생했습니다', 500);
+    }
+  }),
+  http.post('/user/check-email', async ({ request }) => {
     const body = (await request.json()) as { email: string };
     const email = body.email;
 
@@ -27,7 +69,7 @@ export const userHandlers = [
     );
   }),
 
-  http.post('/users/extra-info', async ({ request }) => {
+  http.post('/user/extra-info', async ({ request }) => {
     try {
       const body = (await request.json()) as {
         grade?: string;
@@ -46,5 +88,10 @@ export const userHandlers = [
       console.error('Extra info submission error:', error);
       return createErrorResponse('서버 내부 오류가 발생했습니다', 500);
     }
+  }),
+
+  // 로그아웃
+  http.post('/auth/logout', () => {
+    return createResponse('SUCCESS', '로그아웃 성공', 0);
   }),
 ];

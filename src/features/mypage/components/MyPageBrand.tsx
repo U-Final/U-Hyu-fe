@@ -1,26 +1,25 @@
 import React from 'react';
-import { BRANDS } from '@/shared/components/brand_grid/constants';
-import { Check } from 'lucide-react';
+
 import type { UserInfo } from '@mypage/types/types';
+import { Check } from 'lucide-react';
+
+import { BRANDS } from '@/shared/components/brand_grid/constants';
 
 interface Props {
   user: UserInfo;
-  setUser: React.Dispatch<React.SetStateAction<UserInfo>>;
 }
 
-const MyPageBrand: React.FC<Props> = ({ user, setUser }) => {
+const MyPageBrand: React.FC<Props> = ({ user }) => {
   const handleToggle = (brandId: string) => {
-    setUser(prev => ({
-      ...prev,
-      favoriteBrands: prev.favoriteBrands.includes(brandId)
-        ? prev.favoriteBrands.filter(id => id !== brandId)
-        : [...prev.favoriteBrands, brandId],
-    }));
+    // TODO: 실제 API 호출로 즐겨찾기 브랜드 업데이트
+    console.log('브랜드 토글:', brandId);
   };
 
   return (
     <div className="space-y-[0.75rem]">
-      <div className="font-bold text-[1rem] text-[var(--text-black)]">관심 브랜드</div>
+      <div className="font-bold text-[1rem] text-[var(--text-black)]">
+        관심 브랜드
+      </div>
 
       <div className="rounded-[1rem] bg-white p-[1.25rem] text-[0.875rem] text-[var(--text-gray)] border border-gray-200">
         <p className="mb-[1rem] text-[0.75rem] text-[var(--text-gray)] text-center">
@@ -28,12 +27,15 @@ const MyPageBrand: React.FC<Props> = ({ user, setUser }) => {
         </p>
 
         <div className="grid grid-cols-3 gap-[1rem] max-h-[13.5rem] overflow-y-auto scrollbar-hidden touch-pan-y px-[0.25rem]">
-          {BRANDS.map((brand) => (
-            <div key={brand.id} className="flex flex-col items-center space-y-[0.5rem]">
+          {BRANDS.map(brand => (
+            <div
+              key={brand.id}
+              className="flex flex-col items-center space-y-[0.5rem]"
+            >
               <div className="relative mt-[0.5rem] p-[0.125rem]">
                 <button
                   onClick={() => handleToggle(brand.id)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleToggle(brand.id)}
+                  onKeyDown={e => e.key === 'Enter' && handleToggle(brand.id)}
                   aria-label={`${brand.name} 브랜드 ${user.favoriteBrands.includes(brand.id) ? '선택됨' : '선택 안됨'}`}
                   aria-pressed={user.favoriteBrands.includes(brand.id)}
                   className={`

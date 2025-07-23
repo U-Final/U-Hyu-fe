@@ -1,5 +1,5 @@
 import { BENEFIT_ENDPOINTS } from '@benefit/api/endpoints';
-import { allBrands, mockBrandDetails } from '@benefit/api/mockData';
+import { mockAllBrands, mockBrandDetails } from '@benefit/api/mockData';
 import type { BenefitType, BrandListRes, StoreType } from '@benefit/api/types';
 import { http } from 'msw';
 
@@ -29,7 +29,7 @@ export const benefitHandlers = [
       const benefitType = url.searchParams.get('benefitType');
 
       // 초기 브랜드 리스트 전체 복사
-      let filtered = [...allBrands];
+      let filtered = [...mockAllBrands];
 
       // category 필터링
       if (category && category !== 'all') {

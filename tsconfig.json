@@ -19,7 +19,7 @@
     "baseUrl": ".",
     "paths": {
       // 전역 스토어 별칭
-      "@useUserStore": ["./src/shared/auth/useUserStore.ts"],
+      "@useUserStore": ["src/shared/store/useUserStore.ts"],
 
       // 각 도메인 별 경로 설정
       "@home/*": ["./src/features/home/*"],

@@ -18,7 +18,7 @@ export default defineConfig({
       // 전역 스토어 별칭
       '@useUserStore': path.resolve(
         __dirname,
-        'src/shared/auth/useUserStore.ts'
+        'src/shared/store/useUserStore.ts'
       ),
 
       '@': path.resolve(__dirname, 'src'),

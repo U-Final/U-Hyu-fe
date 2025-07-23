@@ -1,9 +1,12 @@
-import { MyMapList } from '@mymap/components/mymap-list';
+import React from 'react';
+
+import { FaFilter } from 'react-icons/fa';
+
+import { MapDragBottomSheet } from './MapDragBottomSheet';
 
 import { useMapData } from '../hooks/useMapData';
 import { useMapInteraction } from '../hooks/useMapInteraction';
 import { useMapUI } from '../hooks/useMapUI';
-import { PersistentBottomSheet } from './layout/PersistentBottomSheet';
 import StoreListContent from './layout/StoreListContent';
 import BrandSelectContent from './layout/steps/BrandSelectContent';
 import CategorySelectContent from './layout/steps/CategorySelectContent';
@@ -19,7 +22,6 @@ export const BottomSheetContainer: React.FC = () => {
     selectCategoryAndNavigate,
     selectBrandAndReturn,
     backToList,
-    setBottomSheetStep,
   } = useMapUI();
 
   const handleCreateNewMap = () => {
@@ -41,28 +43,12 @@ export const BottomSheetContainer: React.FC = () => {
           : undefined,
       showFilterButton: true,
       onFilterClick: showFilter,
-      showMymapButton: true,
-      onMymapClick: () => setBottomSheetStep('mymap'),
       content: (
         <StoreListContent
           stores={stores}
           onFilterClick={showFilter}
           onStoreClick={handleStoreSelect}
         />
-      ),
-    },
-    {
-      key: 'mymap',
-      title: 'My Map',
-      showBackButton: true,
-      content: (
-        <div>
-          <MyMapList
-            favoriteLabel="즐겨찾기"
-            onCreateNewMap={handleCreateNewMap}
-            onSelectMap={handleSelectMap}
-          />
-        </div>
       ),
     },
     {
@@ -98,7 +84,7 @@ export const BottomSheetContainer: React.FC = () => {
       steps={bottomSheetSteps}
       currentStepKey={currentBottomSheetStep}
       onStepChange={step =>
-        setBottomSheetStep(step as 'list' | 'category' | 'brand' | 'mymap')
+        setBottomSheetStep(step as 'list' | 'category' | 'brand')
       }
       minHeight={80}
       maxHeight={500}

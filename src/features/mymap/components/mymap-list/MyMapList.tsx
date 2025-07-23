@@ -6,6 +6,7 @@ import { MdStars } from 'react-icons/md';
 import { MdIosShare } from 'react-icons/md';
 import { PiTrashBold } from 'react-icons/pi';
 import { RiPencilFill } from 'react-icons/ri';
+import { useNavigate } from 'react-router-dom';
 
 import {
   DropdownMenu,
@@ -23,6 +24,7 @@ const MyMapList: React.FC = () => {
   const { data, isLoading, isError } = useMyMapListQuery();
   const openModal = useModalStore(state => state.openModal);
   const uuid = 'd9f8a4b2-7c35-489f-b74e-7f91f1e6f4a9';
+  const navigate = useNavigate();
 
   if (isLoading) return <div>로딩 중...</div>;
   if (isError || !data) return <div>에러 발생</div>;
@@ -70,14 +72,18 @@ const MyMapList: React.FC = () => {
     });
   };
 
+  //
+  const handleGoToMypage = () => {
+    navigate('/mypage/activity');
+  };
+
   return (
     <div className="flex flex-col w-full max-w-md mx-auto p-4 divide-y divide-gray-200">
       {/* 새 지도 만들기 */}
       <AddMyMapButton onCreateNewMap={handleCreate} />
 
       {/* 즐겨찾기 */}
-      {/* 즐겨찾기 누르면 마이페이지 즐겨찾기 수정으로 이동 */}
-      <div className="flex items-center py-3">
+      <div className="flex items-center py-3" onClick={handleGoToMypage}>
         <MdStars className="w-5 h-5 text-primary mr-2" />
         <span className="text-body2 font-semibold">즐겨찾기</span>
       </div>

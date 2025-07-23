@@ -15,7 +15,7 @@ export const DragBottomSheet = ({ children, title }: DragBottomSheetProps) => {
   // 3단계 높이 설정
   const expandedY = 60; // 완전히 열린 상태 (위에서 60px)
   const middleY = window.innerHeight * 0.5; // 중간 상태 (화면 높이의 50%)
-  const collapsedY = window.innerHeight - 100; // 접힌 상태 (아래에서 70px 만 보인다.)
+  const collapsedY = window.innerHeight - 120; // 접힌 상태 (아래에서 70px 만 보인다.)
   const middleThreshold = window.innerHeight * 0.22; // 중간지점을 처리할 범위 (±22%)
 
   // 움직임 제어 함수들

@@ -8,15 +8,20 @@ interface MapDragBottomSheetProps {
   title?: string;
 }
 
-export const MapDragBottomSheet = ({ children, title }: MapDragBottomSheetProps) => {
+export const MapDragBottomSheet = ({
+  children,
+  title,
+}: MapDragBottomSheetProps) => {
   const sheetRef = useRef<HTMLDivElement>(null);
   const [{ y }, api] = useSpring(() => ({ y: window.innerHeight * 0.5 })); // 초기값을 중간 상태로 설정
-  const [currentState, setCurrentState] = useState<'collapsed' | 'middle' | 'expanded'>('middle');
+  const [currentState, setCurrentState] = useState<
+    'collapsed' | 'middle' | 'expanded'
+  >('middle');
 
   // 3단계 높이 설정
   const expandedY = 60; // 완전히 열린 상태 (위에서 60px)
   const middleY = window.innerHeight * 0.5; // 중간 상태 (화면 높이의 50%)
-  const collapsedY = window.innerHeight - 100; // 접힌 상태 (아래에서 100px 만 보인다.)
+  const collapsedY = window.innerHeight - 120; // 접힌 상태 (아래에서 100px 만 보인다.)
   const middleThreshold = window.innerHeight * 0.22; // 중간지점을 처리할 범위 (±22%)
 
   // 움직임 제어 함수들
@@ -24,12 +29,12 @@ export const MapDragBottomSheet = ({ children, title }: MapDragBottomSheetProps)
     api.start({ y: expandedY });
     setCurrentState('expanded');
   }, [api, expandedY]);
-  
+
   const openMiddle = useCallback(() => {
     api.start({ y: middleY });
     setCurrentState('middle');
   }, [api, middleY]);
-  
+
   const close = useCallback(() => {
     api.start({ y: collapsedY });
     setCurrentState('collapsed');
@@ -40,7 +45,7 @@ export const MapDragBottomSheet = ({ children, title }: MapDragBottomSheetProps)
     const timer = setTimeout(() => {
       openMiddle();
     }, 100);
-    
+
     return () => clearTimeout(timer);
   }, [openMiddle]);
 
@@ -89,13 +94,13 @@ export const MapDragBottomSheet = ({ children, title }: MapDragBottomSheetProps)
     <div className="flex-1">
       {/* 배경 오버레이 - expanded 상태일 때만 활성화 */}
       {currentState === 'expanded' && (
-        <div 
-          className="absolute inset-0 z-30 pointer-events-auto" 
+        <div
+          className="absolute inset-0 z-30 pointer-events-auto"
           onClick={handleBackgroundClick}
           style={{ top: 0, bottom: `${window.innerHeight - expandedY}px` }}
         />
       )}
-      
+
       {/* Sheet */}
       <animated.div
         ref={sheetRef}

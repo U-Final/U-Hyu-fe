@@ -1,8 +1,9 @@
+import { useEffect, useRef, useState } from 'react';
+
 import { convertGrade } from '@mypage/constants/gradeUtils';
 import { MYPAGE_PATHS } from '@mypage/constants/paths';
 import type { UserInfo } from '@mypage/types/types';
 import { ChevronRight } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 interface MyPageHeaderProps {
@@ -55,7 +56,9 @@ const MyPageHeader = ({ user }: MyPageHeaderProps) => {
 
   return (
     <div className="space-y-[1rem]">
-      <h2 className="font-bold text-[1.125rem] text-[var(--text-black)]">나의 유휴</h2>
+      <h2 className="font-bold text-[1.125rem] text-[var(--text-black)]">
+        나의 유휴
+      </h2>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-[1rem]">
           <div className="relative">
@@ -76,7 +79,7 @@ const MyPageHeader = ({ user }: MyPageHeaderProps) => {
           </div>
           <div className="flex flex-col justify-center">
             <span className="font-bold text-[1rem] text-[var(--text-black)] leading-none">
-              {user.nickname}
+              {user.nickName || user.userName}
             </span>
             <span className="text-[0.75rem] text-[var(--text-gray)] mt-[0.25rem] leading-none">
               수정일 : {user.updatedAt}
@@ -85,7 +88,7 @@ const MyPageHeader = ({ user }: MyPageHeaderProps) => {
         </div>
         <div className="flex items-center gap-[0.25rem]">
           <span className="px-[0.625rem] py-[0.25rem] border border-gray-300 rounded-[0.5rem] text-[0.65rem] text-[var(--text-gray)] bg-[var(--bg-light-gray)] font-medium">
-            {convertGrade(user.grade)} 등급
+            {user.grade ? convertGrade(user.grade) : '미설정'} 등급
           </span>
           <button
             onClick={() => navigate(nextPath)}

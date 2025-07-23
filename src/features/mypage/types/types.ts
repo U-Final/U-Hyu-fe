@@ -1,14 +1,8 @@
-export type UserGrade = 'VVIP' | 'VIP' | 'GOOD';
+import type { UserInfo as BaseUserInfo, UserGrade } from '@/features/user';
 
-export interface UserInfo {
-  name: string;
-  nickname: string;
-  gender: string;
-  age: number;
-  email: string;
-  updatedAt: string;
-  grade: UserGrade;
-  profileImage: string;
+export interface UserInfo extends BaseUserInfo {
   favoriteBrands: string[];
   markers: string[];
 }
+
+export type { UserGrade };

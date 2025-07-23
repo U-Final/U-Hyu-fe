@@ -40,7 +40,10 @@ export interface UserInfo {
   role: UserRole;
   status: UserStatus;
   grade: UserGrade;
-  profile_image: string;
+  updatedAt: string;
+  profileImage: string;
+  favoriteBrands: string[];
+  markers: string[];
 }
 
 export interface UpdateUserInfoRequest {

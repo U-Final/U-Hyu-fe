@@ -27,7 +27,7 @@
       "@mypage/*": ["./src/features/mypage/*"],
       "@mymap/*": ["./src/features/mymap/*"],
       "@paths": ["./src/routes/path.ts"],
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
     },
 
     /* Linting */

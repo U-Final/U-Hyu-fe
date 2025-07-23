@@ -11,6 +11,8 @@ interface Step {
   showBackButton?: boolean;
   showFilterButton?: boolean;
   onFilterClick?: () => void;
+  showMymapButton?: boolean;
+  onMymapClick?: () => void;
 }
 interface PersistentBottomSheetProps {
   /** 바텀시트에 표시할 스텝들의 배열 */
@@ -123,24 +125,39 @@ export const PersistentBottomSheet: React.FC<PersistentBottomSheetProps> = ({
               )}
             </div>
 
-            <div className="flex items-center gap-2">
-              {/* 필터 버튼 */}
-              {currentStep.showFilterButton && currentStep.onFilterClick && (
-                <button
-                  className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 border border-gray-200 hover:border-blue-300 shadow-sm hover:shadow-md"
-                  onClick={currentStep.onFilterClick}
-                  aria-label="필터 설정"
-                >
-                  <FaFilter className="w-3.5 h-3.5" />
-                  <span>필터</span>
-                </button>
-              )}
+            <div className="flex flex-row gap-2">
+              {/* MyMap 버튼 추가 */}
+              <div className="flex items-center gap-2">
+                {currentStep.showMymapButton && currentStep.onMymapClick && (
+                  <button
+                    className="flex items-center gap-1.5 px-3 py-2 text-sm font-bold text-black hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 border border-light-gray shadow-sm hover:shadow-md"
+                    onClick={currentStep.onMymapClick}
+                    aria-label="MyMap으로 이동"
+                  >
+                    <span>My Map</span>
+                  </button>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                {/* 필터 버튼 */}
+                {currentStep.showFilterButton && currentStep.onFilterClick && (
+                  <button
+                    className="flex items-center gap-1.5 px-3 py-2 text-sm font-bold text-black hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 border border-light-gray shadow-sm hover:shadow-md"
+                    onClick={currentStep.onFilterClick}
+                    aria-label="필터 설정"
+                  >
+                    <FaFilter className="w-3.5 h-3.5" />
+                    <span>필터</span>
+                  </button>
+                )}
+              </div>
 
               {/* 뒤로 가기 버튼 */}
               {currentStep.showBackButton &&
                 currentStepKey !== steps[0]?.key && (
                   <button
-                    className="px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md"
+                    className="px-3 py-1.5 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md"
                     onClick={goBackToFirstStep}
                     aria-label="이전 화면으로 돌아가기"
                   >

@@ -1,11 +1,12 @@
 import React from 'react';
+
 import { useMapData } from '../hooks/useMapData';
-import { useMapUI } from '../hooks/useMapUI';
 import { useMapInteraction } from '../hooks/useMapInteraction';
+import { useMapUI } from '../hooks/useMapUI';
 import { PersistentBottomSheet } from './layout/PersistentBottomSheet';
 import StoreListContent from './layout/StoreListContent';
-import CategorySelectContent from './layout/steps/CategorySelectContent';
 import BrandSelectContent from './layout/steps/BrandSelectContent';
+import CategorySelectContent from './layout/steps/CategorySelectContent';
 
 export const BottomSheetContainer: React.FC = () => {
   const { stores } = useMapData();
@@ -31,12 +32,24 @@ export const BottomSheetContainer: React.FC = () => {
           : undefined,
       showFilterButton: true,
       onFilterClick: showFilter,
+      showMymapButton: true,
+      onMymapClick: () => setBottomSheetStep('mymap'),
       content: (
         <StoreListContent
           stores={stores}
           onFilterClick={showFilter}
           onStoreClick={handleStoreSelect}
         />
+      ),
+    },
+    {
+      key: 'mymap',
+      title: 'My Map',
+      showBackButton: true,
+      content: (
+        <div>
+          바텀시트 본문에 렌더링될 컴포넌트: 기본 mymap 화면을 구현하면된다
+        </div>
       ),
     },
     {
@@ -72,7 +85,7 @@ export const BottomSheetContainer: React.FC = () => {
       steps={bottomSheetSteps}
       currentStepKey={currentBottomSheetStep}
       onStepChange={step =>
-        setBottomSheetStep(step as 'list' | 'category' | 'brand')
+        setBottomSheetStep(step as 'list' | 'category' | 'brand' | 'mymap')
       }
       minHeight={80}
       maxHeight={500}

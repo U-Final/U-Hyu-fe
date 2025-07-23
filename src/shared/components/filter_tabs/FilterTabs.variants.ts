@@ -1,9 +1,5 @@
 import type { FilterTabItem } from './FilterTabs.types';
 
-
-
-
-
 /**
  * 기본 필터 탭 목록
  * - label: 사용자에게 보여질 텍스트

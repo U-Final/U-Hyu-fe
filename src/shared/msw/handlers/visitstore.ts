@@ -20,4 +20,10 @@ export const visitStoreHandler = [
 
     return createResponse(store, '바코드 킨 위치 매장 정보 조회 성공');
   }),
+
+  http.post(BARCODE_ENDPOINTS.VISIT, async ({ request }) => {
+    const { storeId } = (await request.json()) as { storeId: number };
+    console.log(`[📦 MOCK] 방문 처리됨: storeId=${storeId}`);
+    return createResponse(null, '방문 처리 완료!');
+  }),
 ];

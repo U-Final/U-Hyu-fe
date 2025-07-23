@@ -5,8 +5,8 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import { AppRoutes } from '@/routes/AppRoutes';
 
-import { useUserStore } from '@/shared/auth/useUserStore';
 import { queryClient } from '@/shared/client';
+import { useUserStore } from '@/shared/store/useUserStore';
 
 function App() {
   const initializeAuth = useUserStore(state => state.initializeAuth);

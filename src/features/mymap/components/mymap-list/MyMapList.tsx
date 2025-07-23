@@ -92,9 +92,11 @@ const MyMapList: React.FC = () => {
         <div
           key={map.myMapListId}
           className="flex items-center justify-between py-3 cursor-pointer hover:bg-light-gray-hover rounded"
-          onClick={() => navigate(`/map/${map.uuid}`)}
         >
-          <div className="flex items-center">
+          <div
+            className="flex flex-9 items-center"
+            onClick={() => navigate(`/map/${map.uuid}`)}
+          >
             <MdStars
               className={`w-5 h-5 ${MYMAP_COLOR[map.markerColor as MarkerColor] || MYMAP_COLOR.RED}`}
             />
@@ -103,7 +105,7 @@ const MyMapList: React.FC = () => {
           {/* 수정, 삭제, 공유 드롭다운 버튼 */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <BsThreeDotsVertical className="w-4 h-4 cursor-pointer" />
+              <BsThreeDotsVertical className="flex-1 w-4 h-4 cursor-pointer" />
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"

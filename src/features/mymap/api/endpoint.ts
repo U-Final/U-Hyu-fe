@@ -15,7 +15,7 @@ export const MYMAP_ENDPOINTS = {
     TOGGLE_STORE: (myMapListId: number, store_id: number) =>
       `/mymap/${myMapListId}/store/${store_id}`,
     TOGGLE_STORE_MSW: (
-      myMapListId: number | string = ':store_id',
+      myMapListId: number | string = ':myMapListId',
       store_id: number | string = ':store_id'
     ) => `/mymap/${myMapListId}/store/${store_id}`,
   },

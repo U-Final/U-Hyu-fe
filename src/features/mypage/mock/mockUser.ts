@@ -1,8 +1,8 @@
 import type { UserInfo } from '@mypage/types/types';
 
 export const mockUser: UserInfo = {
-  name: '김민수',
-  nickname: 'GOOD4',
+  userName: '김민수',
+  nickName: 'GOOD4',
   gender: 'MALE',
   age: 28,
   email: 'minsu.kim@email.com',
@@ -10,7 +10,6 @@ export const mockUser: UserInfo = {
   grade: 'VVIP',
   profileImage: '/images/profile/image.png',
 
-  
   favoriteBrands: [
     'cgv',
     'baskin',

@@ -6,8 +6,8 @@ import ActivityFavorite from '@mypage/components/ActivityFavorite';
 import ActivityTabs from '@mypage/components/ActivityTabs';
 import MyPageHeader from '@mypage/components/MyPageHeader';
 import { MYPAGE_TABS } from '@mypage/constants/tabs';
+import { mockUser } from '@mypage/mock/mockUser';
 import type { MyPageTab } from '@mypage/types';
-import { mockUser } from '@mypage/types/mockUser';
 
 const MyPageActivity = () => {
   const [activeTab, setActiveTab] = useState<MyPageTab>(MYPAGE_TABS[0]);

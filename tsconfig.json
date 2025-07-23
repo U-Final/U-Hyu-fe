@@ -19,7 +19,8 @@
     "baseUrl": ".",
     "paths": {
       // 각 도메인 별 경로 설정
-      "@home/*" : ["./src/features/home/*"],
+      "@barcode/*": ["./src/features/barcode/*"],
+      "@home/*": ["./src/features/home/*"],
       "@user/*": ["./src/features/user/*"],
       "@kakao-map/*": ["./src/features/kakao-map/*"],
       "@extra-info/*": ["./src/features/extra-info/*"],

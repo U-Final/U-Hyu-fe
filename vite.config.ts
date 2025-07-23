@@ -1,15 +1,11 @@
 /// <reference types="vitest/config" />
 // https://vite.dev/config/
-import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
-import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import { defineConfig } from "vite";
-
-
-
-
+import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
+import tailwindcss from '@tailwindcss/vite';
+import react from '@vitejs/plugin-react';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { defineConfig } from 'vite';
 
 // ES Module 환경에서 __dirname 대신 사용
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -26,6 +22,7 @@ export default defineConfig({
       '@paths': path.resolve(__dirname, 'src/routes/path.ts'),
       '@user': path.resolve(__dirname, 'src/features/user'),
       '@mypage': path.resolve(__dirname, 'src/features/mypage'),
+      '@mymap': path.resolve(__dirname, 'src/features/mymap'),
       '@kakao-map': path.resolve(__dirname, 'src/features/kakao-map'),
     },
   },

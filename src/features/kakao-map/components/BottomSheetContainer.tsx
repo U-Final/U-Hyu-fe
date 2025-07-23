@@ -1,4 +1,4 @@
-import React from 'react';
+import { MyMapList } from '@mymap/components/mymap-list';
 
 import { useMapData } from '../hooks/useMapData';
 import { useMapInteraction } from '../hooks/useMapInteraction';
@@ -21,6 +21,15 @@ export const BottomSheetContainer: React.FC = () => {
     backToList,
     setBottomSheetStep,
   } = useMapUI();
+
+  const handleCreateNewMap = () => {
+    // 추후 새 지도 추가하는 곳으로 이동 구현하기
+  };
+
+  const handleSelectMap = (id: number) => {
+    console.log(`지도 선택됨: ${id}`);
+    // 선택된 지도 상세 보기 또는 이동 처리
+  };
 
   const bottomSheetSteps = [
     {
@@ -48,7 +57,11 @@ export const BottomSheetContainer: React.FC = () => {
       showBackButton: true,
       content: (
         <div>
-          바텀시트 본문에 렌더링될 컴포넌트: 기본 mymap 화면을 구현하면된다
+          <MyMapList
+            favoriteLabel="즐겨찾기"
+            onCreateNewMap={handleCreateNewMap}
+            onSelectMap={handleSelectMap}
+          />
         </div>
       ),
     },

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { FaFilter } from 'react-icons/fa';
 
-import { DragBottomSheet } from '@/shared/components/bottom_sheet/DragBottomSheet';
+import { MapDragBottomSheet } from './MapDragBottomSheet';
 
 import { useMapData } from '../hooks/useMapData';
 import { useMapInteraction } from '../hooks/useMapInteraction';
@@ -28,7 +28,7 @@ export const BottomSheetContainer: React.FC = () => {
     switch (currentBottomSheetStep) {
       case 'list':
         return (
-          <>
+          <div onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
               <div className="flex-1">
                 <h2 className="text-lg font-bold text-gray-900">
@@ -43,7 +43,10 @@ export const BottomSheetContainer: React.FC = () => {
               </div>
               <button
                 className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 border border-gray-200 hover:border-blue-300 shadow-sm hover:shadow-md"
-                onClick={showFilter}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  showFilter();
+                }}
                 aria-label="필터 설정"
               >
                 <FaFilter className="w-3.5 h-3.5" />
@@ -55,18 +58,21 @@ export const BottomSheetContainer: React.FC = () => {
               onFilterClick={showFilter}
               onStoreClick={handleStoreSelect}
             />
-          </>
+          </div>
         );
       case 'category':
         return (
-          <>
+          <div onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
               <div className="flex-1">
                 <h2 className="text-lg font-bold text-gray-900">필터</h2>
               </div>
               <button
                 className="px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md"
-                onClick={backToList}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  backToList();
+                }}
                 aria-label="이전 화면으로 돌아가기"
               >
                 뒤로
@@ -76,18 +82,21 @@ export const BottomSheetContainer: React.FC = () => {
               selectedCategory={selectedCategory}
               onCategorySelect={selectCategoryAndNavigate}
             />
-          </>
+          </div>
         );
       case 'brand':
         return (
-          <>
+          <div onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
               <div className="flex-1">
                 <h2 className="text-lg font-bold text-gray-900">필터</h2>
               </div>
               <button
                 className="px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md"
-                onClick={backToList}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  backToList();
+                }}
                 aria-label="이전 화면으로 돌아가기"
               >
                 뒤로
@@ -101,12 +110,12 @@ export const BottomSheetContainer: React.FC = () => {
               onBrandSelect={selectBrandAndReturn}
               onBack={backToList}
             />
-          </>
+          </div>
         );
       default:
         return null;
     }
   };
 
-  return <DragBottomSheet>{getCurrentStepContent()}</DragBottomSheet>;
+  return <MapDragBottomSheet>{getCurrentStepContent()}</MapDragBottomSheet>;
 };

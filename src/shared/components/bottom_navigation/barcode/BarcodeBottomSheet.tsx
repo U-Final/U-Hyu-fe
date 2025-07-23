@@ -1,5 +1,7 @@
-import { type FC, useRef } from 'react';
+import { type FC, useEffect, useRef } from 'react';
 
+import { postNearbyStore } from '@barcode/api/nearbyStoreApi';
+import { VisitConfirmModal } from '@barcode/components/VisitConfirmModal';
 import { X } from 'lucide-react';
 
 import { PrimaryButton } from '@/shared/components';
@@ -37,6 +39,27 @@ export const BarcodeBottomSheet: FC<BarcodeBottomSheetProps> = ({
     };
     reader.readAsDataURL(file);
   };
+
+  useEffect(() => {
+    if (!isOpen) return;
+    navigator.geolocation.getCurrentPosition(async pos => {
+      const coords = {
+        lat: pos.coords.latitude,
+        lon: pos.coords.longitude,
+        radius: 50,
+      };
+
+      console.log('✅ 위치 요청 성공:', coords);
+
+      const store = await postNearbyStore(coords);
+      if (store) {
+        onClose(); // 시트 닫기
+        openModal('base', {
+          children: <VisitConfirmModal store={store} />,
+        });
+      }
+    });
+  }, [isOpen, onClose, openModal]);
 
   if (!isOpen) return null;
 

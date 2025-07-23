@@ -3,6 +3,12 @@ import React from 'react';
 import { MyMapList } from '@mymap/components/mymap-list';
 import { FaFilter } from 'react-icons/fa';
 
+import { useModalStore } from '@/shared/store';
+import {
+  useIsAuthInitialized,
+  useIsLoggedIn,
+} from '@/shared/store/useUserStore';
+
 import { useBrandsByCategoryWhen } from '../hooks/useBrandsByCategory';
 import { useMapData } from '../hooks/useMapData';
 import { useMapInteraction } from '../hooks/useMapInteraction';
@@ -15,6 +21,9 @@ import BrandSelectContent from './layout/steps/BrandSelectContent';
 import CategorySelectContent from './layout/steps/CategorySelectContent';
 
 export const BottomSheetContainer: React.FC = () => {
+  const isLoggedIn = useIsLoggedIn();
+  const isInitialized = useIsAuthInitialized();
+  const openModal = useModalStore(state => state.openModal);
   const { stores } = useMapData();
   const { handleStoreSelect } = useMapInteraction();
   const {
@@ -145,6 +154,14 @@ export const BottomSheetContainer: React.FC = () => {
         );
 
       case 'mymap':
+        if (!isInitialized) return null;
+
+        if (!isLoggedIn) {
+          // 1. 모달 띄우기
+          openModal('login');
+          // 2. fallback UI 보여주기
+          return <div />;
+        }
         return (
           <div onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
@@ -162,7 +179,7 @@ export const BottomSheetContainer: React.FC = () => {
                 뒤로
               </button>
             </div>
-            <MyMapList/>
+            <MyMapList />
           </div>
         );
 

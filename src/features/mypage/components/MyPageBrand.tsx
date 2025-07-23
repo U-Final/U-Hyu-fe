@@ -1,8 +1,8 @@
-import React from 'react';
 import { BRANDS } from '@/shared/components/brand_grid/constants';
-import { Check } from 'lucide-react';
-import type { UserInfo } from '@mypage/api/types';
 import { updateUserInfo } from '@mypage/api/mypageApi';
+import type { UserInfo } from '@mypage/api/types';
+import { Check } from 'lucide-react';
+import React from 'react';
 
 interface Props {
   user: UserInfo;

@@ -42,6 +42,7 @@ export const BarcodeBottomSheet: FC<BarcodeBottomSheetProps> = ({
 
   useEffect(() => {
     if (!isOpen) return;
+
     navigator.geolocation.getCurrentPosition(async pos => {
       const coords = {
         lat: pos.coords.latitude,
@@ -49,14 +50,17 @@ export const BarcodeBottomSheet: FC<BarcodeBottomSheetProps> = ({
         radius: 50,
       };
 
-      console.log('✅ 위치 요청 성공:', coords);
-
+      console.log(coords);
       const store = await postNearbyStore(coords);
+      console.log(store);
       if (store) {
         onClose(); // 시트 닫기
         openModal('base', {
           children: <VisitConfirmModal store={store} />,
         });
+      } else {
+        console.log('근처에 방문 가능한 제휴 매장이 없습니다.');
+        return;
       }
     });
   }, [isOpen, onClose, openModal]);

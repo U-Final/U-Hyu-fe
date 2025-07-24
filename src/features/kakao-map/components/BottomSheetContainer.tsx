@@ -66,7 +66,7 @@ export const BottomSheetContainer: React.FC = () => {
                 {selectedBrand && (
                   <div className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 bg-blue-50 border border-blue-200 rounded-md max-w-fit">
                     <div className="flex items-center gap-1 text-xs text-blue-700">
-                      <span className="font-medium truncate max-w-16">
+                      <span className="font-medium truncate max-w-12">
                         {getCategoryDisplayName(selectedCategory)}
                       </span>
                       <svg
@@ -109,7 +109,7 @@ export const BottomSheetContainer: React.FC = () => {
                   </div>
                 )}
                 {/* 기존 필터 표시 (브랜드가 없을 때) */}
-                {!selectedBrand && (selectedCategory || selectedBrand) && (
+                {!selectedBrand && selectedCategory && (
                   <p className="text-sm text-gray-500 mt-1">
                     {selectedCategory}
                     {selectedBrand ? ' > ' + selectedBrand : ''}

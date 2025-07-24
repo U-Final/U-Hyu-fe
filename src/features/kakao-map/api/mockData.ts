@@ -248,57 +248,52 @@ export const createMockToggleFavoriteResponse = (storeId: number) => {
   };
 };
 
-// 목데이터: 카테고리별 브랜드 목록 (실제 서비스 데이터 기반)
+// 목데이터: 카테고리별 브랜드 목록 (매장이 있는 카테고리만)
 export const MOCK_CATEGORY_BRANDS: Record<number, CategoryBrand[]> = {
-  1: [ // APP/기기
-    { brandId: 1, brandName: 'V컬러링 멤버십 프로모션' },
-    { brandId: 2, brandName: '원스토어' },
-    { brandId: 3, brandName: '지니뮤직' },
-  ],
   2: [ // 영화/미디어
-    { brandId: 4, brandName: 'CGV' },
-    { brandId: 5, brandName: '롯데시네마' },
-    { brandId: 6, brandName: '메가박스' },
+    { brandId: 1, brandName: 'CGV' },
+    { brandId: 2, brandName: '롯데시네마' },
+    { brandId: 3, brandName: '메가박스' },
   ],
   3: [ // 워터파크/아쿠아리움
-    { brandId: 7, brandName: '아쿠아필드' },
-    { brandId: 8, brandName: '스파랜드' },
-    { brandId: 9, brandName: '클럽디 오아시스' },
+    { brandId: 4, brandName: '아쿠아필드' },
+    { brandId: 5, brandName: '스파랜드' },
+    { brandId: 6, brandName: '클럽디 오아시스' },
   ],
   4: [ // 액티비티
-    { brandId: 10, brandName: '스카이라인 루지' },
-    { brandId: 11, brandName: '클룩' },
-    { brandId: 12, brandName: '부산 엑스 더 스카이' },
+    { brandId: 7, brandName: '스카이라인 루지' },
+    { brandId: 8, brandName: '클룩' },
+    { brandId: 9, brandName: '부산 엑스 더 스카이' },
   ],
   5: [ // 뷰티(피부과, 클리닉)
-    { brandId: 13, brandName: '오가나셀 피부과 의원 청담점' },
-    { brandId: 14, brandName: '데이원클리닉' },
-    { brandId: 15, brandName: '포쉬네일' },
+    { brandId: 10, brandName: '오가나셀 피부과 의원 청담점' },
+    { brandId: 11, brandName: '데이원클리닉' },
+    { brandId: 12, brandName: '포쉬네일' },
   ],
   6: [ // 건강(제약, 영양제 등)
-    { brandId: 16, brandName: '동아제약 디몰' },
-    { brandId: 17, brandName: 'LG생활건강샵 U+패밀리샵' },
-    { brandId: 18, brandName: '필리' },
+    { brandId: 13, brandName: '동아제약 디몰' },
+    { brandId: 14, brandName: 'LG생활건강샵 U+패밀리샵' },
+    { brandId: 15, brandName: '필리' },
   ],
   7: [ // 생활/편의
-    { brandId: 19, brandName: 'GS25' },
-    { brandId: 20, brandName: '펫생각' },
-    { brandId: 21, brandName: '셸로' },
+    { brandId: 16, brandName: 'GS25' },
+    { brandId: 17, brandName: '펫생각' },
+    { brandId: 18, brandName: '셸로' },
   ],
   8: [ // 쇼핑
-    { brandId: 22, brandName: 'GS THE FRESH' },
-    { brandId: 23, brandName: 'VYVY' },
-    { brandId: 24, brandName: '롯데백화점몰' },
+    { brandId: 19, brandName: 'GS THE FRESH' },
+    { brandId: 20, brandName: 'VYVY' },
+    { brandId: 21, brandName: '롯데백화점몰' },
   ],
   9: [ // 음식점
-    { brandId: 25, brandName: 'VIPS' },
-    { brandId: 26, brandName: '더플레이스' },
-    { brandId: 27, brandName: '제일제면소' },
+    { brandId: 22, brandName: 'VIPS' },
+    { brandId: 23, brandName: '더플레이스' },
+    { brandId: 24, brandName: '제일제면소' },
   ],
   10: [ // 베이커리/디저트
-    { brandId: 28, brandName: '파리바게트' },
-    { brandId: 29, brandName: '뚜레쥬르' },
-    { brandId: 30, brandName: '베스킨라빈스' },
+    { brandId: 25, brandName: '파리바게트' },
+    { brandId: 26, brandName: '뚜레쥬르' },
+    { brandId: 27, brandName: '베스킨라빈스' },
   ],
   11: [ // 테마파크
     { brandId: 31, brandName: '뽀로로파크' },

@@ -8,8 +8,7 @@ export const CATEGORY_ID_MAPPING: Record<StoreCategory, number> = {
   // 메인 카테고리
   all: 0, // 전체 카테고리 (모든 브랜드)
   
-  // 실제 서비스 카테고리와 매핑
-  electronics: 1, // APP/기기 (V컬러링, 원스토어, 지니뮤직 등)
+  // 실제 서비스 카테고리와 매핑 (매장이 있는 카테고리만)
   culture: 2, // 영화/미디어 (CGV, 롯데시네마, 메가박스 등)
   activity: 4, // 액티비티 (스카이라인 루지, 클룩, 부산 엑스 더 스카이 등)
   beauty: 5, // 뷰티(피부과, 클리닉) (오가나셀 피부과, 데이원클리닉 등)

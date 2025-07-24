@@ -4,6 +4,7 @@ import { FaFilter } from 'react-icons/fa';
 
 import { useBrandsByCategoryWhen } from '../hooks/useBrandsByCategory';
 import type { StoreCategory } from '../types/category';
+import { CATEGORY_CONFIGS } from '../types/category';
 import { useMapData } from '../hooks/useMapData';
 import { useMapInteraction } from '../hooks/useMapInteraction';
 import { useMapUI } from '../hooks/useMapUI';
@@ -32,6 +33,13 @@ export const BottomSheetContainer: React.FC = () => {
     currentBottomSheetStep === 'brand' && !!selectedCategory
   );
 
+  // 카테고리 키를 한국어 이름으로 변환
+  const getCategoryDisplayName = (categoryKey: string): string => {
+    if (!categoryKey || categoryKey === '') return '';
+    const categoryConfig = CATEGORY_CONFIGS[categoryKey as StoreCategory];
+    return categoryConfig?.name || categoryKey;
+  };
+
   const getCurrentStepContent = () => {
     switch (currentBottomSheetStep) {
       case 'list':
@@ -45,7 +53,7 @@ export const BottomSheetContainer: React.FC = () => {
                 {selectedBrand && (
                   <div className="inline-flex items-center gap-2 mt-1 px-2 py-1 bg-blue-50 border border-blue-200 rounded-lg">
                     <div className="flex items-center gap-1 text-sm text-blue-700">
-                      <span className="font-medium">{selectedCategory}</span>
+                      <span className="font-medium">{getCategoryDisplayName(selectedCategory)}</span>
                       <svg className="w-3 h-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
@@ -139,7 +147,7 @@ export const BottomSheetContainer: React.FC = () => {
             </div>
             <BrandSelectContent
               categoryKey={selectedCategory}
-              categoryDisplayName={selectedCategory}
+              categoryDisplayName={getCategoryDisplayName(selectedCategory)}
               brands={brands}
               isLoading={brandsLoading}
               selectedBrand={selectedBrand}

@@ -3,11 +3,11 @@ import React from 'react';
 import { FaFilter } from 'react-icons/fa';
 
 import { useBrandsByCategoryWhen } from '../hooks/useBrandsByCategory';
-import type { StoreCategory } from '../types/category';
-import { CATEGORY_CONFIGS } from '../types/category';
 import { useMapData } from '../hooks/useMapData';
 import { useMapInteraction } from '../hooks/useMapInteraction';
 import { useMapUI } from '../hooks/useMapUI';
+import type { StoreCategory } from '../types/category';
+import { CATEGORY_CONFIGS } from '../types/category';
 import { MapDragBottomSheet } from './MapDragBottomSheet';
 import StoreListContent from './layout/StoreListContent';
 import BrandSelectContent from './layout/steps/BrandSelectContent';
@@ -53,14 +53,26 @@ export const BottomSheetContainer: React.FC = () => {
                 {selectedBrand && (
                   <div className="inline-flex items-center gap-2 mt-1 px-2 py-1 bg-blue-50 border border-blue-200 rounded-lg">
                     <div className="flex items-center gap-1 text-sm text-blue-700">
-                      <span className="font-medium">{getCategoryDisplayName(selectedCategory)}</span>
-                      <svg className="w-3 h-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      <span className="font-medium">
+                        {getCategoryDisplayName(selectedCategory)}
+                      </span>
+                      <svg
+                        className="w-3 h-3 text-blue-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
                       </svg>
                       <span>{selectedBrand}</span>
                     </div>
                     <button
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         clearFilters();
                       }}
@@ -93,7 +105,7 @@ export const BottomSheetContainer: React.FC = () => {
                 aria-label="필터 설정"
               >
                 <FaFilter className="w-3.5 h-3.5" />
-                <span>필터</span>
+                <span>브랜드 필터</span>
               </button>
             </div>
             <StoreListContent

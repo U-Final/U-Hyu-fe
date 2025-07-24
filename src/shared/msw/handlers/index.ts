@@ -1,9 +1,13 @@
 import { benefitHandlers } from './benefit';
 import { homeHandlers } from './home';
 import { mapHandlers } from './map';
-import { userHandlers } from './user';
+import { mymapHandlers } from './mymap';
 import { mypageHandlers } from './mypage';
 import { adminHandlers } from './admin';
+
+import { recommendHandlers } from './recommendation';
+import { userHandlers } from './user';
+import { visitStoreHandler } from './visitstore';
 
 export const handlers = [
   ...userHandlers,
@@ -12,4 +16,7 @@ export const handlers = [
   ...benefitHandlers,
   ...mypageHandlers,
   ...adminHandlers,
+  ...mymapHandlers,
+  ...recommendHandlers,
+  ...visitStoreHandler,
 ];

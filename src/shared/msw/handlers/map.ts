@@ -3,8 +3,10 @@ import {
   createMockStoreDetailResponse,
   createMockStoreListResponse,
   createMockToggleFavoriteResponse,
+  createMockCategoryBrandsResponse,
 } from '@kakao-map/api/mockData';
 import type {
+  CategoryBrandsResponse,
   StoreDetailResponse,
   StoreListResponse,
   ToggleFavoriteResponseType,
@@ -198,6 +200,38 @@ export const mapHandlers = [
 
     const response: ToggleFavoriteResponseType =
       createMockToggleFavoriteResponse(storeId);
+    return HttpResponse.json(response, { status: 200 });
+  }),
+
+  /**
+   * 카테고리별 브랜드 목록 조회 API 핸들러
+   * GET /category/:categoryId
+   */
+  http.get('*/category/:categoryId', ({ params, request }) => {
+    console.log('🏷️ 카테고리 브랜드 MSW 핸들러 호출:', request.url);
+    const categoryId = Number(params.categoryId);
+    console.log('📂 카테고리 ID:', categoryId);
+
+    // categoryId 파라미터 유효성 검증
+    if (isNaN(categoryId) || categoryId <= 0) {
+      return HttpResponse.json(
+        {
+          message:
+            '잘못된 카테고리 ID입니다. categoryId는 유효한 양의 정수여야 합니다.',
+          statusCode: 400,
+        },
+        { status: 400 }
+      );
+    }
+
+    const response: CategoryBrandsResponse =
+      createMockCategoryBrandsResponse(categoryId);
+    
+    // 404 처리 (해당 카테고리에 브랜드가 없는 경우)
+    if (response.statusCode === 404) {
+      return HttpResponse.json(response, { status: 404 });
+    }
+
     return HttpResponse.json(response, { status: 200 });
   }),
 ];

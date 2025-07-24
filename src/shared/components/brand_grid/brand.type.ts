@@ -10,8 +10,8 @@ export interface Brand {
 }
 
 export interface BrandGridProps {
-  selectedBrands: number[];
-  onBrandToggle?: (brandId: number) => void;
+  selectedBrands: number[] | string[];
+  onBrandToggle?: (brandId: number | string) => void;
   title: string;
   disabled?: boolean;
 }

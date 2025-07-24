@@ -15,7 +15,7 @@ export interface UserInfo {
   createdAt: string;
   updatedAt: string;
   userName: string;
-  nickname: string;
+  nickName: string;
   kakaoId: number;
   email: string;
   age: string;

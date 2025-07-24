@@ -13,14 +13,15 @@ import {
 const BrandGridWrapper = (args: BrandGridProps) => {
   const [selectedBrands, setSelectedBrands] = useState<number[]>([]);
 
-  const handleBrandToggle = (brandId: number) => {
+  const handleBrandToggle = (brandId: number | string) => {
+    const numericBrandId = typeof brandId === 'string' ? parseInt(brandId) : brandId;
     setSelectedBrands(prev => {
-      const newSelection = prev.includes(brandId)
-        ? prev.filter(id => id !== brandId)
-        : [...prev, brandId];
+      const newSelection = prev.includes(numericBrandId)
+        ? prev.filter(id => id !== numericBrandId)
+        : [...prev, numericBrandId];
 
       // 콘솔에서 확인 가능
-      console.log('onBrandToggle:', brandId, newSelection);
+      console.log('onBrandToggle:', numericBrandId, newSelection);
       return newSelection;
     });
   };

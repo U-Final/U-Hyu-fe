@@ -8,7 +8,7 @@ export const mockUser: UserInfo = {
   nickName: 'GOOD4',
   kakaoId: 12345,
   email: 'minsu.kim@email.com',
-  age: '28',
+  age: 28,
   gender: 'MALE',
   role: 'USER',
   status: 'ACTIVE',

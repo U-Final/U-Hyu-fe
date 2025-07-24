@@ -80,7 +80,7 @@ export const MyMapForm = ({
       {/* 색상 선택 */}
       <div>
         <p className="text-body1 text-black font-semibold mb-2">색상 선택</p>
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center px-2">
           {COLOR_OPTIONS.map(c => (
             <button
               key={c}

@@ -7,18 +7,16 @@ import { MdIosShare } from 'react-icons/md';
 import { PiTrashBold } from 'react-icons/pi';
 import { RiPencilFill } from 'react-icons/ri';
 
-
-
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/components/shadcn/ui/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/shared/components/shadcn/ui/dropdown-menu';
 import { useModalStore } from '@/shared/store';
 
-
-
 import { MymapDeleteModal } from '../MymapDeleteModal';
-
-
-
-
+import { ShareModal } from '../ShareModal';
 
 interface MapListProps {
   onCreateNewMap: () => void;
@@ -28,6 +26,7 @@ interface MapListProps {
 const MyMapList: React.FC<MapListProps> = ({ onCreateNewMap, onSelectMap }) => {
   const { data, isLoading, isError } = useMyMapListQuery();
   const openModal = useModalStore(state => state.openModal);
+  const uuid = 'd9f8a4b2-7c35-489f-b74e-7f91f1e6f4a9';
 
   if (isLoading) return <div>로딩 중...</div>;
   if (isError || !data) return <div>에러 발생</div>;
@@ -36,6 +35,14 @@ const MyMapList: React.FC<MapListProps> = ({ onCreateNewMap, onSelectMap }) => {
     openModal('base', {
       title: 'My Map 삭제',
       children: <MymapDeleteModal mapId={mapId} />,
+    });
+  };
+
+  // 추후 uuid를 받아서 보내는 기능
+  const handleShare = (uuid: string) => {
+    openModal('base', {
+      title: 'My Map 공유',
+      children: <ShareModal uuid={uuid} />,
     });
   };
 
@@ -82,7 +89,10 @@ const MyMapList: React.FC<MapListProps> = ({ onCreateNewMap, onSelectMap }) => {
               </DropdownMenuItem>
               <hr />
               <DropdownMenuItem
-                onClick={() => console.log('공유', map.myMapListId)}
+                onClick={e => {
+                  e.stopPropagation();
+                  handleShare(uuid);
+                }}
                 className="flex justify-between font-medium"
               >
                 공유

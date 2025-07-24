@@ -23,7 +23,7 @@ export const RecommendedStoreList = () => {
 
   if (isLoading) return <p>불러오는 중...</p>;
   if (error) return <p>{error.message}</p>;
-  if (isLoggedIn) return null;
+  if (!isLoggedIn) return null;
 
   return (
     <div className="">

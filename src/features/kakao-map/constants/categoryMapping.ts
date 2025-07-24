@@ -7,7 +7,7 @@ import type { StoreCategory } from '../types/category';
 export const CATEGORY_ID_MAPPING: Record<StoreCategory, number> = {
   // 메인 카테고리
   all: 0, // 전체 카테고리 (모든 브랜드)
-  
+
   // 실제 서비스 카테고리와 매핑 (매장이 있는 카테고리만)
   culture: 2, // 영화/미디어 (CGV, 롯데시네마, 메가박스 등)
   activity: 4, // 액티비티 (스카이라인 루지, 클룩, 부산 엑스 더 스카이 등)
@@ -21,14 +21,14 @@ export const CATEGORY_ID_MAPPING: Record<StoreCategory, number> = {
   food: 9, // 음식점 (동일 카테고리)
   bakery: 10, // 베이커리/디저트 (파리바게트, 뚜레쥬르, 베스킨라빈스 등)
   cafe: 10, // 베이커리/디저트 (동일 카테고리)
-  
+
   // 추가 카테고리들 (필요시 확장)
   // 워터파크/아쿠아리움 (id: 3)
-  // 테마파크 (id: 11) 
+  // 테마파크 (id: 11)
   // 공연/전시 (id: 12)
   // 교육 (id: 13)
   // 여행/교통 (id: 14)
-  
+
   // 추가 매핑
   default: 0, // 기타 -> 전체 카테고리로 처리
 };
@@ -43,15 +43,28 @@ export const getCategoryId = (categoryKey: StoreCategory): number => {
 };
 
 /**
+ * 백엔드 카테고리 ID를 기본 프론트엔드 카테고리 키로 매핑하는 역방향 매핑 테이블
+ * 동일한 ID를 가진 여러 키 중에서 가장 대표적인 키를 선택
+ */
+const REVERSE_CATEGORY_MAPPING: Record<number, StoreCategory> = {
+  0: 'all',
+  2: 'culture',
+  4: 'activity',
+  5: 'beauty',
+  6: 'pharmacy',
+  7: 'lifestyle', // convenience와 공유하지만 lifestyle을 기본값으로 선택
+  8: 'shopping',
+  9: 'restaurant', // fastfood, food와 공유하지만 restaurant을 기본값으로 선택
+  10: 'bakery', // cafe와 공유하지만 bakery를 기본값으로 선택
+};
+
+/**
  * 백엔드 카테고리 ID를 프론트엔드 카테고리 키로 역변환
  * @param categoryId - 백엔드 카테고리 ID
  * @returns 프론트엔드 카테고리 키 (기본값: 'all')
  */
 export const getCategoryKey = (categoryId: number): StoreCategory => {
-  const entry = Object.entries(CATEGORY_ID_MAPPING).find(
-    ([, id]) => id === categoryId
-  );
-  return (entry?.[0] as StoreCategory) ?? 'all';
+  return REVERSE_CATEGORY_MAPPING[categoryId] ?? 'all';
 };
 
 /**

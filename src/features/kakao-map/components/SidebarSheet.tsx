@@ -10,7 +10,7 @@ import {
 
 const SidebarSheet = () => {
   return (
-    <Sheet>
+    <Sheet modal={false}>
       <SheetTrigger asChild>
         <button className="p-2">
           <Menu className="w-6 h-6" />

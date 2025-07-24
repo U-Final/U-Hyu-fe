@@ -12,6 +12,15 @@ export const useMapUI = () => {
   // 복합 액션들: 여러 UI 상태를 조합한 복잡한 동작들
 
   /**
+   * mymap 화면으로 이동
+   * 바텀시트를 mymap으로 변경하고 확장
+   */
+  const showMymap = useCallback(() => {
+    actions.setBottomSheetStep('mymap');
+    actions.setBottomSheetExpanded(true);
+  }, [actions]);
+
+  /**
    * 필터 선택 화면으로 이동
    * 바텀시트를 카테고리 선택 단계로 변경하고 확장
    */
@@ -22,11 +31,13 @@ export const useMapUI = () => {
 
   /**
    * 카테고리 선택 후 브랜드 선택 단계로 이동
+   * 새로운 카테고리 선택 시 이전 브랜드 선택 초기화
    * @param category - 선택된 카테고리
    */
   const selectCategoryAndNavigate = useCallback(
     (category: string) => {
       actions.setSelectedCategory(category);
+      actions.setSelectedBrand(''); // 이전 브랜드 선택 초기화
       actions.setBottomSheetStep('brand');
     },
     [actions]
@@ -49,6 +60,14 @@ export const useMapUI = () => {
    */
   const backToList = useCallback(() => {
     actions.setBottomSheetStep('list');
+  }, [actions]);
+
+  /**
+   * 필터 해제 (카테고리와 브랜드 선택 초기화)
+   */
+  const clearFilters = useCallback(() => {
+    actions.setSelectedCategory('');
+    actions.setSelectedBrand('');
   }, [actions]);
 
   return {
@@ -84,9 +103,11 @@ export const useMapUI = () => {
     resetAllUI: actions.resetAllUI,
 
     // 복합 액션들 (이 훅에서 정의한 것)
+    showMymap,
     showFilter,
     selectCategoryAndNavigate,
     selectBrandAndReturn,
     backToList,
+    clearFilters,
   };
 };

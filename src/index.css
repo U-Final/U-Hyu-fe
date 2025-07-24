@@ -274,7 +274,10 @@
   --text-tertiary: #d9d9d9;
   --text-secondary: #71717a;
   --text-gray: #b0b8c1;
-  --text-red: #dc2625;
+  --text-red: #ff3b30;
+  --text-orange: #ff9500;
+  --text-yellow: #ffcc00;
+  --text-green: #34c759;
   --text-white: #ffffff;
   --text-success: #2db745;
   --text-warning: #feb93f;
@@ -301,6 +304,15 @@
   }
   .text-red {
     color: var(--text-red);
+  }
+  .text-orange {
+    color: var(--text-orange);
+  }
+  .text-yellow {
+    color: var(--text-yellow);
+  }
+  .text-green {
+    color: var(--text-green);
   }
   .text-white {
     color: var(--text-white);

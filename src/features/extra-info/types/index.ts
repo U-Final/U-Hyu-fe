@@ -5,8 +5,8 @@ export interface MembershipGrade {
 
 export interface SignupData {
   membershipGrade: string;
-  recentBrands: string[];
-  selectedBrands: string[];
+  recentBrands: number[];
+  selectedBrands: number[];
   email: string;
   emailVerified: boolean;
 }
@@ -30,7 +30,7 @@ export interface StepContentProps {
   data: SignupData;
   onUpdateData: (updates: Partial<SignupData>) => void;
   onToggleBrand: (
-    brandId: string,
+    brandId: number,
     field: 'recentBrands' | 'selectedBrands'
   ) => void;
   disabled?: boolean;
@@ -48,7 +48,7 @@ export interface CurrentStepProps {
   data: SignupData;
   onUpdateData: (updates: Partial<SignupData>) => void;
   onToggleBrand: (
-    brandId: string,
+    brandId: number,
     field: 'recentBrands' | 'selectedBrands'
   ) => void;
   onReset: () => void;
@@ -93,12 +93,12 @@ export interface UseSignupFlowReturn {
     updates: Partial<SignupData>
   ) => void;
   toggleBrand: (
-    brandId: string,
+    brandId: number,
     field: 'recentBrands' | 'selectedBrands'
   ) => void;
   toggleCompletedStepBrand: (
     stepNumber: number,
-    brandId: string,
+    brandId: number,
     field: 'recentBrands' | 'selectedBrands'
   ) => void;
   goToNextStep: () => Promise<void>;

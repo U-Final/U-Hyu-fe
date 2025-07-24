@@ -15,10 +15,10 @@ export interface UserInfo {
   createdAt: string;
   updatedAt: string;
   userName: string;
-  nickname: string;
+  nickName: string;
   kakaoId: number;
   email: string;
-  age: string;
+  age: number;
   gender: Gender;
   role: UserRole;
   status: UserStatus;
@@ -45,7 +45,7 @@ export interface UserInfoResponse {
     userName: string;
     nickName: string;
     email: string;
-    age: string;
+    age: number;
     gender: Gender;
     grade: UserGrade;
     updatedAt: string;

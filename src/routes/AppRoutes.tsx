@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { BenefitPage, ExtraInfo, HomePage, MapPage } from '@/pages';
+import SidebarSheet from '@kakao-map/components/SidebarSheet';
 import { PATH } from '@paths';
 import {
   BrowserRouter,
@@ -47,10 +48,12 @@ const Layout = () => {
   // 모바일에서는 프레임 없이 직접 렌더링
   const content = (
     <div
+      id="main-content"
       className={`w-full h-full flex flex-col relative ${isMap ? 'items-stretch justify-start' : ''}`}
       style={isMap ? { minWidth: 0 } : undefined}
     >
       <BaseLayout isMap={isMap}>
+        <SidebarSheet />
         <Outlet />
       </BaseLayout>
       {showBottomNav && <BottomNavigation />}

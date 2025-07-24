@@ -7,12 +7,18 @@ import { MdIosShare } from 'react-icons/md';
 import { PiTrashBold } from 'react-icons/pi';
 import { RiPencilFill } from 'react-icons/ri';
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/shared/components/shadcn/ui/dropdown-menu';
+
+
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/components/shadcn/ui/dropdown-menu';
+import { useModalStore } from '@/shared/store';
+
+
+
+import { MymapDeleteModal } from '../MymapDeleteModal';
+
+
+
+
 
 interface MapListProps {
   onCreateNewMap: () => void;
@@ -21,9 +27,17 @@ interface MapListProps {
 
 const MyMapList: React.FC<MapListProps> = ({ onCreateNewMap, onSelectMap }) => {
   const { data, isLoading, isError } = useMyMapListQuery();
+  const openModal = useModalStore(state => state.openModal);
 
   if (isLoading) return <div>로딩 중...</div>;
   if (isError || !data) return <div>에러 발생</div>;
+
+  const handleDelete = (mapId: number) => {
+    openModal('base', {
+      title: 'My Map 삭제',
+      children: <MymapDeleteModal mapId={mapId} />,
+    });
+  };
 
   return (
     <div className="flex flex-col w-full max-w-md mx-auto p-4 divide-y divide-gray-200">
@@ -76,7 +90,10 @@ const MyMapList: React.FC<MapListProps> = ({ onCreateNewMap, onSelectMap }) => {
               </DropdownMenuItem>
               <hr />
               <DropdownMenuItem
-                onClick={() => console.log('삭제', map.myMapListId)}
+                onClick={e => {
+                  e.stopPropagation();
+                  handleDelete(map.myMapListId);
+                }}
                 className="flex justify-between font-medium"
               >
                 삭제

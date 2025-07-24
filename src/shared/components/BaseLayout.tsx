@@ -9,7 +9,7 @@ const BaseLayout = ({ children, isMap = false }: BaseLayoutProps) => {
       className={
         isMap
           ? 'flex-1 bg-white scrollbar-hidden overflow-hidden w-full h-full min-w-0'
-          : 'flex-1 bg-white scrollbar-hidden overflow-hidden px-4 pt-[60px] pb-[40px] w-full h-full overflow-y-auto'
+          : 'flex-1 bg-white scrollbar-hidden overflow-hidden px-4 pt-[60px] pb-[50px] w-full h-full overflow-y-auto'
       }
     >
       {children}

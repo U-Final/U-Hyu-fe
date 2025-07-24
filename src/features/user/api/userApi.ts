@@ -3,12 +3,12 @@ import { client } from '@/shared/client';
 import { USER_ENDPOINTS } from './endpoints';
 import type {
   CheckEmailResponse,
-  GetUserInfoResponse,
   LogoutResponse,
   UpdateUserInfoRequest,
   UpdateUserInfoResponse,
   UserExtraInfoRequest,
   UserExtraInfoResponse,
+  GetUserInfoResponse
 } from './types';
 
 export const userApi = {
@@ -25,11 +25,9 @@ export const userApi = {
 
   // 이메일 중복 확인
   checkEmail: async (email: string): Promise<CheckEmailResponse> => {
-    const response = await client.get<CheckEmailResponse>(
+    const response = await client.post<CheckEmailResponse>(
       USER_ENDPOINTS.CHECK_EMAIL,
-      {
-        params: { email },
-      }
+      { email }
     );
     return response.data;
   },

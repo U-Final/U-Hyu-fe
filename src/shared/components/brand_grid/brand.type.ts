@@ -1,5 +1,5 @@
 export interface Brand {
-  id: string;
+  id: number;
   name: string;
   color: string;
   bgColor: string;
@@ -10,8 +10,8 @@ export interface Brand {
 }
 
 export interface BrandGridProps {
-  selectedBrands: string[];
-  onBrandToggle?: (brandId: string) => void;
+  selectedBrands: number[];
+  onBrandToggle?: (brandId: number) => void;
   title: string;
   disabled?: boolean;
 }

@@ -1,3 +1,7 @@
+import React, { useState } from 'react';
+
+import { useCheckEmailMutation } from '@user/hooks/useUserMutation';
+
 import {
   BrandGrid,
   ButtonBase,
@@ -5,7 +9,7 @@ import {
 } from '@/shared/components';
 import { Input } from '@/shared/components/shadcn/ui/input';
 import { Label } from '@/shared/components/shadcn/ui/label';
-import React, { useState } from 'react';
+
 import { EMAIL_REGEX, MEMBERSHIP_GRADES } from '../constants';
 import { type StepContentProps } from '../types';
 
@@ -17,10 +21,29 @@ export const StepContent: React.FC<StepContentProps> = ({
   disabled = false,
 }) => {
   const [isMembershipSheetOpen, setIsMembershipSheetOpen] = useState(false);
+  const [emailError, setEmailError] = useState<string>('');
+  const checkEmailMutation = useCheckEmailMutation();
 
-  const handleEmailVerification = () => {
-    // 테스트용: 중복확인 완료 처리
-    onUpdateData({ emailVerified: true });
+  const getButtonText = () => {
+    if (checkEmailMutation.isPending) return '확인중...';
+    if (data.emailVerified) return '✓ 확인완료';
+    return '중복확인';
+  };
+
+  const handleEmailVerification = async () => {
+    try {
+      setEmailError(''); // 에러 메시지 초기화
+      const result = await checkEmailMutation.mutateAsync(data.email);
+      if (result.data?.isAvailable) {
+        onUpdateData({ emailVerified: true });
+      } else {
+        // 이미 사용중인 이메일인 경우
+        setEmailError('이미 사용중인 이메일입니다.');
+      }
+    } catch (error) {
+      console.error('이메일 중복확인 오류:', error);
+      setEmailError('이메일 중복확인 중 오류가 발생했습니다.');
+    }
   };
 
   const handleMembershipSelect = (value: string) => {
@@ -58,11 +81,13 @@ export const StepContent: React.FC<StepContentProps> = ({
                 onChange={
                   disabled
                     ? undefined
-                    : e =>
+                    : e => {
+                        setEmailError(''); // 이메일 변경 시 에러 메시지 초기화
                         onUpdateData({
                           email: e.target.value,
                           emailVerified: false,
-                        })
+                        });
+                      }
                 }
                 className="w-full h-12 bg-gray-50 border border-gray-300 rounded-md"
                 placeholder="이메일 주소를 입력해주세요"
@@ -70,7 +95,10 @@ export const StepContent: React.FC<StepContentProps> = ({
               />
               <ButtonBase
                 disabled={
-                  disabled || !data.email || !EMAIL_REGEX.test(data.email)
+                  disabled ||
+                  !data.email ||
+                  !EMAIL_REGEX.test(data.email) ||
+                  checkEmailMutation.isPending
                 }
                 onClick={handleEmailVerification}
                 className={`px-4 h-12 font-medium transition-all duration-200 ${
@@ -78,12 +106,15 @@ export const StepContent: React.FC<StepContentProps> = ({
                     ? 'bg-gray-300 text-gray-500 border-gray-300 hover:bg-gray-300 shadow-sm'
                     : 'bg-blue-500 text-white border-blue-500 hover:bg-blue-600 shadow-sm hover:shadow-md'
                 } ${
-                  disabled || !data.email || !EMAIL_REGEX.test(data.email)
+                  disabled ||
+                  !data.email ||
+                  !EMAIL_REGEX.test(data.email) ||
+                  checkEmailMutation.isPending
                     ? 'bg-gray-300 text-gray-500 border-gray-300 cursor-not-allowed hover:bg-gray-300 hover:shadow-none'
                     : ''
                 }`}
               >
-                {data.emailVerified ? '✓ 확인완료' : '중복확인'}
+                {getButtonText()}
               </ButtonBase>
             </div>
             <div className="min-h-[20px] mt-1 text-xs text-red-500 transition-all">
@@ -91,6 +122,8 @@ export const StepContent: React.FC<StepContentProps> = ({
               !EMAIL_REGEX.test(data.email) &&
               !disabled ? (
                 <span>올바른 이메일 형식을 입력해주세요</span>
+              ) : emailError ? (
+                <span>{emailError}</span>
               ) : (
                 ''
               )}

@@ -1,21 +1,38 @@
 import { useState } from 'react';
 
-import { CheckBoxList, Pagination } from '@benefit/components';
+import {
+  BrandDetailModal,
+  CheckBoxList,
+  Pagination,
+} from '@benefit/components';
 import { useBenefitQueryParams } from '@benefit/hooks/useBenefitQueryParams';
 import { useGetBrandListQuery } from '@benefit/hooks/useGetBrandListQuery';
 
 import { BrandCard, FilterTabs, SearchInput } from '@/shared/components';
 import { BENEFIT_FILTER_TABS } from '@/shared/components/filter_tabs/FilterTabs.variants';
+import { useModalStore } from '@/shared/store';
 
 export const BenefitList = () => {
   const { params, setParam, setParams } = useBenefitQueryParams();
   const [searchTerm, setSearchTerm] = useState(params.brand_name ?? '');
+
+  const openModal = useModalStore(state => state.openModal);
 
   const { data, isLoading } = useGetBrandListQuery(params);
 
   const handlePageChange = (page: number) => {
     setParam('page', page.toString());
   };
+
+  const handleBrandClick = async (brandId: number) => {
+    if (!brandId) return;
+
+    openModal('base', {
+      title: '브랜드 상세정보',
+      children: <BrandDetailModal brandId={brandId} />,
+    });
+  };
+
   return (
     <div>
       {/* 필터링 */}
@@ -50,7 +67,10 @@ export const BenefitList = () => {
           <p>로딩 중...</p>
         ) : (
           data?.brandList.map(brand => (
-            <div key={brand.brandId}>
+            <div
+              key={brand.brandId}
+              onClick={() => handleBrandClick(brand.brandId)}
+            >
               <BrandCard logoUrl={brand.logoImage}>
                 <div className="gap-2">
                   <p className="text-body2 font-bold text-black">

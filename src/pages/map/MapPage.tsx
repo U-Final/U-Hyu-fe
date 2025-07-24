@@ -17,8 +17,8 @@ function MapPage() {
 
   return (
     <MapUIProvider>
-      <div className="h-screen flex flex-col">
-        <div className="flex-1 relative">
+      <div className="h-screen relative">
+        <div className="absolute inset-0">
           <MapContainer />
           <MapControlsContainer />
           <LocationControlContainer />

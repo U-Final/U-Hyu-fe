@@ -43,7 +43,7 @@ const MapTopControls: FC<MapTopControlsProps> = ({
   return (
     <div className="absolute top-4 left-4 right-4 z-10 space-y-3">
       {/* 상단 라인: 검색바 + 지역 필터 */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 ml-12">
         {/* 검색바 - 대부분 공간 사용 */}
         <div className="flex-1">
           <SearchInput

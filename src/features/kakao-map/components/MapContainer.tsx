@@ -6,7 +6,7 @@ import MapWithMarkers from './marker/MapWithMarkers';
 
 export const MapContainer: React.FC = () => {
   const { stores, mapCenter, userLocation, loading } = useMapData();
-  const { handleMapCenterChange, handleMarkerClick } = useMapInteraction();
+  const { handleMapCenterChange, handleMarkerClick, selectedMarkerId } = useMapInteraction();
 
   return (
     <MapWithMarkers
@@ -16,6 +16,7 @@ export const MapContainer: React.FC = () => {
       onStoreClick={handleMarkerClick}
       onCenterChange={handleMapCenterChange}
       isSearching={loading.stores}
+      selectedStoreId={selectedMarkerId}
     />
   );
 };

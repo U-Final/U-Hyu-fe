@@ -9,6 +9,7 @@ import { useMapInteraction } from '../hooks/useMapInteraction';
 import { useMapUI } from '../hooks/useMapUI';
 import type { StoreCategory } from '../types/category';
 import { CATEGORY_CONFIGS } from '../types/category';
+import type { Store } from '../types/store';
 import { MapDragBottomSheet } from './MapDragBottomSheet';
 import StoreListContent from './layout/StoreListContent';
 import BrandSelectContent from './layout/steps/BrandSelectContent';
@@ -16,7 +17,7 @@ import CategorySelectContent from './layout/steps/CategorySelectContent';
 
 export const BottomSheetContainer: React.FC = () => {
   const { stores } = useMapData();
-  const { handleStoreSelect } = useMapInteraction();
+  const { handleMarkerClick } = useMapInteraction();
   const {
     selectedCategory,
     selectedBrand,
@@ -44,6 +45,7 @@ export const BottomSheetContainer: React.FC = () => {
     console.log(`지도 선택됨: ${id}`);
     // 선택된 지도 상세 보기 또는 이동 처리
   };
+
 
   // 카테고리 키를 한국어 이름으로 변환
   const getCategoryDisplayName = (categoryKey: string): string => {
@@ -149,7 +151,7 @@ export const BottomSheetContainer: React.FC = () => {
             <StoreListContent
               stores={stores}
               onFilterClick={showFilter}
-              onStoreClick={handleStoreSelect}
+              onStoreClick={handleMarkerClick}
             />
           </div>
         );

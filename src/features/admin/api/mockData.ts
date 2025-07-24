@@ -1,64 +1,106 @@
-import type { CategoryStat, TotalStat } from './types';
-
-// 카테고리 예시
-const CATEGORIES = [
-  { categoryId: 1, categoryName: '영화관', brands: ['CGV', '롯데시네마'] },
-  { categoryId: 2, categoryName: '편의점', brands: ['GS25'] },
-  { categoryId: 3, categoryName: '베이커리', brands: ['파리바게뜨', '뚜레쥬르'] },
-  { categoryId: 4, categoryName: '치킨', brands: ['굽네치킨'] },
-  { categoryId: 5, categoryName: '아이스크림', brands: ['베스킨라빈스'] },
-  { categoryId: 6, categoryName: '테마파크', brands: ['원더파크'] },
+// 통계별 mock 데이터 생성
+export const mockBookmarkStats = [
+  {
+    categoryId: 1,
+    categoryName: '영화관',
+    count: 1561,
+    details: [
+      { brandName: 'CGV', count: 15 },
+      { brandName: '롯데시네마', count: 20 },
+    ],
+  },
+  {
+    categoryId: 2,
+    categoryName: '편의점',
+    count: 1200,
+    details: [
+      { brandName: 'GS25', count: 10 },
+      { brandName: 'CU', count: 5 },
+    ],
+  },
 ];
 
-// 브랜드별 임의 count 생성 함수
-function makeBrandDetails(brands: string[], base = 10) {
-  return brands.map((brand, idx) => ({
-    brandName: brand,
-    count: base + idx * 7,
-  }));
-}
+export const mockFilteringStats = [
+  {
+    categoryId: 1,
+    categoryName: '영화관',
+    count: 1000,
+    details: [
+      { brandName: 'CGV', count: 8 },
+      { brandName: '롯데시네마', count: 12 },
+    ],
+  },
+  {
+    categoryId: 2,
+    categoryName: '편의점',
+    count: 900,
+    details: [
+      { brandName: 'GS25', count: 7 },
+      { brandName: 'CU', count: 3 },
+    ],
+  },
+];
 
-// 통계별 mock 데이터 생성
-export const mockBookmarkStats: CategoryStat[] = CATEGORIES.map((cat, i) => ({
-  categoryId: cat.categoryId,
-  categoryName: cat.categoryName,
-  count: 1000 + i * 100,
-  details: makeBrandDetails(cat.brands, 20 + i * 5),
-}));
+export const mockSearchStats = [
+  {
+    categoryId: 1,
+    categoryName: '영화관',
+    count: 900,
+    details: [
+      { brandName: 'CGV', count: 7 },
+      { brandName: '롯데시네마', count: 9 },
+    ],
+  },
+  {
+    categoryId: 2,
+    categoryName: '편의점',
+    count: 800,
+    details: [
+      { brandName: 'GS25', count: 6 },
+      { brandName: 'CU', count: 2 },
+    ],
+  },
+];
 
-export const mockFilteringStats: CategoryStat[] = CATEGORIES.map((cat, i) => ({
-  categoryId: cat.categoryId,
-  categoryName: cat.categoryName,
-  count: 800 + i * 80,
-  details: makeBrandDetails(cat.brands, 10 + i * 3),
-}));
+export const mockRecommendStats = [
+  {
+    categoryId: 1,
+    categoryName: '영화관',
+    count: 1561,
+  },
+  {
+    categoryId: 2,
+    categoryName: '편의점',
+    count: 1200,
+  },
+];
 
-export const mockSearchStats: CategoryStat[] = CATEGORIES.map((cat, i) => ({
-  categoryId: cat.categoryId,
-  categoryName: cat.categoryName,
-  count: 600 + i * 60,
-  details: makeBrandDetails(cat.brands, 5 + i * 2),
-}));
+export const mockMembershipStats = [
+  {
+    categoryId: 1,
+    categoryName: '영화관',
+    count: 300,
+    details: [
+      { brandName: 'CGV', count: 2 },
+      { brandName: '롯데시네마', count: 1 },
+    ],
+  },
+  {
+    categoryId: 2,
+    categoryName: '편의점',
+    count: 200,
+    details: [
+      { brandName: 'GS25', count: 1 },
+      { brandName: 'CU', count: 1 },
+    ],
+  },
+];
 
-export const mockRecommendStats: CategoryStat[] = CATEGORIES.map((cat, i) => ({
-  categoryId: cat.categoryId,
-  categoryName: cat.categoryName,
-  count: 400 + i * 40,
-  details: makeBrandDetails(cat.brands, 2 + i),
-}));
-
-export const mockMembershipStats: CategoryStat[] = CATEGORIES.map((cat, i) => ({
-  categoryId: cat.categoryId,
-  categoryName: cat.categoryName,
-  count: 200 + i * 20,
-  details: makeBrandDetails(cat.brands, 1 + i),
-}));
-
-export const mockTotalStats: TotalStat = {
-  totalBookmark: mockBookmarkStats.reduce((acc, cur) => acc + cur.count, 0),
-  totalFiltering: mockFilteringStats.reduce((acc, cur) => acc + cur.count, 0),
-  totalSearch: mockSearchStats.reduce((acc, cur) => acc + cur.count, 0),
-  totalMembership: mockMembershipStats.reduce((acc, cur) => acc + cur.count, 0),
+export const mockTotalStats = {
+  totalBookmark: 13123,
+  totalFiltering: 13123,
+  totalSearch: 13123,
+  totalMembership: 13123,
 };
 
 // 관리자 카테고리 목록 mock 데이터

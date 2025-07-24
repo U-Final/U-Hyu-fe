@@ -6,8 +6,8 @@ export type UserStatus = 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
 
 export interface UserExtraInfoRequest {
   grade: UserGrade;
-  recentBrands: string[];
-  interestedBrands: string[];
+  recentBrands: number[];
+  interestedBrands: number[];
 }
 
 export interface UserExtraInfoResponse {
@@ -36,12 +36,13 @@ export interface UserInfo {
   userName: string;
   nickName: string | null;
   email: string;
-  age: number | null;
+  age: number;
   gender: UserGender;
   grade: UserGrade | null;
   role: UserRole;
   status: UserStatus;
-  favoriteBrands: string[];
+  favoriteBrands: number[];
+  markerId: number;
   markers: string[];
 }
 

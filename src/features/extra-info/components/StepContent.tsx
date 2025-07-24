@@ -180,7 +180,7 @@ export const StepContent: React.FC<StepContentProps> = ({
           onBrandToggle={
             disabled
               ? undefined
-              : brandId => onToggleBrand(String(brandId), 'recentBrands')
+              : brandId => onToggleBrand(brandId, 'recentBrands')
           }
           title="최근 이용한 브랜드"
           disabled={disabled}
@@ -194,7 +194,7 @@ export const StepContent: React.FC<StepContentProps> = ({
           onBrandToggle={
             disabled
               ? undefined
-              : brandId => onToggleBrand(String(brandId), 'selectedBrands')
+              : brandId => onToggleBrand(brandId, 'selectedBrands')
           }
           title="관심있는 브랜드"
           disabled={disabled}

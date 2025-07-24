@@ -3,7 +3,7 @@ import { postNearbyStore } from '@barcode/api/nearbyStoreApi';
 import { useQuery } from '@tanstack/react-query';
 
 // 같은 위치에서 요청이 반복되는 경우를 위함.
-export const useNearbyStore = (params: LocationParams, enabled = true) => {
+export const useNearbyStoreQuery = (params: LocationParams, enabled = true) => {
   return useQuery({
     queryKey: ['barcode-open-nearby-store', params],
     queryFn: () => postNearbyStore(params),

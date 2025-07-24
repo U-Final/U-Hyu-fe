@@ -3,6 +3,7 @@ import { AxiosError } from 'axios';
 
 import { mapApi } from '../api/mapApi';
 import type {
+  GetCategoryBrandsParams,
   GetNearbyStoresParams,
   StoreDetailResponse,
   ToggleFavoriteResponseType,
@@ -23,6 +24,12 @@ export const MAP_QUERY_KEYS = {
   },
   favorites: {
     all: ['favorites'] as const,
+  },
+  categories: {
+    all: ['categories'] as const,
+    brands: () => [...MAP_QUERY_KEYS.categories.all, 'brands'] as const,
+    brand: (categoryId: number) =>
+      [...MAP_QUERY_KEYS.categories.brands(), categoryId] as const,
   },
 } as const;
 
@@ -99,6 +106,44 @@ export const useStoreDetailQuery = (storeId: number | null) => {
     // UX 최적화
     refetchOnWindowFocus: false,
     retry: 1, // 상세 정보는 1회만 재시도
+  });
+};
+
+/**
+ * 카테고리별 브랜드 목록 조회 쿼리 훅
+ *
+ * @param params - 카테고리 ID 파라미터
+ * @returns React Query 결과 객체
+ */
+export const useCategoryBrandsQuery = (params: GetCategoryBrandsParams) => {
+  return useQuery({
+    queryKey: MAP_QUERY_KEYS.categories.brand(params.categoryId),
+    queryFn: () => mapApi.getCategoryBrands(params),
+
+    // 카테고리 브랜드는 자주 변경되지 않으므로 긴 캐시 시간
+    staleTime: 30 * 60 * 1000, // 30분
+    gcTime: 60 * 60 * 1000, // 60분
+
+    // 쿼리 실행 조건: 유효한 카테고리 ID가 있을 때만 실행
+    enabled: params.categoryId > 0,
+
+    // UX 최적화 설정
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true,
+
+    // 재시도 로직
+    retry: (failureCount, error) => {
+      if (error instanceof AxiosError && error.response?.status) {
+        const status = error.response.status;
+        if (status >= 400 && status < 500) {
+          return false; // 클라이언트 에러는 재시도 안함
+        }
+      }
+      return failureCount < 2; // 최대 2회 재시도
+    },
+
+    // 지수 백오프 재시도 지연
+    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 };
 

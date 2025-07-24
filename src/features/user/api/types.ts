@@ -6,8 +6,8 @@ export type UserStatus = 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
 
 export interface UserExtraInfoRequest {
   grade: UserGrade;
-  recentBrands: string[];
-  interestedBrands: string[];
+  recentBrands: number[];
+  interestedBrands: number[];
 }
 
 export interface UserExtraInfoResponse {
@@ -30,19 +30,19 @@ export interface CheckEmailResponse {
   };
 }
 
-// 유저 정보 조회 응답 타입
+// 유저 정보 조회 응답 타입 (실제 API 응답에 맞춰 수정)
 export interface UserInfo {
-  name: string;
-  nickname: string;
+  profileImage: string;
+  userName: string;
+  nickName: string | null;
   email: string;
   age: number;
   gender: UserGender;
+  grade: UserGrade | null;
   role: UserRole;
   status: UserStatus;
-  grade: UserGrade;
-  updatedAt: string;
-  profileImage: string;
-  favoriteBrands: string[];
+  favoriteBrands: number[];
+  markerId: number;
   markers: string[];
 }
 

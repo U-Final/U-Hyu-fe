@@ -53,6 +53,14 @@ export const useMapUI = () => {
     actions.setBottomSheetStep('list');
   }, [actions]);
 
+  /**
+   * 필터 해제 (카테고리와 브랜드 선택 초기화)
+   */
+  const clearFilters = useCallback(() => {
+    actions.setSelectedCategory('');
+    actions.setSelectedBrand('');
+  }, [actions]);
+
   return {
     // UI 상태 노출
     searchValue: state.searchValue,
@@ -90,5 +98,6 @@ export const useMapUI = () => {
     selectCategoryAndNavigate,
     selectBrandAndReturn,
     backToList,
+    clearFilters,
   };
 };

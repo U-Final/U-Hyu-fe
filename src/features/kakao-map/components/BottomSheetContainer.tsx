@@ -23,6 +23,7 @@ export const BottomSheetContainer: React.FC = () => {
     selectCategoryAndNavigate,
     selectBrandAndReturn,
     backToList,
+    clearFilters,
   } = useMapUI();
 
   // 브랜드 단계일 때만 브랜드 데이터 조회 (성능 최적화)
@@ -42,9 +43,37 @@ export const BottomSheetContainer: React.FC = () => {
                   주변 제휴 매장
                 </h2>
                 {selectedBrand && (
-                  <p className="text-sm text-gray-500 mt-1">
-                    {selectedCategory} {'>'}  {selectedBrand}
-                  </p>
+                  <div className="inline-flex items-center gap-2 mt-1 px-2 py-1 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="flex items-center gap-1 text-sm text-blue-700">
+                      <span className="font-medium">{selectedCategory}</span>
+                      <svg className="w-3 h-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                      <span>{selectedBrand}</span>
+                    </div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        clearFilters();
+                      }}
+                      className="flex-shrink-0 p-0.5 text-blue-400 hover:text-blue-600 hover:bg-blue-100 rounded-full transition-all duration-200"
+                      aria-label="필터 해제"
+                    >
+                      <svg
+                        className="w-3.5 h-3.5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2.5}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </button>
+                  </div>
                 )}
               </div>
               <button

@@ -1,9 +1,11 @@
-import { type FC } from 'react';
+import { type FC, useEffect } from 'react';
 
 import { X } from 'lucide-react';
 
-import GuestBarcodeContent from '@/shared/components/bottom_navigation/barcode/contents/GuestBarcodeSection';
-import { LoggedInBarcodeContent } from '@/shared/components/bottom_navigation/barcode/contents/LoggedInBarcodeContent';
+import {
+  GuestBarcodeContent,
+  LoggedInBarcodeContent,
+} from '@/shared/components/bottom_navigation/barcode/contents';
 import { useIsLoggedIn } from '@/shared/store/useUserStore';
 
 interface BarcodeBottomSheetProps {
@@ -17,32 +19,49 @@ export const BarcodeBottomSheet: FC<BarcodeBottomSheetProps> = ({
 }) => {
   const isLoggedIn = useIsLoggedIn();
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   if (!isOpen) return null;
 
   return (
-    <div
-      role="dialog"
-      aria-label="바코드 업로드 바텀시트"
-      className="absolute bottom-12 left-0 right-0 z-10"
-    >
-      <div className="bg-white rounded-t-2xl shadow-2xl z-50 flex flex-col border border-light-gray p-4">
-        <header className="flex justify-between items-center mb-4">
-          <h2 className="text-sm font-semibold">바코드 멤버십</h2>
-          <button
-            onClick={onClose}
-            aria-label="닫기"
-            className="cursor-pointer hover:bg-gray-200 rounded-md"
-          >
-            <X size={20} />
-          </button>
-        </header>
+    <>
+      <div
+        onClick={onClose}
+        role="presentation"
+        className="fixed inset-0 bg-black/4"
+      />
 
-        {isLoggedIn ? (
-          <LoggedInBarcodeContent onClose={onClose} />
-        ) : (
-          <GuestBarcodeContent />
-        )}
+      <div
+        role="dialog"
+        aria-label="바코드 바텀시트"
+        className="absolute bottom-[0.5px] left-0 right-0"
+      >
+        <div className="bg-white rounded-t-2xl z-50 flex flex-col border border-light-gray p-4 min-h-[150px]">
+          <header className="flex justify-between items-center mb-4">
+            <h2 className="text-sm font-semibold">바코드 멤버십</h2>
+            <button
+              onClick={onClose}
+              aria-label="닫기"
+              className="cursor-pointer hover:bg-gray-200 rounded-md"
+            >
+              <X size={20} />
+            </button>
+          </header>
+
+          {!isLoggedIn ? (
+            <LoggedInBarcodeContent onClose={onClose} />
+          ) : (
+            <GuestBarcodeContent />
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };

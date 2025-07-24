@@ -12,6 +12,15 @@ export const useMapUI = () => {
   // 복합 액션들: 여러 UI 상태를 조합한 복잡한 동작들
 
   /**
+   * mymap 화면으로 이동
+   * 바텀시트를 mymap으로 변경하고 확장
+   */
+  const showMymap = useCallback(() => {
+    actions.setBottomSheetStep('mymap');
+    actions.setBottomSheetExpanded(true);
+  }, [actions]);
+
+  /**
    * 필터 선택 화면으로 이동
    * 바텀시트를 카테고리 선택 단계로 변경하고 확장
    */
@@ -84,6 +93,7 @@ export const useMapUI = () => {
     resetAllUI: actions.resetAllUI,
 
     // 복합 액션들 (이 훅에서 정의한 것)
+    showMymap,
     showFilter,
     selectCategoryAndNavigate,
     selectBrandAndReturn,

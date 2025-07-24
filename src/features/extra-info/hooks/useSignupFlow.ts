@@ -64,7 +64,7 @@ export const useSignupFlow = (
   );
 
   const toggleBrand = useCallback(
-    (brandId: string, field: 'recentBrands' | 'selectedBrands') => {
+    (brandId: number, field: 'recentBrands' | 'selectedBrands') => {
       const currentBrands = data[field];
       const newBrands = currentBrands.includes(brandId)
         ? currentBrands.filter(id => id !== brandId)
@@ -78,7 +78,7 @@ export const useSignupFlow = (
   const toggleCompletedStepBrand = useCallback(
     (
       stepNumber: number,
-      brandId: string,
+      brandId: number,
       field: 'recentBrands' | 'selectedBrands'
     ) => {
       setCompletedSteps(prev =>

@@ -15,18 +15,14 @@ export const BrandGrid: React.FC<BrandGridProps> = ({
       <p className="text-sm text-gray-600 mb-4">{title}</p>
       <div className="grid grid-cols-3 gap-6 justify-items-center">
         {BRANDS.map((brand, index) => {
-          const isStringArray = selectedBrands.length > 0 && typeof selectedBrands[0] === 'string';
-          const brandIdValue = isStringArray ? String(brand.id) : brand.id;
-          const isSelected = isStringArray 
-            ? (selectedBrands as string[]).includes(String(brand.id))
-            : (selectedBrands as number[]).includes(brand.id);
+          const isSelected = selectedBrands.includes(brand.id);
           
           return (
             <BrandLogo
               key={brand.id}
               brand={brand}
               isSelected={isSelected}
-              onClick={onBrandToggle ? () => onBrandToggle(brandIdValue) : undefined}
+              onClick={onBrandToggle ? () => onBrandToggle(brand.id) : undefined}
               delay={index * 0.1}
               disabled={disabled}
             />

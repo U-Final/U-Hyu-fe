@@ -3,6 +3,16 @@ import { MYMAP_COLOR, type MarkerColor } from '@mymap/constants/mymapColor';
 import { useMyMapListQuery } from '@mymap/hooks/useMyMapListQuery';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MdStars } from 'react-icons/md';
+import { MdIosShare } from 'react-icons/md';
+import { PiTrashBold } from 'react-icons/pi';
+import { RiPencilFill } from 'react-icons/ri';
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/shared/components/shadcn/ui/dropdown-menu';
 
 interface MapListProps {
   onCreateNewMap: () => void;
@@ -40,7 +50,40 @@ const MyMapList: React.FC<MapListProps> = ({ onCreateNewMap, onSelectMap }) => {
             />
             <span className="ml-2 text-body2 font-semibold">{map.title}</span>
           </div>
-          <BsThreeDotsVertical />
+          {/* 수정, 삭제, 공유 드롭다운 버튼 */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <BsThreeDotsVertical className="w-4 h-4 cursor-pointer" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="w-36 divide-gray-200 bg-white border-none"
+            >
+              <DropdownMenuItem
+                onClick={() => console.log('수정', map.myMapListId)}
+                className="flex justify-between font-medium"
+              >
+                수정
+                <RiPencilFill className="mr-2 h-4 w-4" />
+              </DropdownMenuItem>
+              <hr />
+              <DropdownMenuItem
+                onClick={() => console.log('공유', map.myMapListId)}
+                className="flex justify-between font-medium"
+              >
+                공유
+                <MdIosShare className="mr-2 h-4 w-4" />
+              </DropdownMenuItem>
+              <hr />
+              <DropdownMenuItem
+                onClick={() => console.log('삭제', map.myMapListId)}
+                className="flex justify-between font-medium"
+              >
+                삭제
+                <PiTrashBold className="mr-2 h-4 w-4" />
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       ))}
     </div>

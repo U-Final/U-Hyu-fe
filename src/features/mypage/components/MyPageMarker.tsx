@@ -40,7 +40,7 @@ const MyPageMarker = ({ user, setUser }: Props) => {
       console.error(err);
       // 실패 시 이전 상태로 롤백
       setUser(prev =>
-        prev && previousMarkerId
+        prev && previousMarkerId !== undefined
           ? {
               ...prev,
               marker: prev.marker

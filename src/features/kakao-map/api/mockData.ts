@@ -1,4 +1,9 @@
-import type { CategoryBrand, CategoryBrandsResponse, StoreDetail, StoreSummary } from './types';
+import type {
+  CategoryBrand,
+  CategoryBrandsResponse,
+  StoreDetail,
+  StoreSummary,
+} from './types';
 
 // 목데이터: 주변 매장 목록 (실제 카테고리 및 브랜드 기반)
 export const MOCK_STORES: StoreSummary[] = [
@@ -538,67 +543,80 @@ export const createMockToggleFavoriteResponse = (storeId: number) => {
 
 // 목데이터: 카테고리별 브랜드 목록 (매장이 있는 카테고리만)
 export const MOCK_CATEGORY_BRANDS: Record<number, CategoryBrand[]> = {
-  2: [ // 영화/미디어
+  2: [
+    // 영화/미디어
     { brandId: 1, brandName: 'CGV' },
     { brandId: 2, brandName: '롯데시네마' },
     { brandId: 3, brandName: '메가박스' },
   ],
-  3: [ // 워터파크/아쿠아리움
+  3: [
+    // 워터파크/아쿠아리움
     { brandId: 4, brandName: '아쿠아필드' },
     { brandId: 5, brandName: '스파랜드' },
     { brandId: 6, brandName: '클럽디 오아시스' },
   ],
-  4: [ // 액티비티
+  4: [
+    // 액티비티
     { brandId: 7, brandName: '스카이라인 루지' },
     { brandId: 8, brandName: '클룩' },
     { brandId: 9, brandName: '부산 엑스 더 스카이' },
   ],
-  5: [ // 뷰티(피부과, 클리닉)
+  5: [
+    // 뷰티(피부과, 클리닉)
     { brandId: 10, brandName: '오가나셀 피부과 의원 청담점' },
     { brandId: 11, brandName: '데이원클리닉' },
     { brandId: 12, brandName: '포쉬네일' },
   ],
-  6: [ // 건강(제약, 영양제 등)
+  6: [
+    // 건강(제약, 영양제 등)
     { brandId: 13, brandName: '동아제약 디몰' },
     { brandId: 14, brandName: 'LG생활건강샵 U+패밀리샵' },
     { brandId: 15, brandName: '필리' },
   ],
-  7: [ // 생활/편의
+  7: [
+    // 생활/편의
     { brandId: 16, brandName: 'GS25' },
     { brandId: 17, brandName: '펫생각' },
     { brandId: 18, brandName: '셸로' },
   ],
-  8: [ // 쇼핑
+  8: [
+    // 쇼핑
     { brandId: 19, brandName: 'GS THE FRESH' },
     { brandId: 20, brandName: 'VYVY' },
     { brandId: 21, brandName: '롯데백화점몰' },
   ],
-  9: [ // 음식점
+  9: [
+    // 음식점
     { brandId: 22, brandName: 'VIPS' },
     { brandId: 23, brandName: '더플레이스' },
     { brandId: 24, brandName: '제일제면소' },
   ],
-  10: [ // 베이커리/디저트
+  10: [
+    // 베이커리/디저트
     { brandId: 25, brandName: '파리바게트' },
     { brandId: 26, brandName: '뚜레쥬르' },
     { brandId: 27, brandName: '베스킨라빈스' },
   ],
-  11: [ // 테마파크
+  11: [
+    // 테마파크
     { brandId: 31, brandName: '뽀로로파크' },
     { brandId: 32, brandName: '아르떼 키즈파크 제주' },
     { brandId: 33, brandName: '원더빌리지' },
   ],
-  12: [ // 공연/전시
+  12: [
+    // 공연/전시
     { brandId: 34, brandName: '빛의 벙커' },
     { brandId: 35, brandName: '빛의 시어터' },
     { brandId: 36, brandName: '그라운드시소' },
   ],
-  13: [ // 교육
+  13: [
+    // 교육
     { brandId: 37, brandName: '젠지' },
     { brandId: 38, brandName: '월스트리트 잉글리시' },
     { brandId: 39, brandName: 'DBR동아비즈니스리뷰' },
   ],
-  14: [ // 여행/교통
+  14: [
+    // 여행/교통
     { brandId: 40, brandName: 'SK렌터카' },
     { brandId: 41, brandName: '야놀자글로벌 해외 숙박' },
     { brandId: 42, brandName: '티웨이항공' },
@@ -606,12 +624,17 @@ export const MOCK_CATEGORY_BRANDS: Record<number, CategoryBrand[]> = {
 };
 
 // 목데이터 응답 헬퍼 함수: 카테고리별 브랜드 목록
-export const createMockCategoryBrandsResponse = (categoryId: number): CategoryBrandsResponse => {
+export const createMockCategoryBrandsResponse = (
+  categoryId: number
+): CategoryBrandsResponse => {
   const brands = MOCK_CATEGORY_BRANDS[categoryId] || [];
-  
+
   return {
     data: brands,
-    message: brands.length > 0 ? '카테고리별 브랜드 목록을 성공적으로 조회했습니다.' : '해당 카테고리에 브랜드가 없습니다.',
-    statusCode: brands.length > 0 ? 0 : 404,
+    message:
+      brands.length > 0
+        ? '카테고리별 브랜드 목록을 성공적으로 조회했습니다.'
+        : '해당 카테고리에 브랜드가 없습니다.',
+    statusCode: brands.length > 0 ? 200 : 404,
   };
 };

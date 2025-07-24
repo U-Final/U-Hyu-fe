@@ -15,6 +15,7 @@ import {
 } from '@/shared/components/shadcn/ui/dropdown-menu';
 import { useModalStore } from '@/shared/store';
 
+import { MyMapForm } from '../InputMymap';
 import { MymapDeleteModal } from '../MymapDeleteModal';
 import { ShareModal } from '../ShareModal';
 
@@ -31,6 +32,7 @@ const MyMapList: React.FC<MapListProps> = ({ onCreateNewMap, onSelectMap }) => {
   if (isLoading) return <div>로딩 중...</div>;
   if (isError || !data) return <div>에러 발생</div>;
 
+  // 삭제 모달
   const handleDelete = (mapId: number) => {
     openModal('base', {
       title: 'My Map 삭제',
@@ -38,11 +40,30 @@ const MyMapList: React.FC<MapListProps> = ({ onCreateNewMap, onSelectMap }) => {
     });
   };
 
-  // 추후 uuid를 받아서 보내는 기능
+  // 추후 uuid를 받아서 보내는 기능 추가
   const handleShare = (uuid: string) => {
     openModal('base', {
       title: 'My Map 공유',
       children: <ShareModal uuid={uuid} />,
+    });
+  };
+
+  // 수정 모달
+  const handleUpdate = (
+    myMapListId: number,
+    myMapTitle: string,
+    color: string
+  ) => {
+    openModal('base', {
+      title: '수정',
+      children: (
+        <MyMapForm
+          mode="edit"
+          myMapListId={myMapListId}
+          defaultTitle={myMapTitle}
+          defaultColor={color as MarkerColor}
+        />
+      ),
     });
   };
 
@@ -81,7 +102,10 @@ const MyMapList: React.FC<MapListProps> = ({ onCreateNewMap, onSelectMap }) => {
               className="w-36 divide-gray-200 bg-white border-none"
             >
               <DropdownMenuItem
-                onClick={() => console.log('수정', map.myMapListId)}
+                onClick={e => {
+                  e.stopPropagation();
+                  handleUpdate(map.myMapListId, map.title, map.markerColor);
+                }}
                 className="flex justify-between font-medium"
               >
                 수정

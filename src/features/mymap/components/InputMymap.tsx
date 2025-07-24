@@ -4,9 +4,8 @@ import { MYMAP_COLOR, type MarkerColor } from '@mymap/constants/mymapColor';
 import { useAddMyMapMutation } from '@mymap/hooks/useAddMyMapMutation';
 import { useUpdateMyMapMutation } from '@mymap/hooks/useUpdateMyMapMutation';
 
-import { PrimaryButton} from '@/shared/components';
+import { PrimaryButton } from '@/shared/components';
 import { useModalStore } from '@/shared/store';
-import { Input } from '@/shared/components/shadcn/ui/input';
 
 interface MyMapFormProps {
   mode: 'create' | 'edit';
@@ -27,11 +26,11 @@ const COLOR_OPTIONS: MarkerColor[] = [
 export const MyMapForm = ({
   mode,
   myMapListId,
-  defaultTitle = '',
-  defaultColor = 'RED',
+  defaultTitle,
+  defaultColor,
 }: MyMapFormProps) => {
-  const [title, setTitle] = useState(defaultTitle);
-  const [color, setColor] = useState<MarkerColor>(defaultColor);
+  const [title, setTitle] = useState(defaultTitle ?? '');
+  const [color, setColor] = useState<MarkerColor>(defaultColor as MarkerColor);
 
   const { mutate: addMyMap, isPending: isCreating } = useAddMyMapMutation();
   const { mutate: updateMyMap, isPending: isUpdating } =
@@ -57,30 +56,37 @@ export const MyMapForm = ({
   };
 
   return (
-    <div className="flex flex-col gap-6 p-4">
+    <div className="flex flex-col gap-6">
       {/* 제목 입력 */}
-      <div>
-        <Input
+      <div className="flex border-b pb-2">
+        <input
+          className="flex-9 bg-transparent border-none outline-none focus:outline-none focus:ring-0 focus:border-none placeholder:text-sm placeholder:font-semibold"
           placeholder="지도 제목을 입력해주세요"
           value={title}
           onChange={e => {
             if (e.target.value.length <= MAX_LENGTH) setTitle(e.target.value);
           }}
         />
-        <div className="text-right text-caption text-gray-400 mt-1">
+        <div className="flex-1 text-right font-semibold text-sm text-gray mt-1">
           {title.length}/{MAX_LENGTH}
         </div>
       </div>
 
       {/* 색상 선택 */}
       <div>
-        <p className="text-body1 font-semibold mb-2">색상 선택</p>
-        <div className="flex gap-5">
+        <p className="text-body1 text-black font-semibold mb-2">색상 선택</p>
+        <div className="flex justify-between items-center">
           {COLOR_OPTIONS.map(c => (
             <button
               key={c}
-              className={`w-6 h-6 rounded-full ${MYMAP_COLOR[c]} ${color === c ? 'ring-2 ring-primary' : ''}`}
               onClick={() => setColor(c)}
+              className={`
+        w-6 h-6 rounded-full 
+        ${MYMAP_COLOR[c]}
+        ${color === c ? 'scale-125 ring-2 ring-primary' : 'scale-100'} 
+        transition-transform duration-200 ease-in-out
+      `}
+              style={{ backgroundColor: 'currentColor' }}
             />
           ))}
         </div>
@@ -88,7 +94,7 @@ export const MyMapForm = ({
 
       {/* 버튼 */}
       <PrimaryButton onClick={handleSubmit} disabled={isLoading}>
-        {isLoading ? '처리 중...' : '완료'}
+        완료
       </PrimaryButton>
     </div>
   );

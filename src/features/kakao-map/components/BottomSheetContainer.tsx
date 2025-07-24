@@ -62,15 +62,15 @@ export const BottomSheetContainer: React.FC = () => {
                 <h2 className="text-lg font-bold text-gray-900">
                   주변 제휴 매장
                 </h2>
-                {/* 개선된 필터 표시 UI */}
+                {/* 컴팩트한 필터 표시 UI */}
                 {selectedBrand && (
-                  <div className="inline-flex items-center gap-2 mt-1 px-2 py-1 bg-blue-50 border border-blue-200 rounded-lg">
-                    <div className="flex items-center gap-1 text-sm text-blue-700">
-                      <span className="font-medium">
+                  <div className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 bg-blue-50 border border-blue-200 rounded-md max-w-fit">
+                    <div className="flex items-center gap-1 text-xs text-blue-700">
+                      <span className="font-medium truncate max-w-16">
                         {getCategoryDisplayName(selectedCategory)}
                       </span>
                       <svg
-                        className="w-3 h-3 text-blue-400"
+                        className="w-2.5 h-2.5 text-blue-400 flex-shrink-0"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -82,18 +82,18 @@ export const BottomSheetContainer: React.FC = () => {
                           d="M9 5l7 7-7 7"
                         />
                       </svg>
-                      <span>{selectedBrand}</span>
+                      <span className="truncate max-w-20">{selectedBrand}</span>
                     </div>
                     <button
                       onClick={e => {
                         e.stopPropagation();
                         clearFilters();
                       }}
-                      className="flex-shrink-0 p-0.5 text-blue-400 hover:text-blue-600 hover:bg-blue-100 rounded-full transition-all duration-200"
+                      className="flex-shrink-0 p-0.5 text-blue-400 hover:text-blue-600 hover:bg-blue-100 rounded-full transition-all duration-200 ml-0.5"
                       aria-label="필터 해제"
                     >
                       <svg
-                        className="w-3.5 h-3.5"
+                        className="w-2.5 h-2.5"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"

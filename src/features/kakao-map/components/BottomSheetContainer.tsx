@@ -2,11 +2,12 @@ import React from 'react';
 
 import { FaFilter } from 'react-icons/fa';
 
-import { MapDragBottomSheet } from './MapDragBottomSheet';
-
+import { useBrandsByCategoryWhen } from '../hooks/useBrandsByCategory';
+import type { StoreCategory } from '../types/category';
 import { useMapData } from '../hooks/useMapData';
 import { useMapInteraction } from '../hooks/useMapInteraction';
 import { useMapUI } from '../hooks/useMapUI';
+import { MapDragBottomSheet } from './MapDragBottomSheet';
 import StoreListContent from './layout/StoreListContent';
 import BrandSelectContent from './layout/steps/BrandSelectContent';
 import CategorySelectContent from './layout/steps/CategorySelectContent';
@@ -24,11 +25,17 @@ export const BottomSheetContainer: React.FC = () => {
     backToList,
   } = useMapUI();
 
+  // 브랜드 단계일 때만 브랜드 데이터 조회 (성능 최적화)
+  const { brands, isLoading: brandsLoading } = useBrandsByCategoryWhen(
+    selectedCategory as StoreCategory,
+    currentBottomSheetStep === 'brand' && !!selectedCategory
+  );
+
   const getCurrentStepContent = () => {
     switch (currentBottomSheetStep) {
       case 'list':
         return (
-          <div onClick={(e) => e.stopPropagation()}>
+          <div onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
               <div className="flex-1">
                 <h2 className="text-lg font-bold text-gray-900">
@@ -43,7 +50,7 @@ export const BottomSheetContainer: React.FC = () => {
               </div>
               <button
                 className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 border border-gray-200 hover:border-blue-300 shadow-sm hover:shadow-md"
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
                   showFilter();
                 }}
@@ -62,14 +69,14 @@ export const BottomSheetContainer: React.FC = () => {
         );
       case 'category':
         return (
-          <div onClick={(e) => e.stopPropagation()}>
+          <div onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
               <div className="flex-1">
                 <h2 className="text-lg font-bold text-gray-900">필터</h2>
               </div>
               <button
                 className="px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md"
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
                   backToList();
                 }}
@@ -86,14 +93,14 @@ export const BottomSheetContainer: React.FC = () => {
         );
       case 'brand':
         return (
-          <div onClick={(e) => e.stopPropagation()}>
+          <div onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
               <div className="flex-1">
                 <h2 className="text-lg font-bold text-gray-900">필터</h2>
               </div>
               <button
                 className="px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md"
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
                   backToList();
                 }}
@@ -105,7 +112,8 @@ export const BottomSheetContainer: React.FC = () => {
             <BrandSelectContent
               categoryKey={selectedCategory}
               categoryDisplayName={selectedCategory}
-              brands={[]} // TODO: 브랜드 데이터 구현 필요
+              brands={brands}
+              isLoading={brandsLoading}
               selectedBrand={selectedBrand}
               onBrandSelect={selectBrandAndReturn}
               onBack={backToList}

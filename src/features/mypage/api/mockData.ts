@@ -5,7 +5,7 @@ export const mockUserInfo: UserInfo = {
   createdAt: '2025-07-21T05:49:15.658Z',
   updatedAt: '2025-07-21T05:49:15.658Z',
   userName: '홍길동',
-  nickname: '길동이',
+  nickName: '길동이',
   kakaoId: 12345,
   email: 'gildong@example.com',
   age: '28',
@@ -21,7 +21,5 @@ export const mockUserInfo: UserInfo = {
     updatedAt: '2025-07-21T05:49:15.658Z',
     markerImage: 'marker8.png',
   },
-  userRole: 'USER',
-  userGrade: 'VIP',
   brandIds: [1, 4, 3],
 };

@@ -31,11 +31,13 @@ export const useMapUI = () => {
 
   /**
    * 카테고리 선택 후 브랜드 선택 단계로 이동
+   * 새로운 카테고리 선택 시 이전 브랜드 선택 초기화
    * @param category - 선택된 카테고리
    */
   const selectCategoryAndNavigate = useCallback(
     (category: string) => {
       actions.setSelectedCategory(category);
+      actions.setSelectedBrand(''); // 이전 브랜드 선택 초기화
       actions.setBottomSheetStep('brand');
     },
     [actions]
@@ -58,6 +60,14 @@ export const useMapUI = () => {
    */
   const backToList = useCallback(() => {
     actions.setBottomSheetStep('list');
+  }, [actions]);
+
+  /**
+   * 필터 해제 (카테고리와 브랜드 선택 초기화)
+   */
+  const clearFilters = useCallback(() => {
+    actions.setSelectedCategory('');
+    actions.setSelectedBrand('');
   }, [actions]);
 
   return {
@@ -98,5 +108,6 @@ export const useMapUI = () => {
     selectCategoryAndNavigate,
     selectBrandAndReturn,
     backToList,
+    clearFilters,
   };
 };

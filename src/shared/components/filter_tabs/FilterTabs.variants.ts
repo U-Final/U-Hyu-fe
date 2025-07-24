@@ -1,9 +1,5 @@
 import type { FilterTabItem } from './FilterTabs.types';
 
-
-
-
-
 /**
  * 기본 필터 탭 목록
  * - label: 사용자에게 보여질 텍스트
@@ -11,12 +7,12 @@ import type { FilterTabItem } from './FilterTabs.types';
  */
 export const FILTER_TABS: FilterTabItem[] = [
   { label: '전체', value: 'all' },
-  { label: '액티비티', value: 'activity' },
-  { label: '뷰티/건강', value: 'beauty' },
   { label: '쇼핑', value: 'shopping' },
-  { label: '생활/편의', value: 'life' },
   { label: '푸드', value: 'food' },
+  { label: '생활/편의', value: 'life' },
   { label: '문화/여가', value: 'culture' },
+  { label: '뷰티/건강', value: 'beauty' },
+  { label: '액티비티', value: 'activity' },
   { label: '교육', value: 'education' },
   { label: '여행/교통', value: 'travel' },
 ];

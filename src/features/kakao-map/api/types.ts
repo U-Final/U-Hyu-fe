@@ -80,3 +80,23 @@ export interface GetStoreDetailParams {
 export interface ToggleFavoriteParams {
   storeId: number;
 }
+
+/**
+ * 카테고리별 브랜드 정보 타입
+ */
+export interface CategoryBrand {
+  brandId: number;
+  brandName: string;
+}
+
+/**
+ * 카테고리별 브랜드 조회 API 파라미터
+ */
+export interface GetCategoryBrandsParams {
+  categoryId: number;
+}
+
+/**
+ * 카테고리별 브랜드 조회 API 응답 타입
+ */
+export type CategoryBrandsResponse = ApiResponse<CategoryBrand[]>;

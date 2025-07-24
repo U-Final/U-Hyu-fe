@@ -1,11 +1,6 @@
-import type { AdminBrand, CategoryStat } from '@/features/admin/api/types';
 import { useState } from 'react';
-
-// 추가 타입 정의 (features에서 관리하는 것이 맞으나, RecommendStat/TotalStat이 없다면 features/types.ts에 추가 권장)
-type RecommendStat = { categoryId: number; categoryName: string; count: number };
-type TotalStat = { totalBookmark: number; totalFiltering: number; totalSearch: number; totalMembership: number };
-
-type Category = { categoryId: number; categoryName: string };
+import type { AdminBrand, CategoryStat, RecommendStat, TotalStat, Category } from '@/features/admin/api/types';
+import { ADMIN_ENDPOINTS } from '@/features/admin/api';
 
 export default function AdminPage() {
   // 통계 상태
@@ -23,53 +18,53 @@ export default function AdminPage() {
 
   // 통계별 fetch 함수
   const fetchBookmarkStats = async () => {
-    const res = await fetch('/admin/statistics/bookmark');
+    const res = await fetch(ADMIN_ENDPOINTS.STAT_BOOKMARK);
     const json = await res.json();
     setBookmark(json.result);
   };
   const fetchFilteringStats = async () => {
-    const res = await fetch('/admin/statistics/filter');
+    const res = await fetch(ADMIN_ENDPOINTS.STAT_FILTERING);
     const json = await res.json();
     setFiltering(json.result);
   };
   const fetchSearchStats = async () => {
-    const res = await fetch('/admin/statistics/searching');
+    const res = await fetch(ADMIN_ENDPOINTS.STAT_SEARCH);
     const json = await res.json();
     setSearch(json.result);
   };
   const fetchRecommendStats = async () => {
-    const res = await fetch('/admin/statistics/recommendation');
+    const res = await fetch(ADMIN_ENDPOINTS.STAT_RECOMMEND);
     const json = await res.json();
     setRecommend(json.result);
   };
   const fetchMembershipStats = async () => {
-    const res = await fetch('/admin/statistics/membership');
+    const res = await fetch(ADMIN_ENDPOINTS.STAT_MEMBERSHIP);
     const json = await res.json();
     setMembership(json.result);
   };
   const fetchTotalStats = async () => {
-    const res = await fetch('/admin/statistics/total');
+    const res = await fetch(ADMIN_ENDPOINTS.STAT_TOTAL);
     const json = await res.json();
     setTotal(json.result);
   };
 
   // 카테고리 목록 조회
   const fetchCategories = async () => {
-    const res = await fetch('/admin/category/list');
+    const res = await fetch(ADMIN_ENDPOINTS.CATEGORY_LIST);
     const json = await res.json();
     setCategories(json.result);
   };
 
   // 브랜드 목록 조회
   const fetchBrands = async () => {
-    const res = await fetch('/admin/brand/list');
+    const res = await fetch(ADMIN_ENDPOINTS.BRAND_LIST);
     const json = await res.json();
     setBrands(json.result);
   };
 
   // 브랜드 추가 (예시)
   const addBrand = async () => {
-    const res = await fetch('/admin/brand', {
+    const res = await fetch(ADMIN_ENDPOINTS.BRAND_CREATE, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -91,7 +86,7 @@ export default function AdminPage() {
 
   // 브랜드 수정 (예시: 1번 브랜드)
   const updateBrand = async () => {
-    const res = await fetch('/admin/brands/1', {
+    const res = await fetch(ADMIN_ENDPOINTS.BRAND_UPDATE(1), {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ brandName: '수정된 브랜드명' }),
@@ -102,7 +97,7 @@ export default function AdminPage() {
 
   // 브랜드 삭제 (예시: 1번 브랜드)
   const deleteBrand = async () => {
-    const res = await fetch('/admin/brands/1', { method: 'DELETE' });
+    const res = await fetch(ADMIN_ENDPOINTS.BRAND_DELETE(1), { method: 'DELETE' });
     const json = await res.json();
     setBrandResult(json.result);
   };

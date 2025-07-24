@@ -18,6 +18,17 @@ export interface TotalStat {
   totalMembership: number;
 }
 
+export interface RecommendStat {
+  categoryId: number;
+  categoryName: string;
+  count: number;
+}
+
+export interface Category {
+  categoryId: number;
+  categoryName: string;
+}
+
 // 브랜드(제휴처) 관련 타입 예시 (추후 확장)
 export interface AdminBrand {
   brandId: number;

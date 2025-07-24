@@ -213,10 +213,8 @@ export const mockAdminStatistics = {
       count: 1200,
       details: [
         { brandName: 'GS25', count: 10 },
-        { brandName: 'CU', count: 5 },
       ],
     },
-    // ...필요한 만큼 실제 데이터 추가
   ],
   filtering: [
     {
@@ -228,7 +226,14 @@ export const mockAdminStatistics = {
         { brandName: '롯데시네마', count: 12 },
       ],
     },
-    // ...다른 카테고리
+    {
+      categoryId: 2,
+      categoryName: '편의점',
+      count: 900,
+      details: [
+        { brandName: 'GS25', count: 7 },
+      ],
+    },
   ],
   search: [
     {
@@ -240,20 +245,33 @@ export const mockAdminStatistics = {
         { brandName: '롯데시네마', count: 9 },
       ],
     },
-    // ...다른 카테고리
+    {
+      categoryId: 2,
+      categoryName: '편의점',
+      count: 800,
+      details: [
+        { brandName: 'GS25', count: 6 },
+      ],
+    },
   ],
   recommend: [
     {
       categoryId: 1,
       categoryName: '영화관',
       count: 1561,
+      details: [
+        { brandName: 'CGV', count: 15 },
+        { brandName: '롯데시네마', count: 20 },
+      ],
     },
     {
       categoryId: 2,
       categoryName: '편의점',
       count: 1200,
+      details: [
+        { brandName: 'GS25', count: 10 },
+      ],
     },
-    // ...다른 카테고리
   ],
   membership: [
     {
@@ -265,12 +283,19 @@ export const mockAdminStatistics = {
         { brandName: '롯데시네마', count: 1 },
       ],
     },
-    // ...다른 카테고리
+    {
+      categoryId: 2,
+      categoryName: '편의점',
+      count: 200,
+      details: [
+        { brandName: 'GS25', count: 1 },
+      ],
+    },
   ],
   total: {
-    totalBookmark: 13123,
-    totalFiltering: 13123,
-    totalSearch: 13123,
-    totalMembership: 13123,
+    totalBookmark: 1561 + 1200, // 2761
+    totalFiltering: 1000 + 900, // 1900
+    totalSearch: 900 + 800, // 1700
+    totalMembership: 300 + 200, // 500
   },
 };

@@ -1,17 +1,17 @@
+import { ADMIN_ENDPOINTS } from '@/features/admin/api/endpoints';
 import {
-  mockBookmarkStats,
-  mockFilteringStats,
-  mockSearchStats,
-  mockRecommendStats,
-  mockMembershipStats,
-  mockTotalStats,
-  mockAdminCategories,
-  mockAdminBrands,
+    mockAdminBrands,
+    mockAdminCategories,
+    mockBookmarkStats,
+    mockFilteringStats,
+    mockMembershipStats,
+    mockRecommendStats,
+    mockSearchStats,
+    mockTotalStats,
 } from '@/features/admin/api/mockData';
-import { http, HttpResponse } from 'msw';
 import type { AdminBrand } from '@/features/admin/api/types';
+import { http, HttpResponse } from 'msw';
 
-// 공통 응답 포맷 유틸 (data 필드 사용)
 const createResponse = <T>(data: T, message: string) =>
   HttpResponse.json({
     code: 0,
@@ -23,47 +23,37 @@ const createResponse = <T>(data: T, message: string) =>
 const adminBrands = [...mockAdminBrands];
 
 export const adminHandlers = [
-  // 즐겨찾기 통계
-  http.get('/admin/statistics/bookmark', () => {
+  http.get(ADMIN_ENDPOINTS.STAT_BOOKMARK, () => {
     return createResponse(mockBookmarkStats, '즐겨찾기 통계 조회 성공');
   }),
-  // 필터링 수 통계
-  http.get('/admin/statistics/filter', () => {
+  http.get(ADMIN_ENDPOINTS.STAT_FILTERING, () => {
     return createResponse(mockFilteringStats, '필터링 수 통계 조회 성공');
   }),
-  // 검색 수 통계
-  http.get('/admin/statistics/searching', () => {
+  http.get(ADMIN_ENDPOINTS.STAT_SEARCH, () => {
     return createResponse(mockSearchStats, '검색 수 통계 조회 성공');
   }),
-  // 추천 분포 통계
-  http.get('/admin/statistics/recommendation', () => {
+  http.get(ADMIN_ENDPOINTS.STAT_RECOMMEND, () => {
     return createResponse(mockRecommendStats, '추천 분포 통계 조회 성공');
   }),
-  // 멤버십 통계
-  http.get('/admin/statistics/membership', () => {
+  http.get(ADMIN_ENDPOINTS.STAT_MEMBERSHIP, () => {
     return createResponse(mockMembershipStats, '멤버십 통계 조회 성공');
   }),
-  // 토탈 통계
-  http.get('/admin/statistics/total', () => {
+  http.get(ADMIN_ENDPOINTS.STAT_TOTAL, () => {
     return createResponse(mockTotalStats, '토탈 통계 조회 성공');
   }),
-  // 카테고리 목록 조회
-  http.get('/admin/category/list', () => {
+  http.get(ADMIN_ENDPOINTS.CATEGORY_LIST, () => {
     return createResponse(mockAdminCategories, '카테고리 목록 조회 성공');
   }),
-  // 브랜드 목록 조회
-  http.get('/admin/brand/list', () => {
+  http.get(ADMIN_ENDPOINTS.BRAND_LIST, () => {
     return createResponse(adminBrands, '브랜드 목록 조회 성공');
   }),
-  // 브랜드 추가
-  http.post('/admin/brand', async ({ request }) => {
+  http.post(ADMIN_ENDPOINTS.BRAND_CREATE, async ({ request }) => {
     const body = (await request.json()) as Omit<AdminBrand, 'brandId'>;
     const newId = adminBrands.length ? Math.max(...adminBrands.map(b => b.brandId)) + 1 : 1;
     const newBrand: AdminBrand = { ...body, brandId: newId };
     adminBrands.push(newBrand);
     return createResponse(newBrand, '브랜드 추가 성공');
   }),
-  // 브랜드 수정
   http.put('/admin/brands/:brandId', async ({ params, request }) => {
     const { brandId } = params;
     const idx = adminBrands.findIndex(b => b.brandId === Number(brandId));
@@ -79,7 +69,6 @@ export const adminHandlers = [
     adminBrands[idx] = { ...adminBrands[idx], ...body };
     return createResponse(adminBrands[idx], '브랜드 수정 성공');
   }),
-  // 브랜드 삭제
   http.delete('/admin/brands/:brandId', ({ params }) => {
     const { brandId } = params;
     const idx = adminBrands.findIndex(b => b.brandId === Number(brandId));

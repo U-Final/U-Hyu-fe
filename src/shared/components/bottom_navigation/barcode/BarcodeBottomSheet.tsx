@@ -47,7 +47,9 @@ export const BarcodeBottomSheet: FC<BarcodeBottomSheetProps> = ({
         <div className="bg-white rounded-t-2xl z-30 flex flex-col border border-light-gray p-4 min-h-[150px]">
           <header className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold">
-              {user?.userName} {user?.grade} 멤버십 바코드
+              {user
+                ? `${user.userName} ${user.grade} 멤버십 바코드`
+                : '멤버십 바코드'}
             </h2>
             <button
               onClick={onClose}

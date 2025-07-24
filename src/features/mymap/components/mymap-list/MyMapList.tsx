@@ -5,16 +5,11 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MdStars } from 'react-icons/md';
 
 interface MapListProps {
-  favoriteLabel: string;
   onCreateNewMap: () => void;
   onSelectMap: (id: number) => void;
 }
 
-const MyMapList: React.FC<MapListProps> = ({
-  favoriteLabel,
-  onCreateNewMap,
-  onSelectMap,
-}) => {
+const MyMapList: React.FC<MapListProps> = ({ onCreateNewMap, onSelectMap }) => {
   const { data, isLoading, isError } = useMyMapListQuery();
 
   if (isLoading) return <div>로딩 중...</div>;
@@ -25,14 +20,11 @@ const MyMapList: React.FC<MapListProps> = ({
       {/* 새 지도 만들기 */}
       <ADDMyMapButton onCreateNewMap={onCreateNewMap} />
 
-
       {/* 즐겨찾기 */}
       {/* 즐겨찾기 누르면 마이페이지 즐겨찾기 수정으로 이동 */}
       <div className="flex items-center py-3">
         <MdStars className="w-5 h-5 text-primary mr-2" />
-        <span className="text-body2 font-semibold">
-          {favoriteLabel}
-        </span>
+        <span className="text-body2 font-semibold">즐겨찾기</span>
       </div>
 
       {/* map 리스트 */}
@@ -43,7 +35,9 @@ const MyMapList: React.FC<MapListProps> = ({
           onClick={() => onSelectMap(map.myMapListId)}
         >
           <div className="flex items-center">
-            <MdStars className={`w-5 h-5 ${MYMAP_COLOR[map.markerColor as MarkerColor] || MYMAP_COLOR.RED}}`} />
+            <MdStars
+              className={`w-5 h-5 ${MYMAP_COLOR[map.markerColor as MarkerColor] || MYMAP_COLOR.RED}`}
+            />
             <span className="ml-2 text-body2 font-semibold">{map.title}</span>
           </div>
           <BsThreeDotsVertical />

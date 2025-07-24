@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { BenefitPage, ExtraInfo, HomePage, MapPage } from '@/pages';
+import { AdminPage, BenefitPage, ExtraInfo, HomePage, MapPage, MyPage, MyPageActivity } from '@/pages';
 import SidebarSheet from '@kakao-map/components/SidebarSheet';
 import { PATH } from '@paths';
 import {
@@ -11,8 +11,6 @@ import {
   useLocation,
 } from 'react-router-dom';
 
-import MyPage from '@/pages/mypage/MyPage';
-import MyPageActivity from '@/pages/mypage/MyPageActivity';
 
 import { BaseLayout, BottomNavigation, ModalRoot } from '@/shared/components';
 
@@ -37,6 +35,7 @@ const Layout = () => {
     PATH.MAP,
     PATH.MYPAGE,
     PATH.MYPAGE_ACTIVITY,
+    PATH.ADMIN,
   ] as const;
 
   const showBottomNav = visibleBottomNavRoutes.includes(
@@ -85,6 +84,7 @@ export const AppRoutes = () => {
           <Route path={PATH.EXTRA_INFO} element={<ExtraInfo />} />
           <Route path={PATH.LOGIN} element={<div>loginPage</div>} />
           <Route path={PATH.MAP} element={<MapPage />} />
+          <Route path={PATH.ADMIN} element={<AdminPage />} />
         </Route>
       </Routes>
       <ModalRoot />

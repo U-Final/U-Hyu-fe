@@ -1,7 +1,13 @@
+import RecommendedStoreCard from '@recommendation/components/RecommendedCard';
 import { useRecommendedStoresQuery } from '@recommendation/hooks/useRecommendQuery';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
-// 예시로 만든 UI 추후 수정.
-const RecommendedStoreList = () => {
+import { useIsLoggedIn, useUser } from '@/shared/store/useUserStore';
+
+export const RecommendedStoreList = () => {
   const {
     data: stores,
     isLoading,
@@ -12,26 +18,31 @@ const RecommendedStoreList = () => {
     radius: 1000,
   });
 
+  const isLoggedIn = useIsLoggedIn();
+  const user = useUser();
+
   if (isLoading) return <p>불러오는 중...</p>;
   if (error) return <p>{error.message}</p>;
+  if (isLoggedIn) return null;
 
   return (
-    <div className="space-y-4 p-4">
-      {stores?.map(store => (
-        <div
-          key={store.store_id}
-          className="border p-4 rounded-lg shadow-sm bg-white flex"
-        >
-          <div className="flex-1">
-            <p>{store.store_name}</p>
-            <p>{store.addr_detail}</p>
-            <p>{store.description}</p>
-          </div>
-          <img src={store.logo_image} className="w-[100px]" />
-        </div>
-      ))}
+    <div className="">
+      <p className="text-black font-semibold text-lg px-4 pt-2">
+        {user?.userName}님 안녕하세요, 오늘은 이런 혜택 어떠세요?
+      </p>
+
+      <Swiper
+        spaceBetween={4}
+        slidesPerView={1.2}
+        grabCursor
+        style={{ paddingRight: '1rem' }}
+      >
+        {stores?.map(store => (
+          <SwiperSlide key={store.store_id}>
+            <RecommendedStoreCard store={store} />
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   );
 };
-
-export default RecommendedStoreList;

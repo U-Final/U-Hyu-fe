@@ -3,11 +3,13 @@ import { homeHandlers } from './home';
 import { mapHandlers } from './map';
 import { userHandlers } from './user';
 import { mypageHandlers } from './mypage';
+import { adminHandlers } from './admin';
 
 export const handlers = [
   ...userHandlers,
   ...mapHandlers,
   ...homeHandlers,
   ...benefitHandlers,
-  ...mypageHandlers
+  ...mypageHandlers,
+  ...adminHandlers,
 ];

@@ -1,5 +1,6 @@
-import { RefreshCw } from 'lucide-react';
 import React from 'react';
+
+import { RefreshCw } from 'lucide-react';
 
 interface ManualSearchButtonProps {
   /** 버튼 표시 여부 */
@@ -35,7 +36,7 @@ export const ManualSearchButton: React.FC<ManualSearchButtonProps> = ({
   return (
     <div
       className={`
-        fixed top-20 left-1/2 -translate-x-1/2 z-20
+        fixed top-32 left-1/2 -translate-x-1/2 z-20
         transition-all duration-300 ease-out
         ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'}
         ${className}
@@ -51,25 +52,26 @@ export const ManualSearchButton: React.FC<ManualSearchButtonProps> = ({
           rounded-full shadow-lg hover:shadow-xl
           transition-all duration-200 
           font-medium text-sm
-          ${loading 
-            ? 'cursor-not-allowed opacity-75' 
-            : 'hover:bg-gray-50 active:scale-95 cursor-pointer'
+          ${
+            loading
+              ? 'cursor-not-allowed opacity-75'
+              : 'hover:bg-gray-50 active:scale-95 cursor-pointer'
           }
           backdrop-blur-sm
         `}
         aria-label="이 지역에서 재검색"
       >
-        <RefreshCw 
-          size={16} 
+        <RefreshCw
+          size={16}
           className={`
             ${loading ? 'animate-spin' : ''}
             text-blue-600
-          `} 
+          `}
         />
         <span className="whitespace-nowrap">
           {loading ? '검색 중...' : '이 지역에서 재검색'}
         </span>
-        
+
         {/* 이동 거리 표시 (개발 모드에서만) */}
         {import.meta.env.MODE === 'development' && distance && (
           <span className="text-xs text-gray-500 ml-1">
@@ -77,7 +79,7 @@ export const ManualSearchButton: React.FC<ManualSearchButtonProps> = ({
           </span>
         )}
       </button>
-      
+
       {/* 버튼 아래 작은 화살표 (지도를 가리키는 효과) */}
       <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1">
         <div className="w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-200 drop-shadow-sm" />
@@ -94,7 +96,6 @@ export const MobileManualSearchButton: React.FC<ManualSearchButtonProps> = ({
   visible,
   loading = false,
   onClick,
-  distance,
   className = '',
 }) => {
   if (!visible) return null;
@@ -107,7 +108,7 @@ export const MobileManualSearchButton: React.FC<ManualSearchButtonProps> = ({
   return (
     <div
       className={`
-        fixed top-16 left-1/2 -translate-x-1/2 z-20
+        fixed top-28 left-1/2 -translate-x-1/2 z-20
         transition-all duration-300 ease-out
         ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'}
         ${className}
@@ -123,20 +124,21 @@ export const MobileManualSearchButton: React.FC<ManualSearchButtonProps> = ({
           rounded-full shadow-lg
           transition-all duration-200 
           font-medium text-xs
-          ${loading 
-            ? 'cursor-not-allowed opacity-75' 
-            : 'hover:bg-gray-50 active:scale-95 cursor-pointer'
+          ${
+            loading
+              ? 'cursor-not-allowed opacity-75'
+              : 'hover:bg-gray-50 active:scale-95 cursor-pointer'
           }
           backdrop-blur-sm
         `}
         aria-label="재검색"
       >
-        <RefreshCw 
-          size={14} 
+        <RefreshCw
+          size={14}
           className={`
             ${loading ? 'animate-spin' : ''}
             text-blue-600
-          `} 
+          `}
         />
         <span className="whitespace-nowrap">
           {loading ? '검색중' : '재검색'}
@@ -150,14 +152,16 @@ export const MobileManualSearchButton: React.FC<ManualSearchButtonProps> = ({
  * 반응형 재검색 버튼
  * 화면 크기에 따라 적절한 버전을 자동 선택
  */
-export const ResponsiveManualSearchButton: React.FC<ManualSearchButtonProps> = (props) => {
+export const ResponsiveManualSearchButton: React.FC<
+  ManualSearchButtonProps
+> = props => {
   return (
     <>
       {/* 데스크톱/태블릿 버전 */}
       <div className="hidden sm:block">
         <ManualSearchButton {...props} />
       </div>
-      
+
       {/* 모바일 버전 */}
       <div className="block sm:hidden">
         <MobileManualSearchButton {...props} />

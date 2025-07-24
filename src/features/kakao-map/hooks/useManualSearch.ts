@@ -6,7 +6,9 @@ import { useCallback, useRef, useState } from 'react';
  */
 
 // 재검색 버튼이 표시되는 최소 이동 거리 (미터)
-const SHOW_BUTTON_DISTANCE = 200;
+const SHOW_BUTTON_DISTANCE = import.meta.env.VITE_SEARCH_DISTANCE_THRESHOLD 
+  ? parseInt(import.meta.env.VITE_SEARCH_DISTANCE_THRESHOLD) 
+  : 5000; // 기본값: 5km
 
 export interface SearchState {
   /** 재검색 버튼 표시 여부 */

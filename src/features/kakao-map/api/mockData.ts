@@ -1,4 +1,4 @@
-import type { StoreDetail, StoreSummary } from './types';
+import type { CategoryBrand, CategoryBrandsResponse, StoreDetail, StoreSummary } from './types';
 
 // 목데이터: 주변 매장 목록
 export const MOCK_STORES: StoreSummary[] = [
@@ -245,5 +245,68 @@ export const createMockToggleFavoriteResponse = (storeId: number) => {
     },
     message: '즐겨찾기가 성공적으로 업데이트되었습니다.',
     statusCode: 200,
+  };
+};
+
+// 목데이터: 카테고리별 브랜드 목록
+export const MOCK_CATEGORY_BRANDS: Record<number, CategoryBrand[]> = {
+  1: [
+    { brandId: 1, brandName: '스타벅스' },
+    { brandId: 2, brandName: '투썸플레이스' },
+    { brandId: 3, brandName: '이디야커피' },
+    { brandId: 4, brandName: '커피빈' },
+  ],
+  2: [
+    { brandId: 5, brandName: 'GS25' },
+    { brandId: 6, brandName: 'CU' },
+    { brandId: 7, brandName: '세븐일레븐' },
+    { brandId: 8, brandName: '이마트24' },
+  ],
+  3: [
+    { brandId: 9, brandName: '맥도날드' },
+    { brandId: 10, brandName: 'KFC' },
+    { brandId: 11, brandName: '버거킹' },
+    { brandId: 12, brandName: '롯데리아' },
+  ],
+  4: [
+    { brandId: 13, brandName: '올리브영' },
+    { brandId: 14, brandName: '왓슨스' },
+    { brandId: 15, brandName: 'LOHBS' },
+  ],
+  5: [
+    { brandId: 16, brandName: '파리바게뜨' },
+    { brandId: 17, brandName: '뚜레쥬르' },
+    { brandId: 18, brandName: '삼립' },
+  ],
+  6: [
+    { brandId: 19, brandName: 'CGV' },
+    { brandId: 20, brandName: '롯데시네마' },
+    { brandId: 21, brandName: '메가박스' },
+  ],
+  7: [
+    { brandId: 22, brandName: '이마트' },
+    { brandId: 23, brandName: '홈플러스' },
+    { brandId: 24, brandName: '롯데마트' },
+  ],
+  8: [
+    { brandId: 25, brandName: '피트니스클럽' },
+    { brandId: 26, brandName: '헬스장' },
+    { brandId: 27, brandName: '필라테스' },
+  ],
+  9: [
+    { brandId: 28, brandName: '약국' },
+    { brandId: 29, brandName: '온누리약국' },
+    { brandId: 30, brandName: '부민약국' },
+  ],
+};
+
+// 목데이터 응답 헬퍼 함수: 카테고리별 브랜드 목록
+export const createMockCategoryBrandsResponse = (categoryId: number): CategoryBrandsResponse => {
+  const brands = MOCK_CATEGORY_BRANDS[categoryId] || [];
+  
+  return {
+    data: brands,
+    message: brands.length > 0 ? '카테고리별 브랜드 목록을 성공적으로 조회했습니다.' : '해당 카테고리에 브랜드가 없습니다.',
+    statusCode: brands.length > 0 ? 0 : 404,
   };
 };

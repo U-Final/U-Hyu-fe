@@ -2,6 +2,8 @@ import { client } from '@/shared/client';
 
 import { MAP_ENDPOINTS } from './endpoints';
 import type {
+  CategoryBrandsResponse,
+  GetCategoryBrandsParams,
   GetNearbyStoresParams,
   GetStoreDetailParams,
   StoreDetailResponse,
@@ -54,6 +56,18 @@ export const mapApi = {
     const response = await client.post<ToggleFavoriteResponseType>(url);
     return response.data;
   },
+
+  /**
+   * 카테고리별 브랜드 목록 조회
+   * GET /category/2
+   */
+  getCategoryBrands: async ({
+    categoryId,
+  }: GetCategoryBrandsParams): Promise<CategoryBrandsResponse> => {
+    const url = `${MAP_ENDPOINTS.GET_CATEGORY_BRANDS}/${categoryId}`;
+    const response = await client.get<CategoryBrandsResponse>(url);
+    return response.data;
+  },
 };
 
 // 타입 가드 함수들 (런타임 안전성을 위한 추가 보안)
@@ -63,4 +77,8 @@ export const isValidStoreId = (storeId: unknown): storeId is number => {
 
 export const isValidCoordinate = (coord: unknown): coord is number => {
   return typeof coord === 'number' && !isNaN(coord) && isFinite(coord);
+};
+
+export const isValidCategoryId = (categoryId: unknown): categoryId is number => {
+  return typeof categoryId === 'number' && categoryId > 0;
 };

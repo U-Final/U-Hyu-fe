@@ -35,16 +35,6 @@ export const BottomSheetContainer: React.FC = () => {
     currentBottomSheetStep === 'brand' && !!selectedCategory
   );
 
-  // MyMap 관련 핸들러
-  const handleCreateNewMap = () => {
-    // 추후 새 지도 추가하는 곳으로 이동 구현하기
-  };
-
-  const handleSelectMap = (id: number) => {
-    console.log(`지도 선택됨: ${id}`);
-    // 선택된 지도 상세 보기 또는 이동 처리
-  };
-
   // 카테고리 키를 한국어 이름으로 변환
   const getCategoryDisplayName = (categoryKey: string): string => {
     if (!categoryKey || categoryKey === '') return '';
@@ -172,10 +162,7 @@ export const BottomSheetContainer: React.FC = () => {
                 뒤로
               </button>
             </div>
-            <MyMapList
-              onCreateNewMap={handleCreateNewMap}
-              onSelectMap={handleSelectMap}
-            />
+            <MyMapList/>
           </div>
         );
 

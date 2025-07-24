@@ -6,3 +6,49 @@ export interface MyMapListRes {
   title: string;
   markerColor: string;
 }
+
+/**
+ * My Map 추가 요청
+ */
+export interface MyMapStoreAddReq {
+  title: string;
+  markerColor: string;
+  uuid: string;
+}
+
+/**
+ * My Map 추가 응답
+ */
+export interface MyMapStoreAddRes {
+  myMapListId: number;
+}
+
+/**
+ * My Map 수정 요청
+ */
+export interface MyMapListUpdateReq {
+  myMapListId: number;
+  title: string;
+  markerColor: string;
+}
+
+/**
+ * My Map 수정 응답
+ */
+export interface MyMapListUpdateRes {
+  myMapListId: number;
+}
+
+/**
+ * My Map 삭제 요청
+ */
+export interface MyMapListDeleteParams {
+  myMapListId: number;
+}
+
+/**
+ * My Map 삭제 응답
+ */
+export interface MyMapListDeleteRes {
+  Resultcode: number;
+}

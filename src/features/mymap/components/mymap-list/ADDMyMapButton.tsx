@@ -1,10 +1,10 @@
 import { FiPlusCircle } from 'react-icons/fi';
 
-interface ADDMyMapButtonProps {
+interface AddMyMapButtonProps {
   onCreateNewMap: () => void;
 }
 
-const ADDMyMapButton: React.FC<ADDMyMapButtonProps> = ({ onCreateNewMap }) => {
+const AddMyMapButton: React.FC<AddMyMapButtonProps> = ({ onCreateNewMap }) => {
   return (
     <button
       onClick={onCreateNewMap}
@@ -15,4 +15,4 @@ const ADDMyMapButton: React.FC<ADDMyMapButtonProps> = ({ onCreateNewMap }) => {
   );
 };
 
-export default ADDMyMapButton;
+export default AddMyMapButton;

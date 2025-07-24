@@ -31,7 +31,7 @@ const BaseModal = ({ title, children }: BaseModalProps) => {
       aria-modal="true"
       aria-labelledby={title ? 'modal-title' : undefined}
       onClick={handleBackdropClick}
-      className="absolute inset-0 z-50 flex items-center justify-center bg-black/40"
+      className="absolute inset-0 z-[999] flex items-center justify-center bg-black/40"
     >
       <section className="bg-white rounded-[16px] w-full px-[20px] py-[20px] min-w-[300px] max-w-lg mx-8 flex flex-col gap-[10px]">
         <header className="flex justify-between items-center">

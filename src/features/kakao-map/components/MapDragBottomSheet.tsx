@@ -16,12 +16,12 @@ export const MapDragBottomSheet = ({
   const [{ y }, api] = useSpring(() => ({ y: window.innerHeight * 0.5 })); // 초기값을 중간 상태로 설정
   const [currentState, setCurrentState] = useState<
     'collapsed' | 'middle' | 'expanded'
-  >('middle');
+  >('collapsed');
 
   // 3단계 높이 설정
   const expandedY = 60; // 완전히 열린 상태 (위에서 60px)
   const middleY = window.innerHeight * 0.5; // 중간 상태 (화면 높이의 50%)
-  const collapsedY = window.innerHeight - 120; // 접힌 상태 (아래에서 100px 만 보인다.)
+  const collapsedY = window.innerHeight - 120; // 접힌 상태
   const middleThreshold = window.innerHeight * 0.22; // 중간지점을 처리할 범위 (±22%)
 
   // 움직임 제어 함수들
@@ -50,17 +50,30 @@ export const MapDragBottomSheet = ({
   }, [openMiddle]);
 
   const bind = useDrag(
-    ({ last, target, movement: [, my], cancel, memo }) => {
+    ({ last, target, movement: [, my], cancel, memo, first }) => {
       const targetScroll = target as HTMLElement;
+      
+      // 첫 번째 이벤트에서 드래그 가능 여부 결정
+      if (first) {
+        // bottom sheet 영역이 아닌 곳에서 드래그하면 취소
+        if (!sheetRef.current?.contains(targetScroll)) {
+          return cancel?.();
+        }
+
+        // 드래그 핸들 영역이 아닌 곳에서 드래그하면 취소
+        const isDragHandle = targetScroll.closest('.cursor-grab');
+        if (!isDragHandle) {
+          return cancel?.();
+        }
+
+        // 스크롤 영역에서 드래그하면 취소
+        if (targetScroll.closest('[data-scrollable]')) {
+          return cancel?.();
+        }
+      }
+
       if (!memo) memo = y.get();
       const newY = memo + my;
-
-      if (
-        sheetRef.current?.contains(targetScroll) &&
-        targetScroll.closest('[data-scrollable]')
-      ) {
-        return; //스크롤 영역을 터치하면 드래그 안되게 설정.
-      }
 
       if (last) {
         //드래그 완료시 위치 결정
@@ -80,7 +93,12 @@ export const MapDragBottomSheet = ({
       }
       return memo;
     },
-    { from: () => [0, y.get()], pointer: { touch: true } }
+    { 
+      from: () => [0, y.get()], 
+      pointer: { touch: true },
+      filterTaps: true,
+      threshold: 10
+    }
   );
 
   const handleBackgroundClick = () => {
@@ -91,7 +109,7 @@ export const MapDragBottomSheet = ({
   };
 
   return (
-    <div className="flex-1">
+    <div className="flex-1 pointer-events-none">
       {/* 배경 오버레이 - expanded 상태일 때만 활성화 */}
       {currentState === 'expanded' && (
         <div
@@ -104,26 +122,36 @@ export const MapDragBottomSheet = ({
       {/* Sheet */}
       <animated.div
         ref={sheetRef}
-        {...bind()}
         style={{
           transform: y.to(val => `translateY(${val}px)`),
           height: y.to(val => `calc(100vh - ${val}px)`),
         }}
-        className="absolute top-0 left-0 right-0 z-40 bg-white rounded-t-2xl border border-light-gray touch-none flex flex-col"
+        className="absolute top-0 left-0 right-0 z-40 bg-white rounded-t-2xl border border-light-gray flex flex-col pointer-events-auto"
       >
-        <div className="flex-shrink-0 py-4 px-4">
+        <div 
+          className="flex-shrink-0 py-4 px-4 cursor-grab active:cursor-grabbing touch-auto" 
+          {...bind()}
+          onTouchStart={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
+        >
           <div className="w-12 h-1.5 bg-gray rounded-full mx-auto" />
         </div>
 
         {title && (
-          <div className="flex-shrink-0" onClick={openMiddle}>
+          <div 
+            className="flex-shrink-0 cursor-grab active:cursor-grabbing touch-auto" 
+            onClick={openMiddle} 
+            {...bind()}
+            onTouchStart={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
+          >
             {title}
           </div>
         )}
 
         <div
           data-scrollable
-          className="flex-1 overflow-y-auto scrollbar-hidden pb-[50px]"
+          className="flex-1 overflow-y-auto scrollbar-hidden pb-[60px]"
         >
           {children}
         </div>

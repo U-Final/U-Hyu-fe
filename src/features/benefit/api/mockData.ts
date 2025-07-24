@@ -12,7 +12,7 @@ interface BrandMock extends Brand {
 /**
  * 목데이터: 브랜드 정보
  */
-export const allBrands: BrandMock[] = [
+export const MOCK_ALL_BRANDS: BrandMock[] = [
   {
     brandId: 101,
     brandName: '굽네치킨',
@@ -90,7 +90,7 @@ export const allBrands: BrandMock[] = [
 /**
  * 목데이터: 브랜드 상세 정보
  */
-export const mockBrandDetails: BrandDetailRes[] = [
+export const MOCK_BRAND_DETAILS: BrandDetailRes[] = [
   {
     brandId: 101,
     brandName: '굽네치킨',

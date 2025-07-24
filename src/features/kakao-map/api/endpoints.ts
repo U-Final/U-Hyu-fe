@@ -5,6 +5,8 @@ export const MAP_ENDPOINTS = {
   GET_STORE_DETAIL: '/map/detail/stores',
   /** 매장 즐겨찾기 토글 */
   TOGGLE_FAVORITE: '/map/stores',
+  /** 카테고리별 브랜드 조회 */
+  GET_CATEGORY_BRANDS: '/category',
 } as const;
 
 export type MapEndpoint = (typeof MAP_ENDPOINTS)[keyof typeof MAP_ENDPOINTS];

@@ -15,7 +15,7 @@ interface MapUIState {
   isSearchFocused: boolean;
 
   // 바텀시트 네비게이션 상태
-  currentBottomSheetStep: 'list' | 'category' | 'brand';
+  currentBottomSheetStep: 'list' | 'category' | 'brand' | 'mymap';
   isBottomSheetExpanded: boolean;
 
   // 필터 UI 상태
@@ -43,7 +43,7 @@ type MapUIAction =
   | { type: 'CLEAR_SEARCH' }
 
   // 바텀시트 관련 액션
-  | { type: 'SET_BOTTOM_SHEET_STEP'; payload: 'list' | 'category' | 'brand' }
+  | { type: 'SET_BOTTOM_SHEET_STEP'; payload: 'list' | 'category' | 'brand' | 'mymap' }
   | { type: 'SET_BOTTOM_SHEET_EXPANDED'; payload: boolean }
   | { type: 'TOGGLE_BOTTOM_SHEET' }
 
@@ -140,7 +140,7 @@ interface MapUIContextValue {
     clearSearch: () => void;
 
     // 바텀시트 관련 액션
-    setBottomSheetStep: (step: 'list' | 'category' | 'brand') => void;
+    setBottomSheetStep: (step: 'list' | 'category' | 'brand' | 'mymap') => void;
     setBottomSheetExpanded: (expanded: boolean) => void;
     toggleBottomSheet: () => void;
 
@@ -210,7 +210,7 @@ export const MapUIProvider: React.FC<{ children: React.ReactNode }> = ({
     }, []),
 
     // 바텀시트 관련 액션
-    setBottomSheetStep: useCallback((step: 'list' | 'category' | 'brand') => {
+    setBottomSheetStep: useCallback((step: 'list' | 'category' | 'brand' | 'mymap') => {
       dispatch({ type: 'SET_BOTTOM_SHEET_STEP', payload: step });
     }, []),
 

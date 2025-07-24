@@ -636,7 +636,6 @@
   touch-action: pan-x !important;
   will-change: scroll-position !important;
   position: relative !important;
-  z-index: 999 !important;
 }
 
 .filter-tabs-scroll::-webkit-scrollbar {

@@ -1,3 +1,4 @@
+import { LoginButton } from '@home/components/LoginButton';
 import { Menu } from 'lucide-react';
 
 import {
@@ -12,15 +13,17 @@ const SidebarSheet = () => {
   return (
     <Sheet modal={false}>
       <SheetTrigger asChild>
-        <button className="p-2">
+        <button className="absolute top-[16px] left-4 z-50 p-2 bg-white rounded-md shadow-sm">
           <Menu className="w-6 h-6" />
         </button>
       </SheetTrigger>
       <SheetContent side="left" className="w-[70%]" containerId="main-content">
         <SheetHeader>
-          <SheetTitle>추천 제휴처</SheetTitle>
+          <SheetTitle>U-HYU</SheetTitle>
         </SheetHeader>
-        <p>이러고 하나씩 넣음녀 되는ㄴ건가?</p>
+        <div className="px-8">
+          <LoginButton />
+        </div>
       </SheetContent>
     </Sheet>
   );

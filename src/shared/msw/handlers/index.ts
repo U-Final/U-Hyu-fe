@@ -5,6 +5,7 @@ import { mymapHandlers } from './mymap';
 import { mypageHandlers } from './mypage';
 import { recommendHandlers } from './recommendation';
 import { userHandlers } from './user';
+import { visitStoreHandler } from './visitstore';
 
 export const handlers = [
   ...userHandlers,
@@ -14,4 +15,5 @@ export const handlers = [
   ...mypageHandlers,
   ...mymapHandlers,
   ...recommendHandlers,
+  ...visitStoreHandler,
 ];

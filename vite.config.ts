@@ -25,6 +25,7 @@ export default defineConfig({
       '@mymap': path.resolve(__dirname, 'src/features/mymap'),
       '@kakao-map': path.resolve(__dirname, 'src/features/kakao-map'),
       '@recommendation': path.resolve(__dirname, 'src/features/recommendation'),
+      '@barcode': path.resolve(__dirname, 'src/features/barcode'),
     },
   },
   test: {

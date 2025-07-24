@@ -19,6 +19,7 @@
     "baseUrl": ".",
     "paths": {
       // 각 도메인 별 경로 설정
+      "@barcode/*": ["./src/features/barcode/*"],
       "@recommendation/*": ["./src/features/recommendation/*"],
       "@home/*": ["./src/features/home/*"],
       "@user/*": ["./src/features/user/*"],

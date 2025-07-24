@@ -1,24 +1,38 @@
-import { useState } from 'react';
-import { mockUser } from '@mypage/types/mockUser';
-import type { UserInfo } from '@mypage/types/types';
+import { useUserInfoQuery } from '@mypage/hooks/useUserInfoQuery';
+import { useEffect, useState } from 'react';
 
 import MyPageHeader from '@mypage/components/MyPageHeader';
 import MyPageUserInfo from '@mypage/components/MyPageUserInfo';
 import MyPageMembership from '@mypage/components/MyPageMembership';
 import MyPageBrand from '@mypage/components/MyPageBrand';
 import MyPageMarker from '@mypage/components/MyPageMarker';
+import type { UserInfo } from '@mypage/api/types';
 
 const MyPage = () => {
-  const [user, setUser] = useState<UserInfo>(mockUser);
+  const { data: user, isLoading, error } = useUserInfoQuery();
+  const [localUser, setLocalUser] = useState<UserInfo | undefined>(undefined);
+
+  useEffect(() => {
+    if (user) setLocalUser(user);
+  }, [user]);
+
+  if (isLoading) return <div>로딩중...</div>;
+  if (error || !localUser) return <div>에러 발생</div>;
+  if (localUser.status === 'DELETED') return <div>로그인해주세요.</div>;
 
   return (
     <div className="min-h-screen max-w-[22.5rem] mx-auto">
       <div className="p-[1rem] space-y-[1.5rem] pb-[6rem]">
-        <MyPageHeader user={user} />
-        <MyPageUserInfo user={user} setUser={setUser} />
-        <MyPageMembership user={user} setUser={setUser} />
-        <MyPageBrand user={user} setUser={setUser} />
-        <MyPageMarker user={user} setUser={setUser} />
+        <MyPageHeader
+          user={localUser}
+          onProfileImageChange={(newImage) =>
+            setLocalUser((prev) => prev ? { ...prev, profileImage: newImage } : prev)
+          }
+        />
+        <MyPageUserInfo user={localUser} setUser={setLocalUser} />
+        <MyPageMembership user={localUser} setUser={setLocalUser} />
+        <MyPageBrand user={localUser} setUser={setLocalUser} />
+        <MyPageMarker user={localUser} setUser={setLocalUser} />
       </div>
     </div>
   );

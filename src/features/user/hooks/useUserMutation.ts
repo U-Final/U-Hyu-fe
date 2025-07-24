@@ -1,6 +1,17 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { userApi } from '@user/api/userApi';
+
 import { userKeys } from './useUserQuery';
+
+// 이메일 중복확인 훅 (Mutation)
+export const useCheckEmailMutation = () => {
+  return useMutation({
+    mutationFn: userApi.checkEmail,
+    onError: (error: Error) => {
+      console.error('이메일 중복확인 실패:', error);
+    },
+  });
+};
 
 // 사용자 추가 정보 입력 훅 (Mutation)
 export const useSubmitExtraInfo = () => {

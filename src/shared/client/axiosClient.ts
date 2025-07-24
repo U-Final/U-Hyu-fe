@@ -3,7 +3,7 @@ import axios, { type AxiosInstance } from 'axios';
 const IS_MOCKING = import.meta.env.VITE_USE_MSW === 'true';
 
 const API_CONFIG = {
-  BASE_URL: IS_MOCKING ? '' : import.meta.env.VITE_API_URL, // ✅ 여기서 빈 문자열이면 상대경로!
+  BASE_URL: IS_MOCKING ? '' : import.meta.env.VITE_API_URL,
   TIMEOUT: 10000,
 } as const;
 

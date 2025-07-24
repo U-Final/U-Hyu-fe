@@ -20,14 +20,16 @@
     "paths": {
       // 각 도메인 별 경로 설정
       "@barcode/*": ["./src/features/barcode/*"],
+      "@recommendation/*": ["./src/features/recommendation/*"],
       "@home/*": ["./src/features/home/*"],
       "@user/*": ["./src/features/user/*"],
       "@kakao-map/*": ["./src/features/kakao-map/*"],
       "@extra-info/*": ["./src/features/extra-info/*"],
       "@benefit/*": ["./src/features/benefit/*"],
       "@mypage/*": ["./src/features/mypage/*"],
+      "@mymap/*": ["./src/features/mymap/*"],
       "@paths": ["./src/routes/path.ts"],
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
     },
 
     /* Linting */

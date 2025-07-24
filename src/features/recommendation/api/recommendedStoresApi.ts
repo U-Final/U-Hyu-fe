@@ -17,5 +17,8 @@ export const getRecommendedStores = async (
     RECOMMEND_ENDPOINT,
     { params }
   );
-  return res.data.data!;
+  if (!res.data.data) {
+    throw new Error('추천 매장 데이터를 불러올 수 없음!');
+  }
+  return res.data.data;
 };

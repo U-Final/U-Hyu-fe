@@ -41,10 +41,9 @@ export const BottomSheetContainer: React.FC = () => {
                 <h2 className="text-lg font-bold text-gray-900">
                   주변 제휴 매장
                 </h2>
-                {(selectedCategory || selectedBrand) && (
+                {selectedBrand && (
                   <p className="text-sm text-gray-500 mt-1">
-                    {selectedCategory}
-                    {selectedBrand ? ' > ' + selectedBrand : ''}
+                    {selectedCategory} {'>'}  {selectedBrand}
                   </p>
                 )}
               </div>

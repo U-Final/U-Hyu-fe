@@ -30,7 +30,7 @@ export const MyMapForm = ({
   defaultColor,
 }: MyMapFormProps) => {
   const [title, setTitle] = useState(defaultTitle ?? '');
-  const [color, setColor] = useState<MarkerColor>(defaultColor as MarkerColor);
+  const [color, setColor] = useState<MarkerColor>(defaultColor || 'RED');
 
   const { mutate: addMyMap, isPending: isCreating } = useAddMyMapMutation();
   const { mutate: updateMyMap, isPending: isUpdating } =

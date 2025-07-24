@@ -13,7 +13,10 @@ const SidebarSheet = () => {
   return (
     <Sheet modal={false}>
       <SheetTrigger asChild>
-        <button className="absolute top-[14px] left-[15px] z-50 p-2 bg-white rounded-md shadow-sm">
+        <button
+          aria-label="사이드바 열기"
+          className="absolute top-[14px] left-[15px] z-50 p-2 bg-white rounded-md shadow-sm"
+        >
           <Menu className="w-5 h-5" />
         </button>
       </SheetTrigger>

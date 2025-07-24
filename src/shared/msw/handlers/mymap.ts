@@ -6,7 +6,7 @@ import { http } from 'msw';
 import { createErrorResponse } from '@/shared/utils/createErrorResponse';
 import { createResponse } from '@/shared/utils/createResponse';
 
-let nextId = MOCK_MYMAP_LIST.length + 1;
+let nextId = Math.max(...MOCK_MYMAP_LIST.map(m => m.myMapListId), 0) + 1;
 
 export const mymapHandlers = [
   // My Map 목록 조회 MSW 핸들러

@@ -42,6 +42,11 @@ export const MyMapForm = ({
   const handleSubmit = () => {
     if (!title.trim()) return;
 
+    if (mode === 'edit' && !myMapListId) {
+      console.error('Edit mode requires myMapListId');
+      return;
+    }
+
     if (mode === 'create') {
       addMyMap(
         { title: title.trim(), markerColor: color, uuid: crypto.randomUUID() },

@@ -38,8 +38,8 @@ export const useBrandsByCategory = (categoryKey: StoreCategory | null) => {
     if (!isError || !error) return null;
 
     // Axios 에러인 경우
-    if ('response' in error && error.response) {
-      const status = error.response;
+    if ('response' in error && error.response && typeof error.response === 'object' && 'status' in error.response) {
+      const status = error.response.status;
       switch (status) {
         case 404:
           return '해당 카테고리에 등록된 브랜드가 없습니다.';

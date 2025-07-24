@@ -248,55 +248,77 @@ export const createMockToggleFavoriteResponse = (storeId: number) => {
   };
 };
 
-// 목데이터: 카테고리별 브랜드 목록
+// 목데이터: 카테고리별 브랜드 목록 (실제 서비스 데이터 기반)
 export const MOCK_CATEGORY_BRANDS: Record<number, CategoryBrand[]> = {
-  1: [
-    { brandId: 1, brandName: '스타벅스' },
-    { brandId: 2, brandName: '투썸플레이스' },
-    { brandId: 3, brandName: '이디야커피' },
-    { brandId: 4, brandName: '커피빈' },
+  1: [ // APP/기기
+    { brandId: 1, brandName: 'V컬러링 멤버십 프로모션' },
+    { brandId: 2, brandName: '원스토어' },
+    { brandId: 3, brandName: '지니뮤직' },
   ],
-  2: [
-    { brandId: 5, brandName: 'GS25' },
-    { brandId: 6, brandName: 'CU' },
-    { brandId: 7, brandName: '세븐일레븐' },
-    { brandId: 8, brandName: '이마트24' },
+  2: [ // 영화/미디어
+    { brandId: 4, brandName: 'CGV' },
+    { brandId: 5, brandName: '롯데시네마' },
+    { brandId: 6, brandName: '메가박스' },
   ],
-  3: [
-    { brandId: 9, brandName: '맥도날드' },
-    { brandId: 10, brandName: 'KFC' },
-    { brandId: 11, brandName: '버거킹' },
-    { brandId: 12, brandName: '롯데리아' },
+  3: [ // 워터파크/아쿠아리움
+    { brandId: 7, brandName: '아쿠아필드' },
+    { brandId: 8, brandName: '스파랜드' },
+    { brandId: 9, brandName: '클럽디 오아시스' },
   ],
-  4: [
-    { brandId: 13, brandName: '올리브영' },
-    { brandId: 14, brandName: '왓슨스' },
-    { brandId: 15, brandName: 'LOHBS' },
+  4: [ // 액티비티
+    { brandId: 10, brandName: '스카이라인 루지' },
+    { brandId: 11, brandName: '클룩' },
+    { brandId: 12, brandName: '부산 엑스 더 스카이' },
   ],
-  5: [
-    { brandId: 16, brandName: '파리바게뜨' },
-    { brandId: 17, brandName: '뚜레쥬르' },
-    { brandId: 18, brandName: '삼립' },
+  5: [ // 뷰티(피부과, 클리닉)
+    { brandId: 13, brandName: '오가나셀 피부과 의원 청담점' },
+    { brandId: 14, brandName: '데이원클리닉' },
+    { brandId: 15, brandName: '포쉬네일' },
   ],
-  6: [
-    { brandId: 19, brandName: 'CGV' },
-    { brandId: 20, brandName: '롯데시네마' },
-    { brandId: 21, brandName: '메가박스' },
+  6: [ // 건강(제약, 영양제 등)
+    { brandId: 16, brandName: '동아제약 디몰' },
+    { brandId: 17, brandName: 'LG생활건강샵 U+패밀리샵' },
+    { brandId: 18, brandName: '필리' },
   ],
-  7: [
-    { brandId: 22, brandName: '이마트' },
-    { brandId: 23, brandName: '홈플러스' },
-    { brandId: 24, brandName: '롯데마트' },
+  7: [ // 생활/편의
+    { brandId: 19, brandName: 'GS25' },
+    { brandId: 20, brandName: '펫생각' },
+    { brandId: 21, brandName: '셸로' },
   ],
-  8: [
-    { brandId: 25, brandName: '피트니스클럽' },
-    { brandId: 26, brandName: '헬스장' },
-    { brandId: 27, brandName: '필라테스' },
+  8: [ // 쇼핑
+    { brandId: 22, brandName: 'GS THE FRESH' },
+    { brandId: 23, brandName: 'VYVY' },
+    { brandId: 24, brandName: '롯데백화점몰' },
   ],
-  9: [
-    { brandId: 28, brandName: '약국' },
-    { brandId: 29, brandName: '온누리약국' },
-    { brandId: 30, brandName: '부민약국' },
+  9: [ // 음식점
+    { brandId: 25, brandName: 'VIPS' },
+    { brandId: 26, brandName: '더플레이스' },
+    { brandId: 27, brandName: '제일제면소' },
+  ],
+  10: [ // 베이커리/디저트
+    { brandId: 28, brandName: '파리바게트' },
+    { brandId: 29, brandName: '뚜레쥬르' },
+    { brandId: 30, brandName: '베스킨라빈스' },
+  ],
+  11: [ // 테마파크
+    { brandId: 31, brandName: '뽀로로파크' },
+    { brandId: 32, brandName: '아르떼 키즈파크 제주' },
+    { brandId: 33, brandName: '원더빌리지' },
+  ],
+  12: [ // 공연/전시
+    { brandId: 34, brandName: '빛의 벙커' },
+    { brandId: 35, brandName: '빛의 시어터' },
+    { brandId: 36, brandName: '그라운드시소' },
+  ],
+  13: [ // 교육
+    { brandId: 37, brandName: '젠지' },
+    { brandId: 38, brandName: '월스트리트 잉글리시' },
+    { brandId: 39, brandName: 'DBR동아비즈니스리뷰' },
+  ],
+  14: [ // 여행/교통
+    { brandId: 40, brandName: 'SK렌터카' },
+    { brandId: 41, brandName: '야놀자글로벌 해외 숙박' },
+    { brandId: 42, brandName: '티웨이항공' },
   ],
 };
 

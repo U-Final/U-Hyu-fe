@@ -4,7 +4,7 @@ interface ADDMyMapButtonProps {
   onCreateNewMap: () => void;
 }
 
-const ADDMyMapButton: React.FC<ADDMyMapButtonProps> = ({ onCreateNewMap }) => {
+const AddMyMapButton: React.FC<ADDMyMapButtonProps> = ({ onCreateNewMap }) => {
   return (
     <button
       onClick={onCreateNewMap}
@@ -15,4 +15,4 @@ const ADDMyMapButton: React.FC<ADDMyMapButtonProps> = ({ onCreateNewMap }) => {
   );
 };
 
-export default ADDMyMapButton;
+export default AddMyMapButton;

@@ -60,11 +60,7 @@ export const BarcodeBottomSheet: FC<BarcodeBottomSheetProps> = ({
             </button>
           </header>
 
-          {isLoggedIn ? (
-            <LoggedInBarcodeContent onClose={onClose} />
-          ) : (
-            <GuestBarcodeContent />
-          )}
+          {!isLoggedIn ? <LoggedInBarcodeContent /> : <GuestBarcodeContent />}
         </div>
       </div>
     </>

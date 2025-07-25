@@ -18,17 +18,7 @@ import useKakaoLoader from '@kakao-map/hooks/useKakaoLoader';
  */
 function MapPage() {
   useKakaoLoader();
-  const bottomSheetRef = useRef<MapDragBottomSheetRef>(null);
-
-  // 초기화를 제거 - 바텀시트는 닫힌 상태로 시작
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     console.log('🌟 MapPage에서 바텀시트 초기화 호출');
-  //     bottomSheetRef.current?.initialize();
-  //   }, 200); // 컴포넌트들이 완전히 마운트된 후 호출
-
-  //   return () => clearTimeout(timer);
-  // }, []);
+  const bottomSheetRef = useRef<MapDragBottomSheetRef>(null); // 바텀시트 제어용 ref
 
   return (
     <MapUIProvider>

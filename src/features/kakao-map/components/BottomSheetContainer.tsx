@@ -36,41 +36,42 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>((props, re
     currentBottomSheetStep === 'brand' && !!selectedCategory
   );
 
-  // MyMap 관련 핸들러
+  // 새로운 MyMap 생성 처리
   const handleCreateNewMap = () => {
-    // 추후 새 지도 추가하는 곳으로 이동 구현하기
+    // TODO: 새 지도 추가 기능 구현
   };
 
+  // MyMap 선택 시 처리
   const handleSelectMap = (id: number) => {
-    console.log(`지도 선택됨: ${id}`);
-    // 선택된 지도 상세 보기 또는 이동 처리
+    if (import.meta.env.MODE === 'development') {
+      console.log(`지도 선택됨: ${id}`);
+    }
+    // TODO: 선택된 지도 상세 보기 구현
   };
 
-  // 매장 클릭 시 바텀시트 닫고 인포윈도우 표시
+  // 바텀시트 내 매장 클릭 시 바텀시트 닫고 인포윈도우 표시
   const handleStoreClick = (store: Store) => {
-    console.log('🏪 handleStoreClick 호출됨:', store.storeName);
-    console.log('🔍 ref.current:', ref);
-    
-    // 바텀시트 닫기 (플래그 설정 포함)
-    if (ref && 'current' in ref && ref.current) {
-      console.log('🚫 매장 리스트 클릭 - 명시적으로 닫힌 상태로 설정');
-      ref.current.setExplicitlyClosed(true);
-      ref.current.close();
-      console.log('✅ ref.current.close() 호출 완료');
+    if (import.meta.env.MODE === 'development') {
+      console.log('매장 리스트에서 매장 클릭:', store.storeName);
     }
     
-    // 마커 클릭 핸들러 호출 (인포윈도우 표시)
+    // 바텀시트 명시적 닫힘 플래그 설정 후 닫기
+    if (ref && 'current' in ref && ref.current) {
+      ref.current.setExplicitlyClosed(true);
+      ref.current.close();
+    }
+    
     handleMarkerClick(store);
   };
 
-
-  // 카테고리 키를 한국어 이름으로 변환
+  // 카테고리 키를 표시용 한국어 이름으로 변환
   const getCategoryDisplayName = (categoryKey: string): string => {
     if (!categoryKey || categoryKey === '') return '';
     const categoryConfig = CATEGORY_CONFIGS[categoryKey as StoreCategory];
     return categoryConfig?.name || categoryKey;
   };
 
+  // 현재 바텀시트 단계에 따른 콘텐츠 렌더링
   const getCurrentStepContent = () => {
     switch (currentBottomSheetStep) {
       case 'list':
@@ -81,7 +82,6 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>((props, re
                 <h2 className="text-lg font-bold text-gray-900">
                   주변 제휴 매장
                 </h2>
-                {/* 컴팩트한 필터 표시 UI */}
                 {selectedBrand && (
                   <div className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 bg-blue-50 border border-blue-200 rounded-md max-w-fit">
                     <div className="flex items-center gap-1 text-xs text-blue-700">
@@ -127,7 +127,6 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>((props, re
                     </button>
                   </div>
                 )}
-                {/* 기존 필터 표시 (브랜드가 없을 때) */}
                 {!selectedBrand && selectedCategory && (
                   <p className="text-sm text-gray-500 mt-1">
                     {selectedCategory}

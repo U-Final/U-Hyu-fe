@@ -18,8 +18,8 @@ export interface MapDragBottomSheetRef {
   close: () => void;
   openMiddle: () => void;
   open: () => void;
-  initialize: () => void; // 수동 초기화 함수
-  setExplicitlyClosed: (closed: boolean) => void; // 플래그 설정 함수
+  initialize: () => void;
+  setExplicitlyClosed: (closed: boolean) => void;
 }
 
 export const MapDragBottomSheet = forwardRef<
@@ -27,165 +27,117 @@ export const MapDragBottomSheet = forwardRef<
   MapDragBottomSheetProps
 >(({ children, title }, ref) => {
   const sheetRef = useRef<HTMLDivElement>(null);
-  const isInitialized = useRef(false); // 초기화 여부 추적
-  const isExplicitlyClosed = useRef(false); // 명시적으로 닫힌 상태 추적
-  const [{ y }, api] = useSpring(() => ({
-    y: window.innerHeight - 120, // 초기값을 닫힌 상태로 설정
+  const isInitialized = useRef(false); // 초기화 완료 여부 추적
+  const isExplicitlyClosed = useRef(false); // 사용자가 명시적으로 닫은 상태 추적
+  const [{ y }, api] = useSpring(() => ({ // 바텀시트 Y 위치 애니메이션
+    y: window.innerHeight - 120,
     config: { tension: 300, friction: 30 },
   }));
   const [currentState, setCurrentState] = useState<
     'collapsed' | 'middle' | 'expanded'
   >('collapsed');
 
-  // 3단계 높이 설정
-  const expandedY = 60; // 완전히 열린 상태 (위에서 60px)
-  const middleY = window.innerHeight * 0.5; // 중간 상태 (화면 높이의 50%)
-  const collapsedY = window.innerHeight - 120; // 접힌 상태
-  const middleThreshold = window.innerHeight * 0.22; // 중간지점을 처리할 범위 (±22%)
+  // 바텀시트 3단계 높이 정의
+  const expandedY = 60;
+  const middleY = window.innerHeight * 0.5;
+  const collapsedY = window.innerHeight - 120;
+  const middleThreshold = window.innerHeight * 0.22;
 
-  // 움직임 제어 함수들
+  // 바텀시트를 완전히 열어서 전체 화면으로 표시
   const open = useCallback(() => {
-    console.log('🔼 바텀시트 완전히 열기');
-    isExplicitlyClosed.current = false; // 다시 열릴 때 플래그 리셋
+    if (import.meta.env.MODE === 'development') {
+      console.log('바텀시트 완전히 열기');
+    }
+    isExplicitlyClosed.current = false;
     api.start({ y: expandedY });
     setCurrentState('expanded');
   }, [api, expandedY]);
 
+  // 바텀시트를 중간 높이로 열기 (기본 상태)
   const openMiddle = useCallback(() => {
-    console.log('🔽 바텀시트 중간으로 열기');
-    console.log('🚫 명시적으로 닫힌 상태:', isExplicitlyClosed.current);
+    if (import.meta.env.MODE === 'development') {
+      console.log('바텀시트 중간으로 열기');
+    }
 
-    // 명시적으로 닫힌 상태라면 열지 않음
+    // 명시적으로 닫힌 상태에서는 열지 않음
     if (isExplicitlyClosed.current) {
-      console.log('⛔ 명시적으로 닫힌 상태 - openMiddle 무시');
+      if (import.meta.env.MODE === 'development') {
+        console.log('명시적으로 닫힌 상태 - openMiddle 무시');
+      }
       return;
     }
 
-    isExplicitlyClosed.current = false; // 열 때 플래그 리셋
+    isExplicitlyClosed.current = false;
     api.start({ y: middleY });
     setCurrentState('middle');
-    console.log('✅ openMiddle() 함수 실행 완료');
   }, [api, middleY]);
 
+  // 바텀시트 수동 초기화 (페이지 로드 후 호출)
   const initialize = useCallback(() => {
-    console.log('🚀 수동 초기화 시작');
-    console.log(
-      '🚫 초기화 시점 명시적으로 닫힌 상태:',
-      isExplicitlyClosed.current
-    );
+    if (import.meta.env.MODE === 'development') {
+      console.log('바텀시트 수동 초기화');
+    }
 
     if (!isInitialized.current) {
       isInitialized.current = true;
 
-      // 명시적으로 닫힌 상태라면 초기화하지 않음
       if (isExplicitlyClosed.current) {
-        console.log('⛔ 명시적으로 닫힌 상태 - 초기화 건너뜀');
         return;
       }
 
-      isExplicitlyClosed.current = false; // 초기화 시 플래그 리셋
+      isExplicitlyClosed.current = false;
       setTimeout(() => {
-        // 다시 한번 확인 (타이밍 이슈 방지)
         if (!isExplicitlyClosed.current) {
-          console.log('⏰ 초기화: openMiddle() 호출');
           openMiddle();
-        } else {
-          console.log(
-            '⛔ setTimeout 내에서도 명시적으로 닫힌 상태 - openMiddle 건너뜀'
-          );
         }
       }, 100);
-    } else {
-      console.log('⚠️ 이미 초기화됨 - 건너뜀');
     }
   }, [openMiddle]);
 
+  // 바텀시트 명시적 닫힘 상태 플래그 설정
   const setExplicitlyClosed = useCallback((closed: boolean) => {
-    console.log('🚫 플래그 설정:', closed);
+    if (import.meta.env.MODE === 'development') {
+      console.log('바텀시트 닫힘 플래그 설정:', closed);
+    }
     isExplicitlyClosed.current = closed;
   }, []);
 
+  // 바텀시트를 애니메이션과 함께 닫기
   const close = useCallback(() => {
-    const currentY = y.get();
-    console.log('❌ MapDragBottomSheet close() 함수 호출됨');
-    console.log('📍 currentState:', currentState);
-    console.log('📐 실제 y 값:', currentY);
-    console.log('📏 middleY:', middleY, 'collapsedY:', collapsedY);
-
-    // 명시적으로 닫힌 상태로 설정
-    isExplicitlyClosed.current = true;
-    console.log('🚫 명시적으로 닫힌 상태로 설정');
-
-    // 실제 위치에 따른 상태 판단
-    let realState = 'collapsed';
-    if (currentY < middleY + 50) {
-      // 50px 여유 범위
-      realState = currentY < expandedY + 50 ? 'expanded' : 'middle';
+    if (import.meta.env.MODE === 'development') {
+      console.log('바텀시트 닫기');
     }
-    console.log('🎯 실제 상태:', realState, '→ collapsed로 변경');
 
-    // 부드러운 애니메이션으로 닫기
-    console.log('🔽 부드러운 애니메이션으로 닫기');
+    isExplicitlyClosed.current = true;
     api.start({ y: collapsedY });
-
     setCurrentState('collapsed');
-    console.log('✅ close() 함수 실행 완료');
-  }, [api, collapsedY, currentState, y, middleY, expandedY]);
+  }, [api, collapsedY]);
 
-  // 자동 초기화 비활성화 - 수동으로만 제어
-  // useEffect(() => {
-  //   // 최초 한 번만 초기화
-  //   if (!isInitialized.current) {
-  //     console.log('🏁 최초 마운트 - 초기화 시작');
-  //     console.log('📍 마운트 시점 currentState:', currentState);
-  //     isInitialized.current = true;
+  // 외부에서 바텀시트를 제어할 수 있는 함수들 노출
+  useImperativeHandle(ref, () => ({
+    close,
+    openMiddle,
+    open,
+    initialize,
+    setExplicitlyClosed,
+  }), [close, openMiddle, open, initialize, setExplicitlyClosed]);
 
-  //     const timer = setTimeout(() => {
-  //       console.log('⏰ 100ms 후 openMiddle() 호출 (최초 마운트만)');
-  //       console.log('📍 openMiddle 호출 전 currentState:', currentState);
-  //       openMiddle();
-  //     }, 100);
-
-  //     return () => {
-  //       console.log('🧹 useEffect cleanup (컴포넌트 언마운트)');
-  //       clearTimeout(timer);
-  //     };
-  //   } else {
-  //     console.log('🔄 재마운트 감지 - 초기화 건너뜀');
-  //     console.log('📍 재마운트 시점 currentState:', currentState);
-  //   }
-  // }, [openMiddle, currentState]);
-
-  // ref를 통해 외부에서 제어할 수 있는 함수들 노출
-  useImperativeHandle(ref, () => {
-    console.log('🔧 useImperativeHandle - ref 함수들 노출');
-    return {
-      close,
-      openMiddle,
-      open,
-      initialize,
-      setExplicitlyClosed,
-    };
-  }, [close, openMiddle, open, initialize, setExplicitlyClosed]);
-
+  // 드래그 제스처를 통한 바텀시트 높이 조절
   const bind = useDrag(
     ({ last, target, movement: [, my], cancel, memo, first }) => {
       const targetScroll = target as HTMLElement;
 
-      // 첫 번째 이벤트에서 드래그 가능 여부 결정
+      // 드래그 시작 시 유효성 검사
       if (first) {
-        // bottom sheet 영역이 아닌 곳에서 드래그하면 취소
         if (!sheetRef.current?.contains(targetScroll)) {
           return cancel?.();
         }
 
-        // 드래그 핸들 영역이 아닌 곳에서 드래그하면 취소
         const isDragHandle = targetScroll.closest('.cursor-grab');
         if (!isDragHandle) {
           return cancel?.();
         }
 
-        // 스크롤 영역에서 드래그하면 취소
         if (targetScroll.closest('[data-scrollable]')) {
           return cancel?.();
         }
@@ -194,27 +146,26 @@ export const MapDragBottomSheet = forwardRef<
       if (!memo) memo = y.get();
       const newY = memo + my;
 
+      // 드래그 완료 시 최종 위치 결정
       if (last) {
-        //드래그 완료시 위치 결정
-        const finalY = y.get(); //현재 위치 확인
+        const finalY = y.get();
         if (finalY < middleY - middleThreshold) {
-          isExplicitlyClosed.current = false; // 드래그로 열 때 플래그 리셋
-          open(); // 중간보다 위에 있으면 완전 열기
+          isExplicitlyClosed.current = false;
+          open();
         } else if (finalY > middleY + middleThreshold) {
-          isExplicitlyClosed.current = true; // 드래그로 닫을 때 플래그 설정
-          close(); // 중간보다 아래에 있으면 접기
+          isExplicitlyClosed.current = true;
+          close();
         } else {
-          // 명시적으로 닫힌 상태가 아닐 때만 중간으로 이동
           if (!isExplicitlyClosed.current) {
-            isExplicitlyClosed.current = false; // 드래그로 중간으로 갈 때 플래그 리셋
-            openMiddle(); // 중간 근처에 있으면 중간으로 고정
+            isExplicitlyClosed.current = false;
+            openMiddle();
           }
         }
       } else {
-        //드래그 중일 때 범위 제한
-        if (newY < expandedY - 30) return cancel?.(); // 너무 위로 드래그하면 취소
-        if (newY > collapsedY + 30) return cancel?.(); // 너무 아래로 드래그하면 취소
-        api.start({ y: newY, immediate: true }); // 드래그 중 위치 업데이트
+        // 드래그 중 범위 제한
+        if (newY < expandedY - 30) return cancel?.();
+        if (newY > collapsedY + 30) return cancel?.();
+        api.start({ y: newY, immediate: true });
       }
       return memo;
     },
@@ -226,8 +177,8 @@ export const MapDragBottomSheet = forwardRef<
     }
   );
 
+  // 전체 화면 상태에서 배경 클릭 시 중간 상태로 변경
   const handleBackgroundClick = () => {
-    // expanded 상태일 때만 배경 클릭으로 닫기
     if (currentState === 'expanded' && !isExplicitlyClosed.current) {
       openMiddle();
     }
@@ -235,7 +186,6 @@ export const MapDragBottomSheet = forwardRef<
 
   return (
     <div className="flex-1 pointer-events-none">
-      {/* 배경 오버레이 - expanded 상태일 때만 활성화 */}
       {currentState === 'expanded' && (
         <div
           className="absolute inset-0 z-30 pointer-events-auto"
@@ -244,7 +194,6 @@ export const MapDragBottomSheet = forwardRef<
         />
       )}
 
-      {/* Sheet */}
       <animated.div
         ref={sheetRef}
         style={{

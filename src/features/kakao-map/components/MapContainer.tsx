@@ -6,7 +6,7 @@ import MapWithMarkers from './marker/MapWithMarkers';
 import type { MapDragBottomSheetRef } from './MapDragBottomSheet';
 
 interface MapContainerProps {
-  bottomSheetRef: React.RefObject<MapDragBottomSheetRef>;
+  bottomSheetRef: React.RefObject<MapDragBottomSheetRef | null>;
 }
 
 export const MapContainer: React.FC<MapContainerProps> = ({ bottomSheetRef }) => {

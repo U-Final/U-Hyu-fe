@@ -1,26 +1,47 @@
 import { useRef } from 'react';
 
+import { useUploadBarcodeMutation } from '@barcode/hooks/useUploadBarcodeMutation';
 import type { CropperRef } from 'react-advanced-cropper';
 
 import { PrimaryButton } from '@/shared/components';
-import { useModalStore } from '@/shared/store';
+import { useImageCropStore, useModalStore } from '@/shared/store';
 
-import { useImageCropStore } from '../../../store/useImageCropStore';
 import { BarcodeCropper } from './BarcodeCropper';
+
+// 추후 필요없는 코드 삭제 예정
 
 export function BarcodeCropModal() {
   const closeModal = useModalStore(state => state.closeModal);
   const cropperRef = useRef<CropperRef | null>(null);
   const { imageSrc, setImageSrc, setCroppedImage } = useImageCropStore();
 
+  const { mutate: uploadBarcodeImage } = useUploadBarcodeMutation();
+
   const handleCropConfirm = () => {
     const canvas = cropperRef.current?.getCanvas?.();
     if (!canvas) return;
 
-    const dataUrl = canvas.toDataURL('image/jpeg');
-    setCroppedImage(dataUrl);
-    setImageSrc(null);
-    closeModal();
+    canvas.toBlob(blob => {
+      if (!blob) return;
+      const file = new File([blob], 'barcode.jpg', { type: 'image/jpeg' });
+
+      uploadBarcodeImage(file, {
+        onSuccess: imageUrl => {
+          console.log('✅ 업로드 성공 URL:', imageUrl);
+          setCroppedImage(imageUrl);
+          setImageSrc(null);
+          closeModal();
+        },
+        onError: () => {
+          alert('이미지 업로드 실패');
+        },
+      });
+    }, 'image/jpeg');
+
+    // const dataUrl = canvas.toDataURL('image/jpeg');
+    // setCroppedImage(dataUrl);
+    // setImageSrc(null);
+    // closeModal();
   };
 
   if (!imageSrc) return <p>이미지를 불러오지 못했습니다.</p>;

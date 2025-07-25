@@ -74,7 +74,7 @@ export interface MyMapToggleStoreRes {
 /**
  * My Map 매장 등록 유무 조회 요청
  */
-export interface MyMapToggleStoreParams {
+export interface StoreBookmarkStatusParams {
   store_id: number;
 }
 

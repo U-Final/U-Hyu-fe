@@ -12,6 +12,8 @@ import type {
   MyMapStoreAddRes,
   MyMapToggleStoreParams,
   MyMapToggleStoreRes,
+  StoreBookmarkStatusParams,
+  StoreBookmarkStatusRes,
 } from './types';
 
 // My Map 목록 조회 api
@@ -81,5 +83,20 @@ export const postToggleMyMap = async (
   if (!res.data.data) {
     throw new Error('My Map 매장 추가/삭제에 실패했습니다');
   }
+  return res.data.data;
+};
+
+// My Map 매장 등록 유무 조회
+export const getStoreBookmarkStatus = async (
+  storeId: StoreBookmarkStatusParams['store_id']
+): Promise<StoreBookmarkStatusRes> => {
+  const res = await client.get<ApiResponse<StoreBookmarkStatusRes>>(
+    MYMAP_ENDPOINTS.MYMAP.STATE(storeId)
+  );
+
+  if (!res.data?.data) {
+    throw new Error('북마크 상태 조회 실패');
+  }
+
   return res.data.data;
 };

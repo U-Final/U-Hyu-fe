@@ -35,7 +35,7 @@ export const LoggedInBarcodeContent = () => {
     reader.readAsDataURL(file);
   };
 
-  const handleUploadClick = () => {
+  const triggerFileSelect = () => {
     fileInputRef.current?.click();
   };
 
@@ -77,21 +77,19 @@ export const LoggedInBarcodeContent = () => {
           onReject={() => setIsRejected(true)}
         />
       )}
+
       {imageUrl ? (
         <div className="w-full flex">
-          <CroppedImg image={imageUrl} />
+          <CroppedImg imageUrl={imageUrl} />
           <IconButton
             icon={<ImageUp size={16} />}
             className="hover:bg-gray-hover cursor-pointer"
-            onClick={handleUploadClick}
+            onClick={triggerFileSelect}
             aria-label="바코드 이미지 재업로드"
           />
         </div>
       ) : (
-        <PrimaryButton
-          className="w-full"
-          onClick={() => fileInputRef.current?.click()}
-        >
+        <PrimaryButton className="w-full" onClick={triggerFileSelect}>
           바코드 업로드 하기
         </PrimaryButton>
       )}

@@ -70,3 +70,26 @@ export interface MyMapToggleStoreRes {
   storeId: number;
   isMyMapped: boolean;
 }
+
+/**
+ * My Map 매장 등록 유무 조회 요청
+ */
+export interface MyMapToggleStoreParams {
+  store_id: number;
+}
+
+/**
+ * My Map 매장 등록 유무 조회 응답
+ */
+export interface StoreBookmarkStatusRes {
+  storeName: string;
+  bookmarkedMyMapLists: MyMapListInfo[];
+  isBookmarked: boolean;
+}
+
+export interface MyMapListInfo {
+  myMapListId: number;
+  markerColor: string;
+  title: string;
+  isMyMapped: boolean;
+}

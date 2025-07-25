@@ -16,11 +16,12 @@ export function BarcodeCropModal() {
   const closeModal = useModalStore(state => state.closeModal);
   const cropperRef = useRef<CropperRef | null>(null);
   const { imageSrc, setImageSrc, setCroppedImage } = useImageCropStore();
+  const { data: imageUrl, isLoading, error } = useBarcodeImageQuery(); //기존에 업로드된 이미지 인데 만약에 없으면?
 
   const { mutate: uploadBarcodeImage } = useUploadBarcodeMutation();
   const { mutate: patchBarcodeImage } = usePatchBarcodeImageMutation();
 
-  const { data: imageUrl } = useBarcodeImageQuery();
+  const isInitialUpload = imageUrl == null; // 바코드 최초 업로드로 판단.
 
   const handleCropConfirm = () => {
     const canvas = cropperRef.current?.getCanvas?.();
@@ -29,8 +30,6 @@ export function BarcodeCropModal() {
     canvas.toBlob(blob => {
       if (!blob) return;
       const file = new File([blob], 'barcode.jpg', { type: 'image/jpeg' });
-
-      const hasUploadedBefore = !!imageUrl;
 
       const onSuccess = (newImageUrl: string) => {
         setCroppedImage(newImageUrl);
@@ -42,15 +41,17 @@ export function BarcodeCropModal() {
         alert('이미지 업로드 실패');
       };
 
-      if (hasUploadedBefore) {
-        patchBarcodeImage(file, { onSuccess, onError });
-      } else {
+      if (isInitialUpload) {
         uploadBarcodeImage(file, { onSuccess, onError });
+      } else {
+        patchBarcodeImage(file, { onSuccess, onError });
       }
     }, 'image/jpeg');
   };
 
   if (!imageSrc) return <p>이미지를 불러오지 못했습니다.</p>;
+  if (isLoading) return <p>불러오는 중...</p>;
+  if (error) return <p>{error.message}</p>;
 
   return (
     <section aria-label="바코드 자르기" className="space-y-4">

@@ -41,7 +41,12 @@ const VisitConfirmSection = ({ store, onConfirm, onReject }: StoreProps) => {
         <GhostButton size="sm" onClick={onReject}>
           아니요
         </GhostButton>
-        <PrimaryButton size="sm" className="w-fit" onClick={handleVisitConfirm}>
+        <PrimaryButton
+          size="sm"
+          className="w-fit"
+          onClick={handleVisitConfirm}
+          disabled={isPending}
+        >
           {isPending ? '처리중 ..' : '확인'}
         </PrimaryButton>
       </div>

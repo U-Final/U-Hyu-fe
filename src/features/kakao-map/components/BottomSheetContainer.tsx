@@ -3,6 +3,9 @@ import React from 'react';
 import { MyMapList } from '@mymap/components/mymap-list';
 import { FaFilter } from 'react-icons/fa';
 
+import { useModalStore } from '@/shared/store';
+import { useIsLoggedIn } from '@/shared/store/useUserStore';
+
 import { useBrandsByCategoryWhen } from '../hooks/useBrandsByCategory';
 import { useMapData } from '../hooks/useMapData';
 import { useMapInteraction } from '../hooks/useMapInteraction';
@@ -15,6 +18,8 @@ import BrandSelectContent from './layout/steps/BrandSelectContent';
 import CategorySelectContent from './layout/steps/CategorySelectContent';
 
 export const BottomSheetContainer: React.FC = () => {
+  const isLoggedIn = useIsLoggedIn();
+  const openModal = useModalStore(state => state.openModal);
   const { stores } = useMapData();
   const { handleStoreSelect } = useMapInteraction();
   const {
@@ -34,16 +39,6 @@ export const BottomSheetContainer: React.FC = () => {
     selectedCategory as StoreCategory,
     currentBottomSheetStep === 'brand' && !!selectedCategory
   );
-
-  // MyMap 관련 핸들러
-  const handleCreateNewMap = () => {
-    // 추후 새 지도 추가하는 곳으로 이동 구현하기
-  };
-
-  const handleSelectMap = (id: number) => {
-    console.log(`지도 선택됨: ${id}`);
-    // 선택된 지도 상세 보기 또는 이동 처리
-  };
 
   // 카테고리 키를 한국어 이름으로 변환
   const getCategoryDisplayName = (categoryKey: string): string => {
@@ -121,8 +116,11 @@ export const BottomSheetContainer: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <button
                     className="flex items-center gap-1.5 px-3 py-2 text-sm font-bold text-black hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 border border-light-gray shadow-sm hover:shadow-md"
-                    onClick={e => {
-                      e.stopPropagation();
+                    onClick={() => {
+                      if (!isLoggedIn) {
+                        openModal('login');
+                        return;
+                      }
                       showMymap();
                     }}
                     aria-label="MyMap으로 이동"
@@ -172,10 +170,7 @@ export const BottomSheetContainer: React.FC = () => {
                 뒤로
               </button>
             </div>
-            <MyMapList
-              onCreateNewMap={handleCreateNewMap}
-              onSelectMap={handleSelectMap}
-            />
+            <MyMapList />
           </div>
         );
 

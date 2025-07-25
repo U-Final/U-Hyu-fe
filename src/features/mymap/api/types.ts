@@ -5,6 +5,7 @@ export interface MyMapListRes {
   myMapListId: number;
   title: string;
   markerColor: string;
+  uuid: string;
 }
 
 /**

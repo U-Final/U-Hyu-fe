@@ -32,6 +32,7 @@ export const mymapHandlers = [
       myMapListId: nextId++,
       title: body.title,
       markerColor: body.markerColor,
+      uuid: body.uuid,
     };
 
     MOCK_MYMAP_LIST.push(newMap);
@@ -60,7 +61,7 @@ export const mymapHandlers = [
     }
 
     MOCK_MYMAP_LIST[index] = {
-      myMapListId: body.myMapListId,
+      ...MOCK_MYMAP_LIST[index],
       title: body.title,
       markerColor: body.markerColor,
     };

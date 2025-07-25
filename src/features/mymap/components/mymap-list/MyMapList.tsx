@@ -6,6 +6,7 @@ import { MdStars } from 'react-icons/md';
 import { MdIosShare } from 'react-icons/md';
 import { PiTrashBold } from 'react-icons/pi';
 import { RiPencilFill } from 'react-icons/ri';
+import { useNavigate } from 'react-router-dom';
 
 import {
   DropdownMenu,
@@ -22,7 +23,7 @@ import { ShareModal } from '../ShareModal';
 const MyMapList: React.FC = () => {
   const { data, isLoading, isError } = useMyMapListQuery();
   const openModal = useModalStore(state => state.openModal);
-  const uuid = 'd9f8a4b2-7c35-489f-b74e-7f91f1e6f4a9';
+  const navigate = useNavigate();
 
   if (isLoading) return <div>로딩 중...</div>;
   if (isError || !data) return <div>에러 발생</div>;
@@ -70,14 +71,18 @@ const MyMapList: React.FC = () => {
     });
   };
 
+  // 마이페이지 이동
+  const handleGoToMypage = () => {
+    navigate('/mypage/activity');
+  };
+
   return (
     <div className="flex flex-col w-full max-w-md mx-auto p-4 divide-y divide-gray-200">
       {/* 새 지도 만들기 */}
       <AddMyMapButton onCreateNewMap={handleCreate} />
 
       {/* 즐겨찾기 */}
-      {/* 즐겨찾기 누르면 마이페이지 즐겨찾기 수정으로 이동 */}
-      <div className="flex items-center py-3">
+      <div className="flex items-center py-3" onClick={handleGoToMypage}>
         <MdStars className="w-5 h-5 text-primary mr-2" />
         <span className="text-body2 font-semibold">즐겨찾기</span>
       </div>
@@ -87,9 +92,11 @@ const MyMapList: React.FC = () => {
         <div
           key={map.myMapListId}
           className="flex items-center justify-between py-3 cursor-pointer hover:bg-light-gray-hover rounded"
-          //map.myMapListId
         >
-          <div className="flex items-center">
+          <div
+            className="flex flex-9 items-center"
+            onClick={() => navigate(`/map/${map.uuid}`)}
+          >
             <MdStars
               className={`w-5 h-5 ${MYMAP_COLOR[map.markerColor as MarkerColor] || MYMAP_COLOR.RED}`}
             />
@@ -98,7 +105,7 @@ const MyMapList: React.FC = () => {
           {/* 수정, 삭제, 공유 드롭다운 버튼 */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <BsThreeDotsVertical className="w-4 h-4 cursor-pointer" />
+              <BsThreeDotsVertical className="flex-1 w-4 h-4 cursor-pointer" />
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
@@ -117,7 +124,7 @@ const MyMapList: React.FC = () => {
               <DropdownMenuItem
                 onClick={e => {
                   e.stopPropagation();
-                  handleShare(uuid);
+                  handleShare(map.uuid);
                 }}
                 className="flex justify-between font-medium"
               >

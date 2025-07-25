@@ -53,3 +53,20 @@ export interface MyMapListDeleteParams {
 export interface MyMapListDeleteRes {
   Resultcode: number;
 }
+
+/**
+ * My Map 매장 추가/삭제 요청
+ */
+export interface MyMapToggleStoreParams {
+  myMapListId: number;
+  store_id: number;
+}
+
+/**
+ * My Map 매장 추가/삭제 응답
+ */
+export interface MyMapToggleStoreRes {
+  myMapListId: number;
+  storeId: number;
+  isMyMapped: boolean;
+}

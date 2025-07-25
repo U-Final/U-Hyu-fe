@@ -74,7 +74,7 @@ export const deleteMyMap = async (
 // My Map에 매장 추가/삭제
 export const postToggleMyMap = async (
   myMapListId: MyMapToggleStoreParams['myMapListId'],
-  store_id: MyMapToggleStoreParams['myMapListId']
+  store_id: MyMapToggleStoreParams['store_id']
 ): Promise<MyMapToggleStoreRes> => {
   const res = await client.post<ApiResponse<MyMapToggleStoreRes>>(
     MYMAP_ENDPOINTS.MYMAP.TOGGLE_STORE(myMapListId, store_id)

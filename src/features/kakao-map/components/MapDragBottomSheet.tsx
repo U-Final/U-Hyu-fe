@@ -4,12 +4,13 @@ import {
   useImperativeHandle,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 
 import { animated, useSpring } from '@react-spring/web';
 import { useGesture } from '@use-gesture/react';
 
-import { useBottomSheetSync } from '../hooks/useBottomSheetSync';
+// Context 상태는 더 이상 바텀시트 높이와 연동하지 않음
 
 interface MapDragBottomSheetProps {
   children: React.ReactNode;
@@ -35,29 +36,27 @@ export const MapDragBottomSheet = forwardRef<
   const sheetRef = useRef<HTMLDivElement>(null);
   const isInitialized = useRef(false);
   const isDragging = useRef(false);
-  const customY = useRef<number | null>(null); // 커스텀 드래그 위치 저장
 
-  // Context 기반 상태 관리 사용
-  const {
-    bottomSheetState,
-    isExplicitlyClosed,
-    expandedY,
-    middleY,
-    collapsedY,
-    open,
-    openMiddle,
-    close,
-    setExplicitlyClosed,
-    initialize,
-  } = useBottomSheetSync();
+  // 바텀시트 내부 상태 - 독립적으로 관리
+  const [localState, setLocalState] = useState<'collapsed' | 'middle' | 'expanded'>('middle');
+  const [isExplicitlyClosed, setIsExplicitlyClosed] = useState(false);
 
-  // Spring 애니메이션 - 초기값은 middle로 설정
-  const [{ y }, api] = useSpring(() => ({
-    y: middleY,
-    config: { tension: 300, friction: 30 },
-  }));
+  // 높이 계산 - 리사이즈 대응
+  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+  
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowHeight(window.innerHeight);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-  // 높이 상수 매핑 - useMemo로 메모화하여 불필요한 리렌더 방지
+  const expandedY = 60;
+  const middleY = windowHeight * 0.5;
+  const collapsedY = windowHeight - 120;
+
+  // 높이 상수 매핑
   const snapPositions = useMemo(
     () => ({
       expanded: expandedY,
@@ -67,84 +66,83 @@ export const MapDragBottomSheet = forwardRef<
     [expandedY, middleY, collapsedY]
   );
 
-  // Imperative API 구현 - 플래그 리셋 보장
+  // Spring 애니메이션 - 내부 상태 기반
+  const [{ y }, api] = useSpring(() => ({
+    y: snapPositions[localState],
+    config: { tension: 300, friction: 30 },
+  }));
+
+  // 외부 제어를 위한 명령형 API - 내부 상태 직접 제어
   useImperativeHandle(
     ref,
     () => ({
       close: () => {
-        customY.current = null;
-        close();
-        api.start({ y: collapsedY });
+        setIsExplicitlyClosed(true);
+        setLocalState('collapsed');
       },
       openMiddle: () => {
-        customY.current = null;
-        setExplicitlyClosed(false); // 반드시 먼저 리셋
-        openMiddle();
-        api.start({ y: middleY });
+        setIsExplicitlyClosed(false);
+        setLocalState('middle');
       },
       open: () => {
-        customY.current = null;
-        setExplicitlyClosed(false); // 반드시 먼저 리셋
-        open();
-        api.start({ y: expandedY });
+        setIsExplicitlyClosed(false);
+        setLocalState('expanded');
       },
       initialize: () => {
         if (!isInitialized.current) {
           isInitialized.current = true;
-          customY.current = null;
-          setExplicitlyClosed(false); // 초기화시에도 리셋
-          initialize();
+          setIsExplicitlyClosed(false);
+          setLocalState('middle');
         }
       },
       setExplicitlyClosed: (closed: boolean) => {
+        setIsExplicitlyClosed(closed);
         if (closed) {
-          customY.current = null;
+          setLocalState('collapsed');
         }
-        setExplicitlyClosed(closed);
       },
     }),
-    [
-      close,
-      openMiddle,
-      open,
-      initialize,
-      setExplicitlyClosed,
-      api,
-      collapsedY,
-      middleY,
-      expandedY,
-    ]
+    []
   );
 
-  // Context 상태 변경에 따른 애니메이션 동기화 - 최소한만 처리
+  // 내부 상태 변경시 Spring 애니메이션 동기화
   useEffect(() => {
+    // 드래그 중일 때는 상태 변경을 무시
     if (isDragging.current) return;
 
-    const targetY = customY.current ?? snapPositions[bottomSheetState];
-
-    // 명시적으로 닫힌 상태인 경우에만 collapsed 위치로
-    if (isExplicitlyClosed && bottomSheetState === 'collapsed') {
-      customY.current = null;
-      api.start({ y: collapsedY });
-      return;
+    const targetY = snapPositions[localState];
+    
+    if (import.meta.env.MODE === 'development') {
+      console.log('내부 상태 변경 감지:', localState, '-> 목표 Y:', targetY);
     }
 
-    // 현재 위치와 목표 위치가 다른 경우에만 애니메이션
-    if (Math.abs(y.get() - targetY) > 5) {
-      api.start({ y: targetY });
-    }
-  }, [bottomSheetState, isExplicitlyClosed, snapPositions, api, y, collapsedY]);
+    // 내부 상태에 따라 Spring 애니메이션 실행
+    api.start({ 
+      y: targetY,
+      immediate: false
+    });
+  }, [localState, snapPositions, api]);
 
   // 드래그 제스처 - 개선된 로직
   const bind = useGesture(
     {
-      onDrag: ({ down, movement: [, my], last, first, event }) => {
+      onDrag: ({ down, movement: [, my], last, first, event, velocity: [, vy] }) => {
         // 드래그 시작 시 유효성 검사
         if (first) {
           const target = event.target as HTMLElement;
 
-          // 스크롤 가능한 영역에서는 드래그 비활성화
-          if (target.closest('[data-scrollable]')) {
+          // 스크롤 가능한 영역에서는 드래그 비활성화 (더 정확한 검사)
+          const scrollableElement = target.closest('[data-scrollable]');
+          if (scrollableElement) {
+            const scrollable = scrollableElement as HTMLElement;
+            // 실제로 스크롤 가능한 상태인지 확인
+            if (scrollable.scrollHeight > scrollable.clientHeight) {
+              return;
+            }
+          }
+
+          // 입력 요소나 버튼에서는 드래그 비활성화
+          if (target.tagName === 'INPUT' || target.tagName === 'BUTTON' || target.tagName === 'A') {
             return;
           }
 
@@ -157,10 +155,7 @@ export const MapDragBottomSheet = forwardRef<
         }
 
         // 현재 바텀시트 위치를 기준으로 새 위치 계산
-        const baseY =
-          customY.current !== null
-            ? customY.current
-            : snapPositions[bottomSheetState];
+        const baseY = snapPositions[localState];
         const newY = baseY + my;
 
         // 범위 제한
@@ -170,59 +165,67 @@ export const MapDragBottomSheet = forwardRef<
         const clampedY = Math.max(minY, Math.min(maxY, newY));
 
         if (down) {
-          // 드래그 중 - 즉시 애니메이션 (Context 업데이트 없음)
+          // 드래그 중 - Spring을 직접 조작 (내부 상태 업데이트 안함)
           api.start({ y: clampedY, immediate: true });
         }
 
         if (last) {
-          // 드래그 완료
+          // 드래그 완료 - 내부 상태만 업데이트 (Spring은 useEffect에서 자동 처리)
           isDragging.current = false;
 
           if (import.meta.env.MODE === 'development') {
             console.log('드래그 완료, 최종 Y:', clampedY);
           }
 
-          // 스냅 영역 정의 (더 관대하게)
-          const snapThreshold = 65; // 스냅 임계값
-          const expandedRange = expandedY + snapThreshold;
-          const middleRangeMin = middleY - snapThreshold;
-          const middleRangeMax = middleY + snapThreshold;
-          const collapsedRange = collapsedY - snapThreshold;
-
-          // 스냅 위치 결정
-          if (clampedY <= expandedRange) {
-            // 상단 스냅 영역 - expanded
-            customY.current = null;
-            setExplicitlyClosed(false);
-            open();
-          } else if (clampedY >= middleRangeMin && clampedY <= middleRangeMax) {
-            // 중간 스냅 영역 - middle
-            customY.current = null;
-            setExplicitlyClosed(false);
-            openMiddle();
-          } else if (clampedY >= collapsedRange) {
-            // 하단 스냅 영역 - collapsed
-            customY.current = null;
-            setExplicitlyClosed(true);
-            close();
-          } else {
-            // 스냅 영역이 아닌 곳 - 현재 위치에 고정
-            customY.current = clampedY;
-            api.start({ y: clampedY });
-
-            // Context 상태와 동기화를 위해 가장 가까운 상태로 설정
-            setExplicitlyClosed(false);
-            if (clampedY < middleY) {
-              // expanded에 가까움
-              open();
+          // 스냅 로직을 통해 새로운 내부 상태 결정
+          const velocityThreshold = 0.5;
+          const snapThreshold = 80;
+          
+          if (Math.abs(vy) > velocityThreshold) {
+            // 속도 기반 스냅
+            if (vy < 0) {
+              setIsExplicitlyClosed(false);
+              setLocalState('expanded');
             } else {
-              // middle에 가까움
-              openMiddle();
+              setIsExplicitlyClosed(true);
+              setLocalState('collapsed');
             }
+          } else {
+            // 위치 기반 스냅
+            const expandedRange = expandedY + snapThreshold;
+            const middleRangeMin = middleY - snapThreshold;
+            const middleRangeMax = middleY + snapThreshold;
+            const collapsedRange = collapsedY - snapThreshold;
 
-            if (import.meta.env.MODE === 'development') {
-              console.log('커스텀 위치에 고정:', clampedY);
+            if (clampedY <= expandedRange) {
+              setIsExplicitlyClosed(false);
+              setLocalState('expanded');
+            } else if (clampedY >= middleRangeMin && clampedY <= middleRangeMax) {
+              setIsExplicitlyClosed(false);
+              setLocalState('middle');
+            } else if (clampedY >= collapsedRange) {
+              setIsExplicitlyClosed(true);
+              setLocalState('collapsed');
+            } else {
+              // 가장 가까운 위치로 스냅
+              const distToExpanded = Math.abs(clampedY - expandedY);
+              const distToMiddle = Math.abs(clampedY - middleY);
+              const distToCollapsed = Math.abs(clampedY - collapsedY);
+              
+              setIsExplicitlyClosed(false);
+              if (distToExpanded <= distToMiddle && distToExpanded <= distToCollapsed) {
+                setLocalState('expanded');
+              } else if (distToMiddle <= distToCollapsed) {
+                setLocalState('middle');
+              } else {
+                setIsExplicitlyClosed(true);
+                setLocalState('collapsed');
+              }
             }
+          }
+
+          if (import.meta.env.MODE === 'development') {
+            console.log('드래그 완료 - 속도:', vy, '위치:', clampedY, '-> 내부 상태 업데이트');
           }
         }
       },
@@ -232,8 +235,10 @@ export const MapDragBottomSheet = forwardRef<
         from: () => [0, y.get()],
         pointer: { touch: true },
         filterTaps: true,
-        threshold: 10,
+        threshold: 5, // 더 민감하게 드래그 시작
         axis: 'y',
+        preventScroll: true, // 스크롤 방지
+        rubberband: true, // 경계에서 탄성 효과
       },
     }
   );
@@ -261,8 +266,7 @@ export const MapDragBottomSheet = forwardRef<
             className="flex-shrink-0 px-4 pb-2 cursor-grab active:cursor-grabbing touch-none"
             onClick={() => {
               if (!isExplicitlyClosed) {
-                customY.current = null;
-                openMiddle();
+                setLocalState('middle');
               }
             }}
           >

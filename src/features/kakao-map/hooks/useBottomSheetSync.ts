@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useMapUI } from './useMapUI';
 
@@ -15,10 +15,21 @@ export const useBottomSheetSync = () => {
     setExplicitClosed,
   } = useMapUI();
 
-  // 바텀시트 높이 상수들
+  // 바텀시트 높이 상수들 - 리사이즈 대응
+  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+  
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowHeight(window.innerHeight);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const expandedY = 60;
-  const middleY = window.innerHeight * 0.5;
-  const collapsedY = window.innerHeight - 120;
+  const middleY = windowHeight * 0.5;
+  const collapsedY = windowHeight - 120;
 
   /**
    * 바텀시트 열기 (명시적 닫힌 상태 고려)

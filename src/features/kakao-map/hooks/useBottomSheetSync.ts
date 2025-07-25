@@ -4,7 +4,7 @@ import { useMapUI } from './useMapUI';
 
 /**
  * MapDragBottomSheet와 Context 상태 동기화를 위한 훅
- * 기존 ref 기반 제어를 Context 기반으로 전환하는 과도기 단계
+ * Context + ref 하이브리드 패턴으로 최적화됨
  */
 export const useBottomSheetSync = () => {
   const {
@@ -15,7 +15,6 @@ export const useBottomSheetSync = () => {
     openBottomSheet,
     closeBottomSheet,
     setExplicitClosed,
-    setBottomSheetY,
   } = useMapUI();
 
   // 바텀시트 높이 상수들
@@ -24,7 +23,7 @@ export const useBottomSheetSync = () => {
   const collapsedY = window.innerHeight - 120;
 
   /**
-   * Context에서 바텀시트 열기
+   * 바텀시트 열기 (명시적 닫힌 상태 고려)
    */
   const contextOpenBottomSheet = useCallback(
     (level: 'middle' | 'expanded', animate = true) => {
@@ -42,7 +41,7 @@ export const useBottomSheetSync = () => {
   );
 
   /**
-   * Context에서 바텀시트 닫기
+   * 바텀시트 닫기
    */
   const contextCloseBottomSheet = useCallback(
     (explicit = false, animate = true) => {
@@ -52,32 +51,33 @@ export const useBottomSheetSync = () => {
   );
 
   /**
-   * 드래그 중 Y 위치 업데이트
-   */
-  const updateDragPosition = useCallback(
-    (y: number) => {
-      setBottomSheetY(y);
-    },
-    [setBottomSheetY]
-  );
-
-  /**
-   * 드래그 완료 시 최종 상태 결정
+   * 드래그 완료 시 최종 상태 결정 - 단순화된 로직
    */
   const finalizeDragPosition = useCallback(
     (finalY: number) => {
-      const middleThreshold = window.innerHeight * 0.22;
+      const middleThreshold = window.innerHeight * 0.25; // 임계값 조정
 
+      if (import.meta.env.MODE === 'development') {
+        console.log('드래그 최종 위치:', finalY, '임계값:', middleThreshold);
+      }
+
+      // 드래그 위치에 따른 상태 결정
       if (finalY < middleY - middleThreshold) {
+        // 위쪽으로 드래그 → 확장
         setExplicitClosed(false);
         contextOpenBottomSheet('expanded');
       } else if (finalY > middleY + middleThreshold) {
+        // 아래쪽으로 드래그 → 닫기
         setExplicitClosed(true);
         contextCloseBottomSheet(true);
       } else {
+        // 중간 영역 → 중간 상태
         if (!isExplicitlyClosed) {
           setExplicitClosed(false);
           contextOpenBottomSheet('middle');
+        } else {
+          // 명시적으로 닫힌 상태라면 닫힌 상태 유지
+          contextCloseBottomSheet(true);
         }
       }
     },
@@ -95,13 +95,14 @@ export const useBottomSheetSync = () => {
    */
   const initializeBottomSheet = useCallback(() => {
     if (import.meta.env.MODE === 'development') {
-      console.log('바텀시트 Context 초기화');
+      console.log('바텀시트 초기화, 명시적 닫힘:', isExplicitlyClosed);
     }
 
     if (isExplicitlyClosed) {
       return;
     }
 
+    // 약간의 지연 후 중간 상태로 열기
     setTimeout(() => {
       if (!isExplicitlyClosed) {
         contextOpenBottomSheet('middle');
@@ -110,7 +111,7 @@ export const useBottomSheetSync = () => {
   }, [isExplicitlyClosed, contextOpenBottomSheet]);
 
   /**
-   * 전체 화면에서 배경 클릭 시 중간 상태로 변경
+   * 배경 클릭 시 중간 상태로 변경
    */
   const handleBackgroundClick = useCallback(() => {
     if (bottomSheetState === 'expanded' && !isExplicitlyClosed) {
@@ -130,7 +131,7 @@ export const useBottomSheetSync = () => {
     middleY,
     collapsedY,
 
-    // 제어 함수들
+    // 제어 함수들 - 단순화됨
     open: () => contextOpenBottomSheet('expanded'),
     openMiddle: () => contextOpenBottomSheet('middle'),
     close: () => contextCloseBottomSheet(true),
@@ -138,7 +139,6 @@ export const useBottomSheetSync = () => {
     initialize: initializeBottomSheet,
 
     // 드래그 관련
-    updateDragPosition,
     finalizeDragPosition,
 
     // 기타

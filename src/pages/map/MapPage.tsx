@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { BottomSheetContainer } from '@kakao-map/components/BottomSheetContainer';
 import { MapContainer } from '@kakao-map/components/MapContainer';
@@ -20,17 +20,37 @@ function MapPage() {
   useKakaoLoader();
   const bottomSheetRef = useRef<MapDragBottomSheetRef>(null); // 바텀시트 제어용 ref
 
+  // 바텀시트 초기화
+  useEffect(() => {
+    if (bottomSheetRef.current) {
+      // 페이지 로드 시 바텀시트 초기화 및 중간 상태로 열기
+      bottomSheetRef.current.initialize();
+
+      // 약간의 지연 후 중간 상태로 열기
+      setTimeout(() => {
+        if (bottomSheetRef.current) {
+          bottomSheetRef.current.openMiddle();
+        }
+      }, 300);
+    }
+  }, []);
+
+  // MapUIProvider 내부 컴포넌트
+  const MapContent = () => (
+    <div className="h-screen relative">
+      <div className="absolute inset-0">
+        <MapContainer />
+        <MapControlsContainer />
+        <LocationControlContainer />
+      </div>
+
+      <BottomSheetContainer ref={bottomSheetRef} />
+    </div>
+  );
+
   return (
     <MapUIProvider>
-      <div className="h-screen relative">
-        <div className="absolute inset-0">
-          <MapContainer />
-          <MapControlsContainer />
-          <LocationControlContainer />
-        </div>
-
-        <BottomSheetContainer ref={bottomSheetRef} />
-      </div>
+      <MapContent />
     </MapUIProvider>
   );
 }

@@ -26,7 +26,7 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
     const isLoggedIn = useIsLoggedIn();
     const openModal = useModalStore(state => state.openModal);
     const { stores } = useMapData();
-    const { handleMarkerClick } = useMapInteraction();
+    const { handleMapMarkerClick } = useMapInteraction(); // handleMarkerClick 대신 handleMapMarkerClick 사용
     const {
       selectedCategory,
       selectedBrand,
@@ -45,26 +45,73 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
       currentBottomSheetStep === 'brand' && !!selectedCategory
     );
 
-    // // 새로운 MyMap 생성 처리
-    // const handleCreateNewMap = () => {
-    //   // TODO: 새 지도 추가 기능 구현
-    // };
-
-    // // MyMap 선택 시 처리
-    // const handleSelectMap = (id: number) => {
-    //   if (import.meta.env.MODE === 'development') {
-    //     console.log(`지도 선택됨: ${id}`);
-    //   }
-    //   // TODO: 선택된 지도 상세 보기 구현
-    // };
-
     // 바텀시트 내 매장 클릭 시 바텀시트 닫고 인포윈도우 표시
     const handleStoreClick = (store: Store) => {
       if (import.meta.env.MODE === 'development') {
         console.log('매장 리스트에서 매장 클릭:', store.storeName);
       }
 
-      handleMarkerClick(store);
+      // 바텀시트 명시적 닫힘 플래그 설정 후 닫기
+      if (ref && 'current' in ref && ref.current) {
+        ref.current.setExplicitlyClosed(true);
+        ref.current.close();
+      }
+
+      // 지도 마커 클릭과 동일한 효과 (바텀시트 닫고 인포윈도우 표시)
+      handleMapMarkerClick(store);
+    };
+
+    // MyMap 버튼 클릭 핸들러 - 바텀시트 높이 유지
+    const handleMyMapClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      if (!isLoggedIn) {
+        openModal('login');
+        return;
+      }
+      // 바텀시트 높이 유지하면서 step만 변경
+      showMymap();
+    };
+
+    // 필터 버튼 클릭 핸들러 - 바텀시트 높이 유지
+    const handleFilterClick = (e?: React.MouseEvent) => {
+      if (e) {
+        e.stopPropagation();
+      }
+      // 바텀시트 높이 유지하면서 step만 변경
+      showFilter();
+    };
+
+    // 필터 버튼 클릭 핸들러 - 바텀시트 높이 유지 (컴포넌트용)
+    const handleFilterClickSimple = () => {
+      // 바텀시트 높이 유지하면서 step만 변경
+      showFilter();
+    };
+
+    // 카테고리 선택 핸들러 - 바텀시트 높이 유지
+    const handleCategorySelect = (category: string) => {
+      // 바텀시트 높이 유지하면서 step 변경
+      selectCategoryAndNavigate(category);
+    };
+
+    // 브랜드 선택 핸들러 - 바텀시트 높이 유지
+    const handleBrandSelect = (brand: string) => {
+      // 바텀시트 높이 유지하면서 step 변경
+      selectBrandAndReturn(brand);
+    };
+
+    // 뒤로가기 핸들러 - 바텀시트 높이 유지 (버튼용)
+    const handleBackToList = (e?: React.MouseEvent) => {
+      if (e) {
+        e.stopPropagation();
+      }
+      // 바텀시트 높이 유지하면서 step 변경
+      backToList();
+    };
+
+    // 뒤로가기 핸들러 - 바텀시트 높이 유지 (컴포넌트용)
+    const handleBackToListSimple = () => {
+      // 바텀시트 높이 유지하면서 step 변경
+      backToList();
     };
 
     // 카테고리 키를 표시용 한국어 이름으로 변환
@@ -79,11 +126,7 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
       switch (currentBottomSheetStep) {
         case 'list':
           return (
-            <div 
-              onClick={e => e.stopPropagation()}
-              onMouseDown={e => e.stopPropagation()}
-              onTouchStart={e => e.stopPropagation()}
-            >
+            <div onClick={e => e.stopPropagation()}>
               <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
                 <div className="flex-1">
                   <h2 className="text-lg font-bold text-gray-900">
@@ -150,14 +193,7 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
                   <div className="flex items-center gap-2">
                     <button
                       className="flex items-center gap-1.5 px-3 py-2 text-sm font-bold text-black hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 border border-light-gray shadow-sm hover:shadow-md"
-                      onClick={e => {
-                        e.stopPropagation();
-                        if (!isLoggedIn) {
-                          openModal('login');
-                          return;
-                        }
-                        showMymap();
-                      }}
+                      onClick={handleMyMapClick}
                       aria-label="MyMap으로 이동"
                     >
                       <span>My Map</span>
@@ -167,10 +203,7 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
                   <div className="flex items-center gap-2">
                     <button
                       className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 border border-gray-200 hover:border-blue-300 shadow-sm hover:shadow-md"
-                      onClick={e => {
-                        e.stopPropagation();
-                        showFilter();
-                      }}
+                      onClick={handleFilterClick}
                       aria-label="필터 설정"
                     >
                       <FaFilter className="w-3.5 h-3.5" />
@@ -181,7 +214,7 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
               </div>
               <StoreListContent
                 stores={stores}
-                onFilterClick={showFilter}
+                onFilterClick={handleFilterClickSimple}
                 onStoreClick={handleStoreClick}
               />
             </div>
@@ -189,21 +222,14 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
 
         case 'mymap':
           return (
-            <div 
-              onClick={e => e.stopPropagation()}
-              onMouseDown={e => e.stopPropagation()}
-              onTouchStart={e => e.stopPropagation()}
-            >
+            <div onClick={e => e.stopPropagation()}>
               <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
                 <div className="flex-1">
                   <h2 className="text-lg font-bold text-gray-900">My Map</h2>
                 </div>
                 <button
                   className="px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md"
-                  onClick={e => {
-                    e.stopPropagation();
-                    backToList();
-                  }}
+                  onClick={handleBackToList}
                   aria-label="이전 화면으로 돌아가기"
                 >
                   뒤로
@@ -215,21 +241,14 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
 
         case 'category':
           return (
-            <div 
-              onClick={e => e.stopPropagation()}
-              onMouseDown={e => e.stopPropagation()}
-              onTouchStart={e => e.stopPropagation()}
-            >
+            <div onClick={e => e.stopPropagation()}>
               <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
                 <div className="flex-1">
                   <h2 className="text-lg font-bold text-gray-900">필터</h2>
                 </div>
                 <button
                   className="px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md"
-                  onClick={e => {
-                    e.stopPropagation();
-                    backToList();
-                  }}
+                  onClick={handleBackToList}
                   aria-label="이전 화면으로 돌아가기"
                 >
                   뒤로
@@ -237,28 +256,21 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
               </div>
               <CategorySelectContent
                 selectedCategory={selectedCategory}
-                onCategorySelect={selectCategoryAndNavigate}
+                onCategorySelect={handleCategorySelect}
               />
             </div>
           );
 
         case 'brand':
           return (
-            <div 
-              onClick={e => e.stopPropagation()}
-              onMouseDown={e => e.stopPropagation()}
-              onTouchStart={e => e.stopPropagation()}
-            >
+            <div onClick={e => e.stopPropagation()}>
               <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
                 <div className="flex-1">
                   <h2 className="text-lg font-bold text-gray-900">필터</h2>
                 </div>
                 <button
                   className="px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md"
-                  onClick={e => {
-                    e.stopPropagation();
-                    backToList();
-                  }}
+                  onClick={handleBackToList}
                   aria-label="이전 화면으로 돌아가기"
                 >
                   뒤로
@@ -270,8 +282,8 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
                 brands={brands}
                 isLoading={brandsLoading}
                 selectedBrand={selectedBrand}
-                onBrandSelect={selectBrandAndReturn}
-                onBack={backToList}
+                onBrandSelect={handleBrandSelect}
+                onBack={handleBackToListSimple}
               />
             </div>
           );

@@ -5,7 +5,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-import { useIsLoggedIn, useUser } from '@/shared/store/useUserStore';
+import { useUser } from '@/shared/store/useUserStore';
 
 export const RecommendedStoreList = () => {
   const {
@@ -18,12 +18,10 @@ export const RecommendedStoreList = () => {
     radius: 1000,
   });
 
-  const isLoggedIn = useIsLoggedIn();
   const user = useUser();
 
   if (isLoading) return <p>불러오는 중...</p>;
   if (error) return <p>{error.message}</p>;
-  if (!isLoggedIn) return null;
 
   return (
     <div className="">

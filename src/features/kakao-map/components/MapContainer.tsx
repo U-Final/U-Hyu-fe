@@ -3,15 +3,11 @@ import React from 'react';
 import { useMapData } from '../hooks/useMapData';
 import { useMapInteraction } from '../hooks/useMapInteraction';
 import MapWithMarkers from './marker/MapWithMarkers';
-import type { MapDragBottomSheetRef } from './MapDragBottomSheet';
 
-interface MapContainerProps {
-  bottomSheetRef: React.RefObject<MapDragBottomSheetRef | null>;
-}
-
-export const MapContainer: React.FC<MapContainerProps> = ({ bottomSheetRef }) => {
+export const MapContainer: React.FC = () => {
   const { stores, mapCenter, userLocation, loading } = useMapData();
-  const { handleMapCenterChange, handleMapMarkerClick, selectedMarkerId } = useMapInteraction(bottomSheetRef);
+  const { handleMapCenterChange, handleMapMarkerClick, selectedMarkerId } =
+    useMapInteraction();
 
   return (
     <MapWithMarkers

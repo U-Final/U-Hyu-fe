@@ -24,8 +24,8 @@ function MapPage() {
     <MapUIProvider>
       <div className="h-screen relative">
         <div className="absolute inset-0">
-          <MapContainer bottomSheetRef={bottomSheetRef} />
-          <MapControlsContainer bottomSheetRef={bottomSheetRef} />
+          <MapContainer />
+          <MapControlsContainer />
           <LocationControlContainer />
         </div>
 

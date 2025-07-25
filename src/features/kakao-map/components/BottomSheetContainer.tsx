@@ -64,12 +64,6 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
         console.log('매장 리스트에서 매장 클릭:', store.storeName);
       }
 
-      // 바텀시트 명시적 닫힘 플래그 설정 후 닫기
-      if (ref && 'current' in ref && ref.current) {
-        ref.current.setExplicitlyClosed(true);
-        ref.current.close();
-      }
-
       handleMarkerClick(store);
     };
 

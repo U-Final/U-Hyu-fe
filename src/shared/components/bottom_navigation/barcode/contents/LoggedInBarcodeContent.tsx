@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { NearbyStore } from '@barcode/api/barcode.type';
 import { postNearbyStore } from '@barcode/api/nearbyStoreApi';
 import VisitConfirmSection from '@barcode/components/VisitConfirmSection';
+import { useBarcodeImageQuery } from '@barcode/hooks/useBarcodeImageQuery';
 import { ImageUp } from 'lucide-react';
 
 import { IconButton, PrimaryButton } from '@/shared/components';
@@ -12,11 +13,12 @@ import { useImageCropStore, useModalStore } from '@/shared/store';
 
 export const LoggedInBarcodeContent = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { croppedImage, setImageSrc } = useImageCropStore();
+  const { setImageSrc } = useImageCropStore();
   const openModal = useModalStore(state => state.openModal);
   const [store, setStore] = useState<NearbyStore | null>(null);
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isRejected, setIsRejected] = useState(false);
+  const { data: imageUrl, isLoading, error } = useBarcodeImageQuery();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -63,6 +65,9 @@ export const LoggedInBarcodeContent = () => {
     );
   }, []);
 
+  if (isLoading) return <p>불러오는 중...</p>;
+  if (error) return <p>{error.message}</p>;
+
   return (
     <div className="flex flex-col w-full gap-4">
       {store && !isConfirmed && !isRejected && (
@@ -72,9 +77,9 @@ export const LoggedInBarcodeContent = () => {
           onReject={() => setIsRejected(true)}
         />
       )}
-      {croppedImage ? (
+      {imageUrl ? (
         <div className="relative w-full">
-          <CroppedImg image={croppedImage} />
+          <CroppedImg image={imageUrl} />
           <IconButton
             icon={<ImageUp size={16} />}
             className="absolute top-[-34.5px] right-9 hover:bg-gray-hover cursor-pointer"

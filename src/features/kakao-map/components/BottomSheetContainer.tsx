@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { forwardRef } from 'react';
 
 import { MyMapList } from '@mymap/components/mymap-list';
 import { FaFilter } from 'react-icons/fa';
@@ -15,8 +15,7 @@ import StoreListContent from './layout/StoreListContent';
 import BrandSelectContent from './layout/steps/BrandSelectContent';
 import CategorySelectContent from './layout/steps/CategorySelectContent';
 
-export const BottomSheetContainer: React.FC = () => {
-  const bottomSheetRef = useRef<MapDragBottomSheetRef>(null);
+export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>((props, ref) => {
   const { stores } = useMapData();
   const { handleMarkerClick } = useMapInteraction();
   const {
@@ -50,11 +49,15 @@ export const BottomSheetContainer: React.FC = () => {
   // 매장 클릭 시 바텀시트 닫고 인포윈도우 표시
   const handleStoreClick = (store: Store) => {
     console.log('🏪 handleStoreClick 호출됨:', store.storeName);
-    console.log('🔍 bottomSheetRef.current:', bottomSheetRef.current);
+    console.log('🔍 ref.current:', ref);
     
-    // 바텀시트 닫기
-    bottomSheetRef.current?.close();
-    console.log('✅ bottomSheetRef.current?.close() 호출 완료');
+    // 바텀시트 닫기 (플래그 설정 포함)
+    if (ref && 'current' in ref && ref.current) {
+      console.log('🚫 매장 리스트 클릭 - 명시적으로 닫힌 상태로 설정');
+      ref.current.setExplicitlyClosed(true);
+      ref.current.close();
+      console.log('✅ ref.current.close() 호출 완료');
+    }
     
     // 마커 클릭 핸들러 호출 (인포윈도우 표시)
     handleMarkerClick(store);
@@ -255,5 +258,5 @@ export const BottomSheetContainer: React.FC = () => {
     }
   };
 
-  return <MapDragBottomSheet ref={bottomSheetRef}>{getCurrentStepContent()}</MapDragBottomSheet>;
-};
+  return <MapDragBottomSheet ref={ref}>{getCurrentStepContent()}</MapDragBottomSheet>;
+});

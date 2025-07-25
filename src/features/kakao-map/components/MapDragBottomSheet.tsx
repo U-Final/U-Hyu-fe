@@ -67,11 +67,13 @@ export const MapDragBottomSheet = forwardRef<
       },
       openMiddle: () => {
         customY.current = null; // 커스텀 위치 초기화
+        setExplicitlyClosed(false); // isExplicitlyClosed 리셋
         openMiddle();
         api.start({ y: middleY });
       },
       open: () => {
         customY.current = null; // 커스텀 위치 초기화
+        setExplicitlyClosed(false); // isExplicitlyClosed 리셋
         open();
         api.start({ y: expandedY });
       },
@@ -79,6 +81,7 @@ export const MapDragBottomSheet = forwardRef<
         if (!isInitialized.current) {
           isInitialized.current = true;
           customY.current = null;
+          setExplicitlyClosed(false); // 초기화시에도 리셋
           initialize();
         }
       },
@@ -173,7 +176,7 @@ export const MapDragBottomSheet = forwardRef<
           }
 
           // 스냅 영역 정의 (더 관대하게)
-          const snapThreshold = 70; // 스냅 임계값
+          const snapThreshold = 65; // 스냅 임계값
           const expandedRange = expandedY + snapThreshold;
           const middleRangeMin = middleY - snapThreshold;
           const middleRangeMax = middleY + snapThreshold;

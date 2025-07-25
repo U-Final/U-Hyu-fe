@@ -1,8 +1,8 @@
 import React, {
   createContext,
+  useCallback,
   useContext,
   useReducer,
-  useCallback,
 } from 'react';
 
 /**
@@ -51,14 +51,26 @@ type MapUIAction =
   | { type: 'CLEAR_SEARCH' }
 
   // 바텀시트 관련 액션
-  | { type: 'SET_BOTTOM_SHEET_STEP'; payload: 'list' | 'category' | 'brand' | 'mymap' }
+  | {
+      type: 'SET_BOTTOM_SHEET_STEP';
+      payload: 'list' | 'category' | 'brand' | 'mymap';
+    }
   | { type: 'SET_BOTTOM_SHEET_EXPANDED'; payload: boolean }
   | { type: 'TOGGLE_BOTTOM_SHEET' }
 
   // 바텀시트 통합 제어 액션 (새로 추가)
-  | { type: 'OPEN_BOTTOM_SHEET'; payload: { level: 'middle' | 'expanded'; animate?: boolean } }
-  | { type: 'CLOSE_BOTTOM_SHEET'; payload: { explicit: boolean; animate?: boolean } }
-  | { type: 'SET_BOTTOM_SHEET_STATE'; payload: 'collapsed' | 'middle' | 'expanded' }
+  | {
+      type: 'OPEN_BOTTOM_SHEET';
+      payload: { level: 'middle' | 'expanded'; animate?: boolean };
+    }
+  | {
+      type: 'CLOSE_BOTTOM_SHEET';
+      payload: { explicit: boolean; animate?: boolean };
+    }
+  | {
+      type: 'SET_BOTTOM_SHEET_STATE';
+      payload: 'collapsed' | 'middle' | 'expanded';
+    }
   | { type: 'SET_EXPLICIT_CLOSED'; payload: boolean }
   | { type: 'SET_BOTTOM_SHEET_Y'; payload: number }
   | { type: 'SET_BOTTOM_SHEET_ANIMATING'; payload: boolean }
@@ -109,7 +121,7 @@ const mapUIReducer = (state: MapUIState, action: MapUIAction): MapUIState => {
         bottomSheet: {
           ...state.bottomSheet,
           state: action.payload.level,
-          isExplicitlyClosed: false,
+          isExplicitlyClosed: false, // 바텀시트를 열 때마다 명시적 닫힘 플래그 리셋
           isAnimating: action.payload.animate !== false,
         },
       };
@@ -306,9 +318,12 @@ export const MapUIProvider: React.FC<{ children: React.ReactNode }> = ({
     }, []),
 
     // 바텀시트 관련 액션
-    setBottomSheetStep: useCallback((step: 'list' | 'category' | 'brand' | 'mymap') => {
-      dispatch({ type: 'SET_BOTTOM_SHEET_STEP', payload: step });
-    }, []),
+    setBottomSheetStep: useCallback(
+      (step: 'list' | 'category' | 'brand' | 'mymap') => {
+        dispatch({ type: 'SET_BOTTOM_SHEET_STEP', payload: step });
+      },
+      []
+    ),
 
     setBottomSheetExpanded: useCallback((expanded: boolean) => {
       dispatch({ type: 'SET_BOTTOM_SHEET_EXPANDED', payload: expanded });
@@ -319,17 +334,23 @@ export const MapUIProvider: React.FC<{ children: React.ReactNode }> = ({
     }, []),
 
     // 바텀시트 통합 제어 액션들 (새로 추가)
-    openBottomSheet: useCallback((level: 'middle' | 'expanded', animate = true) => {
-      dispatch({ type: 'OPEN_BOTTOM_SHEET', payload: { level, animate } });
-    }, []),
+    openBottomSheet: useCallback(
+      (level: 'middle' | 'expanded', animate = true) => {
+        dispatch({ type: 'OPEN_BOTTOM_SHEET', payload: { level, animate } });
+      },
+      []
+    ),
 
     closeBottomSheet: useCallback((explicit = false, animate = true) => {
       dispatch({ type: 'CLOSE_BOTTOM_SHEET', payload: { explicit, animate } });
     }, []),
 
-    setBottomSheetState: useCallback((state: 'collapsed' | 'middle' | 'expanded') => {
-      dispatch({ type: 'SET_BOTTOM_SHEET_STATE', payload: state });
-    }, []),
+    setBottomSheetState: useCallback(
+      (state: 'collapsed' | 'middle' | 'expanded') => {
+        dispatch({ type: 'SET_BOTTOM_SHEET_STATE', payload: state });
+      },
+      []
+    ),
 
     setExplicitClosed: useCallback((closed: boolean) => {
       dispatch({ type: 'SET_EXPLICIT_CLOSED', payload: closed });

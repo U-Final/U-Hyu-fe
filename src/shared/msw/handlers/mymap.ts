@@ -7,6 +7,8 @@ import { createErrorResponse } from '@/shared/utils/createErrorResponse';
 import { createResponse } from '@/shared/utils/createResponse';
 
 let nextId = Math.max(...MOCK_MYMAP_LIST.map(m => m.myMapListId), 0) + 1;
+// 임시 저장소: 각 myMapListId에 매핑된 storeId Set
+const MOCK_MYMAP_STORE: Record<number, Set<number>> = {};
 
 export const mymapHandlers = [
   // My Map 목록 조회 MSW 핸들러
@@ -82,5 +84,45 @@ export const mymapHandlers = [
     MOCK_MYMAP_LIST.splice(index, 1);
 
     return createResponse({ Resultcode: 1 }, '삭제 성공');
+  }),
+
+  // My Map에 매장 추가/삭제 MSW 핸들러
+  http.post(MYMAP_ENDPOINTS.MYMAP.TOGGLE_STORE_MSW(), async ({ params }) => {
+    const myMapListId = Number(params.myMapListId);
+    const storeId = Number(params.store_id);
+
+    if (isNaN(myMapListId) || isNaN(storeId)) {
+      return createErrorResponse('ID 형식이 올바르지 않습니다.', 400);
+    }
+
+    // 해당 myMapListId가 존재하는지 확인
+    const exists = MOCK_MYMAP_LIST.some(m => m.myMapListId === myMapListId);
+    if (!exists) {
+      return createErrorResponse('해당 My Map 항목을 찾을 수 없습니다.', 404);
+    }
+
+    if (!MOCK_MYMAP_STORE[myMapListId]) {
+      MOCK_MYMAP_STORE[myMapListId] = new Set();
+    }
+
+    const storeSet = MOCK_MYMAP_STORE[myMapListId];
+    let isMyMapped: boolean;
+
+    if (storeSet.has(storeId)) {
+      storeSet.delete(storeId);
+      isMyMapped = false;
+    } else {
+      storeSet.add(storeId);
+      isMyMapped = true;
+    }
+
+    return createResponse(
+      {
+        myMapListId,
+        storeId,
+        isMyMapped,
+      },
+      isMyMapped ? '매장이 추가되었습니다.' : '매장이 삭제되었습니다.'
+    );
   }),
 ];

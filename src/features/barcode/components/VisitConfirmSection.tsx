@@ -1,5 +1,4 @@
 import type { NearbyStore } from '@barcode/api/barcode.type';
-import { postVisitStore } from '@barcode/api/visitStoreApi';
 import { useVisitConfirmMutation } from '@barcode/hooks/useVisitConfirmMutation';
 
 import { GhostButton, PrimaryButton } from '@/shared/components';
@@ -15,14 +14,9 @@ const VisitConfirmSection = ({ store, onConfirm, onReject }: StoreProps) => {
 
   const handleVisitConfirm = () => {
     confirmVisit(store.store_id, {
-      onSuccess: async () => {
-        try {
-          await postVisitStore(store.store_id);
-          console.log(`${store.store_name} 방문 처리 완료`);
-          onConfirm();
-        } catch (e) {
-          console.error(e, '서버 전송 중 오류 발생');
-        }
+      onSuccess: () => {
+        console.log(`${store.store_name} 방문 처리 완료`);
+        onConfirm();
       },
       onError: () => {
         alert('방문 처리 중 오류 발생');

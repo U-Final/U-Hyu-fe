@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
 import { MyMapList } from '@mymap/components/mymap-list';
 import { FaFilter } from 'react-icons/fa';
@@ -10,12 +10,13 @@ import { useMapUI } from '../hooks/useMapUI';
 import type { StoreCategory } from '../types/category';
 import { CATEGORY_CONFIGS } from '../types/category';
 import type { Store } from '../types/store';
-import { MapDragBottomSheet } from './MapDragBottomSheet';
+import { MapDragBottomSheet, type MapDragBottomSheetRef } from './MapDragBottomSheet';
 import StoreListContent from './layout/StoreListContent';
 import BrandSelectContent from './layout/steps/BrandSelectContent';
 import CategorySelectContent from './layout/steps/CategorySelectContent';
 
 export const BottomSheetContainer: React.FC = () => {
+  const bottomSheetRef = useRef<MapDragBottomSheetRef>(null);
   const { stores } = useMapData();
   const { handleMarkerClick } = useMapInteraction();
   const {
@@ -44,6 +45,19 @@ export const BottomSheetContainer: React.FC = () => {
   const handleSelectMap = (id: number) => {
     console.log(`지도 선택됨: ${id}`);
     // 선택된 지도 상세 보기 또는 이동 처리
+  };
+
+  // 매장 클릭 시 바텀시트 닫고 인포윈도우 표시
+  const handleStoreClick = (store: Store) => {
+    console.log('🏪 handleStoreClick 호출됨:', store.storeName);
+    console.log('🔍 bottomSheetRef.current:', bottomSheetRef.current);
+    
+    // 바텀시트 닫기
+    bottomSheetRef.current?.close();
+    console.log('✅ bottomSheetRef.current?.close() 호출 완료');
+    
+    // 마커 클릭 핸들러 호출 (인포윈도우 표시)
+    handleMarkerClick(store);
   };
 
 
@@ -151,7 +165,7 @@ export const BottomSheetContainer: React.FC = () => {
             <StoreListContent
               stores={stores}
               onFilterClick={showFilter}
-              onStoreClick={handleMarkerClick}
+              onStoreClick={handleStoreClick}
             />
           </div>
         );
@@ -241,5 +255,5 @@ export const BottomSheetContainer: React.FC = () => {
     }
   };
 
-  return <MapDragBottomSheet>{getCurrentStepContent()}</MapDragBottomSheet>;
+  return <MapDragBottomSheet ref={bottomSheetRef}>{getCurrentStepContent()}</MapDragBottomSheet>;
 };

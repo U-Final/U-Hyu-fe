@@ -10,7 +10,7 @@ const LoginModal = () => {
 
   const handleLogin = () => {
     closeModal();
-    login;
+    login();
   };
 
   return (

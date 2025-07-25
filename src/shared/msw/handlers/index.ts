@@ -3,6 +3,8 @@ import { homeHandlers } from './home';
 import { mapHandlers } from './map';
 import { mymapHandlers } from './mymap';
 import { mypageHandlers } from './mypage';
+import { adminHandlers } from './admin';
+
 import { recommendHandlers } from './recommendation';
 import { userHandlers } from './user';
 import { visitStoreHandler } from './visitstore';
@@ -13,6 +15,7 @@ export const handlers = [
   ...homeHandlers,
   ...benefitHandlers,
   ...mypageHandlers,
+  ...adminHandlers,
   ...mymapHandlers,
   ...recommendHandlers,
   ...visitStoreHandler,

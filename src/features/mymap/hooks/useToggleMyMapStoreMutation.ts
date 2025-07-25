@@ -15,7 +15,7 @@ export const useToggleMyMapStoreMutation = () => {
     mutationFn: ({ myMapListId, store_id }) =>
       postToggleMyMap(myMapListId, store_id),
 
-    onSuccess: (data, variables) => {
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
         queryKey: MYMAP_STORE_LIST_QUERY_KEY(variables.myMapListId),
       });

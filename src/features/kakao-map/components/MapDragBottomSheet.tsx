@@ -41,7 +41,6 @@ export const MapDragBottomSheet = forwardRef<
     setExplicitlyClosed,
     initialize,
     finalizeDragPosition,
-    handleBackgroundClick,
   } = useBottomSheetSync();
 
   // Spring 애니메이션
@@ -174,7 +173,7 @@ export const MapDragBottomSheet = forwardRef<
           }
 
           // 스냅 영역 정의 (더 관대하게)
-          const snapThreshold = 80; // 스냅 임계값
+          const snapThreshold = 70; // 스냅 임계값
           const expandedRange = expandedY + snapThreshold;
           const middleRangeMin = middleY - snapThreshold;
           const middleRangeMax = middleY + snapThreshold;
@@ -218,15 +217,6 @@ export const MapDragBottomSheet = forwardRef<
 
   return (
     <div className="flex-1 pointer-events-none">
-      {/* 확장 상태일 때 배경 오버레이 - 투명도 조정 */}
-      {bottomSheetState === 'expanded' && (
-        <div
-          className="absolute inset-0 z-30 pointer-events-auto bg-black bg-opacity-10"
-          onClick={handleBackgroundClick}
-          style={{ top: 0, bottom: `${window.innerHeight - expandedY}px` }}
-        />
-      )}
-
       {/* 바텀시트 메인 컨테이너 */}
       <animated.div
         ref={sheetRef}

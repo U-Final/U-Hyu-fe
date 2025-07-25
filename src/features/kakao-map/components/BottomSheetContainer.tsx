@@ -79,7 +79,11 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
       switch (currentBottomSheetStep) {
         case 'list':
           return (
-            <div onClick={e => e.stopPropagation()}>
+            <div 
+              onClick={e => e.stopPropagation()}
+              onMouseDown={e => e.stopPropagation()}
+              onTouchStart={e => e.stopPropagation()}
+            >
               <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
                 <div className="flex-1">
                   <h2 className="text-lg font-bold text-gray-900">
@@ -185,7 +189,11 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
 
         case 'mymap':
           return (
-            <div onClick={e => e.stopPropagation()}>
+            <div 
+              onClick={e => e.stopPropagation()}
+              onMouseDown={e => e.stopPropagation()}
+              onTouchStart={e => e.stopPropagation()}
+            >
               <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
                 <div className="flex-1">
                   <h2 className="text-lg font-bold text-gray-900">My Map</h2>
@@ -207,7 +215,11 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
 
         case 'category':
           return (
-            <div onClick={e => e.stopPropagation()}>
+            <div 
+              onClick={e => e.stopPropagation()}
+              onMouseDown={e => e.stopPropagation()}
+              onTouchStart={e => e.stopPropagation()}
+            >
               <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
                 <div className="flex-1">
                   <h2 className="text-lg font-bold text-gray-900">필터</h2>
@@ -232,7 +244,11 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
 
         case 'brand':
           return (
-            <div onClick={e => e.stopPropagation()}>
+            <div 
+              onClick={e => e.stopPropagation()}
+              onMouseDown={e => e.stopPropagation()}
+              onTouchStart={e => e.stopPropagation()}
+            >
               <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
                 <div className="flex-1">
                   <h2 className="text-lg font-bold text-gray-900">필터</h2>

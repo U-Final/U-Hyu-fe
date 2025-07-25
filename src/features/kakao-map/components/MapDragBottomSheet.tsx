@@ -30,7 +30,7 @@ export const MapDragBottomSheet = forwardRef<
 >(({ children, title }, ref) => {
   const sheetRef = useRef<HTMLDivElement>(null);
   const isInitialized = useRef(false);
-  
+
   // Context 기반 상태 관리 사용
   const {
     bottomSheetState,
@@ -44,7 +44,6 @@ export const MapDragBottomSheet = forwardRef<
     close,
     setExplicitlyClosed,
     initialize,
-    updateDragPosition,
     finalizeDragPosition,
     handleBackgroundClick,
   } = useBottomSheetSync();
@@ -58,9 +57,12 @@ export const MapDragBottomSheet = forwardRef<
   // const middleThreshold = window.innerHeight * 0.22;
 
   // Context Y 위치 변경에 따른 애니메이션 동기화
-  const syncAnimation = useCallback((targetY: number) => {
-    api.start({ y: targetY });
-  }, [api]);
+  const syncAnimation = useCallback(
+    (targetY: number) => {
+      api.start({ y: targetY });
+    },
+    [api]
+  );
 
   // 초기화 래퍼 (기존 ref 인터페이스 유지)
   const initializeWrapper = useCallback(() => {
@@ -70,8 +72,13 @@ export const MapDragBottomSheet = forwardRef<
     }
   }, [initialize]);
 
-  // Context 상태 변경에 따른 애니메이션 동기화
+  // 드래그 상태 추적을 위한 ref
+  const isDragging = useRef(false);
+
+  // Context 상태 변경에 따른 애니메이션 동기화 (드래그 중이 아닐 때만)
   useEffect(() => {
+    if (isDragging.current) return; // 드래그 중에는 동기화하지 않음
+    
     let targetY: number;
     switch (bottomSheetState) {
       case 'expanded':
@@ -85,7 +92,7 @@ export const MapDragBottomSheet = forwardRef<
         targetY = collapsedY;
         break;
     }
-    
+
     // 현재 애니메이션 위치와 다른 경우에만 동기화
     if (Math.abs(y.get() - targetY) > 5) {
       syncAnimation(targetY);
@@ -93,33 +100,40 @@ export const MapDragBottomSheet = forwardRef<
   }, [bottomSheetState, expandedY, middleY, collapsedY, syncAnimation, y]);
 
   // 외부에서 바텀시트를 제어할 수 있는 함수들 노출 (기존 ref 인터페이스 유지)
-  useImperativeHandle(ref, () => ({
-    close,
-    openMiddle,
-    open,
-    initialize: initializeWrapper,
-    setExplicitlyClosed,
-  }), [close, openMiddle, open, initializeWrapper, setExplicitlyClosed]);
+  useImperativeHandle(
+    ref,
+    () => ({
+      close,
+      openMiddle,
+      open,
+      initialize: initializeWrapper,
+      setExplicitlyClosed,
+    }),
+    [close, openMiddle, open, initializeWrapper, setExplicitlyClosed]
+  );
 
   // 드래그 제스처를 통한 바텀시트 높이 조절
   const bind = useDrag(
     ({ last, target, movement: [, my], cancel, memo, first }) => {
-      const targetScroll = target as HTMLElement;
+      const targetElement = target as HTMLElement;
 
-      // 드래그 시작 시 유효성 검사
+      // 드래그 시작 시 유효성 검사 (기본적인 검증만)
       if (first) {
-        if (!sheetRef.current?.contains(targetScroll)) {
+        if (!sheetRef.current?.contains(targetElement)) {
           return cancel?.();
         }
 
-        const isDragHandle = targetScroll.closest('.cursor-grab');
+        const isDragHandle = targetElement.closest('.cursor-grab');
         if (!isDragHandle) {
           return cancel?.();
         }
 
-        if (targetScroll.closest('[data-scrollable]')) {
+        if (targetElement.closest('[data-scrollable]')) {
           return cancel?.();
         }
+
+        // 드래그 시작 시 상태 설정
+        isDragging.current = true;
       }
 
       if (!memo) memo = y.get();
@@ -127,14 +141,15 @@ export const MapDragBottomSheet = forwardRef<
 
       // 드래그 완료 시 최종 위치 결정
       if (last) {
+        isDragging.current = false; // 드래그 완료
         const finalY = y.get();
         finalizeDragPosition(finalY);
       } else {
-        // 드래그 중 범위 제한 및 위치 업데이트
+        // 드래그 중 범위 제한 (Context 업데이트 없이 애니메이션만)
         if (newY < expandedY - 30) return cancel?.();
         if (newY > collapsedY + 30) return cancel?.();
         api.start({ y: newY, immediate: true });
-        updateDragPosition(newY);
+        // 드래그 중에는 Context 업데이트하지 않음
       }
       return memo;
     },
@@ -145,7 +160,6 @@ export const MapDragBottomSheet = forwardRef<
       threshold: 10,
     }
   );
-
 
   return (
     <div className="flex-1 pointer-events-none">

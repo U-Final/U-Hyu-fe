@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+
 import { useMapUI } from './useMapUI';
 
 /**
@@ -25,51 +26,69 @@ export const useBottomSheetSync = () => {
   /**
    * Context에서 바텀시트 열기
    */
-  const contextOpenBottomSheet = useCallback((level: 'middle' | 'expanded', animate = true) => {
-    // 명시적으로 닫힌 상태에서는 middle 열기 차단
-    if (isExplicitlyClosed && level !== 'expanded') {
-      if (import.meta.env.MODE === 'development') {
-        console.log('명시적으로 닫힌 상태 - middle 열기 무시');
+  const contextOpenBottomSheet = useCallback(
+    (level: 'middle' | 'expanded', animate = true) => {
+      // 명시적으로 닫힌 상태에서는 middle 열기 차단
+      if (isExplicitlyClosed && level !== 'expanded') {
+        if (import.meta.env.MODE === 'development') {
+          console.log('명시적으로 닫힌 상태 - middle 열기 무시');
+        }
+        return;
       }
-      return;
-    }
-    
-    openBottomSheet(level, animate);
-  }, [openBottomSheet, isExplicitlyClosed]);
+
+      openBottomSheet(level, animate);
+    },
+    [openBottomSheet, isExplicitlyClosed]
+  );
 
   /**
    * Context에서 바텀시트 닫기
    */
-  const contextCloseBottomSheet = useCallback((explicit = false, animate = true) => {
-    closeBottomSheet(explicit, animate);
-  }, [closeBottomSheet]);
+  const contextCloseBottomSheet = useCallback(
+    (explicit = false, animate = true) => {
+      closeBottomSheet(explicit, animate);
+    },
+    [closeBottomSheet]
+  );
 
   /**
    * 드래그 중 Y 위치 업데이트
    */
-  const updateDragPosition = useCallback((y: number) => {
-    setBottomSheetY(y);
-  }, [setBottomSheetY]);
+  const updateDragPosition = useCallback(
+    (y: number) => {
+      setBottomSheetY(y);
+    },
+    [setBottomSheetY]
+  );
 
   /**
    * 드래그 완료 시 최종 상태 결정
    */
-  const finalizeDragPosition = useCallback((finalY: number) => {
-    const middleThreshold = window.innerHeight * 0.22;
-    
-    if (finalY < middleY - middleThreshold) {
-      setExplicitClosed(false);
-      contextOpenBottomSheet('expanded');
-    } else if (finalY > middleY + middleThreshold) {
-      setExplicitClosed(true);
-      contextCloseBottomSheet(true);
-    } else {
-      if (!isExplicitlyClosed) {
+  const finalizeDragPosition = useCallback(
+    (finalY: number) => {
+      const middleThreshold = window.innerHeight * 0.22;
+
+      if (finalY < middleY - middleThreshold) {
         setExplicitClosed(false);
-        contextOpenBottomSheet('middle');
+        contextOpenBottomSheet('expanded');
+      } else if (finalY > middleY + middleThreshold) {
+        setExplicitClosed(true);
+        contextCloseBottomSheet(true);
+      } else {
+        if (!isExplicitlyClosed) {
+          setExplicitClosed(false);
+          contextOpenBottomSheet('middle');
+        }
       }
-    }
-  }, [middleY, isExplicitlyClosed, setExplicitClosed, contextOpenBottomSheet, contextCloseBottomSheet]);
+    },
+    [
+      middleY,
+      isExplicitlyClosed,
+      setExplicitClosed,
+      contextOpenBottomSheet,
+      contextCloseBottomSheet,
+    ]
+  );
 
   /**
    * 바텀시트 초기화
@@ -105,23 +124,23 @@ export const useBottomSheetSync = () => {
     isExplicitlyClosed,
     isBottomSheetAnimating,
     bottomSheetY,
-    
+
     // 높이 상수
     expandedY,
     middleY,
     collapsedY,
-    
+
     // 제어 함수들
     open: () => contextOpenBottomSheet('expanded'),
     openMiddle: () => contextOpenBottomSheet('middle'),
     close: () => contextCloseBottomSheet(true),
     setExplicitlyClosed: setExplicitClosed,
     initialize: initializeBottomSheet,
-    
+
     // 드래그 관련
     updateDragPosition,
     finalizeDragPosition,
-    
+
     // 기타
     handleBackgroundClick,
   };

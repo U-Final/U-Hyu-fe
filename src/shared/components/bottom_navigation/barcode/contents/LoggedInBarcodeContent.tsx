@@ -1,7 +1,8 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
+import type { NearbyStore } from '@barcode/api/barcode.type';
 import { postNearbyStore } from '@barcode/api/nearbyStoreApi';
-import { VisitConfirmModal } from '@barcode/components/VisitConfirmModal';
+import VisitConfirmSection from '@barcode/components/VisitConfirmSection';
 import { ImageUp } from 'lucide-react';
 
 import { IconButton, PrimaryButton } from '@/shared/components';
@@ -9,14 +10,13 @@ import { BarcodeCropModal } from '@/shared/components/bottom_navigation/barcode/
 import { CroppedImg } from '@/shared/components/bottom_navigation/barcode/CroppedImg';
 import { useImageCropStore, useModalStore } from '@/shared/store';
 
-interface Props {
-  onClose: () => void;
-}
-
-export const LoggedInBarcodeContent = ({ onClose }: Props) => {
+export const LoggedInBarcodeContent = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { croppedImage, setImageSrc } = useImageCropStore();
   const openModal = useModalStore(state => state.openModal);
+  const [store, setStore] = useState<NearbyStore | null>(null);
+  const [isConfirmed, setIsConfirmed] = useState(false);
+  const [isRejected, setIsRejected] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -38,27 +38,40 @@ export const LoggedInBarcodeContent = ({ onClose }: Props) => {
   };
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(async pos => {
-      const coords = {
-        lat: pos.coords.latitude,
-        lon: pos.coords.longitude,
-        radius: 50,
-      };
-
-      const store = await postNearbyStore(coords);
-      if (store) {
-        onClose();
-        openModal('base', {
-          children: <VisitConfirmModal store={store} />,
-        });
-      } else {
-        console.log('근처에 방문 가능한 제휴 매장이 없습니다.');
+    navigator.geolocation.getCurrentPosition(
+      async pos => {
+        const coords = {
+          lat: pos.coords.latitude,
+          lon: pos.coords.longitude,
+          radius: 50,
+        };
+        try {
+          const store = await postNearbyStore(coords);
+          if (store) {
+            setStore(store);
+          }
+        } catch (error) {
+          console.error('근처 매장 검색 중 오류 발생', error);
+        }
+      },
+      error => {
+        console.error(
+          '위치 정보를 가져올 수 없습니다. 위치 동의가 필요합니다.',
+          error
+        );
       }
-    });
-  }, [onClose, openModal]);
+    );
+  }, []);
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full gap-4">
+      {store && !isConfirmed && !isRejected && (
+        <VisitConfirmSection
+          store={store}
+          onConfirm={() => setIsConfirmed(true)}
+          onReject={() => setIsRejected(true)}
+        />
+      )}
       {croppedImage ? (
         <div className="relative w-full">
           <CroppedImg image={croppedImage} />

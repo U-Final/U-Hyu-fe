@@ -131,9 +131,9 @@ export const mymapHandlers = [
 
   // my map 매장 등록 유무 조회 MSW 핸들러
   http.get(MYMAP_ENDPOINTS.MYMAP.STATE_MSW(), async ({ params }) => {
-    const { storeId } = params;
+    const { store_id } = params;
 
-    if (!storeId) {
+    if (!store_id) {
       return createErrorResponse('storeId가 없습니다.', 400);
     }
 

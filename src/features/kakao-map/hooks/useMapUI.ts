@@ -70,6 +70,43 @@ export const useMapUI = () => {
     actions.setSelectedBrand('');
   }, [actions]);
 
+  // 바텀시트 통합 제어 함수들 (새로 추가)
+  
+  /**
+   * 바텀시트를 지정된 레벨로 열기
+   * 명시적으로 닫힌 상태에서는 expanded만 허용
+   */
+  const openBottomSheet = useCallback((level: 'middle' | 'expanded', animate = true) => {
+    // 명시적으로 닫힌 상태에서는 middle 열기 차단
+    if (state.bottomSheet.isExplicitlyClosed && level !== 'expanded') {
+      if (import.meta.env.MODE === 'development') {
+        console.log('명시적으로 닫힌 상태 - middle 열기 무시');
+      }
+      return;
+    }
+    
+    actions.openBottomSheet(level, animate);
+  }, [actions, state.bottomSheet.isExplicitlyClosed]);
+
+  /**
+   * 바텀시트 닫기
+   */
+  const closeBottomSheet = useCallback((explicit = false, animate = true) => {
+    actions.closeBottomSheet(explicit, animate);
+  }, [actions]);
+
+  /**
+   * 명시적 닫힘 상태 설정
+   */
+  const setExplicitClosed = useCallback((closed: boolean) => {
+    actions.setExplicitClosed(closed);
+  }, [actions]);
+
+  // 편의 함수들
+  const openMiddle = useCallback(() => openBottomSheet('middle'), [openBottomSheet]);
+  const openExpanded = useCallback(() => openBottomSheet('expanded'), [openBottomSheet]);
+  const closeExplicitly = useCallback(() => closeBottomSheet(true), [closeBottomSheet]);
+
   return {
     // UI 상태 노출
     searchValue: state.searchValue,
@@ -79,6 +116,12 @@ export const useMapUI = () => {
     selectedCategory: state.selectedCategory,
     selectedBrand: state.selectedBrand,
     selectedMarkerId: state.selectedMarkerId,
+
+    // 바텀시트 통합 상태 노출
+    bottomSheetState: state.bottomSheet.state,
+    isExplicitlyClosed: state.bottomSheet.isExplicitlyClosed,
+    isBottomSheetAnimating: state.bottomSheet.isAnimating,
+    bottomSheetY: state.bottomSheet.y,
 
     // 필터 상태
     activeRegionFilter: state.activeRegionFilter,
@@ -101,6 +144,20 @@ export const useMapUI = () => {
     setMapDragging: actions.setMapDragging,
     toggleFilterDropdown: actions.toggleFilterDropdown,
     resetAllUI: actions.resetAllUI,
+
+    // 바텀시트 통합 제어 액션들 (Context에서 가져온 것)
+    setBottomSheetState: actions.setBottomSheetState,
+    setBottomSheetY: actions.setBottomSheetY,
+    setBottomSheetAnimating: actions.setBottomSheetAnimating,
+    resetBottomSheet: actions.resetBottomSheet,
+
+    // 바텀시트 통합 제어 편의 함수들 (이 훅에서 정의한 것)
+    openBottomSheet,
+    closeBottomSheet,
+    setExplicitClosed,
+    openMiddle,
+    openExpanded,
+    closeExplicitly,
 
     // 복합 액션들 (이 훅에서 정의한 것)
     showMymap,

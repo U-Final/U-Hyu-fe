@@ -1,11 +1,12 @@
 import { type FC, useEffect } from 'react';
 
-import { X } from 'lucide-react';
+import { ImageUp, X } from 'lucide-react';
 
 import {
   GuestBarcodeContent,
   LoggedInBarcodeContent,
 } from '@/shared/components/bottom_navigation/barcode/contents';
+import { IconButton } from '@/shared/components/buttons/IconButton';
 import { useIsLoggedIn, useUser } from '@/shared/store/useUserStore';
 
 interface BarcodeBottomSheetProps {
@@ -46,18 +47,25 @@ export const BarcodeBottomSheet: FC<BarcodeBottomSheetProps> = ({
       >
         <div className="bg-white rounded-t-2xl z-30 flex flex-col border border-light-gray p-4 min-h-[150px]">
           <header className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold">
+            <h2 className="text-lg font-semibold flex-1">
               {user
                 ? `${user.userName} ${user.grade} 멤버십 바코드`
                 : '멤버십 바코드'}
             </h2>
-            <button
-              onClick={onClose}
-              aria-label="닫기"
-              className="cursor-pointer hover:bg-gray-200 rounded-md"
-            >
-              <X size={20} />
-            </button>
+            <div className="flex gap-4">
+              <IconButton
+                icon={<ImageUp size={16} />}
+                className="hover:bg-gray-hover cursor-pointer"
+                aria-label="바코드 이미지 재업로드"
+              />
+              <button
+                onClick={onClose}
+                aria-label="닫기"
+                className="cursor-pointer hover:bg-gray-200 rounded-md"
+              >
+                <X size={20} />
+              </button>
+            </div>
           </header>
 
           {isLoggedIn ? <LoggedInBarcodeContent /> : <GuestBarcodeContent />}

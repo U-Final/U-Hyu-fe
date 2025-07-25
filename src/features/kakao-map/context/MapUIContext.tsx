@@ -18,12 +18,10 @@ interface MapUIState {
   currentBottomSheetStep: 'list' | 'category' | 'brand' | 'mymap';
   isBottomSheetExpanded: boolean;
 
-  // 바텀시트 통합 상태 (새로 추가)
+  // 바텀시트 통합 상태 - 단순화 (spring 관련 제거)
   bottomSheet: {
     state: 'collapsed' | 'middle' | 'expanded';
     isExplicitlyClosed: boolean;
-    isAnimating: boolean;
-    y: number;
   };
 
   // 필터 UI 상태
@@ -122,7 +120,6 @@ const mapUIReducer = (state: MapUIState, action: MapUIAction): MapUIState => {
           ...state.bottomSheet,
           state: action.payload.level,
           isExplicitlyClosed: false, // 바텀시트를 열 때마다 명시적 닫힘 플래그 리셋
-          isAnimating: action.payload.animate !== false,
         },
       };
     case 'CLOSE_BOTTOM_SHEET':
@@ -132,7 +129,6 @@ const mapUIReducer = (state: MapUIState, action: MapUIAction): MapUIState => {
           ...state.bottomSheet,
           state: 'collapsed',
           isExplicitlyClosed: action.payload.explicit,
-          isAnimating: action.payload.animate !== false,
         },
       };
     case 'SET_BOTTOM_SHEET_STATE':
@@ -151,30 +147,12 @@ const mapUIReducer = (state: MapUIState, action: MapUIAction): MapUIState => {
           isExplicitlyClosed: action.payload,
         },
       };
-    case 'SET_BOTTOM_SHEET_Y':
-      return {
-        ...state,
-        bottomSheet: {
-          ...state.bottomSheet,
-          y: action.payload,
-        },
-      };
-    case 'SET_BOTTOM_SHEET_ANIMATING':
-      return {
-        ...state,
-        bottomSheet: {
-          ...state.bottomSheet,
-          isAnimating: action.payload,
-        },
-      };
     case 'RESET_BOTTOM_SHEET':
       return {
         ...state,
         bottomSheet: {
           state: 'collapsed',
           isExplicitlyClosed: false,
-          isAnimating: false,
-          y: window.innerHeight - 120,
         },
       };
 
@@ -242,8 +220,7 @@ interface MapUIContextValue {
     closeBottomSheet: (explicit?: boolean, animate?: boolean) => void;
     setBottomSheetState: (state: 'collapsed' | 'middle' | 'expanded') => void;
     setExplicitClosed: (closed: boolean) => void;
-    setBottomSheetY: (y: number) => void;
-    setBottomSheetAnimating: (animating: boolean) => void;
+
     resetBottomSheet: () => void;
 
     // 필터 관련 액션
@@ -275,8 +252,6 @@ const initialUIState: MapUIState = {
   bottomSheet: {
     state: 'collapsed',
     isExplicitlyClosed: false,
-    isAnimating: false,
-    y: typeof window !== 'undefined' ? window.innerHeight - 120 : 600,
   },
   selectedCategory: '',
   selectedBrand: '',
@@ -354,14 +329,6 @@ export const MapUIProvider: React.FC<{ children: React.ReactNode }> = ({
 
     setExplicitClosed: useCallback((closed: boolean) => {
       dispatch({ type: 'SET_EXPLICIT_CLOSED', payload: closed });
-    }, []),
-
-    setBottomSheetY: useCallback((y: number) => {
-      dispatch({ type: 'SET_BOTTOM_SHEET_Y', payload: y });
-    }, []),
-
-    setBottomSheetAnimating: useCallback((animating: boolean) => {
-      dispatch({ type: 'SET_BOTTOM_SHEET_ANIMATING', payload: animating });
     }, []),
 
     resetBottomSheet: useCallback(() => {

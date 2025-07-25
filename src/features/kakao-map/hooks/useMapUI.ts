@@ -146,11 +146,9 @@ export const useMapUI = () => {
     selectedBrand: state.selectedBrand,
     selectedMarkerId: state.selectedMarkerId,
 
-    // 바텀시트 통합 상태 노출
+    // 바텀시트 통합 상태 노출 - 단순화
     bottomSheetState: state.bottomSheet.state,
     isExplicitlyClosed: state.bottomSheet.isExplicitlyClosed,
-    isBottomSheetAnimating: state.bottomSheet.isAnimating,
-    bottomSheetY: state.bottomSheet.y,
 
     // 필터 상태
     activeRegionFilter: state.activeRegionFilter,
@@ -174,11 +172,8 @@ export const useMapUI = () => {
     toggleFilterDropdown: actions.toggleFilterDropdown,
     resetAllUI: actions.resetAllUI,
 
-    // 바텀시트 통합 제어 액션들 (Context에서 가져온 것)
+    // 바텀시트 통합 제어 액션들 (Context에서 가져온 것) - 단순화
     setBottomSheetState: actions.setBottomSheetState,
-    setBottomSheetY: actions.setBottomSheetY,
-    setBottomSheetAnimating: actions.setBottomSheetAnimating,
-    resetBottomSheet: actions.resetBottomSheet,
 
     // 바텀시트 통합 제어 편의 함수들 (이 훅에서 정의한 것)
     openBottomSheet,

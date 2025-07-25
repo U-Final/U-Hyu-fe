@@ -1,4 +1,10 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+} from 'react';
 
 import { animated, useSpring } from '@react-spring/web';
 import { useGesture } from '@use-gesture/react';
@@ -22,6 +28,10 @@ export const MapDragBottomSheet = forwardRef<
   MapDragBottomSheetRef,
   MapDragBottomSheetProps
 >(({ children, title }, ref) => {
+  if (import.meta.env.MODE === 'development') {
+    console.log('🔄 MapDragBottomSheet 리렌더링 발생');
+  }
+
   const sheetRef = useRef<HTMLDivElement>(null);
   const isInitialized = useRef(false);
   const isDragging = useRef(false);
@@ -31,7 +41,6 @@ export const MapDragBottomSheet = forwardRef<
   const {
     bottomSheetState,
     isExplicitlyClosed,
-    bottomSheetY,
     expandedY,
     middleY,
     collapsedY,
@@ -40,40 +49,42 @@ export const MapDragBottomSheet = forwardRef<
     close,
     setExplicitlyClosed,
     initialize,
-    finalizeDragPosition,
   } = useBottomSheetSync();
 
-  // Spring 애니메이션
+  // Spring 애니메이션 - 초기값은 middle로 설정
   const [{ y }, api] = useSpring(() => ({
-    y: bottomSheetY,
+    y: middleY,
     config: { tension: 300, friction: 30 },
   }));
 
-  // 높이 상수 매핑
-  const snapPositions = {
-    expanded: expandedY,
-    middle: middleY,
-    collapsed: collapsedY,
-  };
+  // 높이 상수 매핑 - useMemo로 메모화하여 불필요한 리렌더 방지
+  const snapPositions = useMemo(
+    () => ({
+      expanded: expandedY,
+      middle: middleY,
+      collapsed: collapsedY,
+    }),
+    [expandedY, middleY, collapsedY]
+  );
 
-  // Imperative API 구현
+  // Imperative API 구현 - 플래그 리셋 보장
   useImperativeHandle(
     ref,
     () => ({
       close: () => {
-        customY.current = null; // 커스텀 위치 초기화
+        customY.current = null;
         close();
         api.start({ y: collapsedY });
       },
       openMiddle: () => {
-        customY.current = null; // 커스텀 위치 초기화
-        setExplicitlyClosed(false); // isExplicitlyClosed 리셋
+        customY.current = null;
+        setExplicitlyClosed(false); // 반드시 먼저 리셋
         openMiddle();
         api.start({ y: middleY });
       },
       open: () => {
-        customY.current = null; // 커스텀 위치 초기화
-        setExplicitlyClosed(false); // isExplicitlyClosed 리셋
+        customY.current = null;
+        setExplicitlyClosed(false); // 반드시 먼저 리셋
         open();
         api.start({ y: expandedY });
       },
@@ -87,7 +98,7 @@ export const MapDragBottomSheet = forwardRef<
       },
       setExplicitlyClosed: (closed: boolean) => {
         if (closed) {
-          customY.current = null; // 명시적 닫힘 시 커스텀 위치 초기화
+          customY.current = null;
         }
         setExplicitlyClosed(closed);
       },
@@ -105,17 +116,13 @@ export const MapDragBottomSheet = forwardRef<
     ]
   );
 
-  // Context 상태 변경에 따른 애니메이션 동기화 (드래그 중이 아닐 때만)
+  // Context 상태 변경에 따른 애니메이션 동기화 - 최소한만 처리
   useEffect(() => {
     if (isDragging.current) return;
 
-    // 커스텀 위치가 있으면 그것을 사용, 없으면 기본 스냅 위치 사용
-    const targetY =
-      customY.current !== null
-        ? customY.current
-        : snapPositions[bottomSheetState];
+    const targetY = customY.current ?? snapPositions[bottomSheetState];
 
-    // 명시적으로 닫힌 상태면 collapsed 위치로
+    // 명시적으로 닫힌 상태인 경우에만 collapsed 위치로
     if (isExplicitlyClosed && bottomSheetState === 'collapsed') {
       customY.current = null;
       api.start({ y: collapsedY });
@@ -186,19 +193,32 @@ export const MapDragBottomSheet = forwardRef<
           if (clampedY <= expandedRange) {
             // 상단 스냅 영역 - expanded
             customY.current = null;
-            finalizeDragPosition(expandedY);
+            setExplicitlyClosed(false);
+            open();
           } else if (clampedY >= middleRangeMin && clampedY <= middleRangeMax) {
             // 중간 스냅 영역 - middle
             customY.current = null;
-            finalizeDragPosition(middleY);
+            setExplicitlyClosed(false);
+            openMiddle();
           } else if (clampedY >= collapsedRange) {
             // 하단 스냅 영역 - collapsed
             customY.current = null;
-            finalizeDragPosition(collapsedY);
+            setExplicitlyClosed(true);
+            close();
           } else {
             // 스냅 영역이 아닌 곳 - 현재 위치에 고정
             customY.current = clampedY;
             api.start({ y: clampedY });
+
+            // Context 상태와 동기화를 위해 가장 가까운 상태로 설정
+            setExplicitlyClosed(false);
+            if (clampedY < middleY) {
+              // expanded에 가까움
+              open();
+            } else {
+              // middle에 가까움
+              openMiddle();
+            }
 
             if (import.meta.env.MODE === 'development') {
               console.log('커스텀 위치에 고정:', clampedY);

@@ -1,15 +1,16 @@
-import { PATH } from '@paths';
-
-import { NavButton } from '@/shared/components';
+import { ButtonBase } from '@/shared/components';
+import { useKakaoLogin } from '@/shared/hooks';
 import { useModalStore } from '@/shared/store';
 
 import BaseModal from './BaseModal';
 
 const LoginModal = () => {
+  const { login } = useKakaoLogin();
   const closeModal = useModalStore(state => state.closeModal);
 
   const handleLogin = () => {
     closeModal();
+    login();
   };
 
   return (
@@ -18,9 +19,9 @@ const LoginModal = () => {
         <p>
           로그인을 해주시면 <br /> 더 많은 기능을 이용할 수 있습니다!
         </p>
-        <NavButton to={PATH.LOGIN} onClick={handleLogin} className="w-full">
-          로그인 하러가기
-        </NavButton>
+        <ButtonBase onClick={handleLogin} variant="nav">
+          로그인 하러 가기
+        </ButtonBase>
       </div>
     </BaseModal>
   );

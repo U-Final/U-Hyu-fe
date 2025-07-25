@@ -3,7 +3,9 @@ import { type FC, useCallback, useEffect, useRef, useState } from 'react';
 import { CustomOverlayMap, Map as KakaoMap } from 'react-kakao-maps-sdk';
 
 import { useToggleFavoriteMutation } from '../../hooks/useMapQueries';
+import { useDistanceBasedSearch } from '../../hooks/useManualSearch';
 import type { Store } from '../../types/store';
+import ResponsiveManualSearchButton from '../ManualSearchButton';
 import BrandMarker from './BrandMarker';
 import StoreInfoWindow from './StoreInfoWindow';
 
@@ -15,9 +17,10 @@ interface MapWithMarkersProps {
   className?: string;
   onStoreClick?: (store: Store) => void;
   onCenterChange?: (center: { lat: number; lng: number }) => void;
+  /** 검색 로딩 상태 (재검색 버튼 로딩 표시용) */
+  isSearching?: boolean;
 }
 
-const MINIMUM_MOVE_DISTANCE = 300; // 미터 단위
 
 const MapWithMarkers: FC<MapWithMarkersProps> = ({
   center,
@@ -26,6 +29,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   level = 4,
   className = 'w-full h-full',
   onCenterChange,
+  isSearching = false,
 }) => {
   const [selectedStoreId, setSelectedStoreId] = useState<number | null>(null);
   const [infoWindowStore, setInfoWindowStore] = useState<Store | null>(null);
@@ -34,13 +38,25 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   const mapRef = useRef<kakao.maps.Map | null>(null);
   const pantoTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // center prop 동기화 useEffect를 조건부로 변경
+  // 거리 기반 재검색 상태 관리
+  const {
+    showButton,
+    distanceFromLastSearch,
+    handleMapMove,
+    handleSearch,
+    updateSearchPosition
+  } = useDistanceBasedSearch();
+
+  // center prop 동기화 및 검색 기준 위치 설정
   useEffect(() => {
     // 인포윈도우가 열려있지 않을 때만 center prop 동기화
     if (!infoWindowStore) {
       setMapCenter(center);
+      // 새로운 center가 설정될 때 검색 기준 위치도 업데이트
+      updateSearchPosition(center);
     }
-  }, [center, infoWindowStore]);
+  }, [center, infoWindowStore, updateSearchPosition]);
+
 
   // 컴포넌트 언마운트 시 setTimeout cleanup
   useEffect(() => {
@@ -51,7 +67,6 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
     };
   }, []);
 
-  const lastApiCallPosition = useRef<{ lat: number; lng: number } | null>(null);
 
   const handleMarkerClick = useCallback((store: Store) => {
     setSelectedStoreId(store.storeId);
@@ -107,79 +122,75 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
     [infoWindowStore, toggleFavoriteMutation]
   );
 
-  // 거리 계산 함수 (Haversine formula)
-  const calculateDistance = useCallback(
-    (
-      pos1: { lat: number; lng: number },
-      pos2: { lat: number; lng: number }
-    ) => {
-      const R = 6371e3; // 지구 반지름 (미터)
-      const φ1 = (pos1.lat * Math.PI) / 180;
-      const φ2 = (pos2.lat * Math.PI) / 180;
-      const Δφ = ((pos2.lat - pos1.lat) * Math.PI) / 180;
-      const Δλ = ((pos2.lng - pos1.lng) * Math.PI) / 180;
-
-      const a =
-        Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-        Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-      return R * c; // 미터 단위 거리
-    },
-    []
-  );
 
   const handleDragEnd = useCallback(
     (map: kakao.maps.Map) => {
       const newCenter = map.getCenter();
-      if (!newCenter || !onCenterChange) return;
+      if (!newCenter) return;
 
       const currentPosition = {
         lat: newCenter.getLat(),
         lng: newCenter.getLng(),
       };
 
-      if (lastApiCallPosition.current) {
-        const distance = calculateDistance(
-          lastApiCallPosition.current,
-          currentPosition
-        );
+      // 거리 기반 재검색 상태 업데이트만 실행 (자동 검색 로직 제거)
+      handleMapMove(currentPosition);
 
-        // 최소 이동 거리를 충족하지 않으면 API 요청 스킵
-        if (distance < MINIMUM_MOVE_DISTANCE) {
-          if (import.meta.env.MODE === 'development') {
-            console.log(
-              `드래그 완료 - 거리 부족 (${Math.round(distance)}m < ${MINIMUM_MOVE_DISTANCE}m), API 요청 스킵`
-            );
-          }
-          return;
-        }
-
-        if (import.meta.env.MODE === 'development') {
-          console.log(`API 요청 실행 - 이동 거리: ${Math.round(distance)}m`);
-        }
+      if (import.meta.env.MODE === 'development') {
+        console.log(`지도 이동: ${currentPosition.lat}, ${currentPosition.lng}`);
       }
-
-      // API 요청 실행 및 위치 저장
-      lastApiCallPosition.current = currentPosition;
-      onCenterChange(currentPosition);
     },
-    [onCenterChange, calculateDistance]
+    [handleMapMove]
   );
 
+  /**
+   * 재검색 버튼 클릭 핸들러
+   */
+  const handleSearchClick = useCallback(() => {
+    if (!onCenterChange || !mapRef.current) return;
+
+    const currentCenter = mapRef.current.getCenter();
+    if (!currentCenter) return;
+
+    const currentPosition = {
+      lat: currentCenter.getLat(),
+      lng: currentCenter.getLng(),
+    };
+
+    // 검색 상태 업데이트 (버튼 숨김 및 새로운 기준점 설정)
+    handleSearch();
+    updateSearchPosition(currentPosition);
+    
+    // API 요청 실행
+    onCenterChange(currentPosition);
+
+    if (import.meta.env.MODE === 'development') {
+      console.log('재검색 실행:', currentPosition);
+    }
+  }, [onCenterChange, handleSearch, updateSearchPosition]);
+
   return (
-    <KakaoMap
-      id="map"
-      center={mapCenter}
-      className={className}
-      level={level}
-      isPanto={isPanto}
-      onDragEnd={handleDragEnd}
-      onClick={handleInfoWindowClose} // 지도 클릭 시 인포윈도우 닫기
-      onCreate={map => {
-        mapRef.current = map;
-      }}
-    >
+    <>
+      {/* 거리 기반 재검색 버튼 */}
+      <ResponsiveManualSearchButton
+        visible={showButton}
+        loading={isSearching}
+        onClick={handleSearchClick}
+        distance={distanceFromLastSearch}
+      />
+
+      <KakaoMap
+        id="map"
+        center={mapCenter}
+        className={className}
+        level={level}
+        isPanto={isPanto}
+        onDragEnd={handleDragEnd}
+        onClick={handleInfoWindowClose} // 지도 클릭 시 인포윈도우 닫기
+        onCreate={map => {
+          mapRef.current = map;
+        }}
+      >
       {/* 매장 마커들 */}
       {stores.map(store => (
         <CustomOverlayMap
@@ -223,6 +234,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         </CustomOverlayMap>
       )}
     </KakaoMap>
+    </>
   );
 };
 

@@ -104,6 +104,8 @@ src/features/{feature-name}/
   VITE_USE_MOCK_DATA=true
 - 실제 API 연동
   VITE_USE_MOCK_DATA=false
+- 지도 재검색 거리 설정 (미터 단위)
+  VITE_SEARCH_DISTANCE_THRESHOLD=5000  # 기본값: 5km
 
 ### **핵심 전략 요약**
 

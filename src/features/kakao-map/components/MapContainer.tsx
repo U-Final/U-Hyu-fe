@@ -1,10 +1,11 @@
 import React from 'react';
+
 import { useMapData } from '../hooks/useMapData';
 import { useMapInteraction } from '../hooks/useMapInteraction';
 import MapWithMarkers from './marker/MapWithMarkers';
 
 export const MapContainer: React.FC = () => {
-  const { stores, mapCenter, userLocation } = useMapData();
+  const { stores, mapCenter, userLocation, loading } = useMapData();
   const { handleMapCenterChange, handleMarkerClick } = useMapInteraction();
 
   return (
@@ -14,6 +15,7 @@ export const MapContainer: React.FC = () => {
       currentLocation={userLocation}
       onStoreClick={handleMarkerClick}
       onCenterChange={handleMapCenterChange}
+      isSearching={loading.stores}
     />
   );
 };

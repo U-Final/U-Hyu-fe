@@ -9,23 +9,16 @@ export const useMapInteraction = () => {
     setSelectedMarker, 
     selectedMarkerId, 
     setBottomSheetExpanded,
-    setExplicitClosed,
-    closeExplicitly,
   } = useMapUI();
 
   // 매장 선택 시 UI 상태 업데이트 및 지도 중심점 이동
   const handleStoreSelect = useCallback(
-    (store: Store, shouldCloseBottomSheet = false) => {
-      // Context를 통한 바텀시트 닫힘 처리
-      if (shouldCloseBottomSheet) {
-        setExplicitClosed(true);
-      }
-
+    (store: Store) => {
       setSelectedMarker(store.storeId);
       selectStore(store);
       setMapCenter({ lat: store.latitude, lng: store.longitude });
     },
-    [selectStore, setMapCenter, setSelectedMarker, setExplicitClosed]
+    [selectStore, setMapCenter, setSelectedMarker]
   );
 
   // 지도 중심점 변경 처리
@@ -37,19 +30,17 @@ export const useMapInteraction = () => {
   );
 
   // 지도 위 마커 클릭 시 바텀시트 닫고 인포윈도우 표시
+  // 바텀시트 제어는 ref를 통해 외부에서 수행
   const handleMapMarkerClick = useCallback(
     (store: Store) => {
-      // Context를 통한 바텀시트 깜빡임 방지 및 닫기
-      setExplicitClosed(true);
-      closeExplicitly();
-
       if (import.meta.env.MODE === 'development') {
         console.log('지도 마커 클릭:', store.storeName);
       }
       
-      handleStoreSelect(store, true);
+      // 매장 선택만 수행 (바텀시트 제어는 외부에서 ref로 처리)
+      handleStoreSelect(store);
     },
-    [handleStoreSelect, setExplicitClosed, closeExplicitly]
+    [handleStoreSelect]
   );
 
   // 바텀시트 내 매장 리스트 클릭 시 처리

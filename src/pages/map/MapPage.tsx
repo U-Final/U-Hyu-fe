@@ -1,11 +1,11 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 import { BottomSheetContainer } from '@kakao-map/components/BottomSheetContainer';
 import { MapContainer } from '@kakao-map/components/MapContainer';
 import { MapControlsContainer } from '@kakao-map/components/MapControlsContainer';
-import type { MapDragBottomSheetRef } from '@kakao-map/components/MapDragBottomSheet';
 import { LocationControlContainer } from '@kakao-map/components/location/LocationControlContainer';
 import { MapUIProvider } from '@kakao-map/context/MapUIContext';
+import { useMapUIContext } from '@kakao-map/context/MapUIContext';
 import useKakaoLoader from '@kakao-map/hooks/useKakaoLoader';
 
 /**
@@ -16,9 +16,9 @@ import useKakaoLoader from '@kakao-map/hooks/useKakaoLoader';
  *
  * @returns 지도와 관련된 UI가 포함된 React 요소
  */
-function MapPage() {
-  useKakaoLoader();
-  const bottomSheetRef = useRef<MapDragBottomSheetRef>(null); // 바텀시트 제어용 ref
+// MapUIProvider 내부 컴포넌트
+const MapContent = () => {
+  const { bottomSheetRef } = useMapUIContext();
 
   // 바텀시트 초기화
   useEffect(() => {
@@ -33,10 +33,9 @@ function MapPage() {
         }
       }, 300);
     }
-  }, []);
+  }, [bottomSheetRef]);
 
-  // MapUIProvider 내부 컴포넌트
-  const MapContent = () => (
+  return (
     <div className="h-screen relative">
       <div className="absolute inset-0">
         <MapContainer />
@@ -47,6 +46,10 @@ function MapPage() {
       <BottomSheetContainer ref={bottomSheetRef} />
     </div>
   );
+};
+
+function MapPage() {
+  useKakaoLoader();
 
   return (
     <MapUIProvider>

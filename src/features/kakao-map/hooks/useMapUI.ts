@@ -5,7 +5,7 @@ import { useMapUIContext } from '../context/MapUIContext';
 /**
  * 지도 UI 상태 관리를 위한 메인 훅
  * MapUIContext의 상태와 액션을 편리하게 사용할 수 있도록 래핑
- * 복합 액션들도 포함하여 컴포넌트에서 쉽게 사용 가능
+ * 바텀시트 제어는 ref를 통해서만 수행
  */
 export const useMapUI = () => {
   const { state, actions } = useMapUIContext();
@@ -17,9 +17,7 @@ export const useMapUI = () => {
    * 바텀시트 높이 유지하면서 step만 변경
    */
   const showMymap = useCallback(() => {
-    actions.setExplicitClosed(false); // isExplicitlyClosed 플래그 리셋
     actions.setBottomSheetStep('mymap');
-    // 기존의 setBottomSheetExpanded 제거 - 높이 유지
   }, [actions]);
 
   /**
@@ -27,9 +25,7 @@ export const useMapUI = () => {
    * 바텀시트 높이 유지하면서 step만 변경
    */
   const showFilter = useCallback(() => {
-    actions.setExplicitClosed(false); // isExplicitlyClosed 플래그 리셋
     actions.setBottomSheetStep('category');
-    // 기존의 setBottomSheetExpanded 제거 - 높이 유지
   }, [actions]);
 
   /**
@@ -39,11 +35,9 @@ export const useMapUI = () => {
    */
   const selectCategoryAndNavigate = useCallback(
     (category: string) => {
-      actions.setExplicitClosed(false); // isExplicitlyClosed 플래그 리셋
       actions.setSelectedCategory(category);
       actions.setSelectedBrand(''); // 이전 브랜드 선택 초기화
       actions.setBottomSheetStep('brand');
-      // 높이 유지 - 추가 바텀시트 제어 없음
     },
     [actions]
   );
@@ -55,10 +49,8 @@ export const useMapUI = () => {
    */
   const selectBrandAndReturn = useCallback(
     (brand: string) => {
-      actions.setExplicitClosed(false); // isExplicitlyClosed 플래그 리셋
       actions.setSelectedBrand(brand);
       actions.setBottomSheetStep('list');
-      // 높이 유지 - 추가 바텀시트 제어 없음
     },
     [actions]
   );
@@ -68,9 +60,7 @@ export const useMapUI = () => {
    * 바텀시트 높이 유지하면서 step만 변경
    */
   const backToList = useCallback(() => {
-    actions.setExplicitClosed(false); // isExplicitlyClosed 플래그 리셋
     actions.setBottomSheetStep('list');
-    // 높이 유지 - 추가 바텀시트 제어 없음
   }, [actions]);
 
   /**
@@ -81,61 +71,6 @@ export const useMapUI = () => {
     actions.setSelectedBrand('');
   }, [actions]);
 
-  // 바텀시트 통합 제어 함수들 (새로 추가)
-
-  /**
-   * 바텀시트를 지정된 레벨로 열기
-   * 명시적으로 닫힌 상태에서는 expanded만 허용
-   */
-  const openBottomSheet = useCallback(
-    (level: 'middle' | 'expanded', animate = true) => {
-      // 명시적으로 닫힌 상태에서는 middle 열기 차단
-      if (state.bottomSheet.isExplicitlyClosed && level !== 'expanded') {
-        if (import.meta.env.MODE === 'development') {
-          console.log('명시적으로 닫힌 상태 - middle 열기 무시');
-        }
-        return;
-      }
-
-      actions.openBottomSheet(level, animate);
-    },
-    [actions, state.bottomSheet.isExplicitlyClosed]
-  );
-
-  /**
-   * 바텀시트 닫기
-   */
-  const closeBottomSheet = useCallback(
-    (explicit = false, animate = true) => {
-      actions.closeBottomSheet(explicit, animate);
-    },
-    [actions]
-  );
-
-  /**
-   * 명시적 닫힘 상태 설정
-   */
-  const setExplicitClosed = useCallback(
-    (closed: boolean) => {
-      actions.setExplicitClosed(closed);
-    },
-    [actions]
-  );
-
-  // 편의 함수들
-  const openMiddle = useCallback(
-    () => openBottomSheet('middle'),
-    [openBottomSheet]
-  );
-  const openExpanded = useCallback(
-    () => openBottomSheet('expanded'),
-    [openBottomSheet]
-  );
-  const closeExplicitly = useCallback(
-    () => closeBottomSheet(true),
-    [closeBottomSheet]
-  );
-
   return {
     // UI 상태 노출
     searchValue: state.searchValue,
@@ -145,10 +80,6 @@ export const useMapUI = () => {
     selectedCategory: state.selectedCategory,
     selectedBrand: state.selectedBrand,
     selectedMarkerId: state.selectedMarkerId,
-
-    // 바텀시트 통합 상태 노출 - 단순화
-    bottomSheetState: state.bottomSheet.state,
-    isExplicitlyClosed: state.bottomSheet.isExplicitlyClosed,
 
     // 필터 상태
     activeRegionFilter: state.activeRegionFilter,
@@ -171,17 +102,6 @@ export const useMapUI = () => {
     setMapDragging: actions.setMapDragging,
     toggleFilterDropdown: actions.toggleFilterDropdown,
     resetAllUI: actions.resetAllUI,
-
-    // 바텀시트 통합 제어 액션들 (Context에서 가져온 것) - 단순화
-    setBottomSheetState: actions.setBottomSheetState,
-
-    // 바텀시트 통합 제어 편의 함수들 (이 훅에서 정의한 것)
-    openBottomSheet,
-    closeBottomSheet,
-    setExplicitClosed,
-    openMiddle,
-    openExpanded,
-    closeExplicitly,
 
     // 복합 액션들 (이 훅에서 정의한 것)
     showMymap,

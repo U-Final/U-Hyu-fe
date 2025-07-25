@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef, useCallback } from 'react';
 
 import { MyMapList } from '@mymap/components/mymap-list';
 import { FaFilter } from 'react-icons/fa';
@@ -17,16 +17,18 @@ import {
   MapDragBottomSheet,
   type MapDragBottomSheetRef,
 } from './MapDragBottomSheet';
+import { useMapUIContext } from '../context/MapUIContext';
 import StoreListContent from './layout/StoreListContent';
 import BrandSelectContent from './layout/steps/BrandSelectContent';
 import CategorySelectContent from './layout/steps/CategorySelectContent';
 
 export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
   (_, ref) => {
+    const { bottomSheetRef } = useMapUIContext();
     const isLoggedIn = useIsLoggedIn();
     const openModal = useModalStore(state => state.openModal);
     const { stores } = useMapData();
-    const { handleMapMarkerClick } = useMapInteraction(); // handleMarkerClick 대신 handleMapMarkerClick 사용
+    const { handleMapMarkerClick } = useMapInteraction();
     const {
       selectedCategory,
       selectedBrand,
@@ -46,20 +48,20 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
     );
 
     // 바텀시트 내 매장 클릭 시 바텀시트 닫고 인포윈도우 표시
-    const handleStoreClick = (store: Store) => {
+    const handleStoreClick = useCallback((store: Store) => {
       if (import.meta.env.MODE === 'development') {
         console.log('매장 리스트에서 매장 클릭:', store.storeName);
       }
 
       // 바텀시트 명시적 닫힘 플래그 설정 후 닫기
-      if (ref && 'current' in ref && ref.current) {
-        ref.current.setExplicitlyClosed(true);
-        ref.current.close();
+      if (bottomSheetRef && bottomSheetRef.current) {
+        bottomSheetRef.current.setExplicitlyClosed(true);
+        bottomSheetRef.current.close();
       }
 
       // 지도 마커 클릭과 동일한 효과 (바텀시트 닫고 인포윈도우 표시)
       handleMapMarkerClick(store);
-    };
+    }, [bottomSheetRef, handleMapMarkerClick]);
 
     // MyMap 버튼 클릭 핸들러 - 바텀시트 높이 유지
     const handleMyMapClick = (e: React.MouseEvent) => {

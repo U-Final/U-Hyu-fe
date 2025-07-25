@@ -1,5 +1,6 @@
-import {
+import React, {
   forwardRef,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -7,7 +8,6 @@ import {
   useState,
 } from 'react';
 
-import { animated, useSpring } from '@react-spring/web';
 import { useGesture } from '@use-gesture/react';
 
 // Context 상태는 더 이상 바텀시트 높이와 연동하지 않음
@@ -66,46 +66,53 @@ export const MapDragBottomSheet = forwardRef<
     [expandedY, middleY, collapsedY]
   );
 
-  // Spring 애니메이션 - 내부 상태 기반
-  const [{ y }, api] = useSpring(() => ({
-    y: snapPositions[localState],
-    config: { tension: 300, friction: 30 },
-  }));
+  // 현재 Y 위치 상태
+  const [currentY, setCurrentY] = useState(snapPositions[localState]);
 
-  // 외부 제어를 위한 명령형 API - 내부 상태 직접 제어
+  // 외부 제어를 위한 명령형 API - 메모이제이션으로 리렌더링 방지
+  const close = useCallback(() => {
+    setIsExplicitlyClosed(true);
+    setLocalState('collapsed');
+  }, []);
+  
+  const openMiddle = useCallback(() => {
+    setIsExplicitlyClosed(false);
+    setLocalState('middle');
+  }, []);
+  
+  const open = useCallback(() => {
+    setIsExplicitlyClosed(false);
+    setLocalState('expanded');
+  }, []);
+  
+  const initialize = useCallback(() => {
+    if (!isInitialized.current) {
+      isInitialized.current = true;
+      setIsExplicitlyClosed(false);
+      setLocalState('middle');
+    }
+  }, []);
+  
+  const setExplicitlyClosedCallback = useCallback((closed: boolean) => {
+    setIsExplicitlyClosed(closed);
+    if (closed) {
+      setLocalState('collapsed');
+    }
+  }, []);
+
   useImperativeHandle(
     ref,
     () => ({
-      close: () => {
-        setIsExplicitlyClosed(true);
-        setLocalState('collapsed');
-      },
-      openMiddle: () => {
-        setIsExplicitlyClosed(false);
-        setLocalState('middle');
-      },
-      open: () => {
-        setIsExplicitlyClosed(false);
-        setLocalState('expanded');
-      },
-      initialize: () => {
-        if (!isInitialized.current) {
-          isInitialized.current = true;
-          setIsExplicitlyClosed(false);
-          setLocalState('middle');
-        }
-      },
-      setExplicitlyClosed: (closed: boolean) => {
-        setIsExplicitlyClosed(closed);
-        if (closed) {
-          setLocalState('collapsed');
-        }
-      },
+      close,
+      openMiddle,
+      open,
+      initialize,
+      setExplicitlyClosed: setExplicitlyClosedCallback,
     }),
-    []
+    [close, openMiddle, open, initialize, setExplicitlyClosedCallback]
   );
 
-  // 내부 상태 변경시 Spring 애니메이션 동기화
+  // 내부 상태 변경시 Y 위치 동기화
   useEffect(() => {
     // 드래그 중일 때는 상태 변경을 무시
     if (isDragging.current) return;
@@ -116,12 +123,9 @@ export const MapDragBottomSheet = forwardRef<
       console.log('내부 상태 변경 감지:', localState, '-> 목표 Y:', targetY);
     }
 
-    // 내부 상태에 따라 Spring 애니메이션 실행
-    api.start({ 
-      y: targetY,
-      immediate: false
-    });
-  }, [localState, snapPositions, api]);
+    // 내부 상태에 따라 Y 위치 직접 설정
+    setCurrentY(targetY);
+  }, [localState, snapPositions]);
 
   // 드래그 제스처 - 개선된 로직
   const bind = useGesture(
@@ -165,8 +169,8 @@ export const MapDragBottomSheet = forwardRef<
         const clampedY = Math.max(minY, Math.min(maxY, newY));
 
         if (down) {
-          // 드래그 중 - Spring을 직접 조작 (내부 상태 업데이트 안함)
-          api.start({ y: clampedY, immediate: true });
+          // 드래그 중 - Y 위치 직접 업데이트 (내부 상태 업데이트 안함)
+          setCurrentY(clampedY);
         }
 
         if (last) {
@@ -232,7 +236,7 @@ export const MapDragBottomSheet = forwardRef<
     },
     {
       drag: {
-        from: () => [0, y.get()],
+        from: () => [0, currentY],
         pointer: { touch: true },
         filterTaps: true,
         threshold: 5, // 더 민감하게 드래그 시작
@@ -246,11 +250,12 @@ export const MapDragBottomSheet = forwardRef<
   return (
     <div className="flex-1 pointer-events-none">
       {/* 바텀시트 메인 컨테이너 */}
-      <animated.div
+      <div
         ref={sheetRef}
         style={{
-          transform: y.to(val => `translateY(${val}px)`),
-          height: y.to(val => `calc(100vh - ${val}px)`),
+          transform: `translateY(${currentY}px)`,
+          height: `calc(100vh - ${currentY}px)`,
+          transition: isDragging.current ? 'none' : 'transform 0.3s ease-out, height 0.3s ease-out',
         }}
         className="absolute top-0 left-0 right-0 z-40 bg-white rounded-t-2xl border border-light-gray flex flex-col pointer-events-auto shadow-lg"
         {...bind()}
@@ -285,7 +290,7 @@ export const MapDragBottomSheet = forwardRef<
         >
           {children}
         </div>
-      </animated.div>
+      </div>
     </div>
   );
 });

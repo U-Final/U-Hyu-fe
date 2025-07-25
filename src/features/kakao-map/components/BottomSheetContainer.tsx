@@ -1,10 +1,17 @@
 import React from 'react';
 
-import { MyMapList } from '@mymap/components/mymap-list';
+
+
+import AddStore from '@mymap/components/mymap-add-store/AddStore';
+// import { MyMapList } from '@mymap/components/mymap-list';
 import { FaFilter } from 'react-icons/fa';
+
+
 
 import { useModalStore } from '@/shared/store';
 import { useIsLoggedIn } from '@/shared/store/useUserStore';
+
+
 
 import { useBrandsByCategoryWhen } from '../hooks/useBrandsByCategory';
 import { useMapData } from '../hooks/useMapData';
@@ -16,6 +23,10 @@ import { MapDragBottomSheet } from './MapDragBottomSheet';
 import StoreListContent from './layout/StoreListContent';
 import BrandSelectContent from './layout/steps/BrandSelectContent';
 import CategorySelectContent from './layout/steps/CategorySelectContent';
+
+
+
+
 
 export const BottomSheetContainer: React.FC = () => {
   const isLoggedIn = useIsLoggedIn();
@@ -117,7 +128,8 @@ export const BottomSheetContainer: React.FC = () => {
                   <button
                     className="flex items-center gap-1.5 px-3 py-2 text-sm font-bold text-black hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 border border-light-gray shadow-sm hover:shadow-md"
                     onClick={() => {
-                      if (!isLoggedIn) {
+                      console.log('로그인 상태:', isLoggedIn);
+                      if (isLoggedIn) {
                         openModal('login');
                         return;
                       }
@@ -170,7 +182,7 @@ export const BottomSheetContainer: React.FC = () => {
                 뒤로
               </button>
             </div>
-            <MyMapList />
+            <AddStore storeId={1} />
           </div>
         );
 

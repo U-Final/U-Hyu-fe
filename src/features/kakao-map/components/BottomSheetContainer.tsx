@@ -1,17 +1,10 @@
 import React from 'react';
 
-
-
-import AddStore from '@mymap/components/mymap-add-store/AddStore';
-// import { MyMapList } from '@mymap/components/mymap-list';
+import { MyMapList } from '@mymap/components/mymap-list';
 import { FaFilter } from 'react-icons/fa';
-
-
 
 import { useModalStore } from '@/shared/store';
 import { useIsLoggedIn } from '@/shared/store/useUserStore';
-
-
 
 import { useBrandsByCategoryWhen } from '../hooks/useBrandsByCategory';
 import { useMapData } from '../hooks/useMapData';
@@ -23,10 +16,6 @@ import { MapDragBottomSheet } from './MapDragBottomSheet';
 import StoreListContent from './layout/StoreListContent';
 import BrandSelectContent from './layout/steps/BrandSelectContent';
 import CategorySelectContent from './layout/steps/CategorySelectContent';
-
-
-
-
 
 export const BottomSheetContainer: React.FC = () => {
   const isLoggedIn = useIsLoggedIn();
@@ -182,7 +171,7 @@ export const BottomSheetContainer: React.FC = () => {
                 뒤로
               </button>
             </div>
-            <AddStore storeId={1} />
+            <MyMapList />
           </div>
         );
 

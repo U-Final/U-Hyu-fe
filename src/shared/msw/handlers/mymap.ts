@@ -1,5 +1,8 @@
 import { MYMAP_ENDPOINTS } from '@/features/mymap/api/endpoint';
-import { MOCK_MYMAP_LIST } from '@/features/mymap/api/mockData';
+import {
+  MOCK_MYMAP_LIST,
+  MOCK_STORE_BOOKMARK_STATUS,
+} from '@/features/mymap/api/mockData';
 import type { MyMapListUpdateReq, MyMapStoreAddReq } from '@mymap/api/types';
 import { http } from 'msw';
 
@@ -123,6 +126,20 @@ export const mymapHandlers = [
         isMyMapped,
       },
       isMyMapped ? '매장이 추가되었습니다.' : '매장이 삭제되었습니다.'
+    );
+  }),
+
+  // my map 매장 등록 유무 조회 MSW 핸들러
+  http.get(MYMAP_ENDPOINTS.MYMAP.STATE_MSW(), async ({ params }) => {
+    const { storeId } = params;
+
+    if (!storeId) {
+      return createErrorResponse('storeId가 없습니다.', 400);
+    }
+
+    return createResponse(
+      MOCK_STORE_BOOKMARK_STATUS,
+      '북마크 상태 불러오기 성공'
     );
   }),
 ];

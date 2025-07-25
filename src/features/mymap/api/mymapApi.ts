@@ -10,6 +10,8 @@ import type {
   MyMapListUpdateRes,
   MyMapStoreAddReq,
   MyMapStoreAddRes,
+  MyMapToggleStoreParams,
+  MyMapToggleStoreRes,
 } from './types';
 
 // My Map 목록 조회 api
@@ -63,6 +65,21 @@ export const deleteMyMap = async (
 
   if (!res.data.data) {
     throw new Error('My Map 삭제에 실패했습니다');
+  }
+  return res.data.data;
+};
+
+// My Map에 매장 추가/삭제
+export const postToggleMyMap = async (
+  myMapListId: MyMapToggleStoreParams['myMapListId'],
+  store_id: MyMapToggleStoreParams['myMapListId']
+): Promise<MyMapToggleStoreRes> => {
+  const res = await client.post<ApiResponse<MyMapToggleStoreRes>>(
+    MYMAP_ENDPOINTS.MYMAP.TOGGLE_STORE(myMapListId, store_id)
+  );
+
+  if (!res.data.data) {
+    throw new Error('My Map 매장 추가/삭제에 실패했습니다');
   }
   return res.data.data;
 };

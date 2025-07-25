@@ -18,6 +18,14 @@ interface MapUIState {
   currentBottomSheetStep: 'list' | 'category' | 'brand' | 'mymap';
   isBottomSheetExpanded: boolean;
 
+  // 바텀시트 통합 상태 (새로 추가)
+  bottomSheet: {
+    state: 'collapsed' | 'middle' | 'expanded';
+    isExplicitlyClosed: boolean;
+    isAnimating: boolean;
+    y: number;
+  };
+
   // 필터 UI 상태
   selectedCategory: string;
   selectedBrand: string;
@@ -46,6 +54,15 @@ type MapUIAction =
   | { type: 'SET_BOTTOM_SHEET_STEP'; payload: 'list' | 'category' | 'brand' | 'mymap' }
   | { type: 'SET_BOTTOM_SHEET_EXPANDED'; payload: boolean }
   | { type: 'TOGGLE_BOTTOM_SHEET' }
+
+  // 바텀시트 통합 제어 액션 (새로 추가)
+  | { type: 'OPEN_BOTTOM_SHEET'; payload: { level: 'middle' | 'expanded'; animate?: boolean } }
+  | { type: 'CLOSE_BOTTOM_SHEET'; payload: { explicit: boolean; animate?: boolean } }
+  | { type: 'SET_BOTTOM_SHEET_STATE'; payload: 'collapsed' | 'middle' | 'expanded' }
+  | { type: 'SET_EXPLICIT_CLOSED'; payload: boolean }
+  | { type: 'SET_BOTTOM_SHEET_Y'; payload: number }
+  | { type: 'SET_BOTTOM_SHEET_ANIMATING'; payload: boolean }
+  | { type: 'RESET_BOTTOM_SHEET' }
 
   // 필터 관련 액션
   | { type: 'SET_SELECTED_CATEGORY'; payload: string }
@@ -84,6 +101,70 @@ const mapUIReducer = (state: MapUIState, action: MapUIAction): MapUIState => {
       return { ...state, isBottomSheetExpanded: action.payload };
     case 'TOGGLE_BOTTOM_SHEET':
       return { ...state, isBottomSheetExpanded: !state.isBottomSheetExpanded };
+
+    // 바텀시트 통합 제어 액션 처리 (새로 추가)
+    case 'OPEN_BOTTOM_SHEET':
+      return {
+        ...state,
+        bottomSheet: {
+          ...state.bottomSheet,
+          state: action.payload.level,
+          isExplicitlyClosed: false,
+          isAnimating: action.payload.animate !== false,
+        },
+      };
+    case 'CLOSE_BOTTOM_SHEET':
+      return {
+        ...state,
+        bottomSheet: {
+          ...state.bottomSheet,
+          state: 'collapsed',
+          isExplicitlyClosed: action.payload.explicit,
+          isAnimating: action.payload.animate !== false,
+        },
+      };
+    case 'SET_BOTTOM_SHEET_STATE':
+      return {
+        ...state,
+        bottomSheet: {
+          ...state.bottomSheet,
+          state: action.payload,
+        },
+      };
+    case 'SET_EXPLICIT_CLOSED':
+      return {
+        ...state,
+        bottomSheet: {
+          ...state.bottomSheet,
+          isExplicitlyClosed: action.payload,
+        },
+      };
+    case 'SET_BOTTOM_SHEET_Y':
+      return {
+        ...state,
+        bottomSheet: {
+          ...state.bottomSheet,
+          y: action.payload,
+        },
+      };
+    case 'SET_BOTTOM_SHEET_ANIMATING':
+      return {
+        ...state,
+        bottomSheet: {
+          ...state.bottomSheet,
+          isAnimating: action.payload,
+        },
+      };
+    case 'RESET_BOTTOM_SHEET':
+      return {
+        ...state,
+        bottomSheet: {
+          state: 'collapsed',
+          isExplicitlyClosed: false,
+          isAnimating: false,
+          y: window.innerHeight - 120,
+        },
+      };
 
     // 필터 관련 상태 변경
     case 'SET_SELECTED_CATEGORY':
@@ -144,6 +225,15 @@ interface MapUIContextValue {
     setBottomSheetExpanded: (expanded: boolean) => void;
     toggleBottomSheet: () => void;
 
+    // 바텀시트 통합 제어 액션 (새로 추가)
+    openBottomSheet: (level: 'middle' | 'expanded', animate?: boolean) => void;
+    closeBottomSheet: (explicit?: boolean, animate?: boolean) => void;
+    setBottomSheetState: (state: 'collapsed' | 'middle' | 'expanded') => void;
+    setExplicitClosed: (closed: boolean) => void;
+    setBottomSheetY: (y: number) => void;
+    setBottomSheetAnimating: (animating: boolean) => void;
+    resetBottomSheet: () => void;
+
     // 필터 관련 액션
     setSelectedCategory: (category: string) => void;
     setSelectedBrand: (brand: string) => void;
@@ -170,6 +260,12 @@ const initialUIState: MapUIState = {
   isSearchFocused: false,
   currentBottomSheetStep: 'list',
   isBottomSheetExpanded: true,
+  bottomSheet: {
+    state: 'collapsed',
+    isExplicitlyClosed: false,
+    isAnimating: false,
+    y: typeof window !== 'undefined' ? window.innerHeight - 120 : 600,
+  },
   selectedCategory: '',
   selectedBrand: '',
   activeRegionFilter: 'all',
@@ -220,6 +316,35 @@ export const MapUIProvider: React.FC<{ children: React.ReactNode }> = ({
 
     toggleBottomSheet: useCallback(() => {
       dispatch({ type: 'TOGGLE_BOTTOM_SHEET' });
+    }, []),
+
+    // 바텀시트 통합 제어 액션들 (새로 추가)
+    openBottomSheet: useCallback((level: 'middle' | 'expanded', animate = true) => {
+      dispatch({ type: 'OPEN_BOTTOM_SHEET', payload: { level, animate } });
+    }, []),
+
+    closeBottomSheet: useCallback((explicit = false, animate = true) => {
+      dispatch({ type: 'CLOSE_BOTTOM_SHEET', payload: { explicit, animate } });
+    }, []),
+
+    setBottomSheetState: useCallback((state: 'collapsed' | 'middle' | 'expanded') => {
+      dispatch({ type: 'SET_BOTTOM_SHEET_STATE', payload: state });
+    }, []),
+
+    setExplicitClosed: useCallback((closed: boolean) => {
+      dispatch({ type: 'SET_EXPLICIT_CLOSED', payload: closed });
+    }, []),
+
+    setBottomSheetY: useCallback((y: number) => {
+      dispatch({ type: 'SET_BOTTOM_SHEET_Y', payload: y });
+    }, []),
+
+    setBottomSheetAnimating: useCallback((animating: boolean) => {
+      dispatch({ type: 'SET_BOTTOM_SHEET_ANIMATING', payload: animating });
+    }, []),
+
+    resetBottomSheet: useCallback(() => {
+      dispatch({ type: 'RESET_BOTTOM_SHEET' });
     }, []),
 
     // 필터 관련 액션

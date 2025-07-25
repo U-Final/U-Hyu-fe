@@ -1,12 +1,11 @@
 import { type FC, useEffect } from 'react';
 
-import { ImageUp, X } from 'lucide-react';
+import { X } from 'lucide-react';
 
 import {
   GuestBarcodeContent,
   LoggedInBarcodeContent,
 } from '@/shared/components/bottom_navigation/barcode/contents';
-import { IconButton } from '@/shared/components/buttons/IconButton';
 import { useIsLoggedIn, useUser } from '@/shared/store/useUserStore';
 
 interface BarcodeBottomSheetProps {
@@ -53,11 +52,6 @@ export const BarcodeBottomSheet: FC<BarcodeBottomSheetProps> = ({
                 : '멤버십 바코드'}
             </h2>
             <div className="flex gap-4">
-              <IconButton
-                icon={<ImageUp size={16} />}
-                className="hover:bg-gray-hover cursor-pointer"
-                aria-label="바코드 이미지 재업로드"
-              />
               <button
                 onClick={onClose}
                 aria-label="닫기"

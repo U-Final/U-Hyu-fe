@@ -78,11 +78,11 @@ export const LoggedInBarcodeContent = () => {
         />
       )}
       {imageUrl ? (
-        <div className="relative w-full">
+        <div className="w-full flex">
           <CroppedImg image={imageUrl} />
           <IconButton
             icon={<ImageUp size={16} />}
-            className="absolute top-[-34.5px] right-9 hover:bg-gray-hover cursor-pointer"
+            className="hover:bg-gray-hover cursor-pointer"
             onClick={handleUploadClick}
             aria-label="바코드 이미지 재업로드"
           />

@@ -24,3 +24,19 @@ export const getBarcodeImage = async (): Promise<string> => {
 
   return res.data.data;
 };
+
+export const patchBarcodeImage = async (file: File): Promise<string> => {
+  const formData = new FormData();
+  formData.append('image', file);
+
+  const res = await client.patch<ApiResponse<string>>(
+    BARCODE_ENDPOINTS.IMAGE,
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }
+  );
+  return res.data.data;
+};

@@ -1,6 +1,10 @@
 import { useRef } from 'react';
 
-import { useUploadBarcodeMutation } from '@barcode/hooks/useUploadBarcodeMutation';
+import { useBarcodeImageQuery } from '@barcode/hooks/useBarcodeImageQuery';
+import {
+  usePatchBarcodeImageMutation,
+  useUploadBarcodeMutation,
+} from '@barcode/hooks/useUploadBarcodeMutation';
 import type { CropperRef } from 'react-advanced-cropper';
 
 import { PrimaryButton } from '@/shared/components';
@@ -8,14 +12,15 @@ import { useImageCropStore, useModalStore } from '@/shared/store';
 
 import { BarcodeCropper } from './BarcodeCropper';
 
-// 추후 필요없는 코드 삭제 예정
-
 export function BarcodeCropModal() {
   const closeModal = useModalStore(state => state.closeModal);
   const cropperRef = useRef<CropperRef | null>(null);
   const { imageSrc, setImageSrc, setCroppedImage } = useImageCropStore();
 
   const { mutate: uploadBarcodeImage } = useUploadBarcodeMutation();
+  const { mutate: patchBarcodeImage } = usePatchBarcodeImageMutation();
+
+  const { data: imageUrl } = useBarcodeImageQuery();
 
   const handleCropConfirm = () => {
     const canvas = cropperRef.current?.getCanvas?.();
@@ -25,23 +30,24 @@ export function BarcodeCropModal() {
       if (!blob) return;
       const file = new File([blob], 'barcode.jpg', { type: 'image/jpeg' });
 
-      uploadBarcodeImage(file, {
-        onSuccess: imageUrl => {
-          console.log('✅ 업로드 성공 URL:', imageUrl);
-          setCroppedImage(imageUrl);
-          setImageSrc(null);
-          closeModal();
-        },
-        onError: () => {
-          alert('이미지 업로드 실패');
-        },
-      });
-    }, 'image/jpeg');
+      const hasUploadedBefore = !!imageUrl;
 
-    // const dataUrl = canvas.toDataURL('image/jpeg');
-    // setCroppedImage(dataUrl);
-    // setImageSrc(null);
-    // closeModal();
+      const onSuccess = (newImageUrl: string) => {
+        setCroppedImage(newImageUrl);
+        setImageSrc(null);
+        closeModal();
+      };
+
+      const onError = () => {
+        alert('이미지 업로드 실패');
+      };
+
+      if (hasUploadedBefore) {
+        patchBarcodeImage(file, { onSuccess, onError });
+      } else {
+        uploadBarcodeImage(file, { onSuccess, onError });
+      }
+    }, 'image/jpeg');
   };
 
   if (!imageSrc) return <p>이미지를 불러오지 못했습니다.</p>;

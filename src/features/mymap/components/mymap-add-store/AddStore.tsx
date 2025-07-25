@@ -39,7 +39,7 @@ const AddStore: FC<AddStoreProps> = ({ storeId }) => {
   }, [data]);
 
   // 체크 상태 토글
-  const toggleCheck = (id: number, value: boolean) => {
+  const handleCheckToggle = (id: number, value: boolean) => {
     setCheckedMap(prev => ({
       ...prev,
       [id]: value,
@@ -94,7 +94,7 @@ const AddStore: FC<AddStoreProps> = ({ storeId }) => {
           <div
             key={map.myMapListId}
             className="flex items-center justify-between py-3 cursor-pointer rounded hover:bg-light-gray-hover"
-            onClick={() => toggleCheck(map.myMapListId, !isChecked)}
+            onClick={() => handleCheckToggle(map.myMapListId, !isChecked)} 
           >
             <div className="flex flex-9 items-center">
               <MdStars

@@ -39,14 +39,19 @@ export const MOCK_MYMAP_LIST: MyMapListRes[] = [
  */
 export const MOCK_MYMAP_TOGGLE: MyMapToggleStoreRes[] = [
   {
-    myMapListId: 3,
-    storeId: 2,
+    myMapListId: 1,
+    storeId: 1,
+    isMyMapped: true,
+  },
+  {
+    myMapListId: 2,
+    storeId: 1,
     isMyMapped: false,
   },
   {
-    myMapListId: 4,
-    storeId: 2,
-    isMyMapped: true,
+    myMapListId: 3,
+    storeId: 1,
+    isMyMapped: false,
   },
 ];
 

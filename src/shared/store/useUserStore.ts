@@ -39,8 +39,8 @@ export const useUserStore = create<UserState>()(
         import.meta.env.MODE === 'development'
           ? {
               profileImage: '/images/profile/image.png',
-              userName: '테스트사용자',
-              nickName: '테스트닉네임',
+              userName: '유휴 테스트',
+              nickName: '유휴 닉네임',
               email: 'test@example.com',
               age: 25,
               gender: 'FEMALE',

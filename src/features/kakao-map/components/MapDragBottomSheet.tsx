@@ -23,6 +23,30 @@ export interface MapDragBottomSheetRef {
 }
 
 // 📦 바텀시트 컴포넌트 정의
+// 🔢 상수 정의
+const CONSTANTS = {
+  // 위치 상수
+  EXPANDED_BOTTOM_MARGIN: 60, // 완전 확장 시 바텀 여백
+  MIDDLE_POSITION_RATIO: 0.5, // 중간 위치 비율 (화면 높이의 50%)
+  COLLAPSED_BOTTOM_MARGIN: 130, // 거의 접힌 상태의 바텀 여백
+
+  // 드래그 제한 상수
+  DRAG_CANCEL_BELOW_MARGIN: 80, // collapsed 위치에서 아래로 드래그 취소 여백
+  DRAG_CANCEL_ABOVE_MARGIN: 30, // expanded 위치에서 위로 드래그 취소 여백
+
+  // 드래그 범위 상수
+  DRAG_BELOW_LIMIT: 50, // 접힌 상태에서 아래쪽 드래그 허용 범위
+
+  // 스냅 상수
+  SNAP_THRESHOLD: 80, // 스냅 위치 임계값
+
+  // 애니메이션 상수
+  ANIMATION_DURATION: 300, // CSS transition 지속 시간 (ms)
+
+  // 부모 요소 탐색 상수
+  PARENT_ELEMENT_SEARCH_DEPTH: 5, // 클릭 가능한 부모 요소 탐색 깊이
+} as const;
+
 export const MapDragBottomSheet = forwardRef<
   MapDragBottomSheetRef,
   MapDragBottomSheetProps
@@ -57,9 +81,9 @@ export const MapDragBottomSheet = forwardRef<
   }, []);
 
   // 📐 위치 스냅 포인트 정의
-  const expandedY = 60; // 완전 확장 시 바텀 여백
-  const middleY = windowHeight * 0.5; // 중간 위치
-  const collapsedY = windowHeight - 130; // 거의 접힌 상태
+  const expandedY = CONSTANTS.EXPANDED_BOTTOM_MARGIN; // 완전 확장 시 바텀 여백
+  const middleY = windowHeight * CONSTANTS.MIDDLE_POSITION_RATIO; // 중간 위치
+  const collapsedY = windowHeight - CONSTANTS.COLLAPSED_BOTTOM_MARGIN; // 거의 접힌 상태
 
   // 💡 위치 상태값과 실제 translateY(px) 매핑
   const snapPositions = useMemo(
@@ -117,7 +141,7 @@ export const MapDragBottomSheet = forwardRef<
     // 애니메이션 완료 후 상태 리셋
     setTimeout(() => {
       setIsAnimating(false);
-    }, 300); // CSS transition duration과 동일
+    }, CONSTANTS.ANIMATION_DURATION); // CSS transition duration과 동일
   }, []);
 
   // 🔄 localState 변경 시 CSS 애니메이션 실행
@@ -141,6 +165,45 @@ export const MapDragBottomSheet = forwardRef<
     currentY.current = initialY;
   }, [snapPositions, localState]);
 
+  // 🚨 드래그 취소 공통 로직
+  const cancelDragAndRestore = useCallback(
+    (reason: string, debugInfo?: Record<string, unknown>) => {
+      if (import.meta.env.MODE === 'development') {
+        console.log(`🚨 드래그 취소: ${reason}`, debugInfo);
+      }
+
+      // 강제 드래그 중단
+      isDragging.current = false;
+
+      // 전역 이벤트 리스너 즉시 정리
+      if (cleanupGlobalListeners.current) {
+        cleanupGlobalListeners.current();
+      }
+
+      // 애니메이션 프레임 취소
+      if (animationFrame.current) {
+        cancelAnimationFrame(animationFrame.current);
+        animationFrame.current = null;
+      }
+
+      // 즉시 원래 위치로 복원 (애니메이션 포함)
+      const originalPosition = snapPositions[localState];
+      setIsAnimating(true);
+      setTranslateY(originalPosition);
+      currentY.current = originalPosition;
+
+      // 애니메이션 완료 후 상태 리셋
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, CONSTANTS.ANIMATION_DURATION);
+
+      if (import.meta.env.MODE === 'development') {
+        console.log('✅ 드래그 취소 완료 - 위치 복원:', originalPosition);
+      }
+    },
+    [snapPositions, localState]
+  );
+
   const handleTouchMove = useCallback(
     (e: TouchEvent | MouseEvent) => {
       if (!isDragging.current) return;
@@ -151,8 +214,8 @@ export const MapDragBottomSheet = forwardRef<
       const newY = currentY.current + deltaY;
 
       // 🔸 간소한 드래그 취소 로직
-      // collapsed 위치에서 80px까지만 허용
-      const maxAllowedY = collapsedY + 80;
+      // collapsed 위치에서 아래로 드래그 취소 여백까지만 허용
+      const maxAllowedY = collapsedY + CONSTANTS.DRAG_CANCEL_BELOW_MARGIN;
 
       // 취소 근처에서만 디버깅 정보 출력 (성능 고려)
       if (import.meta.env.MODE === 'development' && newY > collapsedY + 30) {
@@ -167,102 +230,35 @@ export const MapDragBottomSheet = forwardRef<
       }
 
       if (newY > maxAllowedY) {
-        if (import.meta.env.MODE === 'development') {
-          console.log('⬇️ 너무 아래로 드래그하여 취소:', {
-            newY: newY.toFixed(1),
-            maxAllowedY,
-            collapsedY,
-            초과량: (newY - maxAllowedY).toFixed(1) + 'px',
-            '취소 이유': 'collapsed 위치에서 80px 초과',
-            '복원할 위치': snapPositions[localState],
-          });
-        }
-
-        // 🚨 강제 드래그 중단 및 즉시 복원
-        isDragging.current = false;
-
-        // 전역 이벤트 리스너 즉시 정리
-        if (cleanupGlobalListeners.current) {
-          cleanupGlobalListeners.current();
-        }
-
-        // 애니메이션 프레임 취소
-        if (animationFrame.current) {
-          cancelAnimationFrame(animationFrame.current);
-          animationFrame.current = null;
-        }
-
-        // 즉시 원래 위치로 복원 (애니메이션 포함)
-        const originalPosition = snapPositions[localState];
-        setIsAnimating(true);
-        setTranslateY(originalPosition);
-        currentY.current = originalPosition;
-
-        // 애니메이션 완료 후 상태 리셋
-        setTimeout(() => {
-          setIsAnimating(false);
-        }, 300);
-
-        if (import.meta.env.MODE === 'development') {
-          console.log('✅ 드래그 취소 완료 - 위치 복원:', originalPosition);
-        }
-
+        cancelDragAndRestore('⬇️ 너무 아래로 드래그', {
+          newY: newY.toFixed(1),
+          maxAllowedY,
+          collapsedY,
+          초과량: (newY - maxAllowedY).toFixed(1) + 'px',
+          '취소 이유': `collapsed 위치에서 ${CONSTANTS.DRAG_CANCEL_BELOW_MARGIN}px 초과`,
+          '복원할 위치': snapPositions[localState],
+        });
         return;
       }
 
       // 위쪽 드래그 취소 (기존보다 더 관대하게)
-      const minAllowedY = expandedY - 30; // 확장 위치에서 30px 위까지만 허용
+      const minAllowedY = expandedY - CONSTANTS.DRAG_CANCEL_ABOVE_MARGIN; // 확장 위치에서 위로 드래그 취소 여백까지만 허용
 
       if (newY < minAllowedY) {
-        if (import.meta.env.MODE === 'development') {
-          console.log('⬆️ 너무 위로 드래그하여 취소:', {
-            newY: newY.toFixed(1),
-            minAllowedY,
-            expandedY,
-            초과량: (minAllowedY - newY).toFixed(1) + 'px',
-            '취소 이유': '바텀시트가 화면 위로 너무 올라감',
-            '복원할 위치': snapPositions[localState],
-          });
-        }
-
-        // 🚨 강제 드래그 중단 및 즉시 복원
-        isDragging.current = false;
-
-        // 전역 이벤트 리스너 즉시 정리
-        if (cleanupGlobalListeners.current) {
-          cleanupGlobalListeners.current();
-        }
-
-        // 애니메이션 프레임 취소
-        if (animationFrame.current) {
-          cancelAnimationFrame(animationFrame.current);
-          animationFrame.current = null;
-        }
-
-        // 즉시 원래 위치로 복원 (애니메이션 포함)
-        const originalPosition = snapPositions[localState];
-        setIsAnimating(true);
-        setTranslateY(originalPosition);
-        currentY.current = originalPosition;
-
-        // 애니메이션 완료 후 상태 리셋
-        setTimeout(() => {
-          setIsAnimating(false);
-        }, 300);
-
-        if (import.meta.env.MODE === 'development') {
-          console.log(
-            '✅ 위쪽 드래그 취소 완료 - 위치 복원:',
-            originalPosition
-          );
-        }
-
+        cancelDragAndRestore('⬆️ 너무 위로 드래그', {
+          newY: newY.toFixed(1),
+          minAllowedY,
+          expandedY,
+          초과량: (minAllowedY - newY).toFixed(1) + 'px',
+          '취소 이유': '바텀시트가 화면 위로 너무 올라감',
+          '복원할 위치': snapPositions[localState],
+        });
         return;
       }
 
       // 정상 범위 내 드래그 처리
       const minY = expandedY;
-      const maxY = collapsedY + 50; // 접힌 상태에서 50px 아래까지
+      const maxY = collapsedY + CONSTANTS.DRAG_BELOW_LIMIT; // 접힌 상태에서 아래쪽 드래그 허용 범위까지
       const clampedY = Math.max(minY, Math.min(maxY, newY));
 
       // requestAnimationFrame으로 부드러운 드래그
@@ -274,7 +270,14 @@ export const MapDragBottomSheet = forwardRef<
         setTranslateY(clampedY);
       });
     },
-    [expandedY, collapsedY, windowHeight, snapPositions, localState]
+    [
+      expandedY,
+      collapsedY,
+      windowHeight,
+      snapPositions,
+      localState,
+      cancelDragAndRestore,
+    ]
   );
 
   const handleTouchEnd = useCallback(() => {
@@ -293,8 +296,8 @@ export const MapDragBottomSheet = forwardRef<
     }
 
     // 드래그 취소된 경우 처리하지 않음 (이미 위치가 복원됨)
-    const maxAllowedY = collapsedY + 80;
-    const minAllowedY = expandedY - 30;
+    const maxAllowedY = collapsedY + CONSTANTS.DRAG_CANCEL_BELOW_MARGIN;
+    const minAllowedY = expandedY - CONSTANTS.DRAG_CANCEL_ABOVE_MARGIN;
 
     if (finalY > maxAllowedY || finalY < minAllowedY) {
       if (import.meta.env.MODE === 'development') {
@@ -309,7 +312,7 @@ export const MapDragBottomSheet = forwardRef<
     }
 
     // 스냅 위치 계산 (정상 범위 내에서만)
-    const snapThreshold = 80;
+    const snapThreshold = CONSTANTS.SNAP_THRESHOLD;
     let newState: typeof localState = localState;
 
     const expandedRange = expandedY + snapThreshold;
@@ -422,10 +425,10 @@ export const MapDragBottomSheet = forwardRef<
         return;
       }
 
-      // 클릭 가능한 부모 요소가 있는지 확인 (5단계까지)
+      // 클릭 가능한 부모 요소가 있는지 확인
       let currentElement = target;
       let depth = 0;
-      while (currentElement && depth < 5) {
+      while (currentElement && depth < CONSTANTS.PARENT_ELEMENT_SEARCH_DEPTH) {
         if (
           clickableElements.includes(currentElement.tagName) ||
           currentElement.onclick ||
@@ -452,8 +455,8 @@ export const MapDragBottomSheet = forwardRef<
       currentY.current = translateY;
 
       if (import.meta.env.MODE === 'development') {
-        const maxAllowedY = collapsedY + 80;
-        const minAllowedY = expandedY - 30;
+        const maxAllowedY = collapsedY + CONSTANTS.DRAG_CANCEL_BELOW_MARGIN;
+        const minAllowedY = expandedY - CONSTANTS.DRAG_CANCEL_ABOVE_MARGIN;
 
         console.log('🎯 드래그 시작 (간소한 취소 로직):', {
           windowHeight,
@@ -461,8 +464,8 @@ export const MapDragBottomSheet = forwardRef<
           middleY,
           collapsedY,
           currentY: translateY.toFixed(1),
-          maxAllowedY: `${maxAllowedY} (collapsed + 80px)`,
-          minAllowedY: `${minAllowedY} (expanded - 30px)`,
+          maxAllowedY: `${maxAllowedY} (collapsed + ${CONSTANTS.DRAG_CANCEL_BELOW_MARGIN}px)`,
+          minAllowedY: `${minAllowedY} (expanded - ${CONSTANTS.DRAG_CANCEL_ABOVE_MARGIN}px)`,
           '허용 범위': `${minAllowedY} ~ ${maxAllowedY}`,
           '취소 조건': {
             아래로: `Y > ${maxAllowedY}`,
@@ -498,7 +501,7 @@ export const MapDragBottomSheet = forwardRef<
           transform: `translateY(${translateY}px)`,
           height: `calc(100vh - ${translateY}px)`,
           transition: isAnimating
-            ? 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+            ? `transform ${CONSTANTS.ANIMATION_DURATION}ms cubic-bezier(0.4, 0, 0.2, 1)`
             : 'none',
         }}
         className="absolute top-0 left-0 right-0 z-40 bg-white rounded-t-2xl border border-light-gray flex flex-col pointer-events-auto shadow-lg"
@@ -530,7 +533,6 @@ export const MapDragBottomSheet = forwardRef<
           className="flex-1 overflow-y-auto scrollbar-hidden pb-safe"
           style={{
             overscrollBehavior: 'contain',
-            WebkitOverflowScrolling: 'touch',
           }}
         >
           {children}

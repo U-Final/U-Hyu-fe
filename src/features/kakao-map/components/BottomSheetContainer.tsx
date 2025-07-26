@@ -6,6 +6,7 @@ import { FaFilter } from 'react-icons/fa';
 import { useModalStore } from '@/shared/store';
 import { useIsLoggedIn } from '@/shared/store/useUserStore';
 
+import { useMapUIContext } from '../context/MapUIContext';
 import { useBrandsByCategoryWhen } from '../hooks/useBrandsByCategory';
 import { useMapData } from '../hooks/useMapData';
 import { useMapInteraction } from '../hooks/useMapInteraction';
@@ -17,7 +18,6 @@ import {
   MapDragBottomSheet,
   type MapDragBottomSheetRef,
 } from './MapDragBottomSheet';
-import { useMapUIContext } from '../context/MapUIContext';
 import StoreListContent from './layout/StoreListContent';
 import BrandSelectContent from './layout/steps/BrandSelectContent';
 import CategorySelectContent from './layout/steps/CategorySelectContent';
@@ -48,20 +48,23 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
     );
 
     // 바텀시트 내 매장 클릭 시 바텀시트 닫고 인포윈도우 표시
-    const handleStoreClick = useCallback((store: Store) => {
-      if (import.meta.env.MODE === 'development') {
-        console.log('매장 리스트에서 매장 클릭:', store.storeName);
-      }
+    const handleStoreClick = useCallback(
+      (store: Store) => {
+        if (import.meta.env.MODE === 'development') {
+          console.log('매장 리스트에서 매장 클릭:', store.storeName);
+        }
 
-      // 바텀시트 명시적 닫힘 플래그 설정 후 닫기
-      if (bottomSheetRef && bottomSheetRef.current) {
-        bottomSheetRef.current.setExplicitlyClosed(true);
-        bottomSheetRef.current.close();
-      }
+        // 바텀시트 명시적 닫힘 플래그 설정 후 닫기
+        if (bottomSheetRef && bottomSheetRef.current) {
+          bottomSheetRef.current.setExplicitlyClosed(true);
+          bottomSheetRef.current.close();
+        }
 
-      // 지도 마커 클릭과 동일한 효과 (바텀시트 닫고 인포윈도우 표시)
-      handleMapMarkerClick(store);
-    }, [bottomSheetRef, handleMapMarkerClick]);
+        // 지도 마커 클릭과 동일한 효과 (바텀시트 닫고 인포윈도우 표시)
+        handleMapMarkerClick(store);
+      },
+      [bottomSheetRef, handleMapMarkerClick]
+    );
 
     // MyMap 버튼 클릭 핸들러 - 바텀시트 높이 유지
     const handleMyMapClick = (e: React.MouseEvent) => {
@@ -76,6 +79,9 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
 
     // 필터 버튼 클릭 핸들러 - 바텀시트 높이 유지
     const handleFilterClick = (e?: React.MouseEvent) => {
+      if (import.meta.env.MODE === 'development') {
+        console.log('🔥 브랜드 필터 버튼 클릭됨!');
+      }
       if (e) {
         e.stopPropagation();
       }
@@ -125,6 +131,9 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
 
     // 현재 바텀시트 단계에 따른 콘텐츠 렌더링
     const getCurrentStepContent = () => {
+      if (import.meta.env.MODE === 'development') {
+        console.log('🎯 현재 바텀시트 step:', currentBottomSheetStep);
+      }
       switch (currentBottomSheetStep) {
         case 'list':
           return (

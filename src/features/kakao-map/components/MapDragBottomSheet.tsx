@@ -94,7 +94,7 @@ export const MapDragBottomSheet = forwardRef<
       initialize: () => {
         if (!isInitialized.current) {
           isInitialized.current = true;
-          setIsExplicitlyClosed(true);
+          setIsExplicitlyClosed(false);
           setLocalState('expanded');
         }
       },
@@ -113,7 +113,7 @@ export const MapDragBottomSheet = forwardRef<
     setIsAnimating(true);
     setTranslateY(targetY);
     currentY.current = targetY;
-    
+
     // 애니메이션 완료 후 상태 리셋
     setTimeout(() => {
       setIsAnimating(false);
@@ -141,35 +141,38 @@ export const MapDragBottomSheet = forwardRef<
     currentY.current = initialY;
   }, [snapPositions, localState]);
 
-  const handleTouchMove = useCallback((e: TouchEvent | MouseEvent) => {
-    if (!isDragging.current) return;
-    
-    e.preventDefault();
-    const event = 'touches' in e ? e.touches[0] : e;
-    const deltaY = event.clientY - startY.current;
-    const newY = currentY.current + deltaY;
-    
-    // 최소 최대 범위 제한
-    const minY = expandedY;
-    const maxY = collapsedY + 120;
-    const clampedY = Math.max(minY, Math.min(maxY, newY));
-    
-    // requestAnimationFrame으로 부드러운 드래그
-    if (animationFrame.current) {
-      cancelAnimationFrame(animationFrame.current);
-    }
-    
-    animationFrame.current = requestAnimationFrame(() => {
-      setTranslateY(clampedY);
-    });
-  }, [expandedY, collapsedY]);
+  const handleTouchMove = useCallback(
+    (e: TouchEvent | MouseEvent) => {
+      if (!isDragging.current) return;
+
+      e.preventDefault();
+      const event = 'touches' in e ? e.touches[0] : e;
+      const deltaY = event.clientY - startY.current;
+      const newY = currentY.current + deltaY;
+
+      // 최소 최대 범위 제한
+      const minY = expandedY;
+      const maxY = collapsedY + 120;
+      const clampedY = Math.max(minY, Math.min(maxY, newY));
+
+      // requestAnimationFrame으로 부드러운 드래그
+      if (animationFrame.current) {
+        cancelAnimationFrame(animationFrame.current);
+      }
+
+      animationFrame.current = requestAnimationFrame(() => {
+        setTranslateY(clampedY);
+      });
+    },
+    [expandedY, collapsedY]
+  );
 
   const handleTouchEnd = useCallback(() => {
     if (!isDragging.current) return;
-    
+
     isDragging.current = false;
     const finalY = translateY;
-    
+
     if (import.meta.env.MODE === 'development') {
       console.log('드래그 완료, 최종 Y:', finalY);
     }
@@ -177,7 +180,7 @@ export const MapDragBottomSheet = forwardRef<
     // 스냅 위치 계산
     const snapThreshold = 80;
     let newState: typeof localState = localState;
-    
+
     const expandedRange = expandedY + snapThreshold;
     const middleRangeMin = middleY - snapThreshold;
     const middleRangeMax = middleY + snapThreshold;
@@ -207,7 +210,7 @@ export const MapDragBottomSheet = forwardRef<
     // 상태 업데이트
     setIsExplicitlyClosed(newState === 'collapsed');
     setLocalState(newState);
-    
+
     if (import.meta.env.MODE === 'development') {
       console.log('드래그 종료 → 상태:', newState);
     }
@@ -218,7 +221,7 @@ export const MapDragBottomSheet = forwardRef<
     const handleGlobalMove = (e: TouchEvent | MouseEvent) => {
       handleTouchMove(e);
     };
-    
+
     const handleGlobalEnd = () => {
       handleTouchEnd();
       // 이벤트 리스너 제거
@@ -229,43 +232,80 @@ export const MapDragBottomSheet = forwardRef<
     };
 
     // 전역 이벤트 리스너 등록
-    document.addEventListener('touchmove', handleGlobalMove, { passive: false });
+    document.addEventListener('touchmove', handleGlobalMove, {
+      passive: false,
+    });
     document.addEventListener('touchend', handleGlobalEnd);
     document.addEventListener('mousemove', handleGlobalMove);
     document.addEventListener('mouseup', handleGlobalEnd);
   }, [handleTouchMove, handleTouchEnd]);
 
   // 👆 순수 JavaScript 드래그 핸들링
-  const handleTouchStart = useCallback((e: React.TouchEvent | React.MouseEvent) => {
-    const event = 'touches' in e ? e.touches[0] : e;
-    const target = e.target as HTMLElement;
-    
-    // 스크롤 가능한 영역이나 폼 요소에서는 드래그 비활성화
-    const scrollableElement = target.closest('[data-scrollable]');
-    if (
-      scrollableElement &&
-      scrollableElement.scrollHeight > scrollableElement.clientHeight
-    ) {
-      return;
-    }
-    if (['INPUT', 'BUTTON', 'A'].includes(target.tagName)) {
-      return;
-    }
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent | React.MouseEvent) => {
+      const event = 'touches' in e ? e.touches[0] : e;
+      const target = e.target as HTMLElement;
 
-    isDragging.current = true;
-    startY.current = event.clientY;
-    currentY.current = translateY;
-    
-    if (import.meta.env.MODE === 'development') {
-      console.log('드래그 시작');
-    }
+      // 클릭 가능한 요소들에서는 드래그 비활성화 (더 포괄적으로)
+      const clickableElements = ['INPUT', 'BUTTON', 'A', 'SELECT', 'TEXTAREA'];
+      if (clickableElements.includes(target.tagName)) {
+        if (import.meta.env.MODE === 'development') {
+          console.log('클릭 가능한 요소에서 드래그 차단:', target.tagName);
+        }
+        return;
+      }
 
-    // 애니메이션 비활성화
-    setIsAnimating(false);
-    
-    // 전역 드래그 이벤트 리스너 등록
-    startDragging();
-  }, [translateY, startDragging]);
+      // 클릭 가능한 역할을 가진 요소들도 체크
+      const interactiveRoles = ['button', 'link', 'menuitem', 'tab'];
+      const role = target.getAttribute('role');
+      if (role && interactiveRoles.includes(role)) {
+        if (import.meta.env.MODE === 'development') {
+          console.log('인터랙티브 역할 요소에서 드래그 차단:', role);
+        }
+        return;
+      }
+
+      // 클릭 가능한 부모 요소가 있는지 확인 (5단계까지)
+      let currentElement = target;
+      let depth = 0;
+      while (currentElement && depth < 5) {
+        if (
+          clickableElements.includes(currentElement.tagName) ||
+          currentElement.onclick ||
+          currentElement.getAttribute('role') === 'button' ||
+          currentElement.classList.contains('cursor-pointer')
+        ) {
+          return;
+        }
+        currentElement = currentElement.parentElement as HTMLElement;
+        depth++;
+      }
+
+      // 스크롤 가능한 영역이나 폼 요소에서는 드래그 비활성화
+      const scrollableElement = target.closest('[data-scrollable]');
+      if (
+        scrollableElement &&
+        scrollableElement.scrollHeight > scrollableElement.clientHeight
+      ) {
+        return;
+      }
+
+      isDragging.current = true;
+      startY.current = event.clientY;
+      currentY.current = translateY;
+
+      if (import.meta.env.MODE === 'development') {
+        console.log('드래그 시작');
+      }
+
+      // 애니메이션 비활성화
+      setIsAnimating(false);
+
+      // 전역 드래그 이벤트 리스너 등록
+      startDragging();
+    },
+    [translateY, startDragging]
+  );
 
   // 컴포넌트 언마운트 시 정리
   useEffect(() => {
@@ -284,7 +324,9 @@ export const MapDragBottomSheet = forwardRef<
         style={{
           transform: `translateY(${translateY}px)`,
           height: `calc(100vh - ${translateY}px)`,
-          transition: isAnimating ? 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
+          transition: isAnimating
+            ? 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+            : 'none',
         }}
         className="absolute top-0 left-0 right-0 z-40 bg-white rounded-t-2xl border border-light-gray flex flex-col pointer-events-auto shadow-lg"
         onTouchStart={handleTouchStart}

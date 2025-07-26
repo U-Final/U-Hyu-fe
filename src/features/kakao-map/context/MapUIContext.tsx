@@ -19,7 +19,6 @@ interface MapUIState {
 
   // 바텀시트 네비게이션 상태
   currentBottomSheetStep: 'list' | 'category' | 'brand' | 'mymap';
-  isBottomSheetExpanded: boolean;
 
   // 바텀시트 상태 제거 - ref로만 제어
 
@@ -85,13 +84,12 @@ const mapUIReducer = (state: MapUIState, action: MapUIAction): MapUIState => {
     case 'CLEAR_SEARCH':
       return { ...state, searchValue: '', isSearchFocused: false };
 
-    // 바텀시트 관련 상태 변경 (네비게이션만)
+    // 바텀시트 관련 상태 변경
     case 'SET_BOTTOM_SHEET_STEP':
+      if (import.meta.env.MODE === 'development') {
+        console.log('🔄 바텀시트 step 변경:', state.currentBottomSheetStep, '→', action.payload);
+      }
       return { ...state, currentBottomSheetStep: action.payload };
-    case 'SET_BOTTOM_SHEET_EXPANDED':
-      return { ...state, isBottomSheetExpanded: action.payload };
-    case 'TOGGLE_BOTTOM_SHEET':
-      return { ...state, isBottomSheetExpanded: !state.isBottomSheetExpanded };
 
     // 필터 관련 상태 변경
     case 'SET_SELECTED_CATEGORY':
@@ -178,8 +176,6 @@ const initialUIState: MapUIState = {
   searchValue: '',
   isSearchFocused: false,
   currentBottomSheetStep: 'list',
-  isBottomSheetExpanded: true,
-  // 바텀시트 상태 제거
   selectedCategory: '',
   selectedBrand: '',
   activeRegionFilter: 'all',

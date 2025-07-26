@@ -25,6 +25,9 @@ export const useMapUI = () => {
    * 바텀시트 높이 유지하면서 step만 변경
    */
   const showFilter = useCallback(() => {
+    if (import.meta.env.MODE === 'development') {
+      console.log('✅ showFilter 호출됨 - category step으로 변경');
+    }
     actions.setBottomSheetStep('category');
   }, [actions]);
 
@@ -76,11 +79,9 @@ export const useMapUI = () => {
     searchValue: state.searchValue,
     isSearchFocused: state.isSearchFocused,
     currentBottomSheetStep: state.currentBottomSheetStep,
-    isBottomSheetExpanded: state.isBottomSheetExpanded,
     selectedCategory: state.selectedCategory,
     selectedBrand: state.selectedBrand,
     selectedMarkerId: state.selectedMarkerId,
-
     // 필터 상태
     activeRegionFilter: state.activeRegionFilter,
     activeCategoryFilter: state.activeCategoryFilter,

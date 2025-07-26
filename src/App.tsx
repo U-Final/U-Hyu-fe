@@ -6,7 +6,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AppRoutes } from '@/routes/AppRoutes';
 
 import { queryClient } from '@/shared/client';
-import { useUserStore } from '@/shared/store/useUserStore';
+import { AuthLogger, useUserStore } from '@/shared/store/useUserStore';
 
 function App() {
   const initializeAuth = useUserStore(state => state.initializeAuth);
@@ -18,6 +18,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <AuthLogger />
       <AppRoutes />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

@@ -35,10 +35,26 @@ export const useUserStore = create<UserState>()(
   persist(
     (set, get) => ({
       // 초기 상태
-      user: null,
+      user:
+        import.meta.env.MODE === 'development'
+          ? {
+              profileImage: '/images/profile/image.png',
+              userName: '테스트사용자',
+              nickName: '테스트닉네임',
+              email: 'test@example.com',
+              age: 25,
+              gender: 'FEMALE',
+              grade: 'VIP',
+              role: 'USER',
+              status: 'ACTIVE',
+              favoriteBrands: [1, 2, 3, 4, 5],
+              markerId: 1,
+              markers: [1, 2, 3],
+            }
+          : null,
       isLoading: false,
-      isInitialized: false,
-      lastAuthCheck: 0,
+      isInitialized: import.meta.env.MODE === 'development',
+      lastAuthCheck: import.meta.env.MODE === 'development' ? Date.now() : 0,
 
       // 사용자 정보 설정
       setUser: (user: UserInfo) =>

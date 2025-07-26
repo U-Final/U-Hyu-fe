@@ -69,10 +69,13 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
     // MyMap 버튼 클릭 핸들러 - 바텀시트 높이 유지
     const handleMyMapClick = (e: React.MouseEvent) => {
       e.stopPropagation();
+
+      // 로그인 상태 확인 로직 수정 (paste.txt의 로직과 paste-2.txt의 로직 통합)
       if (!isLoggedIn) {
         openModal('login');
         return;
       }
+
       // 바텀시트 높이 유지하면서 step만 변경
       showMymap();
     };
@@ -134,6 +137,7 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
       if (import.meta.env.MODE === 'development') {
         console.log('🎯 현재 바텀시트 step:', currentBottomSheetStep);
       }
+
       switch (currentBottomSheetStep) {
         case 'list':
           return (

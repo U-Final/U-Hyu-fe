@@ -32,7 +32,7 @@ const CONSTANTS = {
   HANDLE_HEIGHT: 60, // 핸들바 영역 높이 (패딩 포함)
 
   // 드래그 제한 상수
-  MIN_HEIGHT_FROM_TOP: 100, // 화면 상단에서 최소 거리
+  MIN_HEIGHT_FROM_TOP: 80, // 화면 상단에서 최소 거리
   EXTRA_DRAG_BUFFER: 0, // 닫힌 위치에서 추가 드래그 허용 범위
 
   // 스냅 상수

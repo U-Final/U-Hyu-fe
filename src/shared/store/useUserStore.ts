@@ -76,17 +76,21 @@ export const useUserStore = create<UserState>()(
 
       // 앱 초기화 시 인증 상태 확인
       initializeAuth: async () => {
+        console.log('🔄 initializeAuth 시작됨');
+
         if (get().isInitialized || get().isLoading) return;
         set({ isLoading: true });
 
         try {
           const user = await userApi.getUserInfo();
+          console.log('✅ getUserInfo() 호출 결과:', user);
           set({
             user,
             isInitialized: true,
             isLoading: false,
             lastAuthCheck: Date.now(),
           });
+          console.log('🧠 Zustand 상태에 user 저장 완료:', user);
         } catch (e) {
           console.warn('initializeAuth 실패:', e);
           set({

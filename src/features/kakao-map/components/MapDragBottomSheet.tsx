@@ -150,9 +150,119 @@ export const MapDragBottomSheet = forwardRef<
       const deltaY = event.clientY - startY.current;
       const newY = currentY.current + deltaY;
 
-      // 최소 최대 범위 제한
+      // 🔸 간소한 드래그 취소 로직
+      // collapsed 위치에서 80px까지만 허용
+      const maxAllowedY = collapsedY + 80;
+
+      // 취소 근처에서만 디버깅 정보 출력 (성능 고려)
+      if (import.meta.env.MODE === 'development' && newY > collapsedY + 30) {
+        console.log('📊 취소 위험 구간 진입:', {
+          newY: newY.toFixed(1),
+          maxAllowedY,
+          collapsedY,
+          '여유 공간': (maxAllowedY - newY).toFixed(1) + 'px',
+          '아래쪽 취소 여부': newY > maxAllowedY ? '🚨 취소!' : '⚠️ 주의',
+          windowHeight,
+        });
+      }
+
+      if (newY > maxAllowedY) {
+        if (import.meta.env.MODE === 'development') {
+          console.log('⬇️ 너무 아래로 드래그하여 취소:', {
+            newY: newY.toFixed(1),
+            maxAllowedY,
+            collapsedY,
+            초과량: (newY - maxAllowedY).toFixed(1) + 'px',
+            '취소 이유': 'collapsed 위치에서 80px 초과',
+            '복원할 위치': snapPositions[localState],
+          });
+        }
+
+        // 🚨 강제 드래그 중단 및 즉시 복원
+        isDragging.current = false;
+
+        // 전역 이벤트 리스너 즉시 정리
+        if (cleanupGlobalListeners.current) {
+          cleanupGlobalListeners.current();
+        }
+
+        // 애니메이션 프레임 취소
+        if (animationFrame.current) {
+          cancelAnimationFrame(animationFrame.current);
+          animationFrame.current = null;
+        }
+
+        // 즉시 원래 위치로 복원 (애니메이션 포함)
+        const originalPosition = snapPositions[localState];
+        setIsAnimating(true);
+        setTranslateY(originalPosition);
+        currentY.current = originalPosition;
+
+        // 애니메이션 완료 후 상태 리셋
+        setTimeout(() => {
+          setIsAnimating(false);
+        }, 300);
+
+        if (import.meta.env.MODE === 'development') {
+          console.log('✅ 드래그 취소 완료 - 위치 복원:', originalPosition);
+        }
+
+        return;
+      }
+
+      // 위쪽 드래그 취소 (기존보다 더 관대하게)
+      const minAllowedY = expandedY - 30; // 확장 위치에서 30px 위까지만 허용
+
+      if (newY < minAllowedY) {
+        if (import.meta.env.MODE === 'development') {
+          console.log('⬆️ 너무 위로 드래그하여 취소:', {
+            newY: newY.toFixed(1),
+            minAllowedY,
+            expandedY,
+            초과량: (minAllowedY - newY).toFixed(1) + 'px',
+            '취소 이유': '바텀시트가 화면 위로 너무 올라감',
+            '복원할 위치': snapPositions[localState],
+          });
+        }
+
+        // 🚨 강제 드래그 중단 및 즉시 복원
+        isDragging.current = false;
+
+        // 전역 이벤트 리스너 즉시 정리
+        if (cleanupGlobalListeners.current) {
+          cleanupGlobalListeners.current();
+        }
+
+        // 애니메이션 프레임 취소
+        if (animationFrame.current) {
+          cancelAnimationFrame(animationFrame.current);
+          animationFrame.current = null;
+        }
+
+        // 즉시 원래 위치로 복원 (애니메이션 포함)
+        const originalPosition = snapPositions[localState];
+        setIsAnimating(true);
+        setTranslateY(originalPosition);
+        currentY.current = originalPosition;
+
+        // 애니메이션 완료 후 상태 리셋
+        setTimeout(() => {
+          setIsAnimating(false);
+        }, 300);
+
+        if (import.meta.env.MODE === 'development') {
+          console.log(
+            '✅ 위쪽 드래그 취소 완료 - 위치 복원:',
+            originalPosition
+          );
+        }
+
+        return;
+      }
+
+      // 정상 범위 내 드래그 처리
       const minY = expandedY;
-      const maxY = collapsedY + 120;
+      const maxY = collapsedY + 50; // 접힌 상태에서 50px 아래까지
       const clampedY = Math.max(minY, Math.min(maxY, newY));
 
       // requestAnimationFrame으로 부드러운 드래그
@@ -164,20 +274,41 @@ export const MapDragBottomSheet = forwardRef<
         setTranslateY(clampedY);
       });
     },
-    [expandedY, collapsedY]
+    [expandedY, collapsedY, windowHeight, snapPositions, localState]
   );
 
   const handleTouchEnd = useCallback(() => {
-    if (!isDragging.current) return;
+    if (!isDragging.current) {
+      if (import.meta.env.MODE === 'development') {
+        console.log('🚫 드래그가 이미 종료되어 handleTouchEnd 스킵');
+      }
+      return;
+    }
 
     isDragging.current = false;
     const finalY = translateY;
 
     if (import.meta.env.MODE === 'development') {
-      console.log('드래그 완료, 최종 Y:', finalY);
+      console.log('📍 드래그 정상 완료, 최종 Y:', finalY.toFixed(1));
     }
 
-    // 스냅 위치 계산
+    // 드래그 취소된 경우 처리하지 않음 (이미 위치가 복원됨)
+    const maxAllowedY = collapsedY + 80;
+    const minAllowedY = expandedY - 30;
+
+    if (finalY > maxAllowedY || finalY < minAllowedY) {
+      if (import.meta.env.MODE === 'development') {
+        console.log('⚠️ 비정상 위치에서 드래그 종료 - 추가 보정 없음:', {
+          finalY: finalY.toFixed(1),
+          minAllowedY,
+          maxAllowedY,
+          이유: '이미 취소 로직에서 처리됨',
+        });
+      }
+      return;
+    }
+
+    // 스냅 위치 계산 (정상 범위 내에서만)
     const snapThreshold = 80;
     let newState: typeof localState = localState;
 
@@ -212,9 +343,17 @@ export const MapDragBottomSheet = forwardRef<
     setLocalState(newState);
 
     if (import.meta.env.MODE === 'development') {
-      console.log('드래그 종료 → 상태:', newState);
+      console.log(
+        '✅ 드래그 정상 종료 → 상태:',
+        newState,
+        '위치:',
+        snapPositions[newState]
+      );
     }
-  }, [translateY, expandedY, middleY, collapsedY, localState]);
+  }, [translateY, expandedY, middleY, collapsedY, localState, snapPositions]);
+
+  // 전역 이벤트 리스너 정리 함수
+  const cleanupGlobalListeners = useRef<(() => void) | null>(null);
 
   // 드래그 시작 시 전역 이벤트 리스너 등록
   const startDragging = useCallback(() => {
@@ -223,12 +362,27 @@ export const MapDragBottomSheet = forwardRef<
     };
 
     const handleGlobalEnd = () => {
+      // 드래그가 취소로 인해 이미 종료된 경우 처리하지 않음
+      if (!isDragging.current) {
+        if (import.meta.env.MODE === 'development') {
+          console.log('🚫 드래그가 이미 취소되어 종료 처리 스킵');
+        }
+        // 이벤트 리스너만 제거
+        cleanupListeners();
+        return;
+      }
+
       handleTouchEnd();
       // 이벤트 리스너 제거
+      cleanupListeners();
+    };
+
+    const cleanupListeners = () => {
       document.removeEventListener('touchmove', handleGlobalMove);
       document.removeEventListener('touchend', handleGlobalEnd);
       document.removeEventListener('mousemove', handleGlobalMove);
       document.removeEventListener('mouseup', handleGlobalEnd);
+      cleanupGlobalListeners.current = null;
     };
 
     // 전역 이벤트 리스너 등록
@@ -238,6 +392,9 @@ export const MapDragBottomSheet = forwardRef<
     document.addEventListener('touchend', handleGlobalEnd);
     document.addEventListener('mousemove', handleGlobalMove);
     document.addEventListener('mouseup', handleGlobalEnd);
+
+    // 정리 함수 저장 (취소 시 즉시 호출 가능)
+    cleanupGlobalListeners.current = cleanupListeners;
   }, [handleTouchMove, handleTouchEnd]);
 
   // 👆 순수 JavaScript 드래그 핸들링
@@ -295,7 +452,23 @@ export const MapDragBottomSheet = forwardRef<
       currentY.current = translateY;
 
       if (import.meta.env.MODE === 'development') {
-        console.log('드래그 시작');
+        const maxAllowedY = collapsedY + 80;
+        const minAllowedY = expandedY - 30;
+
+        console.log('🎯 드래그 시작 (간소한 취소 로직):', {
+          windowHeight,
+          expandedY,
+          middleY,
+          collapsedY,
+          currentY: translateY.toFixed(1),
+          maxAllowedY: `${maxAllowedY} (collapsed + 80px)`,
+          minAllowedY: `${minAllowedY} (expanded - 30px)`,
+          '허용 범위': `${minAllowedY} ~ ${maxAllowedY}`,
+          '취소 조건': {
+            아래로: `Y > ${maxAllowedY}`,
+            위로: `Y < ${minAllowedY}`,
+          },
+        });
       }
 
       // 애니메이션 비활성화
@@ -304,7 +477,7 @@ export const MapDragBottomSheet = forwardRef<
       // 전역 드래그 이벤트 리스너 등록
       startDragging();
     },
-    [translateY, startDragging]
+    [translateY, startDragging, windowHeight, expandedY, middleY, collapsedY]
   );
 
   // 컴포넌트 언마운트 시 정리

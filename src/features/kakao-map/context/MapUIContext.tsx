@@ -1,9 +1,12 @@
 import React, {
   createContext,
+  useCallback,
   useContext,
   useReducer,
-  useCallback,
+  useRef,
 } from 'react';
+
+import type { MapDragBottomSheetRef } from '../components/MapDragBottomSheet';
 
 /**
  * 지도 관련 순수 UI 상태 인터페이스
@@ -16,7 +19,8 @@ interface MapUIState {
 
   // 바텀시트 네비게이션 상태
   currentBottomSheetStep: 'list' | 'category' | 'brand' | 'mymap';
-  isBottomSheetExpanded: boolean;
+
+  // 바텀시트 상태 제거 - ref로만 제어
 
   // 필터 UI 상태
   selectedCategory: string;
@@ -43,7 +47,10 @@ type MapUIAction =
   | { type: 'CLEAR_SEARCH' }
 
   // 바텀시트 관련 액션
-  | { type: 'SET_BOTTOM_SHEET_STEP'; payload: 'list' | 'category' | 'brand' | 'mymap' }
+  | {
+      type: 'SET_BOTTOM_SHEET_STEP';
+      payload: 'list' | 'category' | 'brand' | 'mymap';
+    }
   | { type: 'SET_BOTTOM_SHEET_EXPANDED'; payload: boolean }
   | { type: 'TOGGLE_BOTTOM_SHEET' }
 
@@ -79,11 +86,15 @@ const mapUIReducer = (state: MapUIState, action: MapUIAction): MapUIState => {
 
     // 바텀시트 관련 상태 변경
     case 'SET_BOTTOM_SHEET_STEP':
+      if (import.meta.env.MODE === 'development') {
+        console.log(
+          '🔄 바텀시트 step 변경:',
+          state.currentBottomSheetStep,
+          '→',
+          action.payload
+        );
+      }
       return { ...state, currentBottomSheetStep: action.payload };
-    case 'SET_BOTTOM_SHEET_EXPANDED':
-      return { ...state, isBottomSheetExpanded: action.payload };
-    case 'TOGGLE_BOTTOM_SHEET':
-      return { ...state, isBottomSheetExpanded: !state.isBottomSheetExpanded };
 
     // 필터 관련 상태 변경
     case 'SET_SELECTED_CATEGORY':
@@ -133,16 +144,17 @@ const mapUIReducer = (state: MapUIState, action: MapUIAction): MapUIState => {
  */
 interface MapUIContextValue {
   state: MapUIState;
+  bottomSheetRef: React.RefObject<MapDragBottomSheetRef | null>;
   actions: {
     // 검색 관련 액션
     setSearchValue: (value: string) => void;
     setSearchFocused: (focused: boolean) => void;
     clearSearch: () => void;
 
-    // 바텀시트 관련 액션
+    // 바텀시트 관련 액션 (네비게이션만)
     setBottomSheetStep: (step: 'list' | 'category' | 'brand' | 'mymap') => void;
-    setBottomSheetExpanded: (expanded: boolean) => void;
-    toggleBottomSheet: () => void;
+    // setBottomSheetExpanded: (expanded: boolean) => void;
+    // toggleBottomSheet: () => void;
 
     // 필터 관련 액션
     setSelectedCategory: (category: string) => void;
@@ -169,7 +181,6 @@ const initialUIState: MapUIState = {
   searchValue: '',
   isSearchFocused: false,
   currentBottomSheetStep: 'list',
-  isBottomSheetExpanded: true,
   selectedCategory: '',
   selectedBrand: '',
   activeRegionFilter: 'all',
@@ -193,6 +204,7 @@ export const MapUIProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [state, dispatch] = useReducer(mapUIReducer, initialUIState);
+  const bottomSheetRef = useRef<MapDragBottomSheetRef>(null);
 
   // 메모이제이션된 액션 함수들
   const actions = {
@@ -210,9 +222,12 @@ export const MapUIProvider: React.FC<{ children: React.ReactNode }> = ({
     }, []),
 
     // 바텀시트 관련 액션
-    setBottomSheetStep: useCallback((step: 'list' | 'category' | 'brand' | 'mymap') => {
-      dispatch({ type: 'SET_BOTTOM_SHEET_STEP', payload: step });
-    }, []),
+    setBottomSheetStep: useCallback(
+      (step: 'list' | 'category' | 'brand' | 'mymap') => {
+        dispatch({ type: 'SET_BOTTOM_SHEET_STEP', payload: step });
+      },
+      []
+    ),
 
     setBottomSheetExpanded: useCallback((expanded: boolean) => {
       dispatch({ type: 'SET_BOTTOM_SHEET_EXPANDED', payload: expanded });
@@ -221,6 +236,8 @@ export const MapUIProvider: React.FC<{ children: React.ReactNode }> = ({
     toggleBottomSheet: useCallback(() => {
       dispatch({ type: 'TOGGLE_BOTTOM_SHEET' });
     }, []),
+
+    // 바텀시트 통합 제어 액션 제거 - ref로만 제어
 
     // 필터 관련 액션
     setSelectedCategory: useCallback((category: string) => {
@@ -267,7 +284,7 @@ export const MapUIProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   return (
-    <MapUIContext.Provider value={{ state, actions }}>
+    <MapUIContext.Provider value={{ state, actions, bottomSheetRef }}>
       {children}
     </MapUIContext.Provider>
   );

@@ -1,4 +1,5 @@
 import { client } from '@/shared/client';
+import type { ApiResponse } from '@/shared/client/client.type';
 
 import { USER_ENDPOINTS } from './endpoints';
 import type {
@@ -8,7 +9,7 @@ import type {
   UpdateUserInfoResponse,
   UserExtraInfoRequest,
   UserExtraInfoResponse,
-  GetUserInfoResponse
+  UserInfomation,
 } from './types';
 
 export const userApi = {
@@ -33,11 +34,11 @@ export const userApi = {
   },
 
   // 유저 정보 조회
-  getUserInfo: async (): Promise<GetUserInfoResponse> => {
-    const response = await client.get<GetUserInfoResponse>(
-      USER_ENDPOINTS.GET_USER_INFO
+  getUserInfo: async (): Promise<UserInfomation> => {
+    const response = await client.get<ApiResponse<UserInfomation>>(
+      USER_ENDPOINTS.USER
     );
-    return response.data;
+    return response.data.data;
   },
 
   // 유저 정보 수정 - 마이페이지

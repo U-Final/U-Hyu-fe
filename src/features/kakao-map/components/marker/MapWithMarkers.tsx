@@ -19,6 +19,8 @@ interface MapWithMarkersProps {
   onCenterChange?: (center: { lat: number; lng: number }) => void;
   /** 검색 로딩 상태 (재검색 버튼 로딩 표시용) */
   isSearching?: boolean;
+  /** 외부에서 제어하는 선택된 매장 ID */
+  selectedStoreId?: number | null;
 }
 
 
@@ -28,10 +30,13 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   currentLocation,
   level = 4,
   className = 'w-full h-full',
+  onStoreClick,
   onCenterChange,
   isSearching = false,
+  selectedStoreId: externalSelectedStoreId,
 }) => {
-  const [selectedStoreId, setSelectedStoreId] = useState<number | null>(null);
+  const [internalSelectedStoreId, setInternalSelectedStoreId] = useState<number | null>(null);
+  const selectedStoreId = externalSelectedStoreId ?? internalSelectedStoreId;
   const [infoWindowStore, setInfoWindowStore] = useState<Store | null>(null);
   const [mapCenter, setMapCenter] = useState(center);
   const [isPanto, setIsPanto] = useState(false);
@@ -57,6 +62,36 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
     }
   }, [center, infoWindowStore, updateSearchPosition]);
 
+  // 외부에서 selectedStoreId가 변경될 때 인포윈도우 표시
+  useEffect(() => {
+    if (externalSelectedStoreId && stores.length > 0) {
+      const selectedStore = stores.find(store => store.storeId === externalSelectedStoreId);
+      if (selectedStore) {
+        setInfoWindowStore(selectedStore);
+        
+        // 지도 중심을 해당 매장으로 이동
+        const offset = 0.0017;
+        const targetLat = selectedStore.latitude + offset;
+        const targetLng = selectedStore.longitude;
+        const targetCenter = { lat: targetLat, lng: targetLng };
+
+        setIsPanto(true);
+        setMapCenter(targetCenter);
+
+        // 기존 timeout이 있다면 정리
+        if (pantoTimeoutRef.current) {
+          clearTimeout(pantoTimeoutRef.current);
+        }
+
+        // 애니메이션 완료 후 isPanto 리셋
+        pantoTimeoutRef.current = setTimeout(() => {
+          setIsPanto(false);
+          pantoTimeoutRef.current = null;
+        }, 500);
+      }
+    }
+  }, [externalSelectedStoreId, stores]);
+
 
   // 컴포넌트 언마운트 시 setTimeout cleanup
   useEffect(() => {
@@ -69,7 +104,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
 
 
   const handleMarkerClick = useCallback((store: Store) => {
-    setSelectedStoreId(store.storeId);
+    setInternalSelectedStoreId(store.storeId);
     setInfoWindowStore(store);
 
     // 인포 윈도우가 화면 중앙에 오도록 오프셋 적용
@@ -92,10 +127,13 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
       setIsPanto(false);
       pantoTimeoutRef.current = null;
     }, 500); // 애니메이션 시간을 500ms로 증가
-  }, []);
+
+    // 외부에서 전달받은 onStoreClick 콜백도 호출
+    onStoreClick?.(store);
+  }, [onStoreClick]);
 
   const handleInfoWindowClose = useCallback(() => {
-    setSelectedStoreId(null);
+    setInternalSelectedStoreId(null);
     setInfoWindowStore(null);
   }, []);
 

@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  forwardRef,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 
 import { animated, useSpring } from '@react-spring/web';
 import { useDrag } from '@use-gesture/react';
@@ -8,65 +14,130 @@ interface MapDragBottomSheetProps {
   title?: string;
 }
 
-export const MapDragBottomSheet = ({
-  children,
-  title,
-}: MapDragBottomSheetProps) => {
+export interface MapDragBottomSheetRef {
+  close: () => void;
+  openMiddle: () => void;
+  open: () => void;
+  initialize: () => void;
+  setExplicitlyClosed: (closed: boolean) => void;
+}
+
+export const MapDragBottomSheet = forwardRef<
+  MapDragBottomSheetRef,
+  MapDragBottomSheetProps
+>(({ children, title }, ref) => {
   const sheetRef = useRef<HTMLDivElement>(null);
-  const [{ y }, api] = useSpring(() => ({ y: window.innerHeight * 0.5 })); // 초기값을 중간 상태로 설정
+  const isInitialized = useRef(false); // 초기화 완료 여부 추적
+  const isExplicitlyClosed = useRef(false); // 사용자가 명시적으로 닫은 상태 추적
+  const [{ y }, api] = useSpring(() => ({ // 바텀시트 Y 위치 애니메이션
+    y: window.innerHeight - 120,
+    config: { tension: 300, friction: 30 },
+  }));
   const [currentState, setCurrentState] = useState<
     'collapsed' | 'middle' | 'expanded'
   >('collapsed');
 
-  // 3단계 높이 설정
-  const expandedY = 60; // 완전히 열린 상태 (위에서 60px)
-  const middleY = window.innerHeight * 0.5; // 중간 상태 (화면 높이의 50%)
-  const collapsedY = window.innerHeight - 120; // 접힌 상태
-  const middleThreshold = window.innerHeight * 0.22; // 중간지점을 처리할 범위 (±22%)
+  // 바텀시트 3단계 높이 정의
+  const expandedY = 60;
+  const middleY = window.innerHeight * 0.5;
+  const collapsedY = window.innerHeight - 120;
+  const middleThreshold = window.innerHeight * 0.22;
 
-  // 움직임 제어 함수들
+  // 바텀시트를 완전히 열어서 전체 화면으로 표시
   const open = useCallback(() => {
+    if (import.meta.env.MODE === 'development') {
+      console.log('바텀시트 완전히 열기');
+    }
+    isExplicitlyClosed.current = false;
     api.start({ y: expandedY });
     setCurrentState('expanded');
   }, [api, expandedY]);
 
+  // 바텀시트를 중간 높이로 열기 (기본 상태)
   const openMiddle = useCallback(() => {
+    if (import.meta.env.MODE === 'development') {
+      console.log('바텀시트 중간으로 열기');
+    }
+
+    // 명시적으로 닫힌 상태에서는 열지 않음
+    if (isExplicitlyClosed.current) {
+      if (import.meta.env.MODE === 'development') {
+        console.log('명시적으로 닫힌 상태 - openMiddle 무시');
+      }
+      return;
+    }
+
+    isExplicitlyClosed.current = false;
     api.start({ y: middleY });
     setCurrentState('middle');
   }, [api, middleY]);
 
+  // 바텀시트 수동 초기화 (페이지 로드 후 호출)
+  const initialize = useCallback(() => {
+    if (import.meta.env.MODE === 'development') {
+      console.log('바텀시트 수동 초기화');
+    }
+
+    if (!isInitialized.current) {
+      isInitialized.current = true;
+
+      if (isExplicitlyClosed.current) {
+        return;
+      }
+
+      isExplicitlyClosed.current = false;
+      setTimeout(() => {
+        if (!isExplicitlyClosed.current) {
+          openMiddle();
+        }
+      }, 100);
+    }
+  }, [openMiddle]);
+
+  // 바텀시트 명시적 닫힘 상태 플래그 설정
+  const setExplicitlyClosed = useCallback((closed: boolean) => {
+    if (import.meta.env.MODE === 'development') {
+      console.log('바텀시트 닫힘 플래그 설정:', closed);
+    }
+    isExplicitlyClosed.current = closed;
+  }, []);
+
+  // 바텀시트를 애니메이션과 함께 닫기
   const close = useCallback(() => {
+    if (import.meta.env.MODE === 'development') {
+      console.log('바텀시트 닫기');
+    }
+
+    isExplicitlyClosed.current = true;
     api.start({ y: collapsedY });
     setCurrentState('collapsed');
   }, [api, collapsedY]);
 
-  useEffect(() => {
-    // 컴포넌트 마운트 후 중간 상태로 설정
-    const timer = setTimeout(() => {
-      openMiddle();
-    }, 100);
+  // 외부에서 바텀시트를 제어할 수 있는 함수들 노출
+  useImperativeHandle(ref, () => ({
+    close,
+    openMiddle,
+    open,
+    initialize,
+    setExplicitlyClosed,
+  }), [close, openMiddle, open, initialize, setExplicitlyClosed]);
 
-    return () => clearTimeout(timer);
-  }, [openMiddle]);
-
+  // 드래그 제스처를 통한 바텀시트 높이 조절
   const bind = useDrag(
     ({ last, target, movement: [, my], cancel, memo, first }) => {
       const targetScroll = target as HTMLElement;
-      
-      // 첫 번째 이벤트에서 드래그 가능 여부 결정
+
+      // 드래그 시작 시 유효성 검사
       if (first) {
-        // bottom sheet 영역이 아닌 곳에서 드래그하면 취소
         if (!sheetRef.current?.contains(targetScroll)) {
           return cancel?.();
         }
 
-        // 드래그 핸들 영역이 아닌 곳에서 드래그하면 취소
         const isDragHandle = targetScroll.closest('.cursor-grab');
         if (!isDragHandle) {
           return cancel?.();
         }
 
-        // 스크롤 영역에서 드래그하면 취소
         if (targetScroll.closest('[data-scrollable]')) {
           return cancel?.();
         }
@@ -75,42 +146,46 @@ export const MapDragBottomSheet = ({
       if (!memo) memo = y.get();
       const newY = memo + my;
 
+      // 드래그 완료 시 최종 위치 결정
       if (last) {
-        //드래그 완료시 위치 결정
-        const finalY = y.get(); //현재 위치 확인
+        const finalY = y.get();
         if (finalY < middleY - middleThreshold) {
-          open(); // 중간보다 위에 있으면 완전 열기
+          isExplicitlyClosed.current = false;
+          open();
         } else if (finalY > middleY + middleThreshold) {
-          close(); // 중간보다 아래에 있으면 접기
+          isExplicitlyClosed.current = true;
+          close();
         } else {
-          openMiddle(); // 중간 근처에 있으면 중간으로 고정
+          if (!isExplicitlyClosed.current) {
+            isExplicitlyClosed.current = false;
+            openMiddle();
+          }
         }
       } else {
-        //드래그 중일 때 범위 제한
-        if (newY < expandedY - 30) return cancel?.(); // 너무 위로 드래그하면 취소
-        if (newY > collapsedY + 30) return cancel?.(); // 너무 아래로 드래그하면 취소
-        api.start({ y: newY, immediate: true }); // 드래그 중 위치 업데이트
+        // 드래그 중 범위 제한
+        if (newY < expandedY - 30) return cancel?.();
+        if (newY > collapsedY + 30) return cancel?.();
+        api.start({ y: newY, immediate: true });
       }
       return memo;
     },
-    { 
-      from: () => [0, y.get()], 
+    {
+      from: () => [0, y.get()],
       pointer: { touch: true },
       filterTaps: true,
-      threshold: 10
+      threshold: 10,
     }
   );
 
+  // 전체 화면 상태에서 배경 클릭 시 중간 상태로 변경
   const handleBackgroundClick = () => {
-    // expanded 상태일 때만 배경 클릭으로 닫기
-    if (currentState === 'expanded') {
+    if (currentState === 'expanded' && !isExplicitlyClosed.current) {
       openMiddle();
     }
   };
 
   return (
     <div className="flex-1 pointer-events-none">
-      {/* 배경 오버레이 - expanded 상태일 때만 활성화 */}
       {currentState === 'expanded' && (
         <div
           className="absolute inset-0 z-30 pointer-events-auto"
@@ -119,7 +194,6 @@ export const MapDragBottomSheet = ({
         />
       )}
 
-      {/* Sheet */}
       <animated.div
         ref={sheetRef}
         style={{
@@ -128,22 +202,26 @@ export const MapDragBottomSheet = ({
         }}
         className="absolute top-0 left-0 right-0 z-40 bg-white rounded-t-2xl border border-light-gray flex flex-col pointer-events-auto"
       >
-        <div 
-          className="flex-shrink-0 py-4 px-4 cursor-grab active:cursor-grabbing touch-auto" 
+        <div
+          className="flex-shrink-0 py-4 px-4 cursor-grab active:cursor-grabbing"
           {...bind()}
-          onTouchStart={(e) => e.stopPropagation()}
-          onMouseDown={(e) => e.stopPropagation()}
+          onTouchStart={e => e.stopPropagation()}
+          onMouseDown={e => e.stopPropagation()}
         >
           <div className="w-12 h-1.5 bg-gray rounded-full mx-auto" />
         </div>
 
         {title && (
-          <div 
-            className="flex-shrink-0 cursor-grab active:cursor-grabbing touch-auto" 
-            onClick={openMiddle} 
+          <div
+            className="flex-shrink-0 cursor-grab active:cursor-grabbing"
+            onClick={() => {
+              if (!isExplicitlyClosed.current) {
+                openMiddle();
+              }
+            }}
             {...bind()}
-            onTouchStart={(e) => e.stopPropagation()}
-            onMouseDown={(e) => e.stopPropagation()}
+            onTouchStart={e => e.stopPropagation()}
+            onMouseDown={e => e.stopPropagation()}
           >
             {title}
           </div>
@@ -158,4 +236,4 @@ export const MapDragBottomSheet = ({
       </animated.div>
     </div>
   );
-};
+});

@@ -22,4 +22,14 @@ export const mockRecommendStores: RecommendStore[] = [
     geom: 'POINT (126.9371 37.561)',
     logo_image: '/public/images/brands/뚜레쥬르.png',
   },
+  {
+    store_id: 3,
+    store_name: '이디야 신촌점',
+    category_name: '카페',
+    brand_name: '이디야',
+    addr_detail: '서울 서대문구 연세로 10',
+    description: '50% 할인 쿠폰!',
+    geom: 'POINT (126.9371 37.561)',
+    logo_image: '/public/images/brands/뚜레쥬르.png',
+  },
 ];

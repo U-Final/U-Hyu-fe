@@ -15,7 +15,6 @@ import type {
   MymapUuidRes,
   StoreBookmarkStatusParams,
   StoreBookmarkStatusRes,
-
 } from './types';
 
 // My Map 목록 조회 api

@@ -2,25 +2,28 @@ import { useCallback } from 'react';
 import { useMapData } from './useMapData';
 import { useMapUI } from './useMapUI';
 import type { Store } from '../types/store';
+import type { MapDragBottomSheetRef } from '../components/MapDragBottomSheet';
 
-export const useMapInteraction = () => {
+export const useMapInteraction = (bottomSheetRef?: React.RefObject<MapDragBottomSheetRef | null>) => {
   const { selectStore, setMapCenter } = useMapData();
-  const { setSelectedMarker, selectedMarkerId } = useMapUI();
+  const { setSelectedMarker, selectedMarkerId, setBottomSheetExpanded } = useMapUI();
 
-  // 매장 선택 (UI + 비즈니스 로직 연결)
+  // 매장 선택 시 UI 상태 업데이트 및 지도 중심점 이동
   const handleStoreSelect = useCallback(
-    (store: Store) => {
-      // UI 상태 업데이트
-      setSelectedMarker(store.storeId);
+    (store: Store, shouldCloseBottomSheet = false) => {
+      // 지도 마커 클릭 시 바텀시트 닫힘 플래그 설정
+      if (shouldCloseBottomSheet && bottomSheetRef?.current) {
+        bottomSheetRef.current.setExplicitlyClosed(true);
+      }
 
-      // 비즈니스 로직 실행
+      setSelectedMarker(store.storeId);
       selectStore(store);
       setMapCenter({ lat: store.latitude, lng: store.longitude });
     },
-    [selectStore, setMapCenter, setSelectedMarker]
+    [selectStore, setMapCenter, setSelectedMarker, bottomSheetRef]
   );
 
-  // 지도 중심점 변경 (UI 트리거)
+  // 지도 중심점 변경 처리
   const handleMapCenterChange = useCallback(
     (newCenter: { lat: number; lng: number }) => {
       setMapCenter(newCenter);
@@ -28,21 +31,45 @@ export const useMapInteraction = () => {
     [setMapCenter]
   );
 
-  // 마커 클릭
+  // 지도 위 마커 클릭 시 바텀시트 닫고 인포윈도우 표시
+  const handleMapMarkerClick = useCallback(
+    (store: Store) => {
+      // 바텀시트 깜빡임 방지를 위한 즉시 플래그 설정
+      if (bottomSheetRef?.current) {
+        bottomSheetRef.current.setExplicitlyClosed(true);
+      }
+
+      if (import.meta.env.MODE === 'development') {
+        console.log('지도 마커 클릭:', store.storeName);
+      }
+      
+      handleStoreSelect(store, true);
+      
+      if (bottomSheetRef?.current) {
+        bottomSheetRef.current.close();
+      }
+    },
+    [handleStoreSelect, bottomSheetRef]
+  );
+
+  // 바텀시트 내 매장 리스트 클릭 시 처리
   const handleMarkerClick = useCallback(
     (store: Store) => {
+      if (import.meta.env.MODE === 'development') {
+        console.log('바텀시트 매장 클릭:', store.storeName);
+      }
+      
+      setBottomSheetExpanded(false);
       handleStoreSelect(store);
     },
-    [handleStoreSelect]
+    [handleStoreSelect, setBottomSheetExpanded]
   );
 
   return {
-    // 상태
     selectedMarkerId,
-
-    // 핸들러
     handleStoreSelect,
     handleMapCenterChange,
     handleMarkerClick,
+    handleMapMarkerClick,
   };
 };

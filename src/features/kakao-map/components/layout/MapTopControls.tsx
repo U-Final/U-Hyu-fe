@@ -24,6 +24,8 @@ interface MapTopControlsProps {
   activeCategoryFilter: string;
   /** 카테고리 필터 변경 핸들러 */
   onCategoryFilterChange: (value: string) => void;
+  /** 매장 목록 보기 핸들러 */
+  onShowStoreList?: () => void;
 }
 
 /**
@@ -39,6 +41,7 @@ const MapTopControls: FC<MapTopControlsProps> = ({
   activeRegionFilter,
   onRegionFilterChange,
   onCategoryFilterChange,
+  onShowStoreList,
 }) => {
   return (
     <div className="absolute top-4 left-4 right-4 z-10 space-y-3">
@@ -63,6 +66,31 @@ const MapTopControls: FC<MapTopControlsProps> = ({
             onChange={onRegionFilterChange}
           />
         </div>
+
+        {/* 매장 목록 버튼 */}
+        {onShowStoreList && (
+          <div className="flex-shrink-0">
+            <button
+              onClick={onShowStoreList}
+              className="flex items-center justify-center w-12 h-12 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 hover:bg-gray-50"
+              aria-label="매장 목록 보기"
+            >
+              <svg
+                className="w-5 h-5 text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 10h16M4 14h16M4 18h16"
+                />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* 하단 라인: 카테고리 필터탭 전체 너비 사용 */}

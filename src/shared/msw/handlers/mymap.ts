@@ -11,6 +11,8 @@ import { createErrorResponse } from '@/shared/utils/createErrorResponse';
 import { createResponse } from '@/shared/utils/createResponse';
 
 let nextId = Math.max(...MOCK_MYMAP_LIST.map(m => m.myMapListId), 0) + 1;
+// 임시 저장소: 각 myMapListId에 매핑된 storeId Set
+const MOCK_MYMAP_STORE: Record<number, Set<number>> = {};
 
 export const mymapHandlers = [
   // My Map 목록 조회 MSW 핸들러

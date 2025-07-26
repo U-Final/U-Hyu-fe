@@ -1,6 +1,5 @@
-import React, {
+import {
   forwardRef,
-  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -8,55 +7,63 @@ import React, {
   useState,
 } from 'react';
 
+import { animated, useSpring } from '@react-spring/web';
+// 바텀시트 위치 애니메이션을 위한 라이브러리
 import { useGesture } from '@use-gesture/react';
 
-// Context 상태는 더 이상 바텀시트 높이와 연동하지 않음
+// 드래그 제스처 인식 라이브러리
 
+// 🧾 컴포넌트 외부에서 바텀시트를 제어할 수 있게 만드는 props와 ref 인터페이스 정의
 interface MapDragBottomSheetProps {
   children: React.ReactNode;
   title?: string;
 }
 
 export interface MapDragBottomSheetRef {
-  close: () => void;
-  openMiddle: () => void;
-  open: () => void;
-  initialize: () => void;
-  setExplicitlyClosed: (closed: boolean) => void;
+  close: () => void; // 완전히 닫기
+  openMiddle: () => void; // 중간까지 열기
+  open: () => void; // 완전히 열기
+  initialize: () => void; // 최초 한 번만 열림
+  setExplicitlyClosed: (closed: boolean) => void; // 외부에서 명시적으로 닫힘 상태 설정
 }
 
+// 📦 바텀시트 컴포넌트 정의
 export const MapDragBottomSheet = forwardRef<
   MapDragBottomSheetRef,
   MapDragBottomSheetProps
 >(({ children, title }, ref) => {
+  // 개발 중 리렌더링 확인용 로그
   if (import.meta.env.MODE === 'development') {
     console.log('🔄 MapDragBottomSheet 리렌더링 발생');
   }
 
+  // 📌 내부 상태 관리용 ref
   const sheetRef = useRef<HTMLDivElement>(null);
-  const isInitialized = useRef(false);
-  const isDragging = useRef(false);
+  const isInitialized = useRef(false); // initialize()가 한 번만 실행되도록 제어
+  const isDragging = useRef(false); // 드래그 중 상태
 
-  // 바텀시트 내부 상태 - 독립적으로 관리
-  const [localState, setLocalState] = useState<'collapsed' | 'middle' | 'expanded'>('middle');
+  // 🧠 바텀시트 상태(local) - context와 분리된 독립적인 상태
+  const [localState, setLocalState] = useState<
+    'collapsed' | 'middle' | 'expanded'
+  >('collapsed');
+
+  // 외부에서 닫힘을 명시했는지 여부 (open/close 제어에 사용)
   const [isExplicitlyClosed, setIsExplicitlyClosed] = useState(false);
 
-  // 높이 계산 - 리사이즈 대응
+  // 🔧 윈도우 높이 동기화 - 반응형 레이아웃 대응
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-  
   useEffect(() => {
-    const handleResize = () => {
-      setWindowHeight(window.innerHeight);
-    };
+    const handleResize = () => setWindowHeight(window.innerHeight);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const expandedY = 60;
-  const middleY = windowHeight * 0.5;
-  const collapsedY = windowHeight - 120;
+  // 📐 위치 스냅 포인트 정의
+  const expandedY = 60; // 완전 확장 시 바텀 여백
+  const middleY = windowHeight * 0.5; // 중간 위치
+  const collapsedY = windowHeight - 130; // 거의 접힌 상태
 
-  // 높이 상수 매핑
+  // 💡 위치 상태값과 실제 translateY(px) 매핑
   const snapPositions = useMemo(
     () => ({
       expanded: expandedY,
@@ -66,212 +73,215 @@ export const MapDragBottomSheet = forwardRef<
     [expandedY, middleY, collapsedY]
   );
 
-  // 현재 Y 위치 상태
-  const [currentY, setCurrentY] = useState(snapPositions[localState]);
+  // 🎬 react-spring 기반 y 위치 애니메이션 정의
+  const [{ y }, api] = useSpring(() => ({
+    y: snapPositions[localState],
+    config: { tension: 300, friction: 30 }, // 애니메이션 속성
+  }));
 
-  // 외부 제어를 위한 명령형 API - 메모이제이션으로 리렌더링 방지
-  const close = useCallback(() => {
-    setIsExplicitlyClosed(true);
-    setLocalState('collapsed');
-  }, []);
-  
-  const openMiddle = useCallback(() => {
-    setIsExplicitlyClosed(false);
-    setLocalState('middle');
-  }, []);
-  
-  const open = useCallback(() => {
-    setIsExplicitlyClosed(false);
-    setLocalState('expanded');
-  }, []);
-  
-  const initialize = useCallback(() => {
-    if (!isInitialized.current) {
-      isInitialized.current = true;
-      setIsExplicitlyClosed(false);
-      setLocalState('middle');
-    }
-  }, []);
-  
-  const setExplicitlyClosedCallback = useCallback((closed: boolean) => {
-    setIsExplicitlyClosed(closed);
-    if (closed) {
-      setLocalState('collapsed');
-    }
-  }, []);
-
+  // 🔌 외부에서 조작할 수 있도록 imperative handle 정의
   useImperativeHandle(
     ref,
     () => ({
-      close,
-      openMiddle,
-      open,
-      initialize,
-      setExplicitlyClosed: setExplicitlyClosedCallback,
+      close: () => {
+        setIsExplicitlyClosed(true);
+        setLocalState('collapsed');
+      },
+      openMiddle: () => {
+        setIsExplicitlyClosed(false);
+        setLocalState('middle');
+      },
+      open: () => {
+        setIsExplicitlyClosed(false);
+        setLocalState('expanded');
+      },
+      initialize: () => {
+        if (!isInitialized.current) {
+          isInitialized.current = true;
+          setIsExplicitlyClosed(true);
+          setLocalState('expanded');
+        }
+      },
+      setExplicitlyClosed: (closed: boolean) => {
+        setIsExplicitlyClosed(closed);
+        if (closed) {
+          setLocalState('collapsed');
+        }
+      },
     }),
-    [close, openMiddle, open, initialize, setExplicitlyClosedCallback]
+    []
   );
 
-  // 내부 상태 변경시 Y 위치 동기화
+  // 🔄 localState 변경 시 spring 애니메이션 실행
   useEffect(() => {
-    // 드래그 중일 때는 상태 변경을 무시
-    if (isDragging.current) return;
-
-    const targetY = snapPositions[localState];
-    
-    if (import.meta.env.MODE === 'development') {
-      console.log('내부 상태 변경 감지:', localState, '-> 목표 Y:', targetY);
+    // 드래그 중에는 자동 애니메이션을 막음 (사용자 제어 우선)
+    if (isDragging.current) {
+      if (import.meta.env.MODE === 'development') {
+        console.log('⏸️ 드래그 중이므로 상태 변경 무시:', localState);
+      }
+      return;
     }
 
-    // 내부 상태에 따라 Y 위치 직접 설정
-    setCurrentY(targetY);
-  }, [localState, snapPositions]);
+    const targetY = snapPositions[localState];
+    api.start({
+      y: targetY,
+      immediate: false,
+    });
+  }, [localState, snapPositions, api, isExplicitlyClosed]);
 
-  // 드래그 제스처 - 개선된 로직
+  // 👆 드래그 제스처 핸들링
+  // 앞부분 동일...
+
   const bind = useGesture(
     {
-      onDrag: ({ down, movement: [, my], last, first, event, velocity: [, vy] }) => {
-        // 드래그 시작 시 유효성 검사
+      onDrag: ({
+        down,
+        movement: [, my],
+        last,
+        first,
+        event,
+        velocity: [, vy],
+      }) => {
         if (first) {
           const target = event.target as HTMLElement;
-
-          // 스크롤 가능한 영역에서는 드래그 비활성화 (더 정확한 검사)
           const scrollableElement = target.closest('[data-scrollable]');
-          if (scrollableElement) {
-            const scrollable = scrollableElement as HTMLElement;
-            // 실제로 스크롤 가능한 상태인지 확인
-            if (scrollable.scrollHeight > scrollable.clientHeight) {
-              return;
-            }
+          if (
+            scrollableElement &&
+            scrollableElement.scrollHeight > scrollableElement.clientHeight
+          ) {
+            return;
           }
-
-          // 입력 요소나 버튼에서는 드래그 비활성화
-          if (target.tagName === 'INPUT' || target.tagName === 'BUTTON' || target.tagName === 'A') {
+          if (['INPUT', 'BUTTON', 'A'].includes(target.tagName)) {
             return;
           }
 
-          // 드래그 시작
           isDragging.current = true;
-
           if (import.meta.env.MODE === 'development') {
             console.log('드래그 시작');
           }
         }
 
-        // 현재 바텀시트 위치를 기준으로 새 위치 계산
         const baseY = snapPositions[localState];
         const newY = baseY + my;
 
-        // 범위 제한
-        const minY = expandedY - 50; // 위로 약간 더 드래그 가능
-        const maxY = collapsedY + 100; // 아래로 약간 더 드래그 가능
+        // ❗ 수정: 최소 최대 범위 고정
+        const minY = expandedY;
+        const maxY = collapsedY + 120;
 
         const clampedY = Math.max(minY, Math.min(maxY, newY));
 
         if (down) {
-          // 드래그 중 - Y 위치 직접 업데이트 (내부 상태 업데이트 안함)
-          setCurrentY(clampedY);
+          api.start({ y: clampedY, immediate: true });
         }
 
         if (last) {
-          // 드래그 완료 - 내부 상태만 업데이트 (Spring은 useEffect에서 자동 처리)
           isDragging.current = false;
 
           if (import.meta.env.MODE === 'development') {
             console.log('드래그 완료, 최종 Y:', clampedY);
           }
 
-          // 스냅 로직을 통해 새로운 내부 상태 결정
           const velocityThreshold = 0.5;
           const snapThreshold = 80;
-          
+
+          let newState: typeof localState = localState;
+
           if (Math.abs(vy) > velocityThreshold) {
-            // 속도 기반 스냅
             if (vy < 0) {
-              setIsExplicitlyClosed(false);
-              setLocalState('expanded');
+              newState = 'expanded';
             } else {
-              setIsExplicitlyClosed(true);
-              setLocalState('collapsed');
+              newState = 'collapsed';
             }
           } else {
-            // 위치 기반 스냅
             const expandedRange = expandedY + snapThreshold;
             const middleRangeMin = middleY - snapThreshold;
             const middleRangeMax = middleY + snapThreshold;
             const collapsedRange = collapsedY - snapThreshold;
 
             if (clampedY <= expandedRange) {
-              setIsExplicitlyClosed(false);
-              setLocalState('expanded');
-            } else if (clampedY >= middleRangeMin && clampedY <= middleRangeMax) {
-              setIsExplicitlyClosed(false);
-              setLocalState('middle');
+              newState = 'expanded';
+            } else if (
+              clampedY >= middleRangeMin &&
+              clampedY <= middleRangeMax
+            ) {
+              newState = 'middle';
             } else if (clampedY >= collapsedRange) {
-              setIsExplicitlyClosed(true);
-              setLocalState('collapsed');
+              newState = 'collapsed';
             } else {
-              // 가장 가까운 위치로 스냅
               const distToExpanded = Math.abs(clampedY - expandedY);
               const distToMiddle = Math.abs(clampedY - middleY);
               const distToCollapsed = Math.abs(clampedY - collapsedY);
-              
-              setIsExplicitlyClosed(false);
-              if (distToExpanded <= distToMiddle && distToExpanded <= distToCollapsed) {
-                setLocalState('expanded');
+
+              if (
+                distToExpanded <= distToMiddle &&
+                distToExpanded <= distToCollapsed
+              ) {
+                newState = 'expanded';
               } else if (distToMiddle <= distToCollapsed) {
-                setLocalState('middle');
+                newState = 'middle';
               } else {
-                setIsExplicitlyClosed(true);
-                setLocalState('collapsed');
+                newState = 'collapsed';
               }
             }
           }
 
+          // ❗ 명시적 닫힘 여부 반영
+          setIsExplicitlyClosed(newState === 'collapsed');
+          setLocalState(newState);
+
+          // ✅ 직접 spring 애니메이션 실행해서 위치 복원
+          const targetY = snapPositions[newState];
+          api.start({ y: targetY, immediate: false });
+
           if (import.meta.env.MODE === 'development') {
-            console.log('드래그 완료 - 속도:', vy, '위치:', clampedY, '-> 내부 상태 업데이트');
+            console.log(
+              '드래그 종료 → 상태:',
+              newState,
+              '→ 애니메이션 실행 (y:',
+              targetY,
+              ')'
+            );
           }
         }
       },
     },
     {
       drag: {
-        from: () => [0, currentY],
+        from: () => [0, y.get()],
         pointer: { touch: true },
         filterTaps: true,
-        threshold: 5, // 더 민감하게 드래그 시작
+        threshold: 5,
         axis: 'y',
-        preventScroll: true, // 스크롤 방지
-        rubberband: true, // 경계에서 탄성 효과
+        preventScroll: true,
+        rubberband: true,
       },
     }
   );
 
   return (
     <div className="flex-1 pointer-events-none">
-      {/* 바텀시트 메인 컨테이너 */}
-      <div
+      {/* 📦 바텀시트 전체 컨테이너 - 포인터 이벤트는 내부에서만 활성화 */}
+      <animated.div
         ref={sheetRef}
         style={{
-          transform: `translateY(${currentY}px)`,
-          height: `calc(100vh - ${currentY}px)`,
-          transition: isDragging.current ? 'none' : 'transform 0.3s ease-out, height 0.3s ease-out',
+          transform: y.to(val => `translateY(${val}px)`),
+          height: y.to(val => `calc(100vh - ${val}px)`),
         }}
         className="absolute top-0 left-0 right-0 z-40 bg-white rounded-t-2xl border border-light-gray flex flex-col pointer-events-auto shadow-lg"
         {...bind()}
       >
-        {/* 드래그 핸들 */}
+        {/* 🔘 드래그 핸들 - 사용자 상호작용 유도 */}
         <div className="flex-shrink-0 py-4 px-4 cursor-grab active:cursor-grabbing touch-none">
           <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto" />
         </div>
 
-        {/* 타이틀 (옵션) */}
+        {/* 🏷️ 제목 영역 - 클릭시 확장 가능 */}
         {title && (
           <div
             className="flex-shrink-0 px-4 pb-2 cursor-grab active:cursor-grabbing touch-none"
             onClick={() => {
               if (!isExplicitlyClosed) {
-                setLocalState('middle');
+                setLocalState('expanded');
               }
             }}
           >
@@ -279,7 +289,7 @@ export const MapDragBottomSheet = forwardRef<
           </div>
         )}
 
-        {/* 콘텐츠 영역 */}
+        {/* 🧾 실제 콘텐츠 스크롤 영역 */}
         <div
           data-scrollable
           className="flex-1 overflow-y-auto scrollbar-hidden pb-safe"
@@ -290,7 +300,7 @@ export const MapDragBottomSheet = forwardRef<
         >
           {children}
         </div>
-      </div>
+      </animated.div>
     </div>
   );
 });

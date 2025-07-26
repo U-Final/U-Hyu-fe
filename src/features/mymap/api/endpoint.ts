@@ -7,8 +7,8 @@ export const MYMAP_ENDPOINTS = {
     DELETE: (myMapListId: number) => `/mymap/${myMapListId}`,
     DELETE_MSW: (myMapListId: number | string = ':myMapListId') =>
       `/mymap/${myMapListId}`,
-    VIEW: (uuid: number) => `/mymap/${uuid}`,
-    VIEW_MSW: (uuid: number | string = ':uuid') => `/mymap/${uuid}`,
+    VIEW: (uuid: string) => `/mymap/${uuid}`,
+    VIEW_MSW: (uuid: string = ':uuid') => `/mymap/${uuid}`,
     STATE: (store_id: number) => `/mymap/list/${store_id}`,
     STATE_MSW: (store_id: number | string = ':store_id') =>
       `/mymap/list/${store_id}`,

@@ -1,5 +1,9 @@
 import { MYMAP_ENDPOINTS } from '@/features/mymap/api/endpoint';
-import { MOCK_MYMAP_LIST } from '@/features/mymap/api/mockData';
+import {
+  MOCK_MYMAP_DATA_BY_UUID,
+  MOCK_MYMAP_LIST,
+  MOCK_STORE_BOOKMARK_STATUS,
+} from '@/features/mymap/api/mockData';
 import type { MyMapListUpdateReq, MyMapStoreAddReq } from '@mymap/api/types';
 import { http } from 'msw';
 
@@ -82,5 +86,77 @@ export const mymapHandlers = [
     MOCK_MYMAP_LIST.splice(index, 1);
 
     return createResponse({ Resultcode: 1 }, '삭제 성공');
+  }),
+
+  // My Map에 매장 추가/삭제 MSW 핸들러
+  http.post(MYMAP_ENDPOINTS.MYMAP.TOGGLE_STORE_MSW(), async ({ params }) => {
+    const myMapListId = Number(params.myMapListId);
+    const storeId = Number(params.store_id);
+
+    if (isNaN(myMapListId) || isNaN(storeId)) {
+      return createErrorResponse('ID 형식이 올바르지 않습니다.', 400);
+    }
+
+    // 해당 myMapListId가 존재하는지 확인
+    const exists = MOCK_MYMAP_LIST.some(m => m.myMapListId === myMapListId);
+    if (!exists) {
+      return createErrorResponse('해당 My Map 항목을 찾을 수 없습니다.', 404);
+    }
+
+    if (!MOCK_MYMAP_STORE[myMapListId]) {
+      MOCK_MYMAP_STORE[myMapListId] = new Set();
+    }
+
+    const storeSet = MOCK_MYMAP_STORE[myMapListId];
+    let isMyMapped: boolean;
+
+    if (storeSet.has(storeId)) {
+      storeSet.delete(storeId);
+      isMyMapped = false;
+    } else {
+      storeSet.add(storeId);
+      isMyMapped = true;
+    }
+
+    return createResponse(
+      {
+        myMapListId,
+        storeId,
+        isMyMapped,
+      },
+      isMyMapped ? '매장이 추가되었습니다.' : '매장이 삭제되었습니다.'
+    );
+  }),
+
+  // my map 매장 등록 유무 조회 MSW 핸들러
+  http.get(MYMAP_ENDPOINTS.MYMAP.STATE_MSW(), async ({ params }) => {
+    const { store_id } = params;
+
+    if (!store_id) {
+      return createErrorResponse('storeId가 없습니다.', 400);
+    }
+
+    return createResponse(
+      MOCK_STORE_BOOKMARK_STATUS,
+      '북마크 상태 불러오기 성공'
+    );
+  }),
+
+  // My Map 상세 조회 (UUID 기반)
+  http.get(MYMAP_ENDPOINTS.MYMAP.VIEW_MSW(), async ({ params }) => {
+    const { uuid } = params;
+
+    if (!uuid) {
+      return createErrorResponse('UUID가 없습니다.', 400);
+    }
+
+    if (uuid === MOCK_MYMAP_DATA_BY_UUID.uuid) {
+      return createResponse(
+        MOCK_MYMAP_DATA_BY_UUID,
+        '마이맵 상세 불러오기 성공'
+      );
+    }
+
+    return createErrorResponse('해당 UUID의 마이맵이 존재하지 않습니다.', 404);
   }),
 ];

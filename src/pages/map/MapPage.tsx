@@ -29,7 +29,7 @@ const MapContent = () => {
       // 약간의 지연 후 중간 상태로 열기
       setTimeout(() => {
         if (bottomSheetRef.current) {
-          bottomSheetRef.current.openMiddle();
+          bottomSheetRef.current.open();
         }
       }, 300);
     }

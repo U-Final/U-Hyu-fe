@@ -3,7 +3,6 @@ import {
   useCallback,
   useEffect,
   useImperativeHandle,
-  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -12,14 +11,17 @@ import {
 interface MapDragBottomSheetProps {
   children: React.ReactNode;
   title?: string;
+  bottomNavHeight?: number; // 하단 네비게이션 높이 (기본값: 60px)
+  snapToPositions?: boolean; // 스냅 기능 활성화 여부 (기본값: false)
 }
 
 export interface MapDragBottomSheetRef {
-  close: () => void; // 완전히 닫기
-  openMiddle: () => void; // 중간까지 열기
-  open: () => void; // 완전히 열기
+  close: () => void; // 닫기
+  open: () => void; // 열기
+  toggle: () => void; // 토글
   initialize: () => void; // 최초 한 번만 열림
   setExplicitlyClosed: (closed: boolean) => void; // 외부에서 명시적으로 닫힘 상태 설정
+  getCurrentPosition: () => number; // 현재 위치 반환
 }
 
 // 📦 바텀시트 컴포넌트 정의
@@ -27,21 +29,20 @@ export interface MapDragBottomSheetRef {
 const CONSTANTS = {
   // 위치 상수
   EXPANDED_BOTTOM_MARGIN: 60, // 완전 확장 시 바텀 여백
-  MIDDLE_POSITION_RATIO: 0.5, // 중간 위치 비율 (화면 높이의 50%)
-  COLLAPSED_BOTTOM_MARGIN: 130, // 거의 접힌 상태의 바텀 여백
+  HANDLE_HEIGHT: 60, // 핸들바 영역 높이 (패딩 포함)
 
   // 드래그 제한 상수
-  DRAG_CANCEL_BELOW_MARGIN: 80, // collapsed 위치에서 아래로 드래그 취소 여백
-  DRAG_CANCEL_ABOVE_MARGIN: 30, // expanded 위치에서 위로 드래그 취소 여백
-
-  // 드래그 범위 상수
-  DRAG_BELOW_LIMIT: 50, // 접힌 상태에서 아래쪽 드래그 허용 범위
+  MIN_HEIGHT_FROM_TOP: 100, // 화면 상단에서 최소 거리
+  EXTRA_DRAG_BUFFER: 0, // 닫힌 위치에서 추가 드래그 허용 범위
 
   // 스냅 상수
-  SNAP_THRESHOLD: 80, // 스냅 위치 임계값
+  SNAP_THRESHOLD: 100, // 스냅 위치 임계값
 
   // 애니메이션 상수
   ANIMATION_DURATION: 300, // CSS transition 지속 시간 (ms)
+
+  // 드래그 민감도 상수
+  MIN_DRAG_THRESHOLD: 3, // 최소 드래그 임계값 (px) - 이 값보다 작은 움직임은 무시
 
   // 부모 요소 탐색 상수
   PARENT_ELEMENT_SEARCH_DEPTH: 5, // 클릭 가능한 부모 요소 탐색 깊이
@@ -50,7 +51,7 @@ const CONSTANTS = {
 export const MapDragBottomSheet = forwardRef<
   MapDragBottomSheetRef,
   MapDragBottomSheetProps
->(({ children, title }, ref) => {
+>(({ children, title, bottomNavHeight = 60, snapToPositions = false }, ref) => {
   // 개발 중 리렌더링 확인용 로그
   if (import.meta.env.MODE === 'development') {
     console.log('🔄 MapDragBottomSheet 리렌더링 발생');
@@ -61,16 +62,13 @@ export const MapDragBottomSheet = forwardRef<
   const isInitialized = useRef(false); // initialize()가 한 번만 실행되도록 제어
   const isDragging = useRef(false); // 드래그 중 상태
   const startY = useRef(0); // 드래그 시작 Y 좌표
-  const currentY = useRef(0); // 현재 Y 좌표
+  const startTranslateY = useRef(0); // 드래그 시작 시 바텀시트 위치
+  const hasMovedEnough = useRef(false); // 임계값 이상 움직였는지 여부
   const animationFrame = useRef<number | null>(null);
+  const lastDragEndTime = useRef(0); // 마지막 드래그 종료 시간
 
-  // 🧠 바텀시트 상태(local) - context와 분리된 독립적인 상태
-  const [localState, setLocalState] = useState<
-    'collapsed' | 'middle' | 'expanded'
-  >('collapsed');
-
-  // 외부에서 닫힘을 명시했는지 여부 (open/close 제어에 사용)
-  const [isExplicitlyClosed, setIsExplicitlyClosed] = useState(false);
+  // 바텀시트 열림/닫힘 상태
+  const [isOpen, setIsOpen] = useState(false);
 
   // 🔧 윈도우 높이 동기화 - 반응형 레이아웃 대응
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
@@ -80,23 +78,20 @@ export const MapDragBottomSheet = forwardRef<
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // 📐 위치 스냅 포인트 정의
-  const expandedY = CONSTANTS.EXPANDED_BOTTOM_MARGIN; // 완전 확장 시 바텀 여백
-  const middleY = windowHeight * CONSTANTS.MIDDLE_POSITION_RATIO; // 중간 위치
-  const collapsedY = windowHeight - CONSTANTS.COLLAPSED_BOTTOM_MARGIN; // 거의 접힌 상태
+  // 📐 위치 제한값 정의
+  const minY = CONSTANTS.MIN_HEIGHT_FROM_TOP; // 최대로 올라갈 수 있는 위치
+  const maxY =
+    windowHeight -
+    bottomNavHeight -
+    CONSTANTS.HANDLE_HEIGHT +
+    CONSTANTS.EXTRA_DRAG_BUFFER; // 최대로 내려갈 수 있는 위치
 
-  // 💡 위치 상태값과 실제 translateY(px) 매핑
-  const snapPositions = useMemo(
-    () => ({
-      expanded: expandedY,
-      middle: middleY,
-      collapsed: collapsedY,
-    }),
-    [expandedY, middleY, collapsedY]
-  );
+  // 기본 위치 정의 (스냅용)
+  const openY = CONSTANTS.EXPANDED_BOTTOM_MARGIN; // 열린 상태 기본 위치
+  const closedY = windowHeight - bottomNavHeight - CONSTANTS.HANDLE_HEIGHT; // 닫힌 상태 기본 위치
 
   // 🎬 CSS transform을 통한 위치 제어
-  const [translateY, setTranslateY] = useState(collapsedY);
+  const [translateY, setTranslateY] = useState(closedY);
   const [isAnimating, setIsAnimating] = useState(false);
 
   // 🔌 외부에서 조작할 수 있도록 imperative handle 정의
@@ -104,289 +99,187 @@ export const MapDragBottomSheet = forwardRef<
     ref,
     () => ({
       close: () => {
-        setIsExplicitlyClosed(true);
-        setLocalState('collapsed');
-      },
-      openMiddle: () => {
-        setIsExplicitlyClosed(false);
-        setLocalState('middle');
+        setIsOpen(false);
+        animateToPosition(closedY);
       },
       open: () => {
-        setIsExplicitlyClosed(false);
-        setLocalState('expanded');
+        setIsOpen(true);
+        animateToPosition(openY);
+      },
+      toggle: () => {
+        if (isOpen) {
+          setIsOpen(false);
+          animateToPosition(closedY);
+        } else {
+          setIsOpen(true);
+          animateToPosition(openY);
+        }
       },
       initialize: () => {
         if (!isInitialized.current) {
           isInitialized.current = true;
-          setIsExplicitlyClosed(false);
-          setLocalState('expanded');
+          setIsOpen(true);
+          animateToPosition(openY);
         }
       },
       setExplicitlyClosed: (closed: boolean) => {
-        setIsExplicitlyClosed(closed);
-        if (closed) {
-          setLocalState('collapsed');
-        }
+        setIsOpen(!closed);
+        animateToPosition(closed ? closedY : openY);
       },
+      getCurrentPosition: () => translateY,
     }),
-    []
+    [translateY, openY, closedY, isOpen]
   );
 
   // 애니메이션 함수
   const animateToPosition = useCallback((targetY: number) => {
     setIsAnimating(true);
     setTranslateY(targetY);
-    currentY.current = targetY;
 
     // 애니메이션 완료 후 상태 리셋
     setTimeout(() => {
       setIsAnimating(false);
-    }, CONSTANTS.ANIMATION_DURATION); // CSS transition duration과 동일
+    }, CONSTANTS.ANIMATION_DURATION);
   }, []);
-
-  // 🔄 localState 변경 시 CSS 애니메이션 실행
-  useEffect(() => {
-    // 드래그 중에는 자동 애니메이션을 막음 (사용자 제어 우선)
-    if (isDragging.current) {
-      if (import.meta.env.MODE === 'development') {
-        console.log('⏸️ 드래그 중이므로 상태 변경 무시:', localState);
-      }
-      return;
-    }
-
-    const targetY = snapPositions[localState];
-    animateToPosition(targetY);
-  }, [localState, snapPositions, isExplicitlyClosed, animateToPosition]);
 
   // translateY 초기화
   useEffect(() => {
-    const initialY = snapPositions[localState];
-    setTranslateY(initialY);
-    currentY.current = initialY;
-  }, [snapPositions, localState]);
-
-  // 🚨 드래그 취소 공통 로직
-  const cancelDragAndRestore = useCallback(
-    (reason: string, debugInfo?: Record<string, unknown>) => {
-      if (import.meta.env.MODE === 'development') {
-        console.log(`🚨 드래그 취소: ${reason}`, debugInfo);
-      }
-
-      // 강제 드래그 중단
-      isDragging.current = false;
-
-      // 전역 이벤트 리스너 즉시 정리
-      if (cleanupGlobalListeners.current) {
-        cleanupGlobalListeners.current();
-      }
-
-      // 애니메이션 프레임 취소
-      if (animationFrame.current) {
-        cancelAnimationFrame(animationFrame.current);
-        animationFrame.current = null;
-      }
-
-      // 즉시 원래 위치로 복원 (애니메이션 포함)
-      const originalPosition = snapPositions[localState];
-      setIsAnimating(true);
-      setTranslateY(originalPosition);
-      currentY.current = originalPosition;
-
-      // 애니메이션 완료 후 상태 리셋
-      setTimeout(() => {
-        setIsAnimating(false);
-      }, CONSTANTS.ANIMATION_DURATION);
-
-      if (import.meta.env.MODE === 'development') {
-        console.log('✅ 드래그 취소 완료 - 위치 복원:', originalPosition);
-      }
-    },
-    [snapPositions, localState]
-  );
+    setTranslateY(closedY);
+  }, [closedY]);
 
   const handleTouchMove = useCallback(
     (e: TouchEvent | MouseEvent) => {
       if (!isDragging.current) return;
 
       e.preventDefault();
+      e.stopPropagation();
+
       const event = 'touches' in e ? e.touches[0] : e;
+
+      // 🔧 수정된 계산 방식: 시작점으로부터의 실제 이동거리만 계산
       const deltaY = event.clientY - startY.current;
-      const newY = currentY.current + deltaY;
 
-      // 🔸 간소한 드래그 취소 로직
-      // collapsed 위치에서 아래로 드래그 취소 여백까지만 허용
-      const maxAllowedY = collapsedY + CONSTANTS.DRAG_CANCEL_BELOW_MARGIN;
-
-      // 취소 근처에서만 디버깅 정보 출력 (성능 고려)
-      if (import.meta.env.MODE === 'development' && newY > collapsedY + 30) {
-        console.log('📊 취소 위험 구간 진입:', {
-          newY: newY.toFixed(1),
-          maxAllowedY,
-          collapsedY,
-          '여유 공간': (maxAllowedY - newY).toFixed(1) + 'px',
-          '아래쪽 취소 여부': newY > maxAllowedY ? '🚨 취소!' : '⚠️ 주의',
-          windowHeight,
-        });
-      }
-
-      if (newY > maxAllowedY) {
-        cancelDragAndRestore('⬇️ 너무 아래로 드래그', {
-          newY: newY.toFixed(1),
-          maxAllowedY,
-          collapsedY,
-          초과량: (newY - maxAllowedY).toFixed(1) + 'px',
-          '취소 이유': `collapsed 위치에서 ${CONSTANTS.DRAG_CANCEL_BELOW_MARGIN}px 초과`,
-          '복원할 위치': snapPositions[localState],
-        });
+      // 📏 최소 이동 거리 임계값 체크
+      if (
+        !hasMovedEnough.current &&
+        Math.abs(deltaY) < CONSTANTS.MIN_DRAG_THRESHOLD
+      ) {
+        // 임계값보다 작은 움직임은 무시
         return;
       }
 
-      // 위쪽 드래그 취소 (기존보다 더 관대하게)
-      const minAllowedY = expandedY - CONSTANTS.DRAG_CANCEL_ABOVE_MARGIN; // 확장 위치에서 위로 드래그 취소 여백까지만 허용
-
-      if (newY < minAllowedY) {
-        cancelDragAndRestore('⬆️ 너무 위로 드래그', {
-          newY: newY.toFixed(1),
-          minAllowedY,
-          expandedY,
-          초과량: (minAllowedY - newY).toFixed(1) + 'px',
-          '취소 이유': '바텀시트가 화면 위로 너무 올라감',
-          '복원할 위치': snapPositions[localState],
-        });
-        return;
+      // 임계값을 넘었으면 드래그로 인정
+      if (!hasMovedEnough.current) {
+        hasMovedEnough.current = true;
+        if (import.meta.env.MODE === 'development') {
+          console.log(
+            '🎯 드래그 임계값 초과, 드래그 시작:',
+            Math.abs(deltaY).toFixed(1) + 'px'
+          );
+        }
       }
 
-      // 정상 범위 내 드래그 처리
-      const minY = expandedY;
-      const maxY = collapsedY + CONSTANTS.DRAG_BELOW_LIMIT; // 접힌 상태에서 아래쪽 드래그 허용 범위까지
+      const newY = startTranslateY.current + deltaY;
+
+      // 🔸 최소/최대값으로 제한 (취소하지 않고 클램핑)
       const clampedY = Math.max(minY, Math.min(maxY, newY));
 
-      // requestAnimationFrame으로 부드러운 드래그
-      if (animationFrame.current) {
-        cancelAnimationFrame(animationFrame.current);
+      if (import.meta.env.MODE === 'development' && Math.abs(deltaY) % 10 < 1) {
+        // 10px마다 한 번씩만 로그 출력 (성능 최적화)
+        console.log('📊 드래그 위치 계산:', {
+          델타Y: deltaY.toFixed(1),
+          시작위치: startTranslateY.current.toFixed(1),
+          계산된위치: newY.toFixed(1),
+          최종위치: clampedY.toFixed(1),
+        });
       }
 
-      animationFrame.current = requestAnimationFrame(() => {
-        setTranslateY(clampedY);
-      });
+      // 즉시 위치 업데이트
+      setTranslateY(clampedY);
     },
-    [
-      expandedY,
-      collapsedY,
-      windowHeight,
-      snapPositions,
-      localState,
-      cancelDragAndRestore,
-    ]
+    [minY, maxY]
   );
 
   const handleTouchEnd = useCallback(() => {
     if (!isDragging.current) {
-      if (import.meta.env.MODE === 'development') {
-        console.log('🚫 드래그가 이미 종료되어 handleTouchEnd 스킵');
-      }
       return;
     }
 
+    const wasDragging = hasMovedEnough.current;
     isDragging.current = false;
+    hasMovedEnough.current = false; // 다음 드래그를 위해 리셋
+
+    if (wasDragging) {
+      lastDragEndTime.current = Date.now(); // 실제 드래그가 있었을 때만 시간 기록
+    }
+
     const finalY = translateY;
 
     if (import.meta.env.MODE === 'development') {
-      console.log('📍 드래그 정상 완료, 최종 Y:', finalY.toFixed(1));
+      console.log('📍 드래그 종료, 최종 Y:', finalY.toFixed(1));
     }
 
-    // 드래그 취소된 경우 처리하지 않음 (이미 위치가 복원됨)
-    const maxAllowedY = collapsedY + CONSTANTS.DRAG_CANCEL_BELOW_MARGIN;
-    const minAllowedY = expandedY - CONSTANTS.DRAG_CANCEL_ABOVE_MARGIN;
+    // 스냅 기능이 활성화된 경우에만 스냅 적용
+    if (snapToPositions) {
+      const midPoint = (openY + closedY) / 2;
+      const shouldOpen = finalY < midPoint;
 
-    if (finalY > maxAllowedY || finalY < minAllowedY) {
+      animateToPosition(shouldOpen ? openY : closedY);
+      setIsOpen(shouldOpen);
+
       if (import.meta.env.MODE === 'development') {
-        console.log('⚠️ 비정상 위치에서 드래그 종료 - 추가 보정 없음:', {
-          finalY: finalY.toFixed(1),
-          minAllowedY,
-          maxAllowedY,
-          이유: '이미 취소 로직에서 처리됨',
-        });
+        console.log(
+          '✅ 스냅 적용 → 위치:',
+          shouldOpen ? 'open' : 'closed',
+          shouldOpen ? openY : closedY
+        );
       }
-      return;
-    }
-
-    // 스냅 위치 계산 (정상 범위 내에서만)
-    const snapThreshold = CONSTANTS.SNAP_THRESHOLD;
-    let newState: typeof localState = localState;
-
-    const expandedRange = expandedY + snapThreshold;
-    const middleRangeMin = middleY - snapThreshold;
-    const middleRangeMax = middleY + snapThreshold;
-    const collapsedRange = collapsedY - snapThreshold;
-
-    if (finalY <= expandedRange) {
-      newState = 'expanded';
-    } else if (finalY >= middleRangeMin && finalY <= middleRangeMax) {
-      newState = 'middle';
-    } else if (finalY >= collapsedRange) {
-      newState = 'collapsed';
     } else {
-      // 가장 가까운 위치로 스냅
-      const distToExpanded = Math.abs(finalY - expandedY);
-      const distToMiddle = Math.abs(finalY - middleY);
-      const distToCollapsed = Math.abs(finalY - collapsedY);
-
-      if (distToExpanded <= distToMiddle && distToExpanded <= distToCollapsed) {
-        newState = 'expanded';
-      } else if (distToMiddle <= distToCollapsed) {
-        newState = 'middle';
-      } else {
-        newState = 'collapsed';
+      // 스냅 없이 현재 위치 유지 (별도 처리 불필요)
+      if (import.meta.env.MODE === 'development') {
+        console.log('✅ 드래그 위치 유지:', finalY.toFixed(1));
       }
     }
-
-    // 상태 업데이트
-    setIsExplicitlyClosed(newState === 'collapsed');
-    setLocalState(newState);
-
-    if (import.meta.env.MODE === 'development') {
-      console.log(
-        '✅ 드래그 정상 종료 → 상태:',
-        newState,
-        '위치:',
-        snapPositions[newState]
-      );
-    }
-  }, [translateY, expandedY, middleY, collapsedY, localState, snapPositions]);
+  }, [translateY, openY, closedY, snapToPositions, animateToPosition]);
 
   // 전역 이벤트 리스너 정리 함수
   const cleanupGlobalListeners = useRef<(() => void) | null>(null);
 
+  // 전역 이벤트 처리 함수들을 상위에서 정의
+  const handleGlobalMove = useCallback(
+    (e: TouchEvent | MouseEvent) => {
+      handleTouchMove(e);
+    },
+    [handleTouchMove]
+  );
+
+  const handleGlobalEnd = useCallback(() => {
+    if (!isDragging.current) {
+      if (import.meta.env.MODE === 'development') {
+        console.log('🚫 드래그가 이미 종료되어 handleGlobalEnd 스킵');
+      }
+      return;
+    }
+
+    if (import.meta.env.MODE === 'development') {
+      console.log('🏁 전역 드래그 종료 이벤트 처리');
+    }
+
+    handleTouchEnd();
+
+    // 이벤트 리스너 정리
+    document.removeEventListener('touchmove', handleGlobalMove);
+    document.removeEventListener('touchend', handleGlobalEnd);
+    document.removeEventListener('mousemove', handleGlobalMove);
+    document.removeEventListener('mouseup', handleGlobalEnd);
+    cleanupGlobalListeners.current = null;
+  }, [handleTouchEnd, handleGlobalMove]);
+
   // 드래그 시작 시 전역 이벤트 리스너 등록
   const startDragging = useCallback(() => {
-    const handleGlobalMove = (e: TouchEvent | MouseEvent) => {
-      handleTouchMove(e);
-    };
-
-    const handleGlobalEnd = () => {
-      // 드래그가 취소로 인해 이미 종료된 경우 처리하지 않음
-      if (!isDragging.current) {
-        if (import.meta.env.MODE === 'development') {
-          console.log('🚫 드래그가 이미 취소되어 종료 처리 스킵');
-        }
-        // 이벤트 리스너만 제거
-        cleanupListeners();
-        return;
-      }
-
-      handleTouchEnd();
-      // 이벤트 리스너 제거
-      cleanupListeners();
-    };
-
-    const cleanupListeners = () => {
-      document.removeEventListener('touchmove', handleGlobalMove);
-      document.removeEventListener('touchend', handleGlobalEnd);
-      document.removeEventListener('mousemove', handleGlobalMove);
-      document.removeEventListener('mouseup', handleGlobalEnd);
-      cleanupGlobalListeners.current = null;
-    };
+    if (import.meta.env.MODE === 'development') {
+      console.log('🚀 전역 드래그 이벤트 리스너 등록');
+    }
 
     // 전역 이벤트 리스너 등록
     document.addEventListener('touchmove', handleGlobalMove, {
@@ -396,105 +289,81 @@ export const MapDragBottomSheet = forwardRef<
     document.addEventListener('mousemove', handleGlobalMove);
     document.addEventListener('mouseup', handleGlobalEnd);
 
-    // 정리 함수 저장 (취소 시 즉시 호출 가능)
-    cleanupGlobalListeners.current = cleanupListeners;
-  }, [handleTouchMove, handleTouchEnd]);
+    // 정리 함수 저장
+    cleanupGlobalListeners.current = () => {
+      document.removeEventListener('touchmove', handleGlobalMove);
+      document.removeEventListener('touchend', handleGlobalEnd);
+      document.removeEventListener('mousemove', handleGlobalMove);
+      document.removeEventListener('mouseup', handleGlobalEnd);
+      cleanupGlobalListeners.current = null;
+    };
+  }, [handleGlobalMove, handleGlobalEnd]);
 
-  // 👆 순수 JavaScript 드래그 핸들링
+  // 👆 드래그 핸들링
   const handleTouchStart = useCallback(
     (e: React.TouchEvent | React.MouseEvent) => {
+      // 이미 드래그 중이면 무시
+      if (isDragging.current) {
+        if (import.meta.env.MODE === 'development') {
+          console.log('🚫 이미 드래그 중이므로 무시');
+        }
+        return;
+      }
+
       const event = 'touches' in e ? e.touches[0] : e;
-      const target = e.target as HTMLElement;
 
-      // 클릭 가능한 요소들에서는 드래그 비활성화 (더 포괄적으로)
-      const clickableElements = ['INPUT', 'BUTTON', 'A', 'SELECT', 'TEXTAREA'];
-      if (clickableElements.includes(target.tagName)) {
-        if (import.meta.env.MODE === 'development') {
-          console.log('클릭 가능한 요소에서 드래그 차단:', target.tagName);
-        }
-        return;
-      }
-
-      // 클릭 가능한 역할을 가진 요소들도 체크
-      const interactiveRoles = ['button', 'link', 'menuitem', 'tab'];
-      const role = target.getAttribute('role');
-      if (role && interactiveRoles.includes(role)) {
-        if (import.meta.env.MODE === 'development') {
-          console.log('인터랙티브 역할 요소에서 드래그 차단:', role);
-        }
-        return;
-      }
-
-      // 클릭 가능한 부모 요소가 있는지 확인
-      let currentElement = target;
-      let depth = 0;
-      while (currentElement && depth < CONSTANTS.PARENT_ELEMENT_SEARCH_DEPTH) {
-        if (
-          clickableElements.includes(currentElement.tagName) ||
-          currentElement.onclick ||
-          currentElement.getAttribute('role') === 'button' ||
-          currentElement.classList.contains('cursor-pointer')
-        ) {
-          return;
-        }
-        currentElement = currentElement.parentElement as HTMLElement;
-        depth++;
-      }
-
-      // 스크롤 가능한 영역이나 폼 요소에서는 드래그 비활성화
-      const scrollableElement = target.closest('[data-scrollable]');
-      if (
-        scrollableElement &&
-        scrollableElement.scrollHeight > scrollableElement.clientHeight
-      ) {
-        return;
-      }
-
+      // 드래그 시작
       isDragging.current = true;
+      hasMovedEnough.current = false; // 드래그 시작 시 초기화
       startY.current = event.clientY;
-      currentY.current = translateY;
+      startTranslateY.current = translateY;
 
       if (import.meta.env.MODE === 'development') {
-        const maxAllowedY = collapsedY + CONSTANTS.DRAG_CANCEL_BELOW_MARGIN;
-        const minAllowedY = expandedY - CONSTANTS.DRAG_CANCEL_ABOVE_MARGIN;
-
-        console.log('🎯 드래그 시작 (간소한 취소 로직):', {
-          windowHeight,
-          expandedY,
-          middleY,
-          collapsedY,
-          currentY: translateY.toFixed(1),
-          maxAllowedY: `${maxAllowedY} (collapsed + ${CONSTANTS.DRAG_CANCEL_BELOW_MARGIN}px)`,
-          minAllowedY: `${minAllowedY} (expanded - ${CONSTANTS.DRAG_CANCEL_ABOVE_MARGIN}px)`,
-          '허용 범위': `${minAllowedY} ~ ${maxAllowedY}`,
-          '취소 조건': {
-            아래로: `Y > ${maxAllowedY}`,
-            위로: `Y < ${minAllowedY}`,
-          },
+        console.log('🎯 드래그 시작:', {
+          현재위치: translateY.toFixed(1),
+          최소위치: minY,
+          최대위치: maxY,
+          시작Y좌표: event.clientY,
+          이벤트타입: e.type,
+          타겟: (e.target as HTMLElement).className,
+          '드래그 가능 범위': `${minY} ~ ${maxY}`,
         });
       }
 
       // 애니메이션 비활성화
       setIsAnimating(false);
 
+      // 기본 동작 방지
+      e.preventDefault();
+      e.stopPropagation();
+
       // 전역 드래그 이벤트 리스너 등록
       startDragging();
     },
-    [translateY, startDragging, windowHeight, expandedY, middleY, collapsedY]
+    [translateY, startDragging, minY, maxY]
   );
 
   // 컴포넌트 언마운트 시 정리
   useEffect(() => {
     return () => {
-      if (animationFrame.current) {
-        cancelAnimationFrame(animationFrame.current);
+      const currentAnimationFrame = animationFrame.current;
+      const currentCleanup = cleanupGlobalListeners.current;
+
+      if (currentAnimationFrame) {
+        cancelAnimationFrame(currentAnimationFrame);
+      }
+      if (currentCleanup) {
+        currentCleanup();
       }
     };
   }, []);
 
+  // 바텀시트가 닫힌 위치 근처에 있는지 확인
+  const isNearClosed = translateY > closedY - 50;
+
   return (
     <div className="flex-1 pointer-events-none">
-      {/* 📦 바텀시트 전체 컨테이너 - 포인터 이벤트는 내부에서만 활성화 */}
+      {/* 📦 바텀시트 전체 컨테이너 */}
       <div
         ref={sheetRef}
         style={{
@@ -503,24 +372,57 @@ export const MapDragBottomSheet = forwardRef<
           transition: isAnimating
             ? `transform ${CONSTANTS.ANIMATION_DURATION}ms cubic-bezier(0.4, 0, 0.2, 1)`
             : 'none',
+          // 네비게이션 위에 표시되도록 z-index 조정
+          zIndex: 40,
         }}
-        className="absolute top-0 left-0 right-0 z-40 bg-white rounded-t-2xl border border-light-gray flex flex-col pointer-events-auto shadow-lg"
-        onTouchStart={handleTouchStart}
-        onMouseDown={handleTouchStart}
+        className="absolute top-0 left-0 right-0 bg-white rounded-t-2xl border border-light-gray flex flex-col pointer-events-auto shadow-lg"
       >
         {/* 🔘 드래그 핸들 - 사용자 상호작용 유도 */}
-        <div className="flex-shrink-0 py-4 px-4 cursor-grab active:cursor-grabbing touch-none select-none">
+        <div
+          className="flex-shrink-0 py-4 px-4 cursor-grab active:cursor-grabbing touch-none select-none"
+          onTouchStart={handleTouchStart}
+          onMouseDown={handleTouchStart}
+          onClick={() => {
+            // 최근 실제 드래그 종료 후 150ms 이내면 클릭 무시 (드래그 vs 클릭 구분)
+            const timeSinceLastDrag = Date.now() - lastDragEndTime.current;
+            if (timeSinceLastDrag < 150) {
+              if (import.meta.env.MODE === 'development') {
+                console.log(
+                  '🚫 최근 드래그 종료로 인한 클릭 무시 (',
+                  timeSinceLastDrag,
+                  'ms)'
+                );
+              }
+              return;
+            }
+
+            // 핸들바 클릭 시 토글
+            if (isOpen) {
+              setIsOpen(false);
+              animateToPosition(closedY);
+            } else {
+              setIsOpen(true);
+              animateToPosition(openY);
+            }
+
+            if (import.meta.env.MODE === 'development') {
+              console.log('👆 핸들 클릭으로 토글:', isOpen ? 'close' : 'open');
+            }
+          }}
+        >
           <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto" />
         </div>
 
-        {/* 🏷️ 제목 영역 - 클릭시 확장 가능 */}
+        {/* 🏷️ 제목 영역 */}
         {title && (
           <div
             className="flex-shrink-0 px-4 pb-2 cursor-grab active:cursor-grabbing touch-none select-none"
-            onClick={() => {
-              if (!isExplicitlyClosed) {
-                setLocalState('expanded');
-              }
+            onTouchStart={handleTouchStart}
+            onMouseDown={handleTouchStart}
+            style={{
+              // 거의 닫힌 상태에서 제목 숨기기
+              opacity: isNearClosed ? 0 : 1,
+              transition: 'opacity 200ms ease-in-out',
             }}
           >
             <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
@@ -533,6 +435,9 @@ export const MapDragBottomSheet = forwardRef<
           className="flex-1 overflow-y-auto scrollbar-hidden pb-safe"
           style={{
             overscrollBehavior: 'contain',
+            // 거의 닫힌 상태에서 콘텐츠 숨기기
+            opacity: isNearClosed ? 0 : 1,
+            transition: 'opacity 200ms ease-in-out',
           }}
         >
           {children}

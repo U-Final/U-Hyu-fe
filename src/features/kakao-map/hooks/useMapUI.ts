@@ -91,8 +91,6 @@ export const useMapUI = () => {
     setSearchFocused: actions.setSearchFocused,
     clearSearch: actions.clearSearch,
     setBottomSheetStep: actions.setBottomSheetStep,
-    setBottomSheetExpanded: actions.setBottomSheetExpanded,
-    toggleBottomSheet: actions.toggleBottomSheet,
     setSelectedCategory: actions.setSelectedCategory,
     setSelectedBrand: actions.setSelectedBrand,
     setRegionFilter: actions.setRegionFilter,

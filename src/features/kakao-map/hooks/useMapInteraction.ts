@@ -1,15 +1,12 @@
 import { useCallback } from 'react';
+
+import type { Store } from '../types/store';
 import { useMapData } from './useMapData';
 import { useMapUI } from './useMapUI';
-import type { Store } from '../types/store';
 
 export const useMapInteraction = () => {
   const { selectStore, setMapCenter } = useMapData();
-  const { 
-    setSelectedMarker, 
-    selectedMarkerId, 
-    setBottomSheetExpanded,
-  } = useMapUI();
+  const { setSelectedMarker, selectedMarkerId } = useMapUI();
 
   // 매장 선택 시 UI 상태 업데이트 및 지도 중심점 이동
   const handleStoreSelect = useCallback(
@@ -36,7 +33,7 @@ export const useMapInteraction = () => {
       if (import.meta.env.MODE === 'development') {
         console.log('지도 마커 클릭:', store.storeName);
       }
-      
+
       // 매장 선택만 수행 (바텀시트 제어는 외부에서 ref로 처리)
       handleStoreSelect(store);
     },
@@ -49,11 +46,11 @@ export const useMapInteraction = () => {
       if (import.meta.env.MODE === 'development') {
         console.log('바텀시트 매장 클릭:', store.storeName);
       }
-      
-      setBottomSheetExpanded(false);
+
+      // setBottomSheetExpanded(false);
       handleStoreSelect(store);
     },
-    [handleStoreSelect, setBottomSheetExpanded]
+    [handleStoreSelect]
   );
 
   return {

@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { useMapUI } from '../hooks/useMapUI';
 import { useMapUIContext } from '../context/MapUIContext';
+import { useMapUI } from '../hooks/useMapUI';
 import MapTopControls from './layout/MapTopControls';
 
 /**
@@ -19,7 +19,7 @@ export const MapControlsContainer: React.FC = () => {
     setCategoryFilter,
     activeCategoryFilter,
   } = useMapUI();
-  
+
   // 바텀시트 REF 가져오기
   const { bottomSheetRef } = useMapUIContext();
 
@@ -52,10 +52,10 @@ export const MapControlsContainer: React.FC = () => {
     if (import.meta.env.MODE === 'development') {
       console.log('매장 목록 버튼 클릭 - 바텀시트 열기');
     }
-    
+
     // REF를 통해 바텀시트 중간 위치로 열기
     if (bottomSheetRef && bottomSheetRef.current) {
-      bottomSheetRef.current.openMiddle();
+      bottomSheetRef.current.open();
     }
   };
 

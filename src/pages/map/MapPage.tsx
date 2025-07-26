@@ -1,6 +1,9 @@
+import { useRef } from 'react';
+
 import { BottomSheetContainer } from '@kakao-map/components/BottomSheetContainer';
 import { MapContainer } from '@kakao-map/components/MapContainer';
 import { MapControlsContainer } from '@kakao-map/components/MapControlsContainer';
+import type { MapDragBottomSheetRef } from '@kakao-map/components/MapDragBottomSheet';
 import { LocationControlContainer } from '@kakao-map/components/location/LocationControlContainer';
 import { MapUIProvider } from '@kakao-map/context/MapUIContext';
 import useKakaoLoader from '@kakao-map/hooks/useKakaoLoader';
@@ -15,17 +18,18 @@ import useKakaoLoader from '@kakao-map/hooks/useKakaoLoader';
  */
 function MapPage() {
   useKakaoLoader();
+  const bottomSheetRef = useRef<MapDragBottomSheetRef>(null); // 바텀시트 제어용 ref
 
   return (
     <MapUIProvider>
       <div className="h-screen relative">
         <div className="absolute inset-0">
-          <MapContainer />
-          <MapControlsContainer />
+          <MapContainer bottomSheetRef={bottomSheetRef} />
+          <MapControlsContainer bottomSheetRef={bottomSheetRef} />
           <LocationControlContainer />
         </div>
-        
-        <BottomSheetContainer />
+
+        <BottomSheetContainer ref={bottomSheetRef} />
       </div>
     </MapUIProvider>
   );

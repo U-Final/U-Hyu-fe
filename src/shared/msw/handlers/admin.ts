@@ -1,15 +1,15 @@
-import { ADMIN_ENDPOINTS } from '@/features/admin/api/endpoints';
+import { ADMIN_ENDPOINTS } from '@admin/api/endpoints';
 import {
-    mockAdminBrands,
-    mockAdminCategories,
-    mockBookmarkStats,
-    mockFilteringStats,
-    mockMembershipStats,
-    mockRecommendStats,
-    mockSearchStats,
-    mockTotalStats,
-} from '@/features/admin/api/mockData';
-import type { AdminBrand } from '@/features/admin/api/types';
+  mockAdminBrands,
+  mockAdminCategories,
+  mockBookmarkStats,
+  mockFilteringStats,
+  mockMembershipStats,
+  mockRecommendStats,
+  mockSearchStats,
+  mockTotalStats,
+} from '@admin/api/mockData';
+import type { AdminBrand } from '@admin/types';
 import { http, HttpResponse } from 'msw';
 
 const createResponse = <T>(data: T, message: string) =>

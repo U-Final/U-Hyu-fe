@@ -28,6 +28,7 @@
       "@benefit/*": ["./src/features/benefit/*"],
       "@mypage/*": ["./src/features/mypage/*"],
       "@mymap/*": ["./src/features/mymap/*"],
+      "@admin/*": ["./src/features/admin/*"],
       "@paths": ["./src/routes/path.ts"],
       "@/*": ["./src/*"],
     },

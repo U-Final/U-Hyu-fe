@@ -23,6 +23,7 @@ export default defineConfig({
       '@user': path.resolve(__dirname, 'src/features/user'),
       '@mypage': path.resolve(__dirname, 'src/features/mypage'),
       '@mymap': path.resolve(__dirname, 'src/features/mymap'),
+      '@admin': path.resolve(__dirname, 'src/features/admin'),
       '@kakao-map': path.resolve(__dirname, 'src/features/kakao-map'),
       '@recommendation': path.resolve(__dirname, 'src/features/recommendation'),
       '@barcode': path.resolve(__dirname, 'src/features/barcode'),

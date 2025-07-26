@@ -22,6 +22,7 @@ export interface RecommendStat {
   categoryId: number;
   categoryName: string;
   count: number;
+  details?: BrandStatDetail[];
 }
 
 export interface Category {
@@ -47,3 +48,32 @@ export interface BrandBenefit {
   description: string;
   benefitType: 'DISCOUNT' | 'GIFT';
 }
+
+export interface BookmarkChartProps {
+  stats: CategoryStat[] | null;
+  selectedCategoryId?: number | null;
+  categories: Category[];
+}
+
+export interface FilteringChartProps {
+  stats: CategoryStat[] | null;
+  categories: Category[];
+}
+
+export interface SearchChartProps {
+  stats: CategoryStat[] | null;
+  selectedCategoryId?: number | null;
+  categories: Category[];
+}
+
+export interface MembershipChartProps {
+  stats: CategoryStat[] | null;
+  selectedCategoryId?: number | null;
+  categories: Category[];
+}
+
+export interface RecommendChartProps {
+  stats: RecommendStat[] | null;
+  selectedCategoryId?: number | null;
+  categories: Category[];
+} 

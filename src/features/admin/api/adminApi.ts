@@ -1,17 +1,15 @@
-import type { CategoryStat, AdminBrand } from './types';
-
-// 실제 API 연동 시 axios/fetch로 구현, 여기서는 fetch 예시
+import type { CategoryStat, AdminBrand } from '../types';
 
 export async function getAdminCategories(): Promise<CategoryStat[]> {
   const res = await fetch('/admin/categories');
   const json = await res.json();
-  return json.result;
+  return json.data;
 }
 
 export async function getAdminBrands(): Promise<AdminBrand[]> {
   const res = await fetch('/admin/brand/list');
   const json = await res.json();
-  return json.result;
+  return json.data;
 }
 
 export async function postAdminBrand(data: Omit<AdminBrand, 'brandId'>): Promise<AdminBrand> {
@@ -21,7 +19,7 @@ export async function postAdminBrand(data: Omit<AdminBrand, 'brandId'>): Promise
     body: JSON.stringify(data),
   });
   const json = await res.json();
-  return json.result;
+  return json.data;
 }
 
 export async function putAdminBrand(brandId: number, data: Partial<AdminBrand>): Promise<AdminBrand> {
@@ -31,11 +29,11 @@ export async function putAdminBrand(brandId: number, data: Partial<AdminBrand>):
     body: JSON.stringify(data),
   });
   const json = await res.json();
-  return json.result;
+  return json.data;
 }
 
 export async function deleteAdminBrand(brandId: number): Promise<{ brandId: number }> {
   const res = await fetch(`/admin/brands/${brandId}`, { method: 'DELETE' });
   const json = await res.json();
-  return json.result;
+  return json.data;
 } 

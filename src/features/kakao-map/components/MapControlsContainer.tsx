@@ -16,7 +16,6 @@ export const MapControlsContainer: React.FC = () => {
     setRegionFilter,
     setCategoryFilter,
     activeCategoryFilter,
-    openMiddle,
   } = useMapUI();
 
   // 검색 실행 처리 (엔터키 입력 시)

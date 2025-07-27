@@ -1,9 +1,10 @@
 import { type FC, useCallback, useEffect, useRef, useState } from 'react';
 
+import { useSharedMapStore } from '@mymap/store/SharedMapStore';
 import { CustomOverlayMap, Map as KakaoMap } from 'react-kakao-maps-sdk';
 
-import { useToggleFavoriteMutation } from '../../hooks/useMapQueries';
 import { useDistanceBasedSearch } from '../../hooks/useManualSearch';
+import { useToggleFavoriteMutation } from '../../hooks/useMapQueries';
 import type { Store } from '../../types/store';
 import ResponsiveManualSearchButton from '../ManualSearchButton';
 import BrandMarker from './BrandMarker';
@@ -23,7 +24,6 @@ interface MapWithMarkersProps {
   selectedStoreId?: number | null;
 }
 
-
 const MapWithMarkers: FC<MapWithMarkersProps> = ({
   center,
   stores,
@@ -35,7 +35,9 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   isSearching = false,
   selectedStoreId: externalSelectedStoreId,
 }) => {
-  const [internalSelectedStoreId, setInternalSelectedStoreId] = useState<number | null>(null);
+  const [internalSelectedStoreId, setInternalSelectedStoreId] = useState<
+    number | null
+  >(null);
   const selectedStoreId = externalSelectedStoreId ?? internalSelectedStoreId;
   const [infoWindowStore, setInfoWindowStore] = useState<Store | null>(null);
   const [mapCenter, setMapCenter] = useState(center);
@@ -43,13 +45,20 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   const mapRef = useRef<kakao.maps.Map | null>(null);
   const pantoTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // 내부 상태 정의(mymap)
+  const sharedStores = useSharedMapStore(state => state.stores);
+  const isShared = useSharedMapStore(state => !!state.uuid);
+
+  // 마커에 사용할 store 배열 결정(mymap)
+  const storesToRender = isShared ? sharedStores : stores;
+
   // 거리 기반 재검색 상태 관리
   const {
     showButton,
     distanceFromLastSearch,
     handleMapMove,
     handleSearch,
-    updateSearchPosition
+    updateSearchPosition,
   } = useDistanceBasedSearch();
 
   // center prop 동기화 및 검색 기준 위치 설정
@@ -65,10 +74,12 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   // 외부에서 selectedStoreId가 변경될 때 인포윈도우 표시
   useEffect(() => {
     if (externalSelectedStoreId && stores.length > 0) {
-      const selectedStore = stores.find(store => store.storeId === externalSelectedStoreId);
+      const selectedStore = stores.find(
+        store => store.storeId === externalSelectedStoreId
+      );
       if (selectedStore) {
         setInfoWindowStore(selectedStore);
-        
+
         // 지도 중심을 해당 매장으로 이동
         const offset = 0.0017;
         const targetLat = selectedStore.latitude + offset;
@@ -92,7 +103,6 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
     }
   }, [externalSelectedStoreId, stores]);
 
-
   // 컴포넌트 언마운트 시 setTimeout cleanup
   useEffect(() => {
     return () => {
@@ -102,35 +112,37 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
     };
   }, []);
 
+  const handleMarkerClick = useCallback(
+    (store: Store) => {
+      setInternalSelectedStoreId(store.storeId);
+      setInfoWindowStore(store);
 
-  const handleMarkerClick = useCallback((store: Store) => {
-    setInternalSelectedStoreId(store.storeId);
-    setInfoWindowStore(store);
+      // 인포 윈도우가 화면 중앙에 오도록 오프셋 적용
+      const offset = 0.0017;
+      const targetLat = store.latitude + offset;
+      const targetLng = store.longitude;
+      const targetCenter = { lat: targetLat, lng: targetLng };
 
-    // 인포 윈도우가 화면 중앙에 오도록 오프셋 적용
-    const offset = 0.0017;
-    const targetLat = store.latitude + offset;
-    const targetLng = store.longitude;
-    const targetCenter = { lat: targetLat, lng: targetLng };
+      // KakaoMap의 isPanto를 사용한 부드러운 이동
+      setIsPanto(true);
+      setMapCenter(targetCenter);
 
-    // KakaoMap의 isPanto를 사용한 부드러운 이동
-    setIsPanto(true);
-    setMapCenter(targetCenter);
+      // 기존 timeout이 있다면 정리
+      if (pantoTimeoutRef.current) {
+        clearTimeout(pantoTimeoutRef.current);
+      }
 
-    // 기존 timeout이 있다면 정리
-    if (pantoTimeoutRef.current) {
-      clearTimeout(pantoTimeoutRef.current);
-    }
+      // 애니메이션 완료 후 isPanto 리셋
+      pantoTimeoutRef.current = setTimeout(() => {
+        setIsPanto(false);
+        pantoTimeoutRef.current = null;
+      }, 500); // 애니메이션 시간을 500ms로 증가
 
-    // 애니메이션 완료 후 isPanto 리셋
-    pantoTimeoutRef.current = setTimeout(() => {
-      setIsPanto(false);
-      pantoTimeoutRef.current = null;
-    }, 500); // 애니메이션 시간을 500ms로 증가
-
-    // 외부에서 전달받은 onStoreClick 콜백도 호출
-    onStoreClick?.(store);
-  }, [onStoreClick]);
+      // 외부에서 전달받은 onStoreClick 콜백도 호출
+      onStoreClick?.(store);
+    },
+    [onStoreClick]
+  );
 
   const handleInfoWindowClose = useCallback(() => {
     setInternalSelectedStoreId(null);
@@ -160,7 +172,6 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
     [infoWindowStore, toggleFavoriteMutation]
   );
 
-
   const handleDragEnd = useCallback(
     (map: kakao.maps.Map) => {
       const newCenter = map.getCenter();
@@ -175,7 +186,9 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
       handleMapMove(currentPosition);
 
       if (import.meta.env.MODE === 'development') {
-        console.log(`지도 이동: ${currentPosition.lat}, ${currentPosition.lng}`);
+        console.log(
+          `지도 이동: ${currentPosition.lat}, ${currentPosition.lng}`
+        );
       }
     },
     [handleMapMove]
@@ -198,7 +211,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
     // 검색 상태 업데이트 (버튼 숨김 및 새로운 기준점 설정)
     handleSearch();
     updateSearchPosition(currentPosition);
-    
+
     // API 요청 실행
     onCenterChange(currentPosition);
 
@@ -229,49 +242,49 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
           mapRef.current = map;
         }}
       >
-      {/* 매장 마커들 */}
-      {stores.map(store => (
-        <CustomOverlayMap
-          key={store.storeId}
-          position={{ lat: store.latitude, lng: store.longitude }}
-          yAnchor={1}
-          xAnchor={0.5}
-        >
-          <BrandMarker
-            store={store}
-            isSelected={selectedStoreId === store.storeId}
-            hasPromotion={store.benefit !== undefined}
-            onClick={() => handleMarkerClick(store)}
+        {/* 매장 마커들 */}
+        {storesToRender.map(store => (
+          <CustomOverlayMap
+            key={store.storeId}
+            position={{ lat: store.latitude, lng: store.longitude }}
+            yAnchor={1}
+            xAnchor={0.5}
+          >
+            <BrandMarker
+              store={store}
+              isSelected={selectedStoreId === store.storeId}
+              hasPromotion={store.benefit !== undefined}
+              onClick={() => handleMarkerClick(store)}
+            />
+          </CustomOverlayMap>
+        ))}
+
+        {/* 스토어 상세 정보 인포윈도우 */}
+        {infoWindowStore && (
+          <StoreInfoWindow
+            storeId={infoWindowStore.storeId}
+            position={{
+              lat: infoWindowStore.latitude,
+              lng: infoWindowStore.longitude,
+            }}
+            handleToggleFavorite={handleToggleFavorite}
           />
-        </CustomOverlayMap>
-      ))}
+        )}
 
-      {/* 스토어 상세 정보 인포윈도우 */}
-      {infoWindowStore && (
-        <StoreInfoWindow
-          storeId={infoWindowStore.storeId}
-          position={{
-            lat: infoWindowStore.latitude,
-            lng: infoWindowStore.longitude,
-          }}
-          handleToggleFavorite={handleToggleFavorite}
-        />
-      )}
-
-      {/* 사용자 위치 마커 */}
-      {currentLocation && (
-        <CustomOverlayMap
-          position={currentLocation}
-          yAnchor={0.5}
-          xAnchor={0.5}
-        >
-          <div className="relative">
-            <div className="w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg" />
-            <div className="absolute inset-0 w-12 h-12 border-2 border-blue-300 rounded-full opacity-30 animate-pulse -translate-x-4 -translate-y-4" />
-          </div>
-        </CustomOverlayMap>
-      )}
-    </KakaoMap>
+        {/* 사용자 위치 마커 */}
+        {currentLocation && (
+          <CustomOverlayMap
+            position={currentLocation}
+            yAnchor={0.5}
+            xAnchor={0.5}
+          >
+            <div className="relative">
+              <div className="w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg" />
+              <div className="absolute inset-0 w-12 h-12 border-2 border-blue-300 rounded-full opacity-30 animate-pulse -translate-x-4 -translate-y-4" />
+            </div>
+          </CustomOverlayMap>
+        )}
+      </KakaoMap>
     </>
   );
 };

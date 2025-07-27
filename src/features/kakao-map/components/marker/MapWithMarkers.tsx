@@ -73,8 +73,8 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
 
   // 외부에서 selectedStoreId가 변경될 때 인포윈도우 표시
   useEffect(() => {
-    if (externalSelectedStoreId && stores.length > 0) {
-      const selectedStore = stores.find(
+    if (externalSelectedStoreId && storesToRender.length > 0) {
+      const selectedStore = storesToRender.find(
         store => store.storeId === externalSelectedStoreId
       );
       if (selectedStore) {
@@ -101,7 +101,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         }, 500);
       }
     }
-  }, [externalSelectedStoreId, stores]);
+  }, [externalSelectedStoreId, storesToRender]);
 
   // 컴포넌트 언마운트 시 setTimeout cleanup
   useEffect(() => {

@@ -5,7 +5,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-import { useUser } from '@/shared/store/useUserStore';
+import { useUser } from '@/shared/store/userStore';
 
 export const RecommendedStoreList = () => {
   const {

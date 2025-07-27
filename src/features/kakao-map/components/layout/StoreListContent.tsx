@@ -4,7 +4,7 @@ import type { Store } from '@kakao-map/types/store';
 import { RecommendedStoreList } from '@recommendation/components/RecommendedStoreList';
 
 import { BrandCard } from '@/shared/components';
-import { useIsLoggedIn } from '@/shared/store/useUserStore';
+import { useIsLoggedIn } from '@/shared/store/userStore';
 
 interface StoreListContentProps {
   stores: Store[];

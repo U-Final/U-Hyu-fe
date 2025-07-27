@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { userApi } from '@user/api/userApi';
 
+import { userStore } from '@/shared/store/userStore';
+
 import { userKeys } from './useUserQuery';
 
 // 이메일 중복확인 훅 (Mutation)
@@ -38,19 +40,14 @@ export const useLogout = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: userApi.logout,
+    mutationFn: () => userStore.getState().logout(), // 스토어 액션 호출
     onSuccess: () => {
-      // 로그아웃 성공 시 모든 사용자 관련 캐시 무효화
       queryClient.removeQueries({ queryKey: userKeys.all });
-
-      // 로컬 스토리지 정리
-      localStorage.removeItem('accessToken');
-
-      // 로그인 페이지로 리다이렉트
-      window.location.href = '/login';
+      window.location.href = '/';
     },
     onError: (error: Error) => {
-      console.error('로그아웃 실패:', error);
+      console.error('❌ 로그아웃 실패:', error);
+      alert('로그아웃에 실패했습니다. 다시 시도해주세요.');
     },
   });
 };

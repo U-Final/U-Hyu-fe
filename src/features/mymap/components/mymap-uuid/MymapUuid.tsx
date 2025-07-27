@@ -4,6 +4,9 @@ import { MdIosShare, MdStars } from 'react-icons/md';
 import { PiTrashBold } from 'react-icons/pi';
 
 import { BrandCard } from '@/shared/components';
+import { useModalStore } from '@/shared/store';
+
+import { StoreDeleteModal } from '../StoreDeleteModal';
 
 interface MyMapUuidProps {
   uuid: string;
@@ -11,11 +14,25 @@ interface MyMapUuidProps {
 
 const MyMapUuid = ({ uuid }: MyMapUuidProps) => {
   const { data, isLoading, isError } = useMyMapUuidQuery(uuid);
-
+  const openModal = useModalStore(state => state.openModal);
   if (isLoading) return <div>로딩 중...</div>;
   if (isError || !data) return <div>데이터를 불러오지 못했습니다.</div>;
 
   const stores = data.storeList ?? [];
+
+  // 매장 삭제 모달
+  const handleDelete = (myMapListId: number, store_id: number) => {
+    openModal('base', {
+      title: '매장 삭제',
+      children: (
+        <StoreDeleteModal
+          uuid={uuid}
+          myMapListId={myMapListId}
+          store_id={store_id}
+        />
+      ),
+    });
+  };
 
   return (
     <div className="divide-y divide-gray-100 mt-4">
@@ -42,7 +59,13 @@ const MyMapUuid = ({ uuid }: MyMapUuidProps) => {
               <div className="flex-1 min-w-0 ">
                 <div className="flex flex-row items-center justify-between">
                   <div className="text-black font-bold">{store.storeName}</div>
-                  <PiTrashBold className="h-4 w-4 text-gray cursor-pointer" />
+                  <PiTrashBold
+                    className="h-4 w-4 text-gray cursor-pointer"
+                    onClick={e => {
+                      e.stopPropagation();
+                      handleDelete(data.myMapListId, store.storeId);
+                    }}
+                  />
                 </div>
 
                 <div className="text-xs text-secondary font-bold mt-1 truncate">

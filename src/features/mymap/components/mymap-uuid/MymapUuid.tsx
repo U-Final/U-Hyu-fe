@@ -6,6 +6,7 @@ import { PiTrashBold } from 'react-icons/pi';
 import { BrandCard } from '@/shared/components';
 import { useModalStore } from '@/shared/store';
 
+import { ShareModal } from '../ShareModal';
 import { StoreDeleteModal } from '../StoreDeleteModal';
 
 interface MyMapUuidProps {
@@ -34,6 +35,14 @@ const MyMapUuid = ({ uuid }: MyMapUuidProps) => {
     });
   };
 
+  // 공유 모달
+  const handleShare = (uuid: string) => {
+    openModal('base', {
+      title: 'My Map 공유',
+      children: <ShareModal uuid={uuid} />,
+    });
+  };
+
   return (
     <div className="divide-y divide-gray-100 mt-4">
       <div className="flex flex-col justify-center items-center w-full p-5 gap-3">
@@ -43,7 +52,13 @@ const MyMapUuid = ({ uuid }: MyMapUuidProps) => {
           />
           <div className="text-h4 font-bold">{data.title}</div>
         </div>
-        <button className="flex flex-row items-center text-body2 text-black font-bold bg-light-gray py-1.5 px-3 rounded-lg gap-2">
+        <button
+          className="flex flex-row items-center text-body2 text-black font-bold bg-light-gray py-1.5 px-3 rounded-lg gap-2"
+          onClick={e => {
+            e.stopPropagation();
+            handleShare(data.uuid);
+          }}
+        >
           <MdIosShare className="h-4 w-4" />
           공유
         </button>

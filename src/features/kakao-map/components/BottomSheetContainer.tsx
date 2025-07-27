@@ -4,7 +4,7 @@ import { MyMapList } from '@mymap/components/mymap-list';
 import { FaFilter } from 'react-icons/fa';
 
 import { useModalStore } from '@/shared/store';
-import { useIsLoggedIn } from '@/shared/store/useUserStore';
+import { useIsLoggedIn } from '@/shared/store/userStore';
 
 import { useMapUIContext } from '../context/MapUIContext';
 import { useBrandsByCategoryWhen } from '../hooks/useBrandsByCategory';

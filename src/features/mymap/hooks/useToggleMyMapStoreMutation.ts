@@ -5,20 +5,24 @@ import type {
 } from '@mymap/api/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-const MYMAP_STORE_LIST_QUERY_KEY = (id: number) =>
-  ['myMapStoreList', id] as const;
+import { MYMAP_QUERY_KEYS } from './useMyMapUuidQuery';
 
-export const useToggleMyMapStoreMutation = () => {
+/**
+ * My Map에 매장 추가/삭제 Mutation 훅
+ */
+export const useToggleMyMapStoreMutation = (uuid?: string) => {
   const queryClient = useQueryClient();
 
   return useMutation<MyMapToggleStoreRes, Error, MyMapToggleStoreParams>({
     mutationFn: ({ myMapListId, store_id }) =>
       postToggleMyMap(myMapListId, store_id),
 
-    onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: MYMAP_STORE_LIST_QUERY_KEY(variables.myMapListId),
-      });
+    onSuccess: () => {
+      if (uuid) {
+        queryClient.invalidateQueries({
+          queryKey: MYMAP_QUERY_KEYS.detail(uuid),
+        });
+      }
     },
 
     onError: error => {

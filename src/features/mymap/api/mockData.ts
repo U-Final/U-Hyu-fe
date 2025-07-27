@@ -1,6 +1,7 @@
 import type {
   MyMapListRes,
   MyMapToggleStoreRes,
+  MymapUuidRes,
   StoreBookmarkStatusRes,
 } from './types';
 
@@ -79,6 +80,74 @@ export const MOCK_STORE_BOOKMARK_STATUS: StoreBookmarkStatusRes = {
       markerColor: 'ORANGE',
       title: '강남 맛집 투어',
       isMyMapped: false,
+    },
+  ],
+};
+
+/**
+ * 목데이터: My Map 지도 조회 (UUID 기반)
+ */
+export const MOCK_MYMAP_DATA_BY_UUID: MymapUuidRes = {
+  markerColor: 'RED',
+  title: '선릉 혜택 지도',
+  myMapListId: 2,
+  uuid: 'd9f8a4b2-7c35-489f-b74e-7f91f1e6f4a9',
+  isMine: true,
+  storeList: [
+    {
+      storeId: 1,
+      storeName: 'CGV 동대문',
+      categoryName: '영화/미디어',
+      addressDetail: '서울특별시 중구 장충단로13길 20',
+      benefit: '2+1 행사 상품 제공',
+      logo_image: '/images/brands/CGV.png',
+      brandName: 'CGV',
+      latitude: 37.5687346,
+      longitude: 127.0076665,
+    },
+    {
+      storeId: 2,
+      storeName: '롯데시네마 강남',
+      categoryName: '영화/미디어',
+      addressDetail: '서울 강남구 강남대로 438',
+      benefit: '팝콘 무료',
+      logo_image: '/images/brands/롯데시네마.png',
+      brandName: '롯데시네마',
+      latitude: 37.5012743,
+      longitude: 127.039585,
+    },
+    {
+      storeId: 3,
+      storeName: '뚜레쥬르 종각점',
+      categoryName: '베이커리/디저트',
+      addressDetail: '서울 종로구 종로 64',
+      benefit: '아메리카노 1+1',
+      logo_image: '/images/brands/뚜레쥬르.png',
+      brandName: '뚜레쥬르',
+      latitude: 37.570377,
+      longitude: 126.983079,
+    },
+    {
+      storeId: 4,
+      storeName: '배스킨라빈스 신촌점',
+      categoryName: '베이커리/디저트',
+      addressDetail: '서울 서대문구 연세로 12',
+      benefit: '레귤러 1+1 혜택',
+      logo_image: '/images/brands/베스킨라빈스.png',
+      brandName: '배스킨라빈스',
+      latitude: 37.556057,
+      longitude: 126.938426,
+    },
+    {
+      storeId: 5,
+      storeName: '교촌치킨 굽네치킨',
+      categoryName: '음식점',
+      addressDetail: '서울 마포구 홍익로5안길 24',
+      benefit: '사이다 무료',
+      logo_image: '/images/brands/굽네치킨.png',
+      brandName: '교촌치킨',
+      latitude: 37.556332,
+      longitude: 126.924806,
     },
   ],
 };

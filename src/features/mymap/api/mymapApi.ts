@@ -12,6 +12,7 @@ import type {
   MyMapStoreAddRes,
   MyMapToggleStoreParams,
   MyMapToggleStoreRes,
+  MymapUuidRes,
   StoreBookmarkStatusParams,
   StoreBookmarkStatusRes,
 } from './types';
@@ -19,7 +20,7 @@ import type {
 // My Map 목록 조회 api
 export const getMyMapList = async (): Promise<MyMapListRes[]> => {
   const res = await client.get<ApiResponse<MyMapListRes[]>>(
-    MYMAP_ENDPOINTS.MYMAP.ROOT
+    MYMAP_ENDPOINTS.MYMAP.LIST
   );
 
   if (!res.data.data) {
@@ -98,5 +99,17 @@ export const getStoreBookmarkStatus = async (
     throw new Error('북마크 상태 조회 실패');
   }
 
+  return res.data.data;
+};
+
+// My Map 상세 조회 API (UUID 기반)
+export const getMyMapUuid = async (uuid: string): Promise<MymapUuidRes> => {
+  const res = await client.get<ApiResponse<MymapUuidRes>>(
+    MYMAP_ENDPOINTS.MYMAP.VIEW(uuid)
+  );
+
+  if (!res.data.data) {
+    throw new Error('My Map 상세 데이터를 불러올 수 없습니다');
+  }
   return res.data.data;
 };

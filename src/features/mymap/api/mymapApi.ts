@@ -20,7 +20,7 @@ import type {
 // My Map 목록 조회 api
 export const getMyMapList = async (): Promise<MyMapListRes[]> => {
   const res = await client.get<ApiResponse<MyMapListRes[]>>(
-    MYMAP_ENDPOINTS.MYMAP.ROOT
+    MYMAP_ENDPOINTS.MYMAP.LIST
   );
 
   if (!res.data.data) {

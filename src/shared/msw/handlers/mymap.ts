@@ -16,7 +16,7 @@ const MOCK_MYMAP_STORE: Record<number, Set<number>> = {};
 
 export const mymapHandlers = [
   // My Map 목록 조회 MSW 핸들러
-  http.get(MYMAP_ENDPOINTS.MYMAP.ROOT, () => {
+  http.get(MYMAP_ENDPOINTS.MYMAP.LIST, () => {
     const shouldFail = false;
 
     if (shouldFail) {

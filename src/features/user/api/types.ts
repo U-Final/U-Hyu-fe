@@ -43,7 +43,7 @@ export interface UserInfo {
   status: UserStatus;
   favoriteBrands: number[];
   markerId: number;
-  markers: string[];
+  markers: number[];
 }
 
 export interface UpdateUserInfoRequest {

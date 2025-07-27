@@ -1,11 +1,11 @@
-import { useRef } from 'react';
+import { useEffect } from 'react';
 
 import { BottomSheetContainer } from '@kakao-map/components/BottomSheetContainer';
 import { MapContainer } from '@kakao-map/components/MapContainer';
 import { MapControlsContainer } from '@kakao-map/components/MapControlsContainer';
-import type { MapDragBottomSheetRef } from '@kakao-map/components/MapDragBottomSheet';
 import { LocationControlContainer } from '@kakao-map/components/location/LocationControlContainer';
 import { MapUIProvider } from '@kakao-map/context/MapUIContext';
+import { useMapUIContext } from '@kakao-map/context/MapUIContext';
 import useKakaoLoader from '@kakao-map/hooks/useKakaoLoader';
 
 /**
@@ -16,21 +16,44 @@ import useKakaoLoader from '@kakao-map/hooks/useKakaoLoader';
  *
  * @returns 지도와 관련된 UI가 포함된 React 요소
  */
+// MapUIProvider 내부 컴포넌트
+const MapContent = () => {
+  const { bottomSheetRef } = useMapUIContext();
+
+  // 바텀시트 초기화
+  useEffect(() => {
+    if (bottomSheetRef.current) {
+      // 페이지 로드 시 바텀시트 초기화 및 중간 상태로 열기
+      bottomSheetRef.current.initialize();
+
+      // 약간의 지연 후 중간 상태로 열기
+      setTimeout(() => {
+        if (bottomSheetRef.current) {
+          bottomSheetRef.current.open();
+        }
+      }, 300);
+    }
+  }, [bottomSheetRef]);
+
+  return (
+    <div className="h-screen relative">
+      <div className="absolute inset-0">
+        <MapContainer />
+        <MapControlsContainer />
+        <LocationControlContainer />
+      </div>
+
+      <BottomSheetContainer ref={bottomSheetRef} />
+    </div>
+  );
+};
+
 function MapPage() {
   useKakaoLoader();
-  const bottomSheetRef = useRef<MapDragBottomSheetRef>(null); // 바텀시트 제어용 ref
 
   return (
     <MapUIProvider>
-      <div className="h-screen relative">
-        <div className="absolute inset-0">
-          <MapContainer bottomSheetRef={bottomSheetRef} />
-          <MapControlsContainer bottomSheetRef={bottomSheetRef} />
-          <LocationControlContainer />
-        </div>
-
-        <BottomSheetContainer ref={bottomSheetRef} />
-      </div>
+      <MapContent />
     </MapUIProvider>
   );
 }

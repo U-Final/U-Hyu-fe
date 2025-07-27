@@ -46,6 +46,12 @@ const AddStore: FC<AddStoreProps> = ({ storeId }) => {
     }));
   };
 
+  // 즐겨찾기 토글 (현재는 표시만 하고 있어서 기능 추가 필요)
+  const handleBookmarkToggle = (checked: boolean) => {
+    // TODO: 즐겨찾기 토글 API 호출 구현 필요
+    console.log('즐겨찾기 토글:', checked);
+  };
+
   // 지도 생성 모달
   const handleCreate = () => {
     openModal('base', {
@@ -83,7 +89,10 @@ const AddStore: FC<AddStoreProps> = ({ storeId }) => {
           <MdStars className="w-5 h-5 text-primary mr-2" />
           <span className="text-body2 font-semibold">즐겨찾기</span>
         </div>
-        <PrimaryCheckbox checked={data.isBookmarked} />
+        <PrimaryCheckbox 
+          checked={data.isBookmarked} 
+          onCheckedChange={handleBookmarkToggle}
+        />
       </div>
 
       {/* MyMap 리스트 */}
@@ -93,8 +102,7 @@ const AddStore: FC<AddStoreProps> = ({ storeId }) => {
         return (
           <div
             key={map.myMapListId}
-            className="flex items-center justify-between py-3 cursor-pointer rounded hover:bg-light-gray-hover"
-            onClick={() => handleCheckToggle(map.myMapListId, !isChecked)} 
+            className="flex items-center justify-between py-3 rounded hover:bg-light-gray-hover"
           >
             <div className="flex flex-9 items-center">
               <MdStars
@@ -104,7 +112,10 @@ const AddStore: FC<AddStoreProps> = ({ storeId }) => {
               />
               <span className="ml-2 text-body2 font-semibold">{map.title}</span>
             </div>
-            <PrimaryCheckbox checked={isChecked} />
+            <PrimaryCheckbox 
+              checked={isChecked} 
+              onCheckedChange={(checked) => handleCheckToggle(map.myMapListId, checked as boolean)}
+            />
           </div>
         );
       })}

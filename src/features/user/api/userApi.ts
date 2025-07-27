@@ -53,4 +53,19 @@ export const userApi = {
       message: res.data.message,
     };
   },
+
+  updateUserInfo: async (data: {
+    nickname: string;
+    age: number;
+    email: string;
+  }): Promise<{ statusCode: number; message: string }> => {
+    const res = await client.patch<ApiResponse>(
+      USER_ENDPOINTS.USER.ROOT, // ← /api/user 같은 기본 URL
+      data
+    );
+    return {
+      statusCode: res.data.statusCode,
+      message: res.data.message,
+    };
+  },
 };

@@ -5,9 +5,13 @@ import { userKeys } from './useUserQuery';
 
 // 이메일 중복확인 훅 (Mutation)
 export const useCheckEmailMutation = () => {
-  return useMutation({
+  return useMutation<
+    { statusCode: number; message: string },
+    Error,
+    { email: string }
+  >({
     mutationFn: userApi.checkEmail,
-    onError: (error: Error) => {
+    onError: error => {
       console.error('이메일 중복확인 실패:', error);
     },
   });

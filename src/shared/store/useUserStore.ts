@@ -82,7 +82,7 @@ export const useUserStore = create<UserState>()(
           isLoading: get().isLoading,
         });
 
-        if (get().isInitialized && get().user) return;
+        if (get().isLoading || (get().isInitialized && get().user)) return;
         set({ isLoading: true });
 
         try {

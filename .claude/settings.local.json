@@ -4,7 +4,10 @@
       "Bash(npm run build:*)",
       "Bash(yarn build)",
       "WebFetch(domain:react-kakao-maps-sdk.jaeseokim.dev)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(npx tsc:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(npm install:*)"
     ],
     "deny": []
   }

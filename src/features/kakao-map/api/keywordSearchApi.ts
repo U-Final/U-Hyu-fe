@@ -81,6 +81,50 @@ export const normalizeKakaoPlace = (place: KakaoPlace): NormalizedPlace => {
 
 
 /**
+ * 카카오 API 키 유효성 검증
+ */
+const validateKakaoApiKey = (apiKey: string): boolean => {
+  // 카카오 REST API 키는 32자리 16진수 문자열
+  const kakaoApiKeyPattern = /^[a-f0-9]{32}$/i;
+  return kakaoApiKeyPattern.test(apiKey);
+};
+
+/**
+ * 카카오 API 인증 헤더 생성
+ */
+const createKakaoAuthHeaders = (): HeadersInit => {
+  const KAKAO_REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
+  
+  if (!KAKAO_REST_API_KEY) {
+    throw new Error(
+      '카카오 REST API 키가 설정되지 않았습니다. ' +
+      '.env 파일에 VITE_KAKAO_REST_API_KEY 환경변수를 설정해주세요.\n' +
+      '예시: VITE_KAKAO_REST_API_KEY=53a3872100096cdf985756a17ffb1634'
+    );
+  }
+
+  if (!validateKakaoApiKey(KAKAO_REST_API_KEY)) {
+    throw new Error(
+      '카카오 REST API 키 형식이 올바르지 않습니다. ' +
+      '32자리 16진수 문자열이어야 합니다.\n' +
+      '카카오 개발자센터(https://developers.kakao.com)에서 올바른 REST API 키를 확인해주세요.'
+    );
+  }
+
+  if (import.meta.env.MODE === 'development') {
+    console.log('🔐 카카오 API 키 검증 완료:', {
+      keyLength: KAKAO_REST_API_KEY.length,
+      keyPattern: '****' + KAKAO_REST_API_KEY.slice(-4), // 마지막 4자리만 표시
+    });
+  }
+
+  return {
+    'Authorization': `KakaoAK ${KAKAO_REST_API_KEY}`,
+    'Content-Type': 'application/json',
+  };
+};
+
+/**
  * 카카오 키워드 검색 API 호출 (실제 REST API 사용)
  */
 export const searchKeyword = async (
@@ -91,12 +135,6 @@ export const searchKeyword = async (
   meta: KakaoKeywordSearchResponse['meta'];
   pagination: KakaoPagination | null;
 }> => {
-  const KAKAO_REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
-  
-  if (!KAKAO_REST_API_KEY) {
-    throw new Error('카카오 REST API 키가 설정되지 않았습니다.');
-  }
-
   if (!keyword.trim()) {
     throw new Error('검색 키워드가 필요합니다.');
   }
@@ -136,14 +174,21 @@ export const searchKeyword = async (
   const url = `https://dapi.kakao.com/v2/local/search/keyword.json?${params.toString()}`;
 
   try {
+    // 카카오 API 전용 인증 헤더 사용
+    const headers = createKakaoAuthHeaders();
+    
     const response = await fetch(url, {
-      headers: {
-        Authorization: `KakaoAK ${KAKAO_REST_API_KEY}`,
-      },
+      method: 'GET',
+      headers,
     });
 
     if (!response.ok) {
-      throw new Error(`카카오 API 요청 실패: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      throw new Error(
+        `카카오 API 요청 실패: ${response.status} ${response.statusText}${
+          errorText ? ` - ${errorText}` : ''
+        }`
+      );
     }
 
     const data: KakaoKeywordSearchResponse = await response.json();
@@ -162,12 +207,29 @@ export const searchKeyword = async (
       prevPage: () => {},
     } : null;
 
+    if (import.meta.env.MODE === 'development') {
+      console.log('🔍 카카오 키워드 검색 API 호출 성공:', {
+        keyword: keyword.trim(),
+        resultCount: data.documents.length,
+        totalCount: data.meta.total_count,
+        url: url.split('?')[0], // 쿼리 파라미터 제외한 기본 URL만 로깅
+      });
+    }
+
     return {
       places: normalizedPlaces,
       meta: data.meta,
       pagination,
     };
   } catch (error) {
+    if (import.meta.env.MODE === 'development') {
+      console.error('🔍 카카오 키워드 검색 API 호출 실패:', {
+        keyword: keyword.trim(),
+        error: error instanceof Error ? error.message : String(error),
+        url: url.split('?')[0],
+      });
+    }
+
     if (error instanceof Error) {
       throw error;
     }
@@ -224,4 +286,34 @@ export const searchKeywordByCategory = (
     sort: center ? 'DISTANCE' : 'ACCURACY',
     size: 15,
   });
+};
+
+/**
+ * 카카오 API 키 설정 상태 확인
+ * 개발 도구나 디버깅용으로 사용
+ */
+export const checkKakaoApiKeyStatus = (): {
+  isConfigured: boolean;
+  isValid: boolean;
+  message: string;
+} => {
+  const KAKAO_REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
+  
+  if (!KAKAO_REST_API_KEY) {
+    return {
+      isConfigured: false,
+      isValid: false,
+      message: 'VITE_KAKAO_REST_API_KEY 환경변수가 설정되지 않았습니다.',
+    };
+  }
+
+  const isValid = validateKakaoApiKey(KAKAO_REST_API_KEY);
+  
+  return {
+    isConfigured: true,
+    isValid,
+    message: isValid 
+      ? '카카오 API 키가 올바르게 설정되었습니다.'
+      : '카카오 API 키 형식이 올바르지 않습니다. (32자리 16진수 문자열이어야 함)',
+  };
 };

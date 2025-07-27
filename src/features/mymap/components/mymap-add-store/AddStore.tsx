@@ -62,6 +62,7 @@ const AddStore: FC<AddStoreProps> = ({ storeId }) => {
   const handleBookmarkToggle = (checked: boolean) => {
     setIsBookmarked(checked);
   };
+  
   // 지도 생성 모달
   const handleCreate = () => {
     openModal('base', {
@@ -100,7 +101,10 @@ const AddStore: FC<AddStoreProps> = ({ storeId }) => {
       <AddMyMapButton onCreateNewMap={handleCreate} />
 
       {/* 즐겨찾기 */}
-      <div className="flex items-center justify-between py-3">
+      <div
+        className="flex items-center justify-between py-3"
+        onClick={() => handleBookmarkToggle(!isBookmarked)}
+      >
         <div className="flex flex-row">
           <MdStars className="w-5 h-5 text-primary mr-2" />
           <span className="text-body2 font-semibold">즐겨찾기</span>
@@ -108,6 +112,7 @@ const AddStore: FC<AddStoreProps> = ({ storeId }) => {
         <PrimaryCheckbox
           checked={isBookmarked}
           onCheckedChange={handleBookmarkToggle}
+          onClick={e => e.stopPropagation()}
         />
       </div>
 
@@ -119,6 +124,7 @@ const AddStore: FC<AddStoreProps> = ({ storeId }) => {
           <div
             key={map.myMapListId}
             className="flex items-center justify-between py-3 rounded"
+            onClick={() => handleCheckToggle(map.myMapListId, !isChecked)}
           >
             <div className="flex flex-9 items-center">
               <MdStars
@@ -133,6 +139,7 @@ const AddStore: FC<AddStoreProps> = ({ storeId }) => {
               onCheckedChange={checked =>
                 handleCheckToggle(map.myMapListId, checked as boolean)
               }
+              onClick={e => e.stopPropagation()}
             />
           </div>
         );

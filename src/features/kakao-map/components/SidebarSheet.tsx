@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react';
-
-import { USER_ENDPOINTS } from '@user/index';
+import { LoginButton } from '@user/components/LoginButton';
+import { LogoutButton } from '@user/components/LogoutButton';
 import { Menu } from 'lucide-react';
 
-import { client } from '@/shared/client';
 import {
   Sheet,
   SheetContent,
@@ -11,34 +9,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/shared/components/shadcn/ui/sheet';
-
-interface UserInfo {
-  userName: string;
-  email: string;
-  profileImage?: string;
-}
+import { useIsLoggedIn } from '@/shared/store/userStore';
 
 const SidebarSheet = () => {
-  const [user, setUser] = useState<UserInfo | null>(null);
-
-  // 페이지 로드될 때 유저 정보 요청
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const response = await client.get(USER_ENDPOINTS.USER, {});
-        setUser(response.data.data); // 응답 구조에 맞게 조정 필요
-      } catch (error) {
-        console.warn('로그인 안 된 상태 또는 에러 발생:', error);
-      }
-    };
-
-    fetchUserInfo();
-  }, []);
-
-  const handleLogin = () => {
-    window.location.href = import.meta.env.VITE_KAKAO_LOGIN_URL;
-  };
-
+  const isLoggedIn = useIsLoggedIn();
   return (
     <Sheet modal={false}>
       <SheetTrigger asChild>
@@ -55,18 +29,7 @@ const SidebarSheet = () => {
         </SheetHeader>
 
         <div className="px-8 mt-4">
-          {user ? (
-            <p className="text-base font-semibold">
-              안녕하세요, {user.userName}님!
-            </p>
-          ) : (
-            <button
-              onClick={handleLogin}
-              className="w-full bg-yellow-400 hover:bg-yellow-500 text-white py-2 rounded-xl font-bold"
-            >
-              카카오 로그인
-            </button>
-          )}
+          <div>{isLoggedIn ? <LogoutButton /> : <LoginButton />}</div>
         </div>
       </SheetContent>
     </Sheet>

@@ -26,15 +26,3 @@ export interface UserExtraInfoRequest {
 export interface CheckEmailRequest {
   email: string;
 }
-
-export interface UpdateUserInfoRequest {
-  nickname: string;
-  age: number;
-  email: string;
-}
-
-export interface UpdateUserInfoResponse {
-  code: number;
-  status: number;
-  message: string;
-}

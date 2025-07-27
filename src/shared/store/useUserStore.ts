@@ -82,7 +82,7 @@ export const useUserStore = create<UserState>()(
           isLoading: get().isLoading,
         });
 
-        if (get().isInitialized || get().isLoading) return;
+        if (get().isLoading || (get().isInitialized && get().user)) return;
         set({ isLoading: true });
 
         try {
@@ -131,6 +131,7 @@ export const useUserStore = create<UserState>()(
     {
       name: 'user-store',
       partialize: state => ({
+        user: state.user,
         isInitialized: state.isInitialized,
         lastAuthCheck: state.lastAuthCheck,
       }),

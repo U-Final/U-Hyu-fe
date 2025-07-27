@@ -43,7 +43,7 @@ export interface UserInfo {
   status: UserStatus;
   favoriteBrands: number[];
   markerId: number;
-  markers: string[];
+  markers: number[];
 }
 
 export interface UpdateUserInfoRequest {
@@ -69,4 +69,17 @@ export interface GetUserInfoResponse {
 export interface LogoutResponse {
   code: string;
   message: string;
+}
+
+// userInfo 새롭게 타입 작성. 기존 타입 추후 삭제 예정
+export interface UserInfomation {
+  profileImage: string;
+  userName: string;
+  nickName: string | null;
+  email: string;
+  age: number | null;
+  gender: UserGender | null;
+  grade: UserGrade | null;
+  markerId: number | null;
+  updatedAt: string;
 }

@@ -1,19 +1,14 @@
 import React from 'react';
+
+import { useMapUIContext } from '../context/MapUIContext';
 import { useMapUI } from '../hooks/useMapUI';
 import MapTopControls from './layout/MapTopControls';
-import type { MapDragBottomSheetRef } from './MapDragBottomSheet';
-
-interface MapControlsContainerProps {
-  bottomSheetRef?: React.RefObject<MapDragBottomSheetRef | null>;
-}
 
 /**
  * 지도 상단 컨트롤 컨테이너 컴포넌트
  * 검색, 필터 등 지도 상단의 모든 UI 컨트롤을 관리
  */
-export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
-  bottomSheetRef,
-}) => {
+export const MapControlsContainer: React.FC = () => {
   // UI 상태와 액션들 가져오기
   const {
     searchValue,
@@ -24,6 +19,9 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
     setCategoryFilter,
     activeCategoryFilter,
   } = useMapUI();
+
+  // 바텀시트 REF 가져오기
+  const { bottomSheetRef } = useMapUIContext();
 
   // 검색 실행 처리 (엔터키 입력 시)
   const handleSearch = (value: string) => {
@@ -51,11 +49,13 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
 
   // 매장 목록 보기 버튼 클릭 시 바텀시트 열기
   const handleShowStoreList = () => {
-    if (bottomSheetRef?.current) {
-      if (import.meta.env.MODE === 'development') {
-        console.log('매장 목록 버튼 클릭 - 바텀시트 열기');
-      }
-      bottomSheetRef.current.openMiddle();
+    if (import.meta.env.MODE === 'development') {
+      console.log('매장 목록 버튼 클릭 - 바텀시트 열기');
+    }
+
+    // REF를 통해 바텀시트 중간 위치로 열기
+    if (bottomSheetRef && bottomSheetRef.current) {
+      bottomSheetRef.current.open();
     }
   };
 

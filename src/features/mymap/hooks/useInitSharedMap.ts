@@ -17,14 +17,14 @@ export const useInitSharedMap = (uuid?: string) => {
     const fetchSharedMap = async () => {
       try {
         const data = await getMyMapUuid(uuid);
-        const sharedMapData = {
-          ...data,
-          stores: data.storeList.map(store => ({
-            ...store,
-            benefit: store.benefit ?? '',
-          })),
-        };
-        setSharedMap(sharedMapData);
+        setSharedMap({
+          uuid: data.uuid,
+          isMine: data.isMine,
+          myMapListId: data.myMapListId,
+          markerColor: data.markerColor,
+          stores: data.storeList,
+          title: data.title,
+        });
       } catch (error) {
         console.error('공유 지도 불러오기 실패:', error);
         clearSharedMap();

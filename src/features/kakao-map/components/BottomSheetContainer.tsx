@@ -316,7 +316,11 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
 
     return (
       <MapDragBottomSheet ref={ref}>
-        {isShared ? <MyMapUuid uuid={uuid} /> : getCurrentStepContent()}
+        {isShared ? (
+          <MyMapUuid uuid={uuid} onStoreClick={handleStoreClick} />
+        ) : (
+          getCurrentStepContent()
+        )}
       </MapDragBottomSheet>
     );
   }

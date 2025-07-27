@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 
+import type { Store } from '@mymap/api/types';
 import { MYMAP_COLOR, type MarkerColor } from '@mymap/constants/mymapColor';
 import { useMyMapUuidQuery } from '@mymap/hooks/useMyMapUuidQuery';
 import { useSharedMapStore } from '@mymap/store/SharedMapStore';
@@ -14,9 +15,10 @@ import { StoreDeleteModal } from '../StoreDeleteModal';
 
 interface MyMapUuidProps {
   uuid: string;
+  onStoreClick?: (store: Store) => void;
 }
 
-const MyMapUuid = ({ uuid }: MyMapUuidProps) => {
+const MyMapUuid = ({ uuid, onStoreClick }: MyMapUuidProps) => {
   const { data, isLoading, isError } = useMyMapUuidQuery(uuid);
   const openModal = useModalStore(state => state.openModal);
   const { stores, title, markerColor, isMine, setSharedMap } =
@@ -80,6 +82,9 @@ const MyMapUuid = ({ uuid }: MyMapUuidProps) => {
           <div
             key={store.storeId}
             className=" hover:bg-gray-50 transition-colors cursor-pointer"
+            onClick={() => {
+              onStoreClick?.(store);
+            }}
           >
             <BrandCard logoUrl={store.logo_image}>
               <div className="flex-1 min-w-0 ">

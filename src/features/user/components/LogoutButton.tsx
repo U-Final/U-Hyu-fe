@@ -1,26 +1,15 @@
-import { useNavigate } from 'react-router-dom';
-
-import { userStore } from '@/shared/store/userStore';
+import { useLogout } from '@user/hooks/useUserMutation';
 
 export const LogoutButton = () => {
-  const logout = userStore(state => state.logout);
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    try {
-      await logout(); // 백엔드 + 상태 초기화
-      navigate('/'); // 홈으로 이동 (또는 로그인 페이지)
-    } catch (e) {
-      console.error('로그아웃 실패', e);
-    }
-  };
+  const { mutate: logout, isPending } = useLogout();
 
   return (
     <button
-      onClick={handleLogout}
+      onClick={() => logout()}
+      disabled={isPending}
       className="bg-gray-200 hover:bg-gray-300 text-black py-2 px-4 rounded-xl font-semibold"
     >
-      로그아웃
+      {isPending ? '로그아웃 중...' : '로그아웃'}
     </button>
   );
 };

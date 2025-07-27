@@ -74,15 +74,16 @@ const MyMapUuid = ({ uuid }: MyMapUuidProps) => {
               <div className="flex-1 min-w-0 ">
                 <div className="flex flex-row items-center justify-between">
                   <div className="text-black font-bold">{store.storeName}</div>
-                  <PiTrashBold
-                    className="h-4 w-4 text-gray cursor-pointer"
-                    onClick={e => {
-                      e.stopPropagation();
-                      handleDelete(data.myMapListId, store.storeId);
-                    }}
-                  />
+                  {data.isMine && (
+                    <PiTrashBold
+                      className="h-4 w-4 text-gray cursor-pointer"
+                      onClick={e => {
+                        e.stopPropagation();
+                        handleDelete(data.myMapListId, store.storeId);
+                      }}
+                    />
+                  )}
                 </div>
-
                 <div className="text-xs text-secondary font-bold mt-1 truncate">
                   {store.addressDetail}
                 </div>

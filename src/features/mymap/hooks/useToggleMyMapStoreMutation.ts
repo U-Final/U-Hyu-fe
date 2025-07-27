@@ -10,7 +10,7 @@ import { MYMAP_QUERY_KEYS } from './useMyMapUuidQuery';
 /**
  * My Map에 매장 추가/삭제 Mutation 훅
  */
-export const useToggleMyMapStoreMutation = (uuid: string) => {
+export const useToggleMyMapStoreMutation = (uuid?: string) => {
   const queryClient = useQueryClient();
 
   return useMutation<MyMapToggleStoreRes, Error, MyMapToggleStoreParams>({
@@ -18,9 +18,11 @@ export const useToggleMyMapStoreMutation = (uuid: string) => {
       postToggleMyMap(myMapListId, store_id),
 
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: MYMAP_QUERY_KEYS.detail(uuid),
-      });
+      if (uuid) {
+        queryClient.invalidateQueries({
+          queryKey: MYMAP_QUERY_KEYS.detail(uuid),
+        });
+      }
     },
 
     onError: error => {

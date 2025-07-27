@@ -3,12 +3,8 @@ import type { ApiResponse } from '@/shared/client/client.type';
 
 import { USER_ENDPOINTS } from './endpoints';
 import type {
-  CheckEmailResponse,
-  LogoutResponse,
-  UpdateUserInfoRequest,
-  UpdateUserInfoResponse,
+  CheckEmailRequest,
   UserExtraInfoRequest,
-  UserExtraInfoResponse,
   UserInfomation,
 } from './types';
 
@@ -16,45 +12,60 @@ export const userApi = {
   // 사용자 추가 정보 입력
   submitExtraInfo: async (
     data: UserExtraInfoRequest
-  ): Promise<UserExtraInfoResponse> => {
-    const response = await client.post<UserExtraInfoResponse>(
-      USER_ENDPOINTS.EXTRA_INFO,
+  ): Promise<{ statusCode: number; message: string }> => {
+    const res = await client.post<ApiResponse>(
+      USER_ENDPOINTS.USER.EXTRA_INFO,
       data
     );
-    return response.data;
+    return {
+      statusCode: res.data.statusCode,
+      message: res.data.message,
+    };
   },
 
   // 이메일 중복 확인
-  checkEmail: async (email: string): Promise<CheckEmailResponse> => {
-    const response = await client.post<CheckEmailResponse>(
-      USER_ENDPOINTS.CHECK_EMAIL,
+  checkEmail: async ({
+    email,
+  }: CheckEmailRequest): Promise<{ statusCode: number; message: string }> => {
+    const res = await client.post<ApiResponse>(
+      USER_ENDPOINTS.USER.CHECK_EMAIL,
       { email }
     );
-    return response.data;
+    return {
+      statusCode: res.data.statusCode,
+      message: res.data.message,
+    };
   },
 
   // 유저 정보 조회
   getUserInfo: async (): Promise<UserInfomation> => {
-    const response = await client.get<ApiResponse<UserInfomation>>(
-      USER_ENDPOINTS.USER
+    const res = await client.get<ApiResponse<UserInfomation>>(
+      USER_ENDPOINTS.USER.ROOT
     );
-    return response.data.data;
-  },
-
-  // 유저 정보 수정 - 마이페이지
-  updateUserInfo: async (
-    data: UpdateUserInfoRequest
-  ): Promise<UpdateUserInfoResponse> => {
-    const response = await client.patch<UpdateUserInfoResponse>(
-      USER_ENDPOINTS.UPDATE_USER_INFO,
-      data
-    );
-    return response.data;
+    return res.data.data!;
   },
 
   // 로그아웃
-  logout: async (): Promise<LogoutResponse> => {
-    const response = await client.post<LogoutResponse>(USER_ENDPOINTS.LOGOUT);
-    return response.data;
+  logout: async (): Promise<{ statusCode: number; message: string }> => {
+    const res = await client.post<ApiResponse>(USER_ENDPOINTS.LOGOUT);
+    return {
+      statusCode: res.data.statusCode,
+      message: res.data.message,
+    };
+  },
+
+  updateUserInfo: async (data: {
+    nickname: string;
+    age: number;
+    email: string;
+  }): Promise<{ statusCode: number; message: string }> => {
+    const res = await client.patch<ApiResponse>(
+      USER_ENDPOINTS.USER.ROOT, // ← /api/user 같은 기본 URL
+      data
+    );
+    return {
+      statusCode: res.data.statusCode,
+      message: res.data.message,
+    };
   },
 };

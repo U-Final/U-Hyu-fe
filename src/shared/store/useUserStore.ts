@@ -77,6 +77,10 @@ export const useUserStore = create<UserState>()(
       // 앱 초기화 시 인증 상태 확인
       initializeAuth: async () => {
         console.log('🔄 initializeAuth 시작됨');
+        console.log('상태: ', {
+          isInitialized: get().isInitialized,
+          isLoading: get().isLoading,
+        });
 
         if (get().isInitialized || get().isLoading) return;
         set({ isLoading: true });

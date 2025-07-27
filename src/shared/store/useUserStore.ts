@@ -47,11 +47,8 @@ export const useUserStore = create<UserState>()(
               age: 25,
               gender: 'FEMALE',
               grade: 'VIP',
-              role: 'USER',
-              status: 'ACTIVE',
-              favoriteBrands: [1, 2, 3, 4, 5],
               markerId: 1,
-              markers: [1, 2, 3],
+              updatedAt: new Date().toISOString(),
             }
           : null,
       isLoading: false,

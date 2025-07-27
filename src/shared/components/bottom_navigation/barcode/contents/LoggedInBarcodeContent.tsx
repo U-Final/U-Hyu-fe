@@ -10,6 +10,7 @@ import { IconButton, PrimaryButton } from '@/shared/components';
 import { BarcodeCropModal } from '@/shared/components/bottom_navigation/barcode/BarcodeCropModal';
 import { CroppedImg } from '@/shared/components/bottom_navigation/barcode/CroppedImg';
 import { useImageCropStore, useModalStore } from '@/shared/store';
+import { isApiError } from '@/shared/utils/isApiError';
 
 export const LoggedInBarcodeContent = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -66,7 +67,12 @@ export const LoggedInBarcodeContent = () => {
   }, []);
 
   if (isLoading) return <p>불러오는 중...</p>;
-  if (error) return <p>{error.message}</p>;
+
+  if (error && isApiError(error)) {
+    if (error.statusCode !== 4103) {
+      return <p>{error.message}</p>;
+    }
+  }
 
   return (
     <div className="flex flex-col w-full gap-4">

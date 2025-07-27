@@ -1,6 +1,14 @@
 import { useEffect, useState } from 'react';
 
-import { AdminPage, BenefitPage, ExtraInfo, HomePage, MapPage, MyPage, MyPageActivity } from '@/pages';
+import {
+  AdminPage,
+  BenefitPage,
+  ExtraInfo,
+  HomePage,
+  MapPage,
+  MyPage,
+  MyPageActivity,
+} from '@/pages';
 import SidebarSheet from '@kakao-map/components/SidebarSheet';
 import { PATH } from '@paths';
 import {
@@ -10,7 +18,6 @@ import {
   Routes,
   useLocation,
 } from 'react-router-dom';
-
 
 import { BaseLayout, BottomNavigation, ModalRoot } from '@/shared/components';
 
@@ -42,7 +49,7 @@ const Layout = () => {
     pathname as (typeof visibleBottomNavRoutes)[number]
   );
 
-  const isMap = pathname === PATH.MAP;
+  const isMap = pathname.startsWith(PATH.MAP);
 
   // 모바일에서는 프레임 없이 직접 렌더링
   const content = (
@@ -84,6 +91,7 @@ export const AppRoutes = () => {
           <Route path={PATH.EXTRA_INFO} element={<ExtraInfo />} />
           <Route path={PATH.LOGIN} element={<div>loginPage</div>} />
           <Route path={PATH.MAP} element={<MapPage />} />
+          <Route path="/map/:uuid" element={<MapPage />} />
           <Route path={PATH.ADMIN} element={<AdminPage />} />
         </Route>
       </Routes>

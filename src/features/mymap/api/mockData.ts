@@ -88,10 +88,10 @@ export const MOCK_STORE_BOOKMARK_STATUS: StoreBookmarkStatusRes = {
  * 목데이터: My Map 지도 조회 (UUID 기반)
  */
 export const MOCK_MYMAP_DATA_BY_UUID: MymapUuidRes = {
-  markerColor: 'RED',
-  title: '선릉 혜택 지도',
+  markerColor: 'PURPLE',
+  title: 'test1',
   myMapListId: 2,
-  uuid: 'd9f8a4b2-7c35-489f-b74e-7f91f1e6f4a9',
+  uuid: '9f5c2377-e67c-4c2e-b948-daeecb4ec63f',
   isMine: true,
   storeList: [
     {

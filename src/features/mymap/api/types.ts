@@ -118,7 +118,7 @@ export type Store = {
   storeName: string;
   categoryName: string;
   addressDetail: string;
-  benefit: string | null;
+  benefit: string;
   logo_image: string;
   brandName: string;
   latitude: number;

@@ -1,23 +1,21 @@
 import { useToggleMyMapStoreMutation } from '@mymap/hooks/useToggleMyMapStoreMutation';
+import { useSharedMapStore } from '@mymap/store/SharedMapStore';
 
 import { BaseModal, PrimaryButton } from '@/shared/components';
 import { useModalStore } from '@/shared/store';
 
 interface StoreDeleteModalProps {
-  myMapListId: number;
   store_id: number;
   uuid: string;
 }
 
-export const StoreDeleteModal = ({
-  myMapListId,
-  store_id,
-  uuid,
-}: StoreDeleteModalProps & { uuid: string }) => {
+export const StoreDeleteModal = ({ store_id, uuid }: StoreDeleteModalProps) => {
+  const { myMapListId } = useSharedMapStore();
   const toggleMutation = useToggleMyMapStoreMutation(uuid);
   const closeModal = useModalStore(state => state.closeModal);
 
   const handleConfirm = () => {
+    if (!myMapListId) return;
     toggleMutation.mutate(
       { myMapListId, store_id },
       {

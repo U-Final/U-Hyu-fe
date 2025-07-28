@@ -7,9 +7,7 @@ import SidebarSheet from '@kakao-map/components/SidebarSheet';
 import { PATH } from '@paths';
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 
-
-
-import { BaseLayout, BottomNavigation, ModalRoot } from '@/shared/components';
+import { AdminRoute, BaseLayout, BottomNavigation, ModalRoot, UserRoute } from '@/shared/components';
 
 
 
@@ -75,13 +73,13 @@ export const AppRoutes = () => {
         <Route element={<Layout />}>
           <Route path={PATH.HOME} element={<HomePage />} />
           <Route path={PATH.BENEFIT} element={<BenefitPage />} />
-          <Route path={PATH.MYPAGE} element={<MyPage />} />
-          <Route path={PATH.MYPAGE_ACTIVITY} element={<MyPageActivity />} />
-          <Route path={PATH.EXTRA_INFO} element={<ExtraInfo />} />
+          <Route path={PATH.MYPAGE} element={<UserRoute><MyPage /></UserRoute>} />
+          <Route path={PATH.MYPAGE_ACTIVITY} element={<UserRoute><MyPageActivity /></UserRoute>} />
+          <Route path={PATH.EXTRA_INFO} element={<UserRoute><ExtraInfo /></UserRoute>} />
           <Route path={PATH.LOGIN} element={<div>loginPage</div>} />
           <Route path={PATH.MAP} element={<MapPage />} />
           <Route path="/map/:uuid" element={<MapPage />} />
-          <Route path={PATH.ADMIN} element={<AdminPage />} />
+          <Route path={PATH.ADMIN} element={<AdminRoute><AdminPage /></AdminRoute>} />
         </Route>
       </Routes>
       <ModalRoot />

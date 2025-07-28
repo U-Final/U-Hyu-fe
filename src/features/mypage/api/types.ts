@@ -1,7 +1,7 @@
 export type UserRole = 'USER' | 'ADMIN';
 export type UserStatus = 'ACTIVE' | 'DELETED';
-export type UserGrade = 'VVIP' | 'VIP' | 'GOOD' | null;
-export type Gender = 'MALE' | 'FEMALE' | null;
+export type UserGrade = 'GOOD' | 'VIP' | 'VVIP';
+export type Gender = 'MALE' | 'FEMALE';
 
 export interface Marker {
   id: number;
@@ -10,17 +10,16 @@ export interface Marker {
   markerImage: string;
 }
 
-// 실제 API 응답 데이터 구조 (유저 조회)
+// Postman API 응답과 완전히 일치하는 데이터 구조
 export interface UserInfoData {
   profileImage: string;
   userName: string;
   nickName: string | null;
   email: string;
   age: number | null;
-  gender: Gender;
-  grade: UserGrade;
-  markerId: number | null; // 곧 제거될 예정
-  brandIdList?: number[]; // 곧 추가될 예정
+  gender: Gender | null;
+  grade: UserGrade | null;
+  brandIdList?: number[];
   updatedAt: string;
 }
 

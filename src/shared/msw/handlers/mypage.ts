@@ -43,20 +43,24 @@ export const mypageHandlers = [
       );
     }
 
-    // mockUserInfoData 업데이트
+    // mockUserInfoData 복사본 생성 및 업데이트
+    const updatedData = { ...mockUserInfoData };
     if (body.updatedNickName) {
-      mockUserInfoData.nickName = body.updatedNickName;
+      updatedData.nickName = body.updatedNickName;
       console.log('✅ 닉네임 업데이트:', body.updatedNickName);
     }
     if (body.updatedGrade) {
-      mockUserInfoData.grade = body.updatedGrade;
+      updatedData.grade = body.updatedGrade;
       console.log('✅ 등급 업데이트:', body.updatedGrade);
     }
     if (body.updatedBrandIdList) {
-      mockUserInfoData.brandIdList = body.updatedBrandIdList;
+      updatedData.brandIdList = body.updatedBrandIdList;
       console.log('✅ 브랜드 업데이트:', body.updatedBrandIdList);
     }
-    mockUserInfoData.updatedAt = new Date().toISOString();
+    updatedData.updatedAt = new Date().toISOString();
+    
+    // 전역 mock 데이터 업데이트
+    Object.assign(mockUserInfoData, updatedData);
     
     console.log('🔧 업데이트 후 mockUserInfoData:', mockUserInfoData);
     

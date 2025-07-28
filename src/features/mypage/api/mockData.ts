@@ -9,8 +9,7 @@ export const mockUserInfoData: UserInfoData = {
   age: 27,
   gender: "MALE",
   grade: "VVIP",
-  markerId: null, // 곧 제거될 예정
-  brandIdList: [1, 2, 3], // 곧 추가될 예정
+  brandIdList: [1, 2, 3],
   updatedAt: "2025-07-28T02:25:39.470165"
 };
 
@@ -19,7 +18,7 @@ export const mockUpdateUserResponse: UpdateUserResponseData = {
   userId: 9
 };
 
-// API 응답 형태의 목업 데이터 (benefit 구조와 동일)
+// API 응답 형태의 목업 데이터
 export const mockUserInfoResponse = {
   statusCode: 0,
   message: "정상 처리 되었습니다.",

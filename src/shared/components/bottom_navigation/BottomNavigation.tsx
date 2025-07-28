@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { PATH } from '@paths';
 import { X } from 'lucide-react';
 import { FaMap } from 'react-icons/fa';
+import { FaMapMarkerAlt } from 'react-icons/fa';
 import { FaUser } from 'react-icons/fa6';
 import { HiGift } from 'react-icons/hi';
 import { LiaBarcodeSolid } from 'react-icons/lia';
-import { MdHomeFilled } from 'react-icons/md';
 import { NavLink, useLocation } from 'react-router-dom';
 
 import BarcodeItem from '@/shared/components/bottom_navigation/BarcodeItem';
@@ -24,6 +24,7 @@ const BottomNavigation = () => {
   const getActiveTab = (pathname: string) => {
     if (pathname === PATH.HOME) return '홈';
     if (pathname.startsWith(PATH.MAP)) return '지도';
+    if (pathname === PATH.MYMAP) return '마이맵';
     if (pathname === PATH.BENEFIT) return '혜택';
     if (pathname === PATH.MYPAGE || pathname === PATH.MYPAGE_ACTIVITY)
       return '마이페이지';
@@ -46,25 +47,43 @@ const BottomNavigation = () => {
     }
   };
 
+  const handleMyMapClick = (e?: React.MouseEvent) => {
+    if (!isLoggedIn) {
+      e?.preventDefault();
+      checkAuthAndExecuteModal(() => {});
+    }
+  };
+
   return (
     <div className="absolute bottom-0 left-0 right-0 z-1001">
       <nav className="h-12 text-[0.625rem] shadow-nav flex relative justify-around bg-white gap-5 px-[1.5rem] py-[0.5rem]">
-        <NavLink to={PATH.HOME} className="flex gap-4">
-          <NavItem
-            label="홈"
-            icon={<MdHomeFilled />}
-            isActive={activeTab === '홈'}
-            onClick={() => {}}
-          />
-        </NavLink>
         <NavLink to={PATH.MAP} className="flex gap-4">
           <NavItem
             label="지도"
-            icon={<FaMap />}
+            icon={<FaMapMarkerAlt />}
             isActive={activeTab === '지도'}
             onClick={() => {}}
           />
         </NavLink>
+        {isLoggedIn ? (
+          <NavLink to={PATH.MYMAP} className="flex gap-4">
+            <NavItem
+              label="마이맵"
+              icon={<FaMap />}
+              isActive={activeTab === '마이맵'}
+              onClick={() => {}}
+            />
+          </NavLink>
+        ) : (
+          <div className="flex gap-4">
+            <NavItem
+              label="마이맵"
+              icon={<FaMap />}
+              isActive={activeTab === '마이맵'}
+              onClick={handleMyMapClick}
+            />
+          </div>
+        )}
         <span />
         <BarcodeItem
           label={isOpen ? '닫기' : '바코드'}

@@ -19,7 +19,13 @@ import {
   useLocation,
 } from 'react-router-dom';
 
-import { AdminRoute, BaseLayout, BottomNavigation, ModalRoot, UserRoute } from '@/shared/components';
+import {
+  AdminRoute,
+  BaseLayout,
+  BottomNavigation,
+  ModalRoot,
+  UserRoute,
+} from '@/shared/components';
 
 const Layout = () => {
   const { pathname } = useLocation();
@@ -106,18 +112,24 @@ export const AppRoutes = () => {
               </UserRoute>
             }
           />
-          <Route path={PATH.LOGIN} element={<div>loginPage</div>} />
           <Route path={PATH.MAP} element={<MapPage />} />
           <Route path="/map/:uuid" element={<MapPage />} />
-          <Route 
-            path={PATH.ADMIN} 
+          <Route
+            path={PATH.ADMIN}
             element={
               <AdminRoute>
                 <AdminPage />
               </AdminRoute>
             }
           />
-          <Route path={PATH.MYMAP} element={<MymapPage />} />
+          <Route
+            path={PATH.MYMAP}
+            element={
+              <UserRoute>
+                <MymapPage />
+              </UserRoute>
+            }
+          />
         </Route>
       </Routes>
       <ModalRoot />

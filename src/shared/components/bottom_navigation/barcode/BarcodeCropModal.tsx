@@ -1,18 +1,22 @@
 import { useRef } from 'react';
 
+import { BARCODE_IMAGE_QUERY_KEY } from '@barcode/api/barcode.type';
 import { useBarcodeImageQuery } from '@barcode/hooks/useBarcodeImageQuery';
 import {
   usePatchBarcodeImageMutation,
   useUploadBarcodeMutation,
 } from '@barcode/hooks/useUploadBarcodeMutation';
+import { useQueryClient } from '@tanstack/react-query';
 import type { CropperRef } from 'react-advanced-cropper';
 
 import { PrimaryButton } from '@/shared/components';
 import { useImageCropStore, useModalStore } from '@/shared/store';
+import { isApiError } from '@/shared/utils/isApiError';
 
 import { BarcodeCropper } from './BarcodeCropper';
 
 export function BarcodeCropModal() {
+  const queryClient = useQueryClient();
   const closeModal = useModalStore(state => state.closeModal);
   const cropperRef = useRef<CropperRef | null>(null);
   const { imageSrc, setImageSrc, setCroppedImage } = useImageCropStore();
@@ -32,6 +36,7 @@ export function BarcodeCropModal() {
       const file = new File([blob], 'barcode.jpg', { type: 'image/jpeg' });
 
       const onSuccess = (newImageUrl: string) => {
+        queryClient.invalidateQueries({ queryKey: BARCODE_IMAGE_QUERY_KEY });
         setCroppedImage(newImageUrl);
         setImageSrc(null);
         closeModal();
@@ -51,8 +56,11 @@ export function BarcodeCropModal() {
 
   if (!imageSrc) return <p>이미지를 불러오지 못했습니다.</p>;
   if (isLoading) return <p>불러오는 중...</p>;
-  if (error) return <p>{error.message}</p>;
-
+  if (error && isApiError(error)) {
+    if (error.statusCode !== 4103) {
+      return <p>{error.message}</p>;
+    }
+  }
   return (
     <section aria-label="바코드 자르기" className="space-y-4">
       <BarcodeCropper imageSrc={imageSrc} cropperRef={cropperRef} />

@@ -103,13 +103,14 @@ const MapTopControls: FC<MapTopControlsProps> = ({
 
       {/* 검색 결과 리스트 */}
       {(keywordResults.length > 0 || isSearching) && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 max-h-80 overflow-hidden z-30">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 max-h-80 z-30 backdrop-blur-sm overflow-hidden">
           <SearchResultList
             results={keywordResults}
             loading={isSearching}
             onItemClick={onSearchResultClick || (() => {})}
             selectedPlaceId={selectedPlace?.id}
             emptyMessage="검색 결과가 없습니다."
+            className="max-h-80 overflow-y-auto"
           />
         </div>
       )}

@@ -88,64 +88,70 @@ const MyMapList: React.FC = () => {
       </div>
 
       {/* map 리스트 */}
-      {data.map(map => (
-        <div
-          key={map.myMapListId}
-          className="flex items-center justify-between py-3 cursor-pointer hover:bg-light-gray-hover rounded"
-        >
-          <div
-            className="flex flex-9 items-center"
-            onClick={() => navigate(`/map/${map.uuid}`)}
-          >
-            <MdStars
-              className={`w-5 h-5 ${MYMAP_COLOR[map.markerColor as MarkerColor] || MYMAP_COLOR.RED}`}
-            />
-            <span className="ml-2 text-body2 font-semibold">{map.title}</span>
-          </div>
-          {/* 수정, 삭제, 공유 드롭다운 버튼 */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <BsThreeDotsVertical className="flex-1 w-4 h-4 cursor-pointer" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="w-36 divide-gray-200 bg-white border-none"
-            >
-              <DropdownMenuItem
-                onClick={() => {
-                  handleUpdate(map.myMapListId, map.title, map.markerColor);
-                }}
-                className="flex justify-between font-medium"
-              >
-                수정
-                <RiPencilFill className="mr-2 h-4 w-4" />
-              </DropdownMenuItem>
-              <hr />
-              <DropdownMenuItem
-                onClick={e => {
-                  e.stopPropagation();
-                  handleShare(map.uuid);
-                }}
-                className="flex justify-between font-medium"
-              >
-                공유
-                <MdIosShare className="mr-2 h-4 w-4" />
-              </DropdownMenuItem>
-              <hr />
-              <DropdownMenuItem
-                onClick={e => {
-                  e.stopPropagation();
-                  handleDelete(map.myMapListId);
-                }}
-                className="flex justify-between font-medium"
-              >
-                삭제
-                <PiTrashBold className="mr-2 h-4 w-4" />
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+      {data.length === 0 ? (
+        <div className="flex  text-sm text-gray-400 mt-4">
+          새 지도를 만들어주세요
         </div>
-      ))}
+      ) : (
+        data.map(map => (
+          <div
+            key={map.myMapListId}
+            className="flex items-center justify-between py-3 cursor-pointer hover:bg-light-gray-hover rounded"
+          >
+            <div
+              className="flex flex-9 items-center"
+              onClick={() => navigate(`/map/${map.uuid}`)}
+            >
+              <MdStars
+                className={`w-5 h-5 ${MYMAP_COLOR[map.markerColor as MarkerColor] || MYMAP_COLOR.RED}`}
+              />
+              <span className="ml-2 text-body2 font-semibold">{map.title}</span>
+            </div>
+            {/* 수정, 삭제, 공유 드롭다운 버튼 */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <BsThreeDotsVertical className="flex-1 w-4 h-4 cursor-pointer" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="w-36 divide-gray-200 bg-white border-none"
+              >
+                <DropdownMenuItem
+                  onClick={() => {
+                    handleUpdate(map.myMapListId, map.title, map.markerColor);
+                  }}
+                  className="flex justify-between font-medium"
+                >
+                  수정
+                  <RiPencilFill className="mr-2 h-4 w-4" />
+                </DropdownMenuItem>
+                <hr />
+                <DropdownMenuItem
+                  onClick={e => {
+                    e.stopPropagation();
+                    handleShare(map.uuid);
+                  }}
+                  className="flex justify-between font-medium"
+                >
+                  공유
+                  <MdIosShare className="mr-2 h-4 w-4" />
+                </DropdownMenuItem>
+                <hr />
+                <DropdownMenuItem
+                  onClick={e => {
+                    e.stopPropagation();
+                    handleDelete(map.myMapListId);
+                  }}
+                  className="flex justify-between font-medium"
+                >
+                  삭제
+                  <PiTrashBold className="mr-2 h-4 w-4" />
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        ))
+      )}
     </div>
   );
 };

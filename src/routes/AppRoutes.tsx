@@ -1,25 +1,19 @@
 import { useEffect, useState } from 'react';
 
-import {
-  AdminPage,
-  BenefitPage,
-  ExtraInfo,
-  HomePage,
-  MapPage,
-  MyPage,
-  MyPageActivity,
-} from '@/pages';
+
+
+import { AdminPage, BenefitPage, ExtraInfo, HomePage, MapPage, MyPage, MyPageActivity } from '@/pages';
 import SidebarSheet from '@kakao-map/components/SidebarSheet';
 import { PATH } from '@paths';
-import {
-  BrowserRouter,
-  Outlet,
-  Route,
-  Routes,
-  useLocation,
-} from 'react-router-dom';
+import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom';
+
+
 
 import { BaseLayout, BottomNavigation, ModalRoot } from '@/shared/components';
+
+
+
+
 
 const Layout = () => {
   const { pathname } = useLocation();
@@ -36,18 +30,13 @@ const Layout = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const visibleBottomNavRoutes = [
-    PATH.HOME,
-    PATH.BENEFIT,
-    PATH.MAP,
-    PATH.MYPAGE,
-    PATH.MYPAGE_ACTIVITY,
-    PATH.ADMIN,
-  ] as const;
-
-  const showBottomNav = visibleBottomNavRoutes.includes(
-    pathname as (typeof visibleBottomNavRoutes)[number]
-  );
+  const showBottomNav =
+    pathname === PATH.HOME ||
+    pathname === PATH.BENEFIT ||
+    pathname.startsWith(PATH.MAP) ||
+    pathname === PATH.MYPAGE ||
+    pathname === PATH.MYPAGE_ACTIVITY ||
+    pathname === PATH.ADMIN;
 
   const isMap = pathname.startsWith(PATH.MAP);
 

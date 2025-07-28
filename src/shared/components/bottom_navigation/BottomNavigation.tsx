@@ -44,13 +44,13 @@ const BottomNavigation = () => {
         <NavLink
           to={PATH.MYMAP}
           className="flex gap-4"
-          onClick={() => handleTabClick('마이앱')}
+          onClick={() => handleTabClick('마이맵')}
         >
           <NavItem
             label="마이맵"
             icon={<FaMap />}
-            isActive={activeTab === '마이앱'}
-            onClick={() => handleTabClick('마이앱')}
+            isActive={activeTab === '마이맵'}
+            onClick={() => handleTabClick('마이맵')}
           />
         </NavLink>
         <span />

@@ -1,4 +1,5 @@
 import { type UserGrade, type UserRole, userApi } from '@user/index';
+import { toast } from 'sonner';
 import { create } from 'zustand';
 
 interface SimpleUserInfo {
@@ -25,12 +26,13 @@ export const userStore = create<UserState>(set => ({
   clearUser: () => set({ user: null, isAuthChecked: true }),
   logout: async () => {
     try {
-      const res = await userApi.logout();
-      console.log('🚪 로그아웃 성공:', res.message);
       userStore.getState().clearUser();
+      const res = await userApi.logout();
+      if (import.meta.env.DEV) console.log('로그아웃 성공:', res.message);
     } catch (error) {
       console.error('❌ 로그아웃 실패:', error);
-      alert('로그아웃에 실패했습니다. 다시 시도해주세요.');
+      if (import.meta.env.DEV)
+        toast.error('로그아웃에 실패했습니다. 다시 시도해주세요.');
       throw error;
     }
   },

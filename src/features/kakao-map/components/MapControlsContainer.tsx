@@ -37,8 +37,10 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
     loading,
     error,
     hasSearched,
+    selectedPlace,
     setKeyword,
     search,
+    selectPlace,
     clearResults,
     clearError,
   } = useKeywordSearch();
@@ -164,6 +166,10 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
       onCategoryFilterChange={handleCategoryFilterChange}
       onToggleBottomSheet={handleToggleBottomSheet}
       isBottomSheetOpen={isBottomSheetOpen}
+      keywordResults={results}
+      isSearching={loading}
+      selectedPlace={selectedPlace}
+      onSearchResultClick={selectPlace}
     />
   );
 };

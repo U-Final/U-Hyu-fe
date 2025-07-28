@@ -4,7 +4,9 @@ import RegionFilterDropdown from '@kakao-map/components/layout/RegionFilterDropd
 
 import { FilterTabs } from '@/shared/components';
 
+import type { NormalizedPlace } from '../../api/types';
 import { MapSearchInput } from '../search/MapSearchInput';
+import { SearchResultList } from '../search/SearchResultList';
 import BottomSheetToggleButton from './BottomSheetToggleButton';
 
 /**
@@ -31,6 +33,14 @@ interface MapTopControlsProps {
   onToggleBottomSheet: () => void;
   /** 바텀시트 열림/닫힘 상태 */
   isBottomSheetOpen: boolean;
+  /** 키워드 검색 결과 */
+  keywordResults?: NormalizedPlace[];
+  /** 검색 로딩 상태 */
+  isSearching?: boolean;
+  /** 선택된 장소 */
+  selectedPlace?: NormalizedPlace | null;
+  /** 검색 결과 아이템 클릭 핸들러 */
+  onSearchResultClick?: (place: NormalizedPlace) => void;
 }
 
 /**
@@ -48,6 +58,10 @@ const MapTopControls: FC<MapTopControlsProps> = ({
   onCategoryFilterChange,
   onToggleBottomSheet,
   isBottomSheetOpen,
+  keywordResults = [],
+  isSearching = false,
+  selectedPlace,
+  onSearchResultClick,
 }) => {
   return (
     <div className="absolute top-4 left-4 right-4 z-10 space-y-2.5">
@@ -86,6 +100,19 @@ const MapTopControls: FC<MapTopControlsProps> = ({
       <div className="w-full">
         <FilterTabs variant="white" onChange={onCategoryFilterChange} />
       </div>
+
+      {/* 검색 결과 리스트 */}
+      {(keywordResults.length > 0 || isSearching) && (
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 max-h-80 overflow-hidden z-30">
+          <SearchResultList
+            results={keywordResults}
+            loading={isSearching}
+            onItemClick={onSearchResultClick || (() => {})}
+            selectedPlaceId={selectedPlace?.id}
+            emptyMessage="검색 결과가 없습니다."
+          />
+        </div>
+      )}
     </div>
   );
 };

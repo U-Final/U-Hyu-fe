@@ -27,7 +27,7 @@ export default function RegionFilterDropdown({
 }) {
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="w-24 h-[44px] bg-white border border-gray-200 rounded-md text-xs font-semibold shadow-lg hover:shadow-xl focus:shadow-xl transition-all duration-200">
+      <SelectTrigger className="w-24 h-[44px] bg-white border border-gray-200 rounded-md text-sm font-semibold shadow-lg hover:shadow-xl focus:shadow-xl transition-all duration-200">
         <SelectValue placeholder="지역" />
       </SelectTrigger>
       <SelectContent

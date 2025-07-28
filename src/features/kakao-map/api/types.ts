@@ -201,6 +201,7 @@ export interface NormalizedPlace {
   id: string;
   name: string;
   category: string;
+  categoryGroupCode?: string;
   address: string;
   roadAddress: string;
   phone: string;

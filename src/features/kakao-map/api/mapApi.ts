@@ -47,12 +47,12 @@ export const mapApi = {
 
   /**
    * 매장 즐겨찾기 토글
-   * POST /map/stores/123/favorite
+   * POST /map/123
    */
   toggleFavorite: async ({
     storeId,
   }: ToggleFavoriteParams): Promise<ToggleFavoriteResponseType> => {
-    const url = `${MAP_ENDPOINTS.TOGGLE_FAVORITE}/${storeId}/favorite`;
+    const url = `${MAP_ENDPOINTS.TOGGLE_FAVORITE}/${storeId}`;
     const response = await client.post<ToggleFavoriteResponseType>(url);
     return response.data;
   },
@@ -79,6 +79,8 @@ export const isValidCoordinate = (coord: unknown): coord is number => {
   return typeof coord === 'number' && !isNaN(coord) && isFinite(coord);
 };
 
-export const isValidCategoryId = (categoryId: unknown): categoryId is number => {
+export const isValidCategoryId = (
+  categoryId: unknown
+): categoryId is number => {
   return typeof categoryId === 'number' && categoryId > 0;
 };

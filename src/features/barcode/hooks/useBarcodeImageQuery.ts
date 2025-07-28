@@ -6,6 +6,6 @@ export const useBarcodeImageQuery = () => {
   return useQuery({
     queryKey: BARCODE_IMAGE_QUERY_KEY,
     queryFn: getBarcodeImage,
-    staleTime: Infinity, // 무조건 최신 데이터로 간주.
+    staleTime: 0, //업로드 후 반영
   });
 };

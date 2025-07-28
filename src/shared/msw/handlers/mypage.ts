@@ -1,19 +1,19 @@
 import { MYPAGE_ENDPOINTS } from '@/features/mypage/api/endpoints';
-import { mockUserInfo } from '@/features/mypage/api/mockData';
+import { mockUserInfoData, mockUpdateUserResponse } from '@/features/mypage/api/mockData';
 import { http, HttpResponse } from 'msw';
 import type { UpdateUserRequest } from '@/features/mypage/api/types';
 import type { ApiResponse } from '@/shared/client/client.type';
 import { delay } from 'msw';
 
 const createResponse = <T>(result: T, message: string): ApiResponse<T> => ({
-  statusCode: 200,
+  statusCode: 0,
   message,
   data: result,
 });
 
 export const mypageHandlers = [
   // 개인정보 수정
-  http.patch(MYPAGE_ENDPOINTS.USER_INFO, async ({ request }) => {
+  http.patch(MYPAGE_ENDPOINTS.MYPAGE.UPDATE_USER, async ({ request }) => {
     const body = (await request.json()) as Partial<UpdateUserRequest>;
 
     // 에러 케이스: 잘못된 등급
@@ -40,19 +40,18 @@ export const mypageHandlers = [
       );
     }
 
-    if (body.updatedProfileImage) mockUserInfo.profileImage = body.updatedProfileImage;
-    if (body.updatedNickName) mockUserInfo.nickName = body.updatedNickName;
-    if (body.updatedGrade) mockUserInfo.grade = body.updatedGrade;
-    if (body.updatedBrandIdList) mockUserInfo.brandIds = body.updatedBrandIdList;
-    if (body.markerId) mockUserInfo.marker = { ...mockUserInfo.marker, id: body.markerId };
-    mockUserInfo.updatedAt = new Date().toISOString();
+    // mockUserInfoData 업데이트
+    if (body.updatedNickName) mockUserInfoData.nickName = body.updatedNickName;
+    if (body.updatedGrade) mockUserInfoData.grade = body.updatedGrade;
+    if (body.updatedBrandIdList) mockUserInfoData.brandIdList = body.updatedBrandIdList;
+    mockUserInfoData.updatedAt = new Date().toISOString();
+    
     await delay(300);
-    return HttpResponse.json(createResponse({ userId: mockUserInfo.id }, '개인정보 수정 성공'));
+    return HttpResponse.json(createResponse(mockUpdateUserResponse, '정상 처리 되었습니다.'));
   }),
+  
   // 개인정보 조회
-  http.get(MYPAGE_ENDPOINTS.USER_INFO, () =>
-    HttpResponse.json(createResponse(mockUserInfo, '유저 정보 조회 성공'))
+  http.get(MYPAGE_ENDPOINTS.MYPAGE.USER_INFO, () =>
+    HttpResponse.json(createResponse(mockUserInfoData, '정상 처리 되었습니다.'))
   ),
-
-
 ]; 

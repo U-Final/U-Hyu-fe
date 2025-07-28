@@ -1,70 +1,72 @@
-import React from 'react';
-import { Crown, Star, User2 } from 'lucide-react';
-import type { UserInfo, UserGrade } from '@mypage/api/types';
+import type { UserInfoData, UserGrade, UpdateUserRequest } from '@mypage/api/types';
 import { convertGrade } from '@mypage/constants/gradeUtils';
-import { updateUserInfo } from  '@mypage/api/mypageApi';
+import { Crown, Star, User2 } from 'lucide-react';
 
 interface Props {
-  user: UserInfo;
-  setUser: React.Dispatch<React.SetStateAction<UserInfo | undefined>>;
+  user: UserInfoData;
+  editMode: boolean;
+  pendingChanges: UpdateUserRequest;
+  setPendingChanges: React.Dispatch<React.SetStateAction<UpdateUserRequest>>;
 }
 
-const MyPageMembership = ({ user, setUser }: Props) => {
-  const handleSelect = async (grade: UserGrade) => {
-    try {
-      await updateUserInfo({ updatedGrade: grade });
-      setUser((prev) => prev ? { ...prev, grade } : prev);
-      console.log('등급 PATCH 요청 성공:', grade);
-    } catch (err) {
-      alert('등급 변경 실패');
-      console.error(err);
-    }
+const MyPageMembership = ({ user, editMode, pendingChanges, setPendingChanges }: Props) => {
+  const handleGradeChange = (grade: UserGrade) => {
+    if (!editMode) return;
+
+    // pendingChanges에 추가
+    setPendingChanges(prev => ({
+      ...prev,
+      updatedGrade: grade,
+    }));
   };
 
-  const gradeOptions: { grade: UserGrade; icon: React.ReactNode }[] = [
-    { grade: 'VVIP', icon: <Crown className="w-[0.9rem] h-[0.9rem] text-[var(--text-gray)]" /> },
-    { grade: 'VIP', icon: <Star className="w-[0.9rem] h-[0.9rem] text-[var(--text-gray)]" /> },
-    { grade: 'GOOD', icon: <User2 className="w-[0.9rem] h-[0.9rem] text-[var(--text-gray)]" /> },
+  const gradeOptions: { grade: UserGrade; icon: React.ReactNode; label: string }[] = [
+    { grade: 'VVIP', icon: <Crown className="w-5 h-5" />, label: 'VVIP' },
+    { grade: 'VIP', icon: <Star className="w-5 h-5" />, label: 'VIP' },
+    { grade: 'GOOD', icon: <User2 className="w-5 h-5" />, label: '우수' },
   ];
 
-  const handleKeyDown = (grade: UserGrade, e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      handleSelect(grade);
-    }
-  };
+  // 현재 선택된 등급 (pendingChanges 우선, 없으면 user.grade)
+  const currentGrade = pendingChanges.updatedGrade || user.grade;
 
   return (
-    <div className="space-y-[0.75rem]">
-      <div className="font-bold text-[1rem] text-[var(--text-black)]">
-        LG U+ 멤버십 등급
-      </div>
-      <div className="rounded-[1rem] bg-white p-[1.25rem] text-[0.875rem] text-[var(--text-gray)] border border-gray-200">
-        <p className="mb-[1rem] text-[0.75rem] text-[var(--text-gray)] text-center">
-          현재 보유하고 계신 멤버십 등급을 선택해주세요
-        </p>
-        <div
-          className="flex items-center justify-center gap-[0.75rem]"
-          role="radiogroup"
-          aria-label="멤버십 등급 선택"
-        >
-          {gradeOptions.map(({ grade, icon }) => (
+    <div className="space-y-[1rem]">
+      <h3 className="font-bold text-[1rem] text-black">
+        멤버십 등급
+      </h3>
+      <div className="p-[1rem] bg-white rounded-[0.75rem] border border-gray">
+        <div className="flex items-center justify-between mb-[1rem]">
+          <span className="text-[0.875rem] text-gray">현재 등급</span>
+          <span className="text-[0.875rem] font-bold text-black">
+            {currentGrade ? convertGrade(currentGrade) : '등급 없음'}
+          </span>
+        </div>
+        <div className="grid grid-cols-3 gap-[0.5rem]">
+          {gradeOptions.map(({ grade, icon, label }) => (
             <button
               key={grade}
-              onClick={() => handleSelect(grade)}
-              onKeyDown={(e) => handleKeyDown(grade, e)}
-              role="radio"
-              aria-checked={user.grade === grade}
-              aria-label={`${convertGrade(grade)} 등급`}
-              tabIndex={user.grade === grade ? 0 : -1}
-              className={`flex items-center justify-center gap-[0.25rem] w-[10rem] py-[0.4rem] rounded-[0.5rem] border border-gray-300 text-[0.75rem] ${
-                user.grade === grade ? 'bg-[var(--bg-light-gray)] font-bold' : ''
+              onClick={() => handleGradeChange(grade)}
+              disabled={!editMode || currentGrade === grade}
+              className={`flex flex-col items-center gap-[0.25rem] p-[0.75rem] rounded-[0.5rem] text-[0.875rem] font-medium transition-all ${
+                currentGrade === grade
+                  ? 'bg-primary text-white shadow-md'
+                  : editMode
+                  ? 'bg-light-gray text-gray hover:bg-gray-hover hover:scale-105'
+                  : 'bg-light-gray text-gray opacity-50 cursor-not-allowed'
               }`}
             >
-              {icon}
-              {convertGrade(grade)}
+              <div className="flex items-center gap-[0.25rem]">
+                {icon}
+                <span>{label}</span>
+              </div>
             </button>
           ))}
         </div>
+        {!editMode && (
+          <p className="text-[0.75rem] text-gray text-center mt-[0.5rem]">
+            수정 모드에서 등급을 변경할 수 있습니다
+          </p>
+        )}
       </div>
     </div>
   );

@@ -5,34 +5,69 @@ import MyPageHeader from '@mypage/components/MyPageHeader';
 import MyPageUserInfo from '@mypage/components/MyPageUserInfo';
 import MyPageMembership from '@mypage/components/MyPageMembership';
 import MyPageBrand from '@mypage/components/MyPageBrand';
-import MyPageMarker from '@mypage/components/MyPageMarker';
-import type { UserInfo } from '@mypage/api/types';
+// import MyPageMarker from '@mypage/components/MyPageMarker';
+import type { UserInfoData, UpdateUserRequest } from '@mypage/api/types';
+import { updateUserInfo } from '@mypage/api/mypageApi';
 
 const MyPage = () => {
   const { data: user, isLoading, error } = useUserInfoQuery();
-  const [localUser, setLocalUser] = useState<UserInfo | undefined>(undefined);
+  const [localUser, setLocalUser] = useState<UserInfoData | undefined>(undefined);
+  const [editMode, setEditMode] = useState(false);
+  const [pendingChanges, setPendingChanges] = useState<UpdateUserRequest>({});
 
   useEffect(() => {
     if (user) setLocalUser(user);
   }, [user]);
 
+  const handleSaveAll = async () => {
+    // 변경사항이 있는지 확인
+    if (Object.keys(pendingChanges).length === 0) {
+      setEditMode(false);
+      return;
+    }
+
+    try {
+      // 모든 변경사항을 한 번에 요청
+      await updateUserInfo(pendingChanges);
+      setLocalUser(prev => prev ? { ...prev, ...pendingChanges } : prev);
+      setPendingChanges({});
+      setEditMode(false);
+      console.log('통합 수정 요청 성공:', pendingChanges);
+    } catch (err) {
+      alert('수정 실패');
+      console.error(err);
+    }
+  };
+
   if (isLoading) return <div>로딩중...</div>;
   if (error || !localUser) return <div>에러 발생</div>;
-  if (localUser.status === 'DELETED') return <div>로그인해주세요.</div>;
 
   return (
     <div className="min-h-screen max-w-[22.5rem] mx-auto">
       <div className="p-[1rem] space-y-[1.5rem] pb-[6rem]">
-        <MyPageHeader
-          user={localUser}
-          onProfileImageChange={(newImage) =>
-            setLocalUser((prev) => prev ? { ...prev, profileImage: newImage } : prev)
-          }
+        <MyPageHeader user={localUser} />
+        <MyPageUserInfo 
+          user={localUser} 
+          editMode={editMode}
+          setEditMode={setEditMode}
+          setPendingChanges={setPendingChanges}
+          onSaveAll={handleSaveAll}
         />
-        <MyPageUserInfo user={localUser} setUser={setLocalUser} />
-        <MyPageMembership user={localUser} setUser={setLocalUser} />
-        <MyPageBrand user={localUser} setUser={setLocalUser} />
+        <MyPageMembership 
+          user={localUser} 
+          editMode={editMode}
+          pendingChanges={pendingChanges}
+          setPendingChanges={setPendingChanges}
+        />
+        <MyPageBrand 
+          user={localUser} 
+          editMode={editMode}
+          pendingChanges={pendingChanges}
+          setPendingChanges={setPendingChanges}
+        />
+        {/* 마커 기능 제거됨
         <MyPageMarker user={localUser} setUser={setLocalUser} />
+        */}
       </div>
     </div>
   );

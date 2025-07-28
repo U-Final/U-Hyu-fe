@@ -6,6 +6,7 @@ export const useBarcodeImageQuery = () => {
   return useQuery({
     queryKey: BARCODE_IMAGE_QUERY_KEY,
     queryFn: getBarcodeImage,
-    staleTime: 0, //업로드 후 반영
+    staleTime: 1, //1회만 호출하도록
+    refetchOnWindowFocus: false,
   });
 };

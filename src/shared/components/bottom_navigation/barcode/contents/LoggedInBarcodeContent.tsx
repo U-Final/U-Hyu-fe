@@ -3,12 +3,12 @@ import { useEffect, useRef, useState } from 'react';
 import VisitConfirmSection from '@barcode/components/VisitConfirmSection';
 import { useBarcodeImageQuery } from '@barcode/hooks/useBarcodeImageQuery';
 import { useNearbyStoreQuery } from '@barcode/hooks/useNearbyStoreQuery';
-import { useBarcodeStore } from '@barcode/store/barcodeStore';
 
 import { PrimaryButton } from '@/shared/components';
 import { BarcodeCropModal } from '@/shared/components/bottom_navigation/barcode/BarcodeCropModal';
 import { CroppedImg } from '@/shared/components/bottom_navigation/barcode/CroppedImg';
 import { useImageCropStore, useModalStore } from '@/shared/store';
+import { useBarcodeStore } from '@/shared/store/barcodeStore';
 import { isApiError } from '@/shared/utils/isApiError';
 
 export const LoggedInBarcodeContent = () => {

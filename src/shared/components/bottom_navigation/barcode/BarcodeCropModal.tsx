@@ -5,11 +5,11 @@ import {
   usePatchBarcodeImageMutation,
   useUploadBarcodeMutation,
 } from '@barcode/hooks/useUploadBarcodeMutation';
-import { useBarcodeStore } from '@barcode/store/barcodeStore';
 import type { CropperRef } from 'react-advanced-cropper';
 
 import { PrimaryButton } from '@/shared/components';
 import { useImageCropStore, useModalStore } from '@/shared/store';
+import { useBarcodeStore } from '@/shared/store/barcodeStore';
 import { isApiError } from '@/shared/utils/isApiError';
 
 import { BarcodeCropper } from './BarcodeCropper';

@@ -6,7 +6,7 @@ interface SimpleUserInfo {
   grade: UserGrade | null;
   profileImage: string;
   markerId: number | null;
-  role: UserRole | null;
+  role?: UserRole;
 }
 
 interface UserState {
@@ -38,7 +38,9 @@ export const userStore = create<UserState>(set => ({
     try {
       const res = await userApi.getUserInfo();
       const { userName, grade, profileImage, markerId, role } = res;
-      userStore.getState().setUser({ userName, grade, profileImage, markerId, role: role || null }); // 성공 시 저장
+      userStore
+        .getState()
+        .setUser({ userName, grade, profileImage, markerId, role }); // 성공 시 저장
     } catch (error) {
       console.warn('⚠️ 유저 정보 불러오기 실패:', error);
       userStore.getState().clearUser(); // 실패 시 초기화

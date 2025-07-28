@@ -1,3 +1,5 @@
+import type { ApiResponse } from '@/shared/client/client.type';
+
 import type { UpdateUserResponseData, UserInfoData } from './types';
 
 // 실제 API 응답 구조에 맞춘 목업 데이터
@@ -19,14 +21,14 @@ export const mockUpdateUserResponse: UpdateUserResponseData = {
   userId: 9,
 };
 
-// API 응답 형태의 목업 데이터
-export const mockUserInfoResponse = {
+// 공통 응답 형식을 사용한 목업 데이터
+export const mockUserInfoResponse: ApiResponse<UserInfoData> = {
   statusCode: 0,
   message: '정상 처리 되었습니다.',
   data: mockUserInfoData,
 };
 
-export const mockUpdateUserResponseFull = {
+export const mockUpdateUserResponseFull: ApiResponse<UpdateUserResponseData> = {
   statusCode: 0,
   message: '정상 처리 되었습니다.',
   data: mockUpdateUserResponse,

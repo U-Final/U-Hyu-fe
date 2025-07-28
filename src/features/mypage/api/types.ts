@@ -1,3 +1,5 @@
+import type { ApiResponse } from '@/shared/client/client.type';
+
 export type UserRole = 'USER' | 'ADMIN';
 export type UserStatus = 'ACTIVE' | 'DELETED';
 export type UserGrade = 'GOOD' | 'VIP' | 'VVIP';
@@ -28,18 +30,9 @@ export interface UpdateUserResponseData {
   userId: number;
 }
 
-// API 응답 타입들
-export interface UserInfoResponse {
-  statusCode: number;
-  message: string;
-  data: UserInfoData;
-}
-
-export interface UpdateUserResponse {
-  statusCode: number;
-  message: string;
-  data: UpdateUserResponseData;
-}
+// API 응답 타입들 - 공통 ApiResponse 타입 사용
+export type UserInfoResponse = ApiResponse<UserInfoData>;
+export type UpdateUserResponse = ApiResponse<UpdateUserResponseData>;
 
 // 기존 UserInfo 타입 (내부 사용용)
 export interface UserInfo {
@@ -78,10 +71,12 @@ export interface Bookmark {
   createdAt: string;
 }
 
-export interface BookmarkListResponse {
+export interface BookmarkListData {
   bookmarks: Bookmark[];
   totalCount: number;
 }
+
+export type BookmarkListResponse = ApiResponse<BookmarkListData>;
 
 export interface AddBookmarkRequest {
   storeId: number;
@@ -103,9 +98,11 @@ export interface ActivityBrand {
   lastVisitAt: string;
 }
 
-export interface ActivityResponse {
+export interface ActivityData {
   benefits: ActivityBenefit[];
   brands: ActivityBrand[];
   totalBenefitCount: number;
   totalBrandCount: number;
 }
+
+export type ActivityResponse = ApiResponse<ActivityData>;

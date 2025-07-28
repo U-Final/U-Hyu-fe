@@ -15,6 +15,9 @@ export const mypageHandlers = [
   // 개인정보 수정
   http.patch(MYPAGE_ENDPOINTS.MYPAGE.UPDATE_USER, async ({ request }) => {
     const body = (await request.json()) as Partial<UpdateUserRequest>;
+    
+    console.log('🔧 MSW PATCH 요청 받음:', body);
+    console.log('🔧 현재 mockUserInfoData:', mockUserInfoData);
 
     // 에러 케이스: 잘못된 등급
     if (body.updatedGrade && !['VVIP', 'VIP', 'GOOD'].includes(body.updatedGrade)) {
@@ -41,17 +44,29 @@ export const mypageHandlers = [
     }
 
     // mockUserInfoData 업데이트
-    if (body.updatedNickName) mockUserInfoData.nickName = body.updatedNickName;
-    if (body.updatedGrade) mockUserInfoData.grade = body.updatedGrade;
-    if (body.updatedBrandIdList) mockUserInfoData.brandIdList = body.updatedBrandIdList;
+    if (body.updatedNickName) {
+      mockUserInfoData.nickName = body.updatedNickName;
+      console.log('✅ 닉네임 업데이트:', body.updatedNickName);
+    }
+    if (body.updatedGrade) {
+      mockUserInfoData.grade = body.updatedGrade;
+      console.log('✅ 등급 업데이트:', body.updatedGrade);
+    }
+    if (body.updatedBrandIdList) {
+      mockUserInfoData.brandIdList = body.updatedBrandIdList;
+      console.log('✅ 브랜드 업데이트:', body.updatedBrandIdList);
+    }
     mockUserInfoData.updatedAt = new Date().toISOString();
+    
+    console.log('🔧 업데이트 후 mockUserInfoData:', mockUserInfoData);
     
     await delay(300);
     return HttpResponse.json(createResponse(mockUpdateUserResponse, '정상 처리 되었습니다.'));
   }),
   
   // 개인정보 조회
-  http.get(MYPAGE_ENDPOINTS.MYPAGE.USER_INFO, () =>
-    HttpResponse.json(createResponse(mockUserInfoData, '정상 처리 되었습니다.'))
-  ),
+  http.get(MYPAGE_ENDPOINTS.MYPAGE.USER_INFO, () => {
+    console.log('🔧 MSW GET 요청 - 현재 mockUserInfoData:', mockUserInfoData);
+    return HttpResponse.json(createResponse(mockUserInfoData, '정상 처리 되었습니다.'));
+  }),
 ]; 

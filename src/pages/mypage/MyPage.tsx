@@ -10,7 +10,7 @@ import type { UserInfoData, UpdateUserRequest } from '@mypage/api/types';
 import { updateUserInfo } from '@mypage/api/mypageApi';
 
 const MyPage = () => {
-  const { data: user, isLoading, error } = useUserInfoQuery();
+  const { data: user, isLoading, error, refetch } = useUserInfoQuery();
   const [localUser, setLocalUser] = useState<UserInfoData | undefined>(undefined);
   const [editMode, setEditMode] = useState(false);
   const [pendingChanges, setPendingChanges] = useState<UpdateUserRequest>({});
@@ -29,7 +29,11 @@ const MyPage = () => {
     try {
       // 모든 변경사항을 한 번에 요청
       await updateUserInfo(pendingChanges);
-      setLocalUser(prev => prev ? { ...prev, ...pendingChanges } : prev);
+      //       setLocalUser(prev => prev ? { ...prev, ...pendingChanges } : prev);
+      
+      // 데이터를 다시 가져와서 UI 업데이트
+      await refetch();
+      
       setPendingChanges({});
       setEditMode(false);
       console.log('통합 수정 요청 성공:', pendingChanges);

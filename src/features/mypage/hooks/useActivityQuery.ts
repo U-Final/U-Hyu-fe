@@ -1,15 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchActivityBenefit, fetchActivityBrands, fetchActivityFavorites } from '../api/mypageApi';
-
-export interface ActivityBenefit {
-  amount: number;
-}
-
-export interface ActivityBrand {
-  rank: number;
-  name: string;
-  image: string;
-}
+import type { ActivityBenefit, ActivityBrand } from '../api/types';
 
 interface FavoriteBrand {
   id: number;

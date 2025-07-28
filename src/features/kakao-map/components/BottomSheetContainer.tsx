@@ -1,7 +1,9 @@
 import { forwardRef, useCallback } from 'react';
 
 import { MyMapList } from '@mymap/components/mymap-list';
+import MyMapUuid from '@mymap/components/mymap-uuid/MymapUuid';
 import { FaFilter } from 'react-icons/fa';
+import { useParams } from 'react-router-dom';
 
 import { useModalStore } from '@/shared/store';
 import { useIsLoggedIn } from '@/shared/store/userStore';
@@ -40,6 +42,10 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
       backToList,
       clearFilters,
     } = useMapUI();
+
+    const { uuid } = useParams();
+
+    const isShared = !!uuid;
 
     // 브랜드 단계일 때만 브랜드 데이터 조회 (성능 최적화)
     const { brands, isLoading: brandsLoading } = useBrandsByCategoryWhen(
@@ -310,7 +316,11 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
 
     return (
       <MapDragBottomSheet ref={ref}>
-        {getCurrentStepContent()}
+        {isShared ? (
+          <MyMapUuid uuid={uuid} onStoreClick={handleStoreClick} />
+        ) : (
+          getCurrentStepContent()
+        )}
       </MapDragBottomSheet>
     );
   }

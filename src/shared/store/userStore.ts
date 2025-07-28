@@ -1,14 +1,8 @@
-import { type UserGrade, type UserRole, userApi } from '@user/index';
+import { userApi } from '@user/index';
 import { toast } from 'sonner';
 import { create } from 'zustand';
 
-interface SimpleUserInfo {
-  userName: string;
-  grade: UserGrade | null;
-  profileImage: string;
-  markerId: number | null;
-  role?: UserRole;
-}
+import type { SimpleUserInfo } from '@/shared/types';
 
 interface UserState {
   user: SimpleUserInfo | null;

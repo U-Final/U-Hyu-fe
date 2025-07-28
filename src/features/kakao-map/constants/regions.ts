@@ -21,7 +21,7 @@ export interface RegionInfo {
 export const REGION_COORDINATES: Record<string, RegionInfo> = {
   all: {
     key: 'all',
-    label: '전체',
+    label: '지역',
     center: { lat: 37.54699, lng: 127.09598 }, // 서울 강남역 (기본값)
     defaultZoom: 10,
   },

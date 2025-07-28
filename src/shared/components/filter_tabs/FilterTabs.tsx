@@ -23,7 +23,7 @@ const FilterTabs: FC<FilterTabProps> = ({
 
   return (
     <div
-      className="filter-tabs-scroll flex whitespace-nowrap gap-2 py-1"
+      className="filter-tabs-scroll flex whitespace-nowrap gap-2 py-1 w-full overflow-x-auto"
       onWheel={e => {
         // 마우스 휠로 좌우 스크롤 지원
         e.preventDefault();
@@ -34,19 +34,37 @@ const FilterTabs: FC<FilterTabProps> = ({
         e.stopPropagation();
       }}
     >
-      {tabs.map(({ label, value }) => (
+      {tabs.map(({ label, value, icon: IconComponent, color }) => (
         <button
           key={value}
           onClick={() => handleClick(value)}
           className={clsx(
             filterTabVariants[variant].base,
-            'filter-tab-button cursor-pointer',
+            'filter-tab-button cursor-pointer gap-1.5',
             active === value
               ? filterTabVariants[variant].active
               : filterTabVariants[variant].inactive
           )}
+          style={
+            active === value && color
+              ? {
+                  backgroundColor: `${color}20`, // 20% opacity background
+                  borderColor: color,
+                  color: color,
+                  boxShadow: `0 8px 32px ${color}30, 0 0 0 2px ${color}40`,
+                }
+              : {}
+          }
         >
-          {label}
+          {IconComponent && (
+            <IconComponent 
+              className="w-4 h-4 flex-shrink-0" 
+              style={{ 
+                color: active === value && color ? color : 'inherit' 
+              }} 
+            />
+          )}
+          <span className="whitespace-nowrap">{label}</span>
         </button>
       ))}
     </div>

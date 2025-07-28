@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useMapUIContext } from '../context/MapUIContext';
 import { useMapUI } from '../hooks/useMapUI';
@@ -22,6 +22,24 @@ export const MapControlsContainer: React.FC = () => {
 
   // 바텀시트 REF 가져오기
   const { bottomSheetRef } = useMapUIContext();
+  
+  // 바텀시트 열림/닫힘 상태 추적
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+
+  // 바텀시트 상태를 주기적으로 확인 (실제 위치 기반)
+  useEffect(() => {
+    const checkBottomSheetState = () => {
+      if (bottomSheetRef?.current) {
+        const currentPosition = bottomSheetRef.current.getCurrentPosition();
+        // 바텀시트가 중간 지점보다 위에 있으면 열린 상태로 간주
+        const isOpen = currentPosition < 300; // 임계값 조정 가능
+        setIsBottomSheetOpen(isOpen);
+      }
+    };
+
+    const interval = setInterval(checkBottomSheetState, 100); // 100ms마다 체크
+    return () => clearInterval(interval);
+  }, [bottomSheetRef]);
 
   // 검색 실행 처리 (엔터키 입력 시)
   const handleSearch = (value: string) => {
@@ -47,15 +65,14 @@ export const MapControlsContainer: React.FC = () => {
     setCategoryFilter(category);
   };
 
-  // 매장 목록 보기 버튼 클릭 시 바텀시트 열기
-  const handleShowStoreList = () => {
+  // 바텀시트 토글 처리
+  const handleToggleBottomSheet = () => {
     if (import.meta.env.MODE === 'development') {
-      console.log('매장 목록 버튼 클릭 - 바텀시트 열기');
+      console.log('바텀시트 토글 버튼 클릭 - 현재 상태:', isBottomSheetOpen ? '열림' : '닫힘');
     }
 
-    // REF를 통해 바텀시트 중간 위치로 열기
     if (bottomSheetRef && bottomSheetRef.current) {
-      bottomSheetRef.current.open();
+      bottomSheetRef.current.toggle();
     }
   };
 
@@ -69,7 +86,8 @@ export const MapControlsContainer: React.FC = () => {
       onRegionFilterChange={handleRegionFilterChange}
       activeCategoryFilter={activeCategoryFilter}
       onCategoryFilterChange={handleCategoryFilterChange}
-      onShowStoreList={handleShowStoreList}
+      onToggleBottomSheet={handleToggleBottomSheet}
+      isBottomSheetOpen={isBottomSheetOpen}
     />
   );
 };

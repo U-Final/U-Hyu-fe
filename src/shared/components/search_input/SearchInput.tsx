@@ -11,7 +11,7 @@ const SearchInput: FC<SearchInputProps> = ({
   onChange,
   onSearch,
   onCancel,
-  placeholder = '브랜드 검색',
+  placeholder = '카카오 지도 검색',
   variant = 'gray',
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -44,11 +44,11 @@ const SearchInput: FC<SearchInputProps> = ({
         <button
           type="button"
           onClick={handleCancel}
-          className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-text-teritary"
+          className="absolute right-1.5 top-1/2 -translate-y-1/2 p-1 text-text-teritary hover:text-gray-700 hover:bg-gray-100 rounded-full transition-all duration-150"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="w-4 h-4"
+            className="w-3.5 h-3.5"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -56,7 +56,7 @@ const SearchInput: FC<SearchInputProps> = ({
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth={2}
+              strokeWidth={2.5}
               d="M6 18L18 6M6 6l12 12"
             />
           </svg>

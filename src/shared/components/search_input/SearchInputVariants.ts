@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority';
 
 export const SearchInputVariants = cva(
-  'w-full h-[44px] px-[25px] text-sm font-semibold text-black placeholder-text-teritary rounded-md pr-14 transition-all duration-200',
+  'w-full h-[44px] px-[25px] text-sm font-semibold text-black placeholder-text-teritary rounded-md pr-10 transition-all duration-200',
   {
     variants: {
       variant: {

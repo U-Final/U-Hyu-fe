@@ -130,6 +130,13 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
     clearError();
   };
 
+  // 검색 결과 닫기 처리 (외부 클릭 또는 ESC 키)
+  const handleCloseSearchResults = () => {
+    // 검색어는 유지하되 검색 결과만 숨김 (사용자가 다시 볼 수 있도록)
+    clearResults();
+    clearError();
+  };
+
   // 지역 필터 변경 처리
   const handleRegionFilterChange = (region: string) => {
     if (import.meta.env.MODE === 'development') {
@@ -170,6 +177,7 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
       isSearching={loading}
       selectedPlace={selectedPlace}
       onSearchResultClick={selectPlace}
+      onCloseSearchResults={handleCloseSearchResults}
     />
   );
 };

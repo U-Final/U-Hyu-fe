@@ -5,9 +5,9 @@ export const useAuthCheckModal = () => {
   const isLoggedIn = useIsLoggedIn();
   const openModal = useModalStore(state => state.openModal);
 
-  const checkAuthAndExecuteModal = (callback: () => void) => {
+  const checkAuthAndExecuteModal = (callback: () => void, onCancel?: () => void) => {
     if (!isLoggedIn) {
-      openModal('login');
+      openModal('login', {}, onCancel);
       return false;
     }
     callback();

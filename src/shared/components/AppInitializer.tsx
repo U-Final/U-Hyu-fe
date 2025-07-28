@@ -15,7 +15,7 @@ const AppInitializer = () => {
     } else if (isError) {
       clearUser();
     }
-  }, [isSuccess, isError, data]);
+  }, [isSuccess, isError, data, setUser, clearUser]);
 
   return null;
 };

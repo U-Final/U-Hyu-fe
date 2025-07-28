@@ -26,7 +26,7 @@ export const getMyMapList = async (): Promise<MyMapListRes[]> => {
   if (!res.data.data) {
     throw new Error('MyMap 목록 데이터를 불러올 수 없습니다');
   }
-  return res.data.data;
+  return res.data.data ?? [];
 };
 
 // My Map 추가 API

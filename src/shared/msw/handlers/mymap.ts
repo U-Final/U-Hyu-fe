@@ -1,5 +1,6 @@
 import { MYMAP_ENDPOINTS } from '@/features/mymap/api/endpoint';
 import {
+  MOCK_MYMAP_DATA_BY_UUID,
   MOCK_MYMAP_LIST,
   MOCK_STORE_BOOKMARK_STATUS,
 } from '@/features/mymap/api/mockData';
@@ -15,7 +16,7 @@ const MOCK_MYMAP_STORE: Record<number, Set<number>> = {};
 
 export const mymapHandlers = [
   // My Map 목록 조회 MSW 핸들러
-  http.get(MYMAP_ENDPOINTS.MYMAP.ROOT, () => {
+  http.get(MYMAP_ENDPOINTS.MYMAP.LIST, () => {
     const shouldFail = false;
 
     if (shouldFail) {
@@ -141,5 +142,24 @@ export const mymapHandlers = [
       MOCK_STORE_BOOKMARK_STATUS,
       '북마크 상태 불러오기 성공'
     );
+  }),
+
+  // My Map 상세 조회 (UUID 기반)
+  http.get(MYMAP_ENDPOINTS.MYMAP.VIEW_MSW(), async ({ params }) => {
+    const uuid = params.uuid;
+    console.log(params.uuid);
+
+    if (!uuid) {
+      return createErrorResponse('UUID가 없습니다.', 400);
+    }
+
+    if (uuid === MOCK_MYMAP_DATA_BY_UUID.uuid) {
+      return createResponse(
+        MOCK_MYMAP_DATA_BY_UUID,
+        '마이맵 상세 불러오기 성공'
+      );
+    }
+
+    return createErrorResponse('해당 UUID의 마이맵이 존재하지 않습니다.', 404);
   }),
 ];

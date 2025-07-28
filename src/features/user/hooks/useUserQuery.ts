@@ -12,7 +12,7 @@ export const userKeys = {
 export const useCheckEmail = (email: string, enabled: boolean = false) => {
   return useQuery({
     queryKey: userKeys.emailCheck(email),
-    queryFn: () => userApi.checkEmail(email),
+    queryFn: () => userApi.checkEmail({ email }),
     enabled: enabled && email.length > 0,
     staleTime: 10 * 60 * 1000, // 10분간 fresh 상태 유지
     gcTime: 30 * 60 * 1000, // 30분간 캐시 유지
@@ -22,9 +22,9 @@ export const useCheckEmail = (email: string, enabled: boolean = false) => {
 // 사용자 정보 조회 훅 (Query)
 export const useUserInfo = () => {
   return useQuery({
-    queryKey: userKeys.info(),
+    queryKey: ['userMe'],
     queryFn: userApi.getUserInfo,
-    staleTime: 5 * 60 * 1000, // 5분간 fresh 상태 유지
-    gcTime: 10 * 60 * 1000, // 10분간 캐시 유지
+    retry: false,
+    refetchOnWindowFocus: false,
   });
 };

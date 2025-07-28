@@ -6,7 +6,7 @@ import {
   GuestBarcodeContent,
   LoggedInBarcodeContent,
 } from '@/shared/components/bottom_navigation/barcode/contents';
-import { useIsLoggedIn, useUser } from '@/shared/store/useUserStore';
+import { useIsLoggedIn, useUser } from '@/shared/store/userStore';
 
 interface BarcodeBottomSheetProps {
   isOpen: boolean;

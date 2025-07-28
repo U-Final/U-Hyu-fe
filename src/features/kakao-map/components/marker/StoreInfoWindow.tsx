@@ -1,6 +1,9 @@
 import React from 'react';
 
+import AddStore from '@mymap/components/mymap-add-store/AddStore';
 import { CustomOverlayMap } from 'react-kakao-maps-sdk';
+
+import { useModalStore } from '@/shared/store';
 
 import { useStoreDetailQuery } from '../../hooks/useMapQueries';
 import StoreDetailCard from '../card/StoreDetailCard';
@@ -14,13 +17,20 @@ interface StoreInfoWindowProps {
 const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
   storeId,
   position,
-  handleToggleFavorite,
 }) => {
+  const openModal = useModalStore(state => state.openModal);
   const {
     data: storeDetailResponse,
     isLoading,
     error,
   } = useStoreDetailQuery(storeId);
+
+  const handleFavoriteClick = () => {
+    openModal('base', {
+      title: '매장 추가',
+      children: <AddStore storeId={storeId} />,
+    });
+  };
 
   if (isLoading) {
     return (
@@ -69,7 +79,7 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
           benefits={storeDetail.benefits}
           usageLimit={storeDetail.usageLimit}
           usageMethod={storeDetail.usageMethod}
-          handleToggleFavorite={handleToggleFavorite}
+          handleToggleFavorite={handleFavoriteClick}
         />
       </div>
     </CustomOverlayMap>

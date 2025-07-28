@@ -1,35 +1,50 @@
 import { useEffect, useState } from 'react';
 
-import { userApi } from '@/features/user';
-import type { UserInfo } from '@mypage/api/types';
-import { AtSign, BadgeCheck, Calendar, Mail, Pencil, User } from 'lucide-react';
+import type { UserInfoData, UpdateUserRequest } from '@mypage/api/types';
+import { BadgeCheck, Calendar, Mail, Pencil, User } from 'lucide-react';
 
 interface Props {
-  user: UserInfo;
-  setUser: React.Dispatch<React.SetStateAction<UserInfo | undefined>>;
+  user: UserInfoData;
+  editMode: boolean;
+  setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
+  setPendingChanges: React.Dispatch<React.SetStateAction<UpdateUserRequest>>;
+  onSaveAll: () => Promise<void>;
 }
 
-const MyPageUserInfo = ({ user, setUser }: Props) => {
-  const [editMode, setEditMode] = useState(false);
+const MyPageUserInfo = ({ 
+  user, 
+  editMode, 
+  setEditMode, 
+  setPendingChanges, 
+  onSaveAll 
+}: Props) => {
   const [localEdit, setLocalEdit] = useState(user);
 
   useEffect(() => {
     setLocalEdit(user);
   }, [user]);
 
-  const handleChange = <K extends keyof UserInfo>(
+  const handleChange = <K extends keyof UserInfoData>(
     field: K,
-    value: string | number
+    value: string | number | null
   ) => {
-    setLocalEdit((prev: UserInfo) => ({
+    setLocalEdit((prev: UserInfoData) => ({
       ...prev,
-      [field]: field === 'age' ? Number(value) : value,
+      [field]: field === 'age' ? (value === '' ? null : Number(value)) : value,
     }));
+
+    // pendingChanges에 추가
+    if (field === 'nickName') {
+      setPendingChanges(prev => ({
+        ...prev,
+        updatedNickName: value as string || '',
+      }));
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      if (editMode) handleSave();
+      if (editMode) onSaveAll();
     }
   };
 
@@ -40,178 +55,120 @@ const MyPageUserInfo = ({ user, setUser }: Props) => {
     if (localEdit.nickName && !validateField('nickName', localEdit.nickName)) {
       validationErrors.push('닉네임을 입력해주세요.');
     }
-    if (localEdit.email && !validateField('email', localEdit.email)) {
-      validationErrors.push('올바른 이메일 형식을 입력해주세요.');
-    }
-    if (localEdit.age && !validateField('age', String(localEdit.age))) {
-      validationErrors.push('나이는 1~149 사이의 숫자를 입력해주세요.');
-    }
 
     if (validationErrors.length > 0) {
       alert(validationErrors.join('\n'));
       return;
     }
 
-    try {
-      await userApi.updateUserInfo({
-        nickname: localEdit.nickName || '',
-        age: Number(localEdit.age) || 0,
-        email: localEdit.email,
-      });
-      setUser(prev =>
-        prev
-          ? {
-              ...prev,
-              nickName: localEdit.nickName,
-              age: localEdit.age,
-              email: localEdit.email,
-            }
-          : prev
-      );
-      setEditMode(false);
-      console.log('개인정보 PATCH 요청 성공');
-    } catch (err) {
-      alert('개인정보 수정 실패');
-      console.error(err);
-    }
+    await onSaveAll();
   };
 
-  type EditableUserFields =
-    | 'userName'
-    | 'nickName'
-    | 'gender'
-    | 'age'
-    | 'email';
-
-  // 실제로 수정 가능한 필드들 (성별은 disabled로 표시만)
-  const editableFields: EditableUserFields[] = ['nickName', 'age', 'email'];
+  type EditableUserFields = 'nickName';
 
   const fields: {
-    key: EditableUserFields;
+    key: keyof UserInfoData;
     label: string;
     icon: React.ReactNode;
+    editable: boolean;
   }[] = [
     {
       key: 'userName',
       label: '이름',
-      icon: <User className="w-4 h-4 text-[var(--text-gray)]" />,
+      icon: <User className="w-4 h-4 text-gray" />,
+      editable: false,
     },
     {
       key: 'nickName',
       label: '닉네임',
-      icon: <BadgeCheck className="w-4 h-4 text-[var(--text-gray)]" />,
+      icon: <BadgeCheck className="w-4 h-4 text-gray" />,
+      editable: true,
     },
     {
       key: 'gender',
       label: '성별',
-      icon: <AtSign className="w-4 h-4 text-[var(--text-gray)]" />,
+      icon: <User className="w-4 h-4 text-gray" />,
+      editable: false,
     },
     {
       key: 'age',
       label: '나이',
-      icon: <Calendar className="w-4 h-4 text-[var(--text-gray)]" />,
+      icon: <Calendar className="w-4 h-4 text-gray" />,
+      editable: false,
     },
     {
       key: 'email',
       label: '이메일',
-      icon: <Mail className="w-4 h-4 text-[var(--text-gray)]" />,
+      icon: <Mail className="w-4 h-4 text-gray" />,
+      editable: false,
     },
   ];
 
-  //검증 함수 (이메일 형식, 나이 제한)
   const validateField = (key: EditableUserFields, value: string): boolean => {
     switch (key) {
-      case 'email': {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-      }
-      case 'age': {
-        const age = Number(value);
-        return age > 0 && age < 150;
-      }
-      default: {
-        return value.trim().length > 0;
-      }
+      case 'nickName':
+        return value.length >= 1;
+      default:
+        return true;
     }
   };
 
   return (
-    <div className="space-y-[0.75rem]">
+    <div className="space-y-[1rem]">
       <div className="flex items-center justify-between">
-        <span className="font-bold text-[1rem] text-[var(--text-black)]">
-          나의 정보
-        </span>
+        <h3 className="font-bold text-[1rem] text-black">
+          개인정보
+        </h3>
         <button
-          onClick={() => {
-            if (editMode) handleSave();
-            else setEditMode(true);
-          }}
-          className="flex items-center gap-[0.25rem] px-[0.75rem] py-[0.25rem] text-[0.75rem] text-[var(--text-gray)] border border-gray-300 rounded-[0.5rem] bg-[var(--bg-light-gray)]"
+          onClick={() => (editMode ? handleSave() : setEditMode(true))}
+          className="flex items-center gap-[0.25rem] text-[0.875rem] text-primary"
         >
-          <Pencil className="w-[0.75rem] h-[0.75rem]" />
-          {editMode ? '저장' : '개인정보 수정'}
+          <Pencil className="w-4 h-4" />
+          {editMode ? '저장' : '수정'}
         </button>
       </div>
 
-      <div className="rounded-[1rem] bg-white p-[1.25rem] text-[0.875rem] text-[var(--text-gray)] transition-all duration-300 border border-gray-200">
-        <div className="flex flex-col gap-[0.75rem]">
-          {fields.map(({ key, label, icon }) => (
-            <div key={key} className="flex items-center justify-between">
-              <div className="flex items-center gap-[0.5rem] text-[var(--text-gray)]">
-                {icon}
-                <span>{label}</span>
-              </div>
+      <div className="space-y-[0.75rem]">
+        {fields.map(({ key, label, icon, editable }) => {
+          const isEditable = editMode && editable;
+          const value = localEdit[key];
 
-              {editMode ? (
-                key === 'gender' ? (
-                  <div className="flex items-center gap-[0.5rem]">
-                    <label className="flex items-center gap-[0.25rem] text-[0.875rem]">
-                      <input
-                        type="radio"
-                        name="gender"
-                        value="MALE"
-                        checked={user.gender === 'MALE'}
-                        disabled
-                      />
-                      남성
-                    </label>
-                    <label className="flex items-center gap-[0.25rem] text-[0.875rem]">
-                      <input
-                        type="radio"
-                        name="gender"
-                        value="FEMALE"
-                        checked={user.gender === 'FEMALE'}
-                        disabled
-                      />
-                      여성
-                    </label>
-                  </div>
-                ) : editableFields.includes(key) ? (
+          return (
+            <div
+              key={key}
+              className="flex items-center justify-between p-[1rem] bg-white rounded-[0.75rem] border border-gray"
+            >
+              <div className="flex items-center gap-[0.75rem]">
+                {icon}
+                <span className="text-[0.875rem] text-gray">
+                  {label}
+                </span>
+              </div>
+              <div className="flex items-center gap-[0.5rem]">
+                {isEditable ? (
                   <input
-                    type={key === 'age' ? 'number' : 'text'}
-                    value={localEdit[key] || ''}
-                    onChange={e => handleChange(key, e.target.value)}
+                    type="text"
+                    value={String(value || '')}
+                    onChange={(e) => handleChange(key, e.target.value)}
                     onKeyDown={handleKeyDown}
-                    className="w-[10rem] rounded-[0.5rem] border border-gray-300 px-[0.5rem] py-[0.25rem] text-[0.875rem] text-right"
+                    className="text-right text-[0.875rem] text-black bg-transparent border-none outline-none"
+                    placeholder="닉네임을 입력하세요"
                   />
                 ) : (
-                  <span className="min-h-[1.75rem] flex items-center justify-end">
-                    {key === 'userName' ? user.userName : user[key] || '미설정'}
-                  </span>
-                )
-              ) : (
-                <span className="min-h-[1.75rem] flex items-center justify-end">
-                  {key === 'age'
-                    ? `${user.age || 0}세`
-                    : key === 'gender'
-                      ? user.gender === 'MALE'
+                  <span className="text-[0.875rem] text-black">
+                    {key === 'gender'
+                      ? value === 'MALE'
                         ? '남성'
-                        : '여성'
-                      : user[key] || '미설정'}
-                </span>
-              )}
+                        : value === 'FEMALE'
+                        ? '여성'
+                        : '미설정'
+                      : value || '미설정'}
+                  </span>
+                )}
+              </div>
             </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
     </div>
   );

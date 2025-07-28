@@ -1,6 +1,9 @@
 import { deleteMyMap } from '@mymap/api/mymapApi';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+/**
+ * My Map 삭제 Mutation 훅
+ */
 export const useDeleteMyMapMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({

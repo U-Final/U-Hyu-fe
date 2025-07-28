@@ -93,3 +93,34 @@ export interface MyMapListInfo {
   title: string;
   isMyMapped: boolean;
 }
+
+/**
+ * My Map 지도 조회 (UUID 기반) 요청
+ */
+export interface MymapUuidParams {
+  uuid: string;
+}
+
+/**
+ * My Map 지도 조회 (UUID 기반) 요청
+ */
+export type MymapUuidRes = {
+  markerColor: string;
+  title: string;
+  myMapListId: number;
+  uuid: string;
+  storeList: Store[];
+  isMine: boolean;
+};
+
+export type Store = {
+  storeId: number;
+  storeName: string;
+  categoryName: string;
+  addressDetail: string;
+  benefit: string;
+  logo_image: string;
+  brandName: string;
+  latitude: number;
+  longitude: number;
+};

@@ -2,20 +2,20 @@ import { useEffect, useRef, useState } from 'react';
 
 import { convertGrade } from '@mypage/constants/gradeUtils';
 import { MYPAGE_PATHS } from '@mypage/constants/paths';
-import type { UserInfo } from '@mypage/api/types';
+import type { UserInfoData } from '@mypage/api/types';
 import { ChevronRight } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { updateUserInfo, updateUserProfileImage } from '@mypage/api/mypageApi';
+import { formatUpdatedAt } from '@mypage/utils/dateUtils';
+// import { updateUserInfo, updateUserProfileImage } from '@mypage/api/mypageApi';
 
 interface MyPageHeaderProps {
-  user: UserInfo;
-  onProfileImageChange?: (newImage: string) => void;
+  user: UserInfoData;
 }
 
-const MyPageHeader = ({ user, onProfileImageChange }: MyPageHeaderProps) => {
+const MyPageHeader = ({ user }: MyPageHeaderProps) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  // const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [profileImage, setProfileImage] = useState<string>(user.profileImage);
 
@@ -36,6 +36,8 @@ const MyPageHeader = ({ user, onProfileImageChange }: MyPageHeaderProps) => {
     };
   }, []);
 
+  // 프로필 이미지 업로드 기능 제거됨
+  /*
   const handleImageClick = () => {
     fileInputRef.current?.click();
   };
@@ -67,13 +69,14 @@ const MyPageHeader = ({ user, onProfileImageChange }: MyPageHeaderProps) => {
       console.error(err);
     }
   };
+  */
 
   const isActivity = location.pathname === MYPAGE_PATHS.ACTIVITY;
   const nextPath = isActivity ? MYPAGE_PATHS.MAIN : MYPAGE_PATHS.ACTIVITY;
 
   return (
     <div className="space-y-[1rem]">
-      <h2 className="font-bold text-[1.125rem] text-[var(--text-black)]">
+      <h2 className="font-bold text-[1.125rem] text-black">
         나의 유휴
       </h2>
       <div className="flex items-center justify-between">
@@ -82,9 +85,10 @@ const MyPageHeader = ({ user, onProfileImageChange }: MyPageHeaderProps) => {
             <img
               src={profileImage}
               alt="프로필 이미지"
-              onClick={handleImageClick}
-              className="w-[4.5rem] h-[4.5rem] rounded-[0.75rem] bg-white object-cover cursor-pointer"
+              // onClick={handleImageClick}
+              className="w-[4.5rem] h-[4.5rem] rounded-[0.75rem] bg-white object-cover"
             />
+            {/* 프로필 이미지 업로드 기능 제거됨
             <input
               type="file"
               accept="image/*"
@@ -93,27 +97,27 @@ const MyPageHeader = ({ user, onProfileImageChange }: MyPageHeaderProps) => {
               className="hidden"
               aria-label="프로필 이미지 업로드"
             />
+            */}
           </div>
           <div className="flex flex-col justify-center">
-            <span className="font-bold text-[1rem] text-[var(--text-black)] leading-none">
+            <span className="font-bold text-[1rem] text-black leading-none">
               {user.nickName || user.userName}
             </span>
-            <span className="text-[0.75rem] text-[var(--text-gray)] mt-[0.25rem] leading-none">
-              수정일 : {user.updatedAt}
+            <span className="text-[0.875rem] text-gray leading-none">
+              {user.grade ? convertGrade(user.grade) : '등급 없음'}
+            </span>
+            <span className="text-[0.75rem] text-gray leading-none">
+              {formatUpdatedAt(user.updatedAt)}
             </span>
           </div>
         </div>
-        <div className="flex items-center gap-[0.25rem]">
-          <span className="px-[0.625rem] py-[0.25rem] border border-gray-300 rounded-[0.5rem] text-[0.65rem] text-[var(--text-gray)] bg-[var(--bg-light-gray)] font-medium">
-            {user.grade ? convertGrade(user.grade) : '미설정'} 등급
-          </span>
-          <button
-            onClick={() => navigate(nextPath)}
-            className="p-[0.5rem] text-[var(--text-gray)] hover:text-[var(--text-black)]"
-          >
-            <ChevronRight className="w-[1rem] h-[1rem]" />
-          </button>
-        </div>
+        <button
+          onClick={() => navigate(nextPath)}
+          className="flex items-center gap-[0.25rem] text-[0.875rem] text-gray"
+        >
+          {isActivity ? '마이페이지' : '활동 내역'}
+          <ChevronRight className="w-4 h-4" />
+        </button>
       </div>
     </div>
   );

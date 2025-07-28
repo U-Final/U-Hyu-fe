@@ -181,9 +181,9 @@ export const mapHandlers = [
 
   /**
    * 매장 즐겨찾기 토글 API 핸들러
-   * POST /map/stores/:storeId/favorite
+   * POST /map/:storeId
    */
-  http.post('*/map/stores/:storeId/favorite', ({ params }) => {
+  http.post('*/map/:storeId', ({ params }) => {
     const storeId = Number(params.storeId);
 
     // storeId 파라미터 유효성 검증

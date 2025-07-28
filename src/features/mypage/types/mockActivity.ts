@@ -1,11 +1,32 @@
-export const mockBenefit = {
-  amount: 123456789,
+import type { ActivityBenefit, ActivityBrand } from '../api/types';
+
+export const mockBenefit: ActivityBenefit = {
+  id: 1,
+  benefitName: 'CGV 영화 할인',
+  brandName: 'CGV',
+  usedAt: '2024-01-15T10:30:00Z',
+  benefitType: 'DISCOUNT'
 };
 
-export const mockBrands = [
-  { rank: 1, name: '뚜레쥬르', image: '/images/brands/뚜레쥬르.png' },
-  { rank: 2, name: 'CGV', image: '/images/brands/CGV.png' },
-  { rank: 3, name: '파리바게뜨', image: '/images/brands/파리바게뜨.png' },
+export const mockBrands: ActivityBrand[] = [
+  {
+    id: 1,
+    brandName: '뚜레쥬르',
+    visitCount: 5,
+    lastVisitAt: '2024-01-15T10:30:00Z'
+  },
+  {
+    id: 2,
+    brandName: 'CGV',
+    visitCount: 3,
+    lastVisitAt: '2024-01-10T14:20:00Z'
+  },
+  {
+    id: 3,
+    brandName: '파리바게뜨',
+    visitCount: 2,
+    lastVisitAt: '2024-01-08T09:15:00Z'
+  }
 ];
 
 export const mockFavoriteBrands = [

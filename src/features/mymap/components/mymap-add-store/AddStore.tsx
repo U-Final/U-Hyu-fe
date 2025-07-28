@@ -1,5 +1,6 @@
 import { type FC, useEffect, useState } from 'react';
 
+import { useToggleFavoriteMutation } from '@kakao-map/hooks/useMapQueries';
 import { MYMAP_COLOR, type MarkerColor } from '@mymap/constants/mymapColor';
 import { useStoreBookmarkStatusQuery } from '@mymap/hooks/useStoreBookmarkStatusQuery';
 import { useToggleMyMapStoreMutation } from '@mymap/hooks/useToggleMyMapStoreMutation';
@@ -18,14 +19,22 @@ interface AddStoreProps {
 const AddStore: FC<AddStoreProps> = ({ storeId }) => {
   const { data, isLoading, isError } = useStoreBookmarkStatusQuery(storeId);
   const toggleMutation = useToggleMyMapStoreMutation();
+  const toggleFavoriteMutation = useToggleFavoriteMutation();
   const openModal = useModalStore(state => state.openModal);
+  const closeModal = useModalStore(state => state.closeModal);
 
-  // 초기 체크 상태 저장용
+  // my map 초기 체크 상태 저장용
   const [initialCheckedMap, setInitialCheckedMap] = useState<
     Record<number, boolean>
   >({});
-  // 현재 체크 상태
+  // my map 현재 체크 상태
   const [checkedMap, setCheckedMap] = useState<Record<number, boolean>>({});
+
+  // 즐겨찾기 초기 체크 상태 저장용
+  const [initialIsBookmarked, setInitialIsBookmarked] = useState(false);
+
+  // 즐겨찾기 현재 체크 상태
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
   // 데이터 로딩 후 초기값 저장
   useEffect(() => {
@@ -35,6 +44,10 @@ const AddStore: FC<AddStoreProps> = ({ storeId }) => {
       );
       setInitialCheckedMap(initial);
       setCheckedMap(initial);
+    }
+    if (typeof data?.isBookmarked === 'boolean') {
+      setInitialIsBookmarked(data.isBookmarked);
+      setIsBookmarked(data.isBookmarked);
     }
   }, [data]);
 
@@ -46,10 +59,9 @@ const AddStore: FC<AddStoreProps> = ({ storeId }) => {
     }));
   };
 
-  // 즐겨찾기 토글 (현재는 표시만 하고 있어서 기능 추가 필요)
+  // 즐겨찾기 토글
   const handleBookmarkToggle = (checked: boolean) => {
-    // TODO: 즐겨찾기 토글 API 호출 구현 필요
-    console.log('즐겨찾기 토글:', checked);
+    setIsBookmarked(checked);
   };
 
   // 지도 생성 모달
@@ -62,6 +74,12 @@ const AddStore: FC<AddStoreProps> = ({ storeId }) => {
 
   // 저장 버튼 클릭 시 변경된 것만 요청
   const handleSave = () => {
+    // 즐겨찾기 상태 변경 감지
+    if (initialIsBookmarked !== isBookmarked) {
+      toggleFavoriteMutation.mutate({ storeId });
+    }
+
+    // MyMap 항목 변경 감지
     Object.entries(checkedMap).forEach(([id, isChecked]) => {
       const myMapListId = Number(id);
       const initial = initialCheckedMap[myMapListId];
@@ -73,6 +91,7 @@ const AddStore: FC<AddStoreProps> = ({ storeId }) => {
         toggleMutation.mutate({ myMapListId, store_id: storeId });
       }
     });
+    closeModal();
   };
 
   if (isLoading) return <div>로딩 중...</div>;
@@ -84,14 +103,18 @@ const AddStore: FC<AddStoreProps> = ({ storeId }) => {
       <AddMyMapButton onCreateNewMap={handleCreate} />
 
       {/* 즐겨찾기 */}
-      <div className="flex items-center justify-between py-3">
+      <div
+        className="flex items-center justify-between py-3"
+        onClick={() => handleBookmarkToggle(!isBookmarked)}
+      >
         <div className="flex flex-row">
           <MdStars className="w-5 h-5 text-primary mr-2" />
           <span className="text-body2 font-semibold">즐겨찾기</span>
         </div>
-        <PrimaryCheckbox 
-          checked={data.isBookmarked} 
+        <PrimaryCheckbox
+          checked={isBookmarked}
           onCheckedChange={handleBookmarkToggle}
+          onClick={e => e.stopPropagation()}
         />
       </div>
 
@@ -102,7 +125,8 @@ const AddStore: FC<AddStoreProps> = ({ storeId }) => {
         return (
           <div
             key={map.myMapListId}
-            className="flex items-center justify-between py-3 rounded hover:bg-light-gray-hover"
+            className="flex items-center justify-between py-3 rounded"
+            onClick={() => handleCheckToggle(map.myMapListId, !isChecked)}
           >
             <div className="flex flex-9 items-center">
               <MdStars
@@ -112,9 +136,12 @@ const AddStore: FC<AddStoreProps> = ({ storeId }) => {
               />
               <span className="ml-2 text-body2 font-semibold">{map.title}</span>
             </div>
-            <PrimaryCheckbox 
-              checked={isChecked} 
-              onCheckedChange={(checked) => handleCheckToggle(map.myMapListId, checked as boolean)}
+            <PrimaryCheckbox
+              checked={isChecked}
+              onCheckedChange={checked =>
+                handleCheckToggle(map.myMapListId, checked as boolean)
+              }
+              onClick={e => e.stopPropagation()}
             />
           </div>
         );

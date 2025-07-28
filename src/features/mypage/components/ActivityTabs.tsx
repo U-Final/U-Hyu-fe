@@ -8,7 +8,7 @@ interface Props {
 
 const ActivityTabs = ({ activeTab, setActiveTab }: Props) => {
   return (
-    <div className="sticky top-[1.5rem] z-10 pt-[1rem] pb-[0.5rem]">
+    <div className="sticky top-[2.5rem] z-10 pt-[1rem] pb-[0.5rem]">
       <div
         className="relative flex items-center justify-between bg-gray-100 rounded-[1rem] px-[0.25rem] h-[3rem]"
         role="tablist"

@@ -1,114 +1,91 @@
-import { useEffect, useState, useCallback } from "react";
-import { BrandWithFavoriteCard } from "@/shared/components/cards/BrandWithFavoriteCard";
-import { useActivityFavoritesQuery } from "@mypage/hooks/useActivityQuery";
-import { throttle } from "lodash";
-import { Loader2 } from "lucide-react";
-
-const ITEMS_PER_LOAD = 5;
+import { useRef, useEffect, useState } from 'react';
+import { useBookmarkListInfiniteQuery } from '@mypage/hooks/useActivityQuery';
+import { BrandWithFavoriteCard } from '@/shared/components/cards/BrandWithFavoriteCard';
+import { deleteBookmark } from '@mypage/api/mypageApi';
+import type { Bookmark } from '@mypage/api/types';
 
 interface Props {
-   scrollRef: React.RefObject<HTMLDivElement | null>;
+  enabled: boolean;
 }
 
-interface FavoriteBrand {
-  id: number;
-  image: string;
-  name: string;
-  description: string;
-  isFavorite: boolean;
-}
+const ActivityFavorite = ({ enabled }: Props) => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    error,
+    refetch,
+  } = useBookmarkListInfiniteQuery(enabled);
+  const loaderRef = useRef<HTMLDivElement | null>(null);
+  const [removingIds, setRemovingIds] = useState<number[]>([]);
 
-const ActivityFavorite = ({ scrollRef }: Props) => {
-  const { data, isLoading: isQueryLoading, error } = useActivityFavoritesQuery();
-  const [brands, setBrands] = useState<FavoriteBrand[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  // 쿼리 데이터가 바뀌면 초기화
   useEffect(() => {
-    if (data) {
-      setBrands(data.slice(0, ITEMS_PER_LOAD));
-    }
-  }, [data]);
-
-  // 즐겨찾기 토글 핸들러
-  const handleFavoriteToggle = (brandId: number) => {
-    setBrands(prevBrands =>
-      prevBrands.map(brand =>
-        brand.id === brandId
-          ? { ...brand, isFavorite: !brand.isFavorite }
-          : brand
-      )
+    if (!hasNextPage || !enabled) return;
+    const observer = new window.IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.3 }
     );
-  };
-
-  const loadMore = useCallback(() => {
-    if (!data) return;
-    setIsLoading(true);
-    setTimeout(() => {
-      setBrands(prevBrands => {
-        if (prevBrands.length >= data.length) {
-          setIsLoading(false);
-          return prevBrands;
-        }
-        const nextItems = data.slice(
-          prevBrands.length,
-          prevBrands.length + ITEMS_PER_LOAD
-        );
-        if (nextItems.length === 0) {
-          setIsLoading(false);
-          return prevBrands;
-        }
-        setIsLoading(false);
-        return [...prevBrands, ...nextItems];
-      });
-    }, 1000);
-  }, [data]);
-
-  useEffect(() => {
-    const handleScroll = throttle(() => {
-      const div = scrollRef.current;
-      if (!div) return;
-      if (div.scrollTop + div.clientHeight >= div.scrollHeight - 200) {
-        loadMore();
-      }
-    }, 100);
-
-    const div = scrollRef.current;
-    if (div) div.addEventListener("scroll", handleScroll);
+    if (loaderRef.current) observer.observe(loaderRef.current);
     return () => {
-      if (div) div.removeEventListener("scroll", handleScroll);
+      if (loaderRef.current) observer.unobserve(loaderRef.current);
     };
-  }, [scrollRef, brands, isLoading, loadMore]);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage, enabled]);
 
-  if (isQueryLoading) return <div>로딩중...</div>;
-  if (error || !data) return <div>에러 발생</div>;
+  if (isLoading) return <div>로딩중...</div>;
+  if (error) return <div>에러 발생</div>;
+
+  const bookmarks = (data?.pages.flat() as Bookmark[]) || [];
+
+  const handleFavoriteClick = async (bookmarkId: number) => {
+    setRemovingIds((prev) => [...prev, bookmarkId]);
+    await deleteBookmark(bookmarkId);
+    await refetch();
+    setTimeout(() => {
+      setRemovingIds((prev) => prev.filter((id) => id !== bookmarkId));
+    }, 300);
+  };
 
   return (
     <div className="space-y-[1rem]">
-      {brands.map((brand) => (
-        <BrandWithFavoriteCard
-          key={brand.id}
-          logoUrl={brand.image}
-          isStarFilled={brand.isFavorite}
-          onFavoriteClick={() => handleFavoriteToggle(brand.id)}
-          className="border border-gray-200 rounded-[1rem] p-4"
+      {bookmarks.map((store: Bookmark) => (
+        <div
+          key={store.bookmarkId}
+          className={
+            'transition-all duration-300' +
+            (removingIds.includes(store.bookmarkId)
+              ? ' opacity-0 translate-x-10 pointer-events-none'
+              : '')
+          }
         >
-          <div>
-            <h3 className="font-semibold text-[0.9rem]">{brand.name}</h3>
-            <p className="text-sm text-[var(--text-gray)]">{brand.description}</p>
-          </div>
-        </BrandWithFavoriteCard>
+          <BrandWithFavoriteCard
+            logoUrl={store.logoImage}
+            isStarFilled={true}
+            onFavoriteClick={() => handleFavoriteClick(store.bookmarkId)}
+            className="border border-gray-200 rounded-[1rem] p-4"
+          >
+            <div>
+              <h3 className="font-semibold text-[0.9rem]">{store.storeName}</h3>
+              <p className="text-sm text-gray">{store.addressDetail}</p>
+              {store.benefit && <p className="text-xs text-gray mt-1">{store.benefit}</p>}
+            </div>
+          </BrandWithFavoriteCard>
+        </div>
       ))}
-
-      {isLoading && (
-        <div className="flex justify-center py-[1rem]">
-          <Loader2 className="w-5 h-5 animate-spin text-[var(--text-gray)]" />
+      {bookmarks.length === 0 && !isLoading && (
+        <div className="text-center py-[1rem] text-sm text-gray">
+          즐겨찾기 매장이 없습니다.
         </div>
       )}
-      {!isLoading && brands.length === data.length && (
-        <div className="text-center py-[1rem] text-sm text-[var(--text-gray)]">
-          🔔 모든 즐겨찾기를 다 불러왔어요!
-        </div>
+      <div ref={loaderRef} style={{ height: '4rem' }} />
+      {isFetchingNextPage && <div className="text-center py-2 text-gray">불러오는 중...</div>}
+      {!hasNextPage && bookmarks.length > 0 && !isFetchingNextPage && (
+        <div className="text-center py-2 text-gray">모든 즐겨찾기를 다 불러왔습니다.</div>
       )}
     </div>
   );

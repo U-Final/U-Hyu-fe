@@ -1,4 +1,4 @@
-import type { UserInfoData, UpdateUserResponseData } from './types';
+import type { UserInfoData, UpdateUserResponseData } from '@mypage/api/types';
 
 // 실제 API 응답 구조에 맞춘 목업 데이터
 export const mockUserInfoData: UserInfoData = {

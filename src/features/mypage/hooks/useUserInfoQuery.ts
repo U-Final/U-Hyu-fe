@@ -6,5 +6,7 @@ export const useUserInfoQuery = () => {
   return useQuery<UserInfoData>({
     queryKey: ['userInfo'],
     queryFn: fetchUserInfo,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
   });
 };

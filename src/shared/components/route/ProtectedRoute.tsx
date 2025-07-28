@@ -90,7 +90,7 @@ export const ProtectedRoute = ({
     hasTriggeredModal,
     requireAuth,
     requiredRole,
-    user?.role,
+    user,
     navigate,
     redirectTo,
     openModal,

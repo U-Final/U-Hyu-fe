@@ -8,7 +8,6 @@ import { PrimaryButton } from '@/shared/components';
 import { BarcodeCropModal } from '@/shared/components/bottom_navigation/barcode/BarcodeCropModal';
 import { CroppedImg } from '@/shared/components/bottom_navigation/barcode/CroppedImg';
 import { useImageCropStore, useModalStore } from '@/shared/store';
-import { useBarcodeStore } from '@/shared/store/barcodeStore';
 import { isApiError } from '@/shared/utils/isApiError';
 
 export const LoggedInBarcodeContent = () => {
@@ -20,13 +19,7 @@ export const LoggedInBarcodeContent = () => {
   );
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isRejected, setIsRejected] = useState(false);
-  const {
-    data: serverImageUrl,
-    isSuccess,
-    isLoading,
-    error,
-  } = useBarcodeImageQuery();
-  const { imageUrl, setImageUrl } = useBarcodeStore();
+  const { data: imageUrl, isLoading, error } = useBarcodeImageQuery();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -46,12 +39,6 @@ export const LoggedInBarcodeContent = () => {
   const triggerFileSelect = () => {
     fileInputRef.current?.click();
   };
-
-  useEffect(() => {
-    if (isSuccess && serverImageUrl) {
-      setImageUrl(serverImageUrl);
-    }
-  }, [isSuccess, serverImageUrl, setImageUrl]);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(

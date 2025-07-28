@@ -11,7 +11,6 @@ import {
 interface MapDragBottomSheetProps {
   children: React.ReactNode;
   title?: string;
-  bottomNavHeight?: number; // 하단 네비게이션 높이 (기본값: 60px)
   snapToPositions?: boolean; // 스냅 기능 활성화 여부 (기본값: false)
 }
 
@@ -29,7 +28,6 @@ export interface MapDragBottomSheetRef {
 const CONSTANTS = {
   // 위치 상수
   EXPANDED_BOTTOM_MARGIN: 60, // 완전 확장 시 바텀 여백
-  HANDLE_HEIGHT: 60, // 핸들바 영역 높이 (패딩 포함)
 
   // 드래그 제한 상수
   MIN_HEIGHT_FROM_TOP: 80, // 화면 상단에서 최소 거리
@@ -51,7 +49,7 @@ const CONSTANTS = {
 export const MapDragBottomSheet = forwardRef<
   MapDragBottomSheetRef,
   MapDragBottomSheetProps
->(({ children, title, bottomNavHeight = 60, snapToPositions = false }, ref) => {
+>(({ children, title, snapToPositions = false }, ref) => {
   // 개발 중 리렌더링 확인용 로그
   if (import.meta.env.MODE === 'development') {
     console.log('🔄 MapDragBottomSheet 리렌더링 발생');
@@ -70,29 +68,75 @@ export const MapDragBottomSheet = forwardRef<
   // 바텀시트 열림/닫힘 상태
   const [isOpen, setIsOpen] = useState(false);
 
-  // 🔧 윈도우 높이 동기화 - 반응형 레이아웃 대응
+  // 🔧 윈도우 크기 동기화 - 반응형 레이아웃 대응
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const bottomNavHeight = 48; // 고정 네비게이션 높이 사용
+
   useEffect(() => {
-    const handleResize = () => setWindowHeight(window.innerHeight);
+    const handleResize = () => {
+      setWindowHeight(window.innerHeight);
+      setWindowWidth(window.innerWidth);
+    };
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // 📐 위치 제한값 정의
+  // 📐 위치 제한값 정의 - 패딩이 적용된 컨테이너 기준
+  const availableHeight = windowHeight - bottomNavHeight; // 패딩 제외된 사용 가능한 높이
+
+  // 모바일/데스크톱별 반응형 핸들 높이 계산
+  const calculateHandleHeight = () => {
+    const isMobile = windowWidth <= 640;
+
+    if (isMobile) {
+      // 모바일: 더 작은 비율과 적절한 제한값
+      const mobileRatio = 0.08; // 사용 가능 높이의 8% (모바일 최적화)
+      const minHeight = 20; // 최소 60px (모바일에서 적절한 터치 영역)
+      const maxHeight = 80; // 최대 80px (모바일에서 과도하지 않게)
+
+      return Math.min(
+        Math.max(availableHeight * mobileRatio, minHeight),
+        maxHeight
+      );
+    } else {
+      // 데스크톱: 기존 로직 (더 큰 핸들 영역)
+      const desktopRatio = 0.12; // 사용 가능 높이의 12%
+      const minHeight = 70; // 최소 80px
+      const maxHeight = 120; // 최대 120px
+
+      return Math.min(
+        Math.max(availableHeight * desktopRatio, minHeight),
+        maxHeight
+      );
+    }
+  };
+
+  const dynamicHandleHeight = calculateHandleHeight();
+
   const minY = CONSTANTS.MIN_HEIGHT_FROM_TOP; // 최대로 올라갈 수 있는 위치
   const maxY =
-    windowHeight -
-    bottomNavHeight -
-    CONSTANTS.HANDLE_HEIGHT +
-    CONSTANTS.EXTRA_DRAG_BUFFER; // 최대로 내려갈 수 있는 위치
+    availableHeight - dynamicHandleHeight + CONSTANTS.EXTRA_DRAG_BUFFER; // 최대로 내려갈 수 있는 위치
 
-  // 기본 위치 정의 (스냅용)
+  // 기본 위치 정의 (스냅용) - 패딩된 컨테이너 기준
   const openY = CONSTANTS.EXPANDED_BOTTOM_MARGIN; // 열린 상태 기본 위치
-  const closedY = windowHeight - bottomNavHeight - CONSTANTS.HANDLE_HEIGHT; // 닫힌 상태 기본 위치
+  const closedY = availableHeight - dynamicHandleHeight; // 닫힌 상태: 핸들이 네비게이션 바로 위에 위치
 
   // 🎬 CSS transform을 통한 위치 제어
   const [translateY, setTranslateY] = useState(closedY);
   const [isAnimating, setIsAnimating] = useState(false);
+
+  // 애니메이션 함수
+  const animateToPosition = useCallback((targetY: number) => {
+    setIsAnimating(true);
+    setTranslateY(targetY);
+
+    // 애니메이션 완료 후 상태 리셋
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, CONSTANTS.ANIMATION_DURATION);
+  }, []);
 
   // 🔌 외부에서 조작할 수 있도록 imperative handle 정의
   useImperativeHandle(
@@ -128,19 +172,8 @@ export const MapDragBottomSheet = forwardRef<
       },
       getCurrentPosition: () => translateY,
     }),
-    [translateY, openY, closedY, isOpen]
+    [translateY, openY, closedY, isOpen, animateToPosition]
   );
-
-  // 애니메이션 함수
-  const animateToPosition = useCallback((targetY: number) => {
-    setIsAnimating(true);
-    setTranslateY(targetY);
-
-    // 애니메이션 완료 후 상태 리셋
-    setTimeout(() => {
-      setIsAnimating(false);
-    }, CONSTANTS.ANIMATION_DURATION);
-  }, []);
 
   // translateY 초기화
   useEffect(() => {
@@ -358,17 +391,20 @@ export const MapDragBottomSheet = forwardRef<
     };
   }, []);
 
-  // 바텀시트가 닫힌 위치 근처에 있는지 확인
-  const isNearClosed = translateY > closedY - 50;
+  // 바텀시트가 닫힌 위치 근처에 있는지 확인 (동적 핸들 높이 반영)
+  const isNearClosed = translateY > closedY - dynamicHandleHeight * 0.5;
 
   return (
-    <div className="flex-1 pointer-events-none">
+    <div
+      className="flex-1 pointer-events-none"
+      style={{ paddingBottom: `${bottomNavHeight}px` }}
+    >
       {/* 📦 바텀시트 전체 컨테이너 */}
       <div
         ref={sheetRef}
         style={{
           transform: `translateY(${translateY}px)`,
-          height: `calc(100vh - ${translateY}px)`,
+          height: `${availableHeight - translateY}px`, // 패딩된 컨테이너 내에서의 높이
           transition: isAnimating
             ? `transform ${CONSTANTS.ANIMATION_DURATION}ms cubic-bezier(0.4, 0, 0.2, 1)`
             : 'none',

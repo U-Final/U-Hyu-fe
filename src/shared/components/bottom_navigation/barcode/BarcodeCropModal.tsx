@@ -1,25 +1,24 @@
 import { useRef } from 'react';
 
-import { BARCODE_IMAGE_QUERY_KEY } from '@barcode/api/barcode.type';
 import { useBarcodeImageQuery } from '@barcode/hooks/useBarcodeImageQuery';
 import {
   usePatchBarcodeImageMutation,
   useUploadBarcodeMutation,
 } from '@barcode/hooks/useUploadBarcodeMutation';
-import { useQueryClient } from '@tanstack/react-query';
 import type { CropperRef } from 'react-advanced-cropper';
 
 import { PrimaryButton } from '@/shared/components';
 import { useImageCropStore, useModalStore } from '@/shared/store';
+import { useBarcodeStore } from '@/shared/store/barcodeStore';
 import { isApiError } from '@/shared/utils/isApiError';
 
 import { BarcodeCropper } from './BarcodeCropper';
 
 export function BarcodeCropModal() {
-  const queryClient = useQueryClient();
   const closeModal = useModalStore(state => state.closeModal);
   const cropperRef = useRef<CropperRef | null>(null);
   const { imageSrc, setImageSrc, setCroppedImage } = useImageCropStore();
+  const { setImageUrl } = useBarcodeStore();
   const { data: imageUrl, isLoading, error } = useBarcodeImageQuery(); //기존에 업로드된 이미지 인데 만약에 없으면?
 
   const { mutate: uploadBarcodeImage } = useUploadBarcodeMutation();
@@ -36,8 +35,8 @@ export function BarcodeCropModal() {
       const file = new File([blob], 'barcode.jpg', { type: 'image/jpeg' });
 
       const onSuccess = (newImageUrl: string) => {
-        queryClient.invalidateQueries({ queryKey: BARCODE_IMAGE_QUERY_KEY });
         setCroppedImage(newImageUrl);
+        setImageUrl(newImageUrl);
         setImageSrc(null);
         closeModal();
       };

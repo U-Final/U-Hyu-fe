@@ -1,25 +1,32 @@
 import { useEffect, useRef, useState } from 'react';
 
-import type { NearbyStore } from '@barcode/api/barcode.type';
-import { postNearbyStore } from '@barcode/api/nearbyStoreApi';
 import VisitConfirmSection from '@barcode/components/VisitConfirmSection';
 import { useBarcodeImageQuery } from '@barcode/hooks/useBarcodeImageQuery';
-import { ImageUp } from 'lucide-react';
+import { useNearbyStoreQuery } from '@barcode/hooks/useNearbyStoreQuery';
 
-import { IconButton, PrimaryButton } from '@/shared/components';
+import { PrimaryButton } from '@/shared/components';
 import { BarcodeCropModal } from '@/shared/components/bottom_navigation/barcode/BarcodeCropModal';
 import { CroppedImg } from '@/shared/components/bottom_navigation/barcode/CroppedImg';
 import { useImageCropStore, useModalStore } from '@/shared/store';
+import { useBarcodeStore } from '@/shared/store/barcodeStore';
 import { isApiError } from '@/shared/utils/isApiError';
 
 export const LoggedInBarcodeContent = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { setImageSrc } = useImageCropStore();
   const openModal = useModalStore(state => state.openModal);
-  const [store, setStore] = useState<NearbyStore | null>(null);
+  const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(
+    null
+  );
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isRejected, setIsRejected] = useState(false);
-  const { data: imageUrl, isLoading, error } = useBarcodeImageQuery();
+  const {
+    data: serverImageUrl,
+    isSuccess,
+    isLoading,
+    error,
+  } = useBarcodeImageQuery();
+  const { imageUrl, setImageUrl } = useBarcodeStore();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -41,32 +48,35 @@ export const LoggedInBarcodeContent = () => {
   };
 
   useEffect(() => {
+    if (isSuccess && serverImageUrl) {
+      setImageUrl(serverImageUrl);
+    }
+  }, [isSuccess, serverImageUrl, setImageUrl]);
+
+  useEffect(() => {
     navigator.geolocation.getCurrentPosition(
-      async pos => {
-        const coords = {
+      pos => {
+        setCoords({
           lat: pos.coords.latitude,
           lon: pos.coords.longitude,
-          radius: 50,
-        };
-        try {
-          const store = await postNearbyStore(coords);
-          if (store) {
-            setStore(store);
-          }
-        } catch (error) {
-          console.error('근처 매장 검색 중 오류 발생', error);
-        }
+        });
       },
-      error => {
-        console.error(
-          '위치 정보를 가져올 수 없습니다. 위치 동의가 필요합니다.',
-          error
-        );
+      err => {
+        console.error('위치 정보를 가져올 수 없습니다.', err);
       }
     );
   }, []);
 
-  if (isLoading) return <p>불러오는 중...</p>;
+  const { data: store } = useNearbyStoreQuery(
+    {
+      lat: coords?.lat ?? 0,
+      lon: coords?.lon ?? 0,
+      radius: 100,
+    },
+    !!coords
+  );
+
+  if (isLoading) return <p>바코드 불러오는 중...</p>;
 
   if (error && isApiError(error)) {
     if (error.statusCode !== 4103) {
@@ -86,13 +96,7 @@ export const LoggedInBarcodeContent = () => {
 
       {imageUrl ? (
         <div className="w-full flex">
-          <CroppedImg imageUrl={imageUrl} />
-          <IconButton
-            icon={<ImageUp size={16} />}
-            className="hover:bg-gray-hover cursor-pointer"
-            onClick={triggerFileSelect}
-            aria-label="바코드 이미지 재업로드"
-          />
+          <CroppedImg imageUrl={imageUrl} onClick={triggerFileSelect} />
         </div>
       ) : (
         <PrimaryButton className="w-full" onClick={triggerFileSelect}>

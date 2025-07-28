@@ -1,5 +1,6 @@
-import { Search, X } from 'lucide-react';
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
+
+import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/solid';
 
 interface KeywordSearchInputProps {
   /** 현재 검색어 */
@@ -73,24 +74,19 @@ export const KeywordSearchInput: React.FC<KeywordSearchInputProps> = ({
     <form onSubmit={handleSubmit} className={`relative ${className}`}>
       <div
         className={`
-          relative flex items-center
-          bg-white border rounded-lg shadow-sm
-          transition-all duration-200
-          ${
-            isFocused
-              ? 'border-blue-500 shadow-md ring-1 ring-blue-500/20'
-              : 'border-gray-200 hover:border-gray-300'
-          }
+          relative flex items-center h-[44px]
+          bg-white border border-gray-200 rounded-md
+          shadow-lg hover:shadow-xl focus-within:shadow-xl
+          transition-all duration-200 pr-[120px]
           ${loading ? 'cursor-wait' : ''}
         `}
       >
         {/* 검색 아이콘 */}
-        <div className="flex-shrink-0 pl-3">
-          <Search
-            size={18}
+        <div className="flex-shrink-0 pl-[25px]">
+          <MagnifyingGlassIcon
             className={`
-              transition-colors duration-200
-              ${isFocused ? 'text-blue-500' : 'text-gray-400'}
+              w-4 h-4 transition-colors duration-200
+              ${isFocused ? 'text-blue-500' : 'text-gray-600'}
             `}
           />
         </div>
@@ -100,7 +96,7 @@ export const KeywordSearchInput: React.FC<KeywordSearchInputProps> = ({
           ref={inputRef}
           type="text"
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={e => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -108,9 +104,9 @@ export const KeywordSearchInput: React.FC<KeywordSearchInputProps> = ({
           disabled={loading}
           autoFocus={autoFocus}
           className={`
-            flex-1 px-3 py-3 
+            flex-1 px-3 h-full
             bg-transparent border-none outline-none
-            text-gray-900 placeholder-gray-500
+            text-sm font-semibold text-black placeholder-text-teritary
             disabled:cursor-wait disabled:text-gray-400
           `}
           aria-label="장소 검색"
@@ -121,22 +117,16 @@ export const KeywordSearchInput: React.FC<KeywordSearchInputProps> = ({
           <button
             type="button"
             onClick={handleClear}
-            className={`
-              flex-shrink-0 p-2 mr-1
-              text-gray-400 hover:text-gray-600
-              rounded-md hover:bg-gray-100
-              transition-colors duration-200
-              focus:outline-none focus:ring-2 focus:ring-blue-500/20
-            `}
+            className="absolute right-[80px] top-1/2 -translate-y-1/2 p-1 text-text-teritary hover:text-gray-700 hover:bg-gray-100 rounded-full transition-all duration-150"
             aria-label="검색어 지우기"
           >
-            <X size={16} />
+            <XMarkIcon className="w-3.5 h-3.5" />
           </button>
         )}
 
         {/* 로딩 스피너 */}
         {loading && (
-          <div className="flex-shrink-0 p-2 mr-1">
+          <div className="absolute right-[80px] top-1/2 -translate-y-1/2">
             <div
               className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"
               aria-label="검색 중"
@@ -149,13 +139,13 @@ export const KeywordSearchInput: React.FC<KeywordSearchInputProps> = ({
           type="submit"
           disabled={!value.trim() || loading}
           className={`
-            flex-shrink-0 px-4 py-2 mx-1 my-1
-            text-sm font-medium rounded-md
-            transition-all duration-200
+            absolute right-1.5 top-1/2 -translate-y-1/2
+            px-3 py-1.5 text-xs font-semibold rounded-md
+            transition-all duration-200 shadow-sm
             focus:outline-none focus:ring-2 focus:ring-blue-500/20
             ${
               value.trim() && !loading
-                ? 'bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-700'
+                ? 'bg-blue-500 text-white hover:bg-blue-600 hover:shadow-md active:bg-blue-700'
                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'
             }
           `}
@@ -210,10 +200,10 @@ export const CompactKeywordSearchInput: React.FC<KeywordSearchInputProps> = ({
 
   return (
     <div className={`relative ${className}`}>
-      <div className="relative flex items-center bg-white border border-gray-200 rounded-full shadow-sm">
+      <div className="relative flex items-center h-[36px] bg-white border border-gray-200 rounded-md shadow-lg hover:shadow-xl focus-within:shadow-xl transition-all duration-200 pr-8">
         {/* 검색 아이콘 */}
         <div className="flex-shrink-0 pl-3">
-          <Search size={16} className="text-gray-400" />
+          <MagnifyingGlassIcon className="w-3.5 h-3.5 text-gray-600" />
         </div>
 
         {/* 입력 필드 */}
@@ -221,33 +211,33 @@ export const CompactKeywordSearchInput: React.FC<KeywordSearchInputProps> = ({
           ref={inputRef}
           type="text"
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={e => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           disabled={loading}
           autoFocus={autoFocus}
           className={`
-            flex-1 px-2 py-2
+            flex-1 px-2 h-full
             bg-transparent border-none outline-none
-            text-sm text-gray-900 placeholder-gray-500
+            text-sm font-semibold text-black placeholder-text-teritary
             disabled:cursor-wait disabled:text-gray-400
           `}
           aria-label="장소 검색"
         />
 
         {/* 입력 내용 지우기 / 로딩 */}
-        <div className="flex-shrink-0 pr-2">
+        <div className="absolute right-1.5 top-1/2 -translate-y-1/2">
           {loading ? (
-            <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+            <div className="w-3.5 h-3.5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
           ) : (
             value && (
               <button
                 type="button"
                 onClick={handleClear}
-                className="p-1 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100"
+                className="p-1 text-text-teritary hover:text-gray-700 hover:bg-gray-100 rounded-full transition-all duration-150"
                 aria-label="검색어 지우기"
               >
-                <X size={14} />
+                <XMarkIcon className="w-3 h-3" />
               </button>
             )
           )}

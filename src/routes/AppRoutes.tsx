@@ -46,7 +46,7 @@ const Layout = () => {
     pathname === PATH.MYPAGE_ACTIVITY ||
     pathname === PATH.ADMIN;
 
-  const isMap = pathname.startsWith(PATH.MAP);
+  const isMap = pathname === '/' || pathname.startsWith(PATH.MAP);
 
   // 모바일에서는 프레임 없이 직접 렌더링
   const content = (
@@ -81,7 +81,7 @@ export const AppRoutes = () => {
     <BrowserRouter>
       <Routes>
         <Route element={<Layout />}>
-          <Route path={PATH.HOME} element={<HomePage />} />
+          <Route path={PATH.HOME} element={<MapPage />} />
           <Route path={PATH.BENEFIT} element={<BenefitPage />} />
           <Route path={PATH.MYPAGE} element={<MyPage />} />
           <Route path={PATH.MYPAGE_ACTIVITY} element={<MyPageActivity />} />

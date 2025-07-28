@@ -1,16 +1,16 @@
-import type { FilterTabItem } from './FilterTabs.types';
-import { 
-  Squares2X2Icon,
-  ShoppingBagIcon, 
-  SparklesIcon,
-  HomeModernIcon,
-  FilmIcon,
-  HeartIcon,
-  BoltIcon,
+import {
   AcademicCapIcon,
-  GlobeAltIcon
+  BoltIcon,
+  FilmIcon,
+  GlobeAltIcon,
+  HeartIcon,
+  HomeModernIcon,
+  ShoppingBagIcon,
+  SparklesIcon,
+  Squares2X2Icon,
 } from '@heroicons/react/24/solid';
-import type { ComponentType } from 'react';
+
+import type { FilterTabItem } from './FilterTabs.types';
 
 /**
  * 기본 필터 탭 목록
@@ -27,7 +27,12 @@ export const FILTER_TABS: FilterTabItem[] = [
   { label: '문화/여가', value: 'culture', icon: FilmIcon, color: '#8b5cf6' }, // violet-500 - 영화/엔터테인먼트
   { label: '뷰티/건강', value: 'beauty', icon: HeartIcon, color: '#f97316' }, // orange-500 - 건강한 마음
   { label: '액티비티', value: 'activity', icon: BoltIcon, color: '#06b6d4' }, // cyan-500 - 에너지/활동
-  { label: '교육', value: 'education', icon: AcademicCapIcon, color: '#3b82f6' }, // blue-500 - 학사모
+  {
+    label: '교육',
+    value: 'education',
+    icon: AcademicCapIcon,
+    color: '#3b82f6',
+  }, // blue-500 - 학사모
   { label: '여행/교통', value: 'travel', icon: GlobeAltIcon, color: '#84cc16' }, // lime-500 - 지구본
 ];
 
@@ -52,12 +57,15 @@ export const BENEFIT_FILTER_TABS: FilterTabItem[] = [
 export const filterTabVariants = {
   gray: {
     base: 'px-3 h-[36px] flex items-center rounded-xl text-sm font-medium transition-all duration-300 shadow-lg hover:shadow-xl min-w-fit backdrop-blur-sm',
-    active: 'bg-light-gray text-black shadow-2xl scale-105 ring-2 ring-offset-2',
-    inactive: 'text-gray-600 hover:bg-white/50 hover:text-gray-800 hover:scale-102',
+    active:
+      'bg-light-gray text-black shadow-2xl scale-105 ring-2 ring-offset-2',
+    inactive:
+      'text-gray-600 hover:bg-white/50 hover:text-gray-800 hover:scale-102',
   },
   white: {
     base: 'px-3 h-[36px] flex items-center bg-white/90 border border-gray-200/50 rounded-xl text-sm font-medium transition-all duration-300 shadow-lg hover:shadow-xl min-w-fit backdrop-blur-sm',
     active: 'shadow-2xl scale-105 ring-2 ring-offset-2 bg-white',
-    inactive: 'text-gray-600 hover:bg-white hover:text-gray-800 hover:border-gray-300/70 hover:scale-102',
+    inactive:
+      'text-gray-600 hover:bg-white hover:text-gray-800 hover:border-gray-300/70 hover:scale-102',
   },
 } as const;

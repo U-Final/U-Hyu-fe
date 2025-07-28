@@ -12,7 +12,7 @@
   align-items: center;
   box-sizing: border-box;
   width: 100vw;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   background: #f3f4f6;
   padding: 1rem;
 }
@@ -49,11 +49,29 @@
 
 /* Responsive: Mobile devices use full screen */
 @media (max-width: 640px) {
+  /* iOS Safari 전용 최적화 */
+  @supports (-webkit-touch-callout: none) {
+    html, body {
+      position: relative; /* fixed 대신 relative 사용 */
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior: none;
+      -webkit-overflow-scrolling: touch;
+      touch-action: manipulation;
+    }
+    
+    #root {
+      min-height: calc(var(--vh, 1vh) * 100);
+      height: auto; /* 고정 높이 대신 자동 높이 */
+    }
+  }
+  
+  /* 기본 모바일 스타일 */
   html, body {
     overflow: hidden;
     position: fixed;
     width: 100%;
-    height: 100%;
+    height: calc(var(--vh, 1vh) * 100); /* 동적 뷰포트 높이 사용 */
     overscroll-behavior: none;
     -webkit-overflow-scrolling: auto;
     touch-action: manipulation;
@@ -67,12 +85,12 @@
     overflow: hidden;
     position: fixed;
     width: 100vw;
-    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100); /* 동적 뷰포트 높이 사용 */
   }
 
   .mobile-frame {
     width: 100vw;
-    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100); /* 동적 뷰포트 높이 사용 */
     max-width: none;
     max-height: none;
     border-radius: 0;
@@ -86,7 +104,7 @@
   .mobile-content {
     border-radius: 0;
     overflow: hidden;
-    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100); /* 동적 뷰포트 높이 사용 */
     position: relative;
   }
 }

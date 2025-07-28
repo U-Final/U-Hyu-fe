@@ -38,6 +38,7 @@ const Layout = () => {
   }, []);
 
   const showBottomNav =
+    pathname === PATH.HOME ||
     pathname === PATH.MYMAP ||
     pathname === PATH.BENEFIT ||
     pathname.startsWith(PATH.MAP) ||

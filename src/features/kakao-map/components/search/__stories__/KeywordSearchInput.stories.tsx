@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
   CompactKeywordSearchInput,
   KeywordSearchInput,
-} from '../KeywordSearchInput';
+} from '../MapSearchInput';
 
 const meta: Meta<typeof KeywordSearchInput> = {
   title: 'Features/KakaoMap/Search/KeywordSearchInput',
@@ -42,8 +42,8 @@ type Story = StoryObj<typeof KeywordSearchInput>;
 export const Default: Story = {
   args: {
     value: '',
-    onChange: (value) => console.log('onChange:', value),
-    onSearch: (value) => console.log('onSearch:', value),
+    onChange: value => console.log('onChange:', value),
+    onSearch: value => console.log('onSearch:', value),
     onCancel: () => console.log('onCancel'),
     loading: false,
     placeholder: '장소, 업체명 검색',
@@ -113,8 +113,8 @@ export const CompactDefault: StoryObj<typeof CompactKeywordSearchInput> = {
   ...compactMeta,
   args: {
     value: '',
-    onChange: (value) => console.log('onChange:', value),
-    onSearch: (value) => console.log('onSearch:', value),
+    onChange: value => console.log('onChange:', value),
+    onSearch: value => console.log('onSearch:', value),
     onCancel: () => console.log('onCancel'),
     loading: false,
     placeholder: '장소 검색',

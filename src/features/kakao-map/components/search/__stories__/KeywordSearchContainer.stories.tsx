@@ -1,8 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
 import React, { useState } from 'react';
 
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
 import type { NormalizedPlace } from '../../../api/types';
-import { KeywordSearchInput } from '../KeywordSearchInput';
+import { KeywordSearchInput } from '../MapSearchInput';
 import { SearchResultList } from '../SearchResultList';
 
 // UI 전용 검색 컨테이너 컴포넌트
@@ -27,7 +28,7 @@ const UIKeywordSearchContainer: React.FC<UIKeywordSearchContainerProps> = ({
   const handleSearch = (searchKeyword: string) => {
     console.log('Search:', searchKeyword);
     setSearchLoading(true);
-    
+
     // UI 데모용 - 실제로는 API 호출
     setTimeout(() => {
       setSearchResults(places);
@@ -62,7 +63,9 @@ const UIKeywordSearchContainer: React.FC<UIKeywordSearchContainerProps> = ({
           <SearchResultList
             results={searchResults}
             loading={searchLoading}
-            onItemClick={(place: NormalizedPlace) => console.log('Place clicked:', place)}
+            onItemClick={(place: NormalizedPlace) =>
+              console.log('Place clicked:', place)
+            }
           />
         </div>
       )}
@@ -117,21 +120,24 @@ const meta: Meta<typeof UIKeywordSearchContainer> = {
     layout: 'centered',
     docs: {
       description: {
-        component: '카카오 키워드 검색 UI 전체를 통합한 컨테이너 컴포넌트입니다.',
+        component:
+          '카카오 키워드 검색 UI 전체를 통합한 컨테이너 컴포넌트입니다.',
       },
     },
   },
   decorators: [
-    (Story) => (
-      <div style={{ 
-        width: '100vw', 
-        height: '100vh', 
-        padding: '20px',
-        background: '#f5f5f5',
-        display: 'flex',
-        alignItems: 'flex-start',
-        justifyContent: 'center'
-      }}>
+    Story => (
+      <div
+        style={{
+          width: '100vw',
+          height: '100vh',
+          padding: '20px',
+          background: '#f5f5f5',
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'center',
+        }}
+      >
         <Story />
       </div>
     ),
@@ -193,18 +199,20 @@ export const ManyResults: Story = {
     loading: false,
     places: [
       ...mockPlaces,
-      ...Array(10).fill(null).map((_, index) => ({
-        id: `cafe-${index + 1}`,
-        name: `카페 ${index + 1}호점`,
-        category: '음식점 > 카페',
-        address: `서울 강남구 역삼동 ${100 + index}`,
-        roadAddress: `서울 강남구 테헤란로 ${200 + index * 2}`,
-        phone: `02-555-${String(index + 1).padStart(4, '0')}`,
-        latitude: 37.5665 + (index * 0.001),
-        longitude: 126.9780 + (index * 0.001),
-        distance: 500 + index * 100,
-        url: `http://place.map.kakao.com/cafe-${index + 1}`,
-      })),
+      ...Array(10)
+        .fill(null)
+        .map((_, index) => ({
+          id: `cafe-${index + 1}`,
+          name: `카페 ${index + 1}호점`,
+          category: '음식점 > 카페',
+          address: `서울 강남구 역삼동 ${100 + index}`,
+          roadAddress: `서울 강남구 테헤란로 ${200 + index * 2}`,
+          phone: `02-555-${String(index + 1).padStart(4, '0')}`,
+          latitude: 37.5665 + index * 0.001,
+          longitude: 126.978 + index * 0.001,
+          distance: 500 + index * 100,
+          url: `http://place.map.kakao.com/cafe-${index + 1}`,
+        })),
     ],
   },
 };

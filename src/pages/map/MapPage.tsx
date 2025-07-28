@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { BottomSheetContainer } from '@kakao-map/components/BottomSheetContainer';
 import { MapContainer } from '@kakao-map/components/MapContainer';
@@ -6,6 +6,7 @@ import { MapControlsContainer } from '@kakao-map/components/MapControlsContainer
 import { LocationControlContainer } from '@kakao-map/components/location/LocationControlContainer';
 import { MapUIProvider } from '@kakao-map/context/MapUIContext';
 import { useMapUIContext } from '@kakao-map/context/MapUIContext';
+import type { NormalizedPlace } from '@kakao-map/api/types';
 import useKakaoLoader from '@kakao-map/hooks/useKakaoLoader';
 
 /**
@@ -19,6 +20,24 @@ import useKakaoLoader from '@kakao-map/hooks/useKakaoLoader';
 // MapUIProvider 내부 컴포넌트
 const MapContent = () => {
   const { bottomSheetRef } = useMapUIContext();
+  const [keywordResults, setKeywordResults] = useState<NormalizedPlace[]>([]);
+  const [selectedPlace, setSelectedPlace] = useState<NormalizedPlace | null>(null);
+
+  // 키워드 검색 결과 장소 클릭 핸들러
+  const handlePlaceClick = useCallback((place: NormalizedPlace) => {
+    setSelectedPlace(place);
+  }, []);
+
+  // 키워드 검색 결과 인포윈도우 닫기 핸들러
+  const handlePlaceInfoClose = useCallback(() => {
+    setSelectedPlace(null);
+  }, []);
+
+  // MapControlsContainer에서 검색 결과를 받는 핸들러
+  const handleKeywordSearchResults = useCallback((results: NormalizedPlace[]) => {
+    setKeywordResults(results);
+    setSelectedPlace(null); // 새 검색 시 선택 초기화
+  }, []);
 
   // 바텀시트 초기화
   useEffect(() => {
@@ -38,8 +57,13 @@ const MapContent = () => {
   return (
     <div className="h-screen relative">
       <div className="absolute inset-0">
-        <MapContainer />
-        <MapControlsContainer />
+        <MapContainer 
+          keywordResults={keywordResults}
+          selectedPlace={selectedPlace}
+          onPlaceClick={handlePlaceClick}
+          onPlaceInfoClose={handlePlaceInfoClose}
+        />
+        <MapControlsContainer onKeywordSearchResults={handleKeywordSearchResults} />
         <LocationControlContainer />
       </div>
 

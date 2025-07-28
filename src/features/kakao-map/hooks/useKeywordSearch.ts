@@ -102,7 +102,19 @@ export const useKeywordSearch = () => {
     async (inputKeyword?: string, options?: KakaoKeywordSearchOptions) => {
       const keyword = inputKeyword || state.keyword;
 
+      if (import.meta.env.MODE === 'development') {
+        console.log('🔍 useKeywordSearch.search 호출됨:', {
+          inputKeyword,
+          currentStateKeyword: state.keyword,
+          finalKeyword: keyword,
+          options
+        });
+      }
+
       if (!keyword.trim()) {
+        if (import.meta.env.MODE === 'development') {
+          console.log('❌ 검색어가 비어있음:', keyword);
+        }
         setState(prev => ({
           ...prev,
           error: '검색어를 입력해주세요.',
@@ -144,6 +156,7 @@ export const useKeywordSearch = () => {
               keyword,
               resultCount: result.places.length,
               totalCount: result.meta.total_count,
+              results: result.places,
             });
           }
         }

@@ -2,8 +2,9 @@ import { type FC } from 'react';
 
 import RegionFilterDropdown from '@kakao-map/components/layout/RegionFilterDropdown';
 
-import { FilterTabs, SearchInput } from '@/shared/components';
+import { FilterTabs } from '@/shared/components';
 
+import { MapSearchInput } from '../search/MapSearchInput';
 import BottomSheetToggleButton from './BottomSheetToggleButton';
 
 /**
@@ -52,9 +53,9 @@ const MapTopControls: FC<MapTopControlsProps> = ({
     <div className="absolute top-4 left-4 right-4 z-10 space-y-2.5">
       {/* 바텀시트 토글 버튼 - 오른쪽 고정 위치 */}
       <div className="absolute top-0 right-0 z-20">
-        <BottomSheetToggleButton 
-          isOpen={isBottomSheetOpen} 
-          onToggle={onToggleBottomSheet} 
+        <BottomSheetToggleButton
+          isOpen={isBottomSheetOpen}
+          onToggle={onToggleBottomSheet}
         />
       </div>
 
@@ -62,7 +63,7 @@ const MapTopControls: FC<MapTopControlsProps> = ({
       <div className="flex items-stretch gap-2.5 ml-[52px] mr-[52px]">
         {/* 검색바 - 대부분 공간 사용 */}
         <div className="flex-1 h-[44px]">
-          <SearchInput
+          <MapSearchInput
             value={searchValue}
             onChange={onSearchValueChange}
             onSearch={onSearch}

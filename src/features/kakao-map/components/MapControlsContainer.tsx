@@ -1,14 +1,24 @@
 import React, { useEffect, useState } from 'react';
 
+import { checkKakaoApiKeyStatus } from '../api/keywordSearchApi';
 import { useMapUIContext } from '../context/MapUIContext';
+import { useKeywordSearch } from '../hooks/useKeywordSearch';
 import { useMapUI } from '../hooks/useMapUI';
 import MapTopControls from './layout/MapTopControls';
+
+import type { NormalizedPlace } from '../api/types';
+
+interface MapControlsContainerProps {
+  onKeywordSearchResults?: (results: NormalizedPlace[]) => void;
+}
 
 /**
  * 지도 상단 컨트롤 컨테이너 컴포넌트
  * 검색, 필터 등 지도 상단의 모든 UI 컨트롤을 관리
  */
-export const MapControlsContainer: React.FC = () => {
+export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
+  onKeywordSearchResults,
+}) => {
   // UI 상태와 액션들 가져오기
   const {
     searchValue,
@@ -20,11 +30,46 @@ export const MapControlsContainer: React.FC = () => {
     activeCategoryFilter,
   } = useMapUI();
 
+  // 키워드 검색 훅
+  const {
+    keyword,
+    results,
+    loading,
+    error,
+    hasSearched,
+    setKeyword,
+    search,
+    clearResults,
+    clearError,
+  } = useKeywordSearch();
+
   // 바텀시트 REF 가져오기
   const { bottomSheetRef } = useMapUIContext();
   
   // 바텀시트 열림/닫힘 상태 추적
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+
+  // 카카오 API 키 상태 확인 (개발 모드에서만)
+  useEffect(() => {
+    if (import.meta.env.MODE === 'development') {
+      const apiKeyStatus = checkKakaoApiKeyStatus();
+      console.log('🔑 카카오 API 키 상태:', apiKeyStatus);
+    }
+  }, []);
+
+  // searchValue와 keyword 동기화
+  useEffect(() => {
+    if (searchValue !== keyword) {
+      setKeyword(searchValue);
+    }
+  }, [searchValue, keyword, setKeyword]);
+
+  // 검색 결과를 상위 컴포넌트로 전달
+  useEffect(() => {
+    if (onKeywordSearchResults) {
+      onKeywordSearchResults(results);
+    }
+  }, [results, onKeywordSearchResults]);
 
   // 바텀시트 상태를 주기적으로 확인 (실제 위치 기반)
   useEffect(() => {
@@ -42,14 +87,45 @@ export const MapControlsContainer: React.FC = () => {
   }, [bottomSheetRef]);
 
   // 검색 실행 처리 (엔터키 입력 시)
-  const handleSearch = (value: string) => {
+  const handleSearch = async (value: string) => {
+    if (import.meta.env.MODE === 'development') {
+      console.log('MapControlsContainer - handleSearch 호출됨, 검색어:', value);
+    }
+    
+    if (value.trim()) {
+      try {
+        if (import.meta.env.MODE === 'development') {
+          console.log('검색 시작:', value.trim());
+        }
+        await search(value.trim());
+        if (import.meta.env.MODE === 'development') {
+          console.log('검색 완료:', value);
+        }
+      } catch (error) {
+        if (import.meta.env.MODE === 'development') {
+          console.error('검색 실패:', error);
+        }
+      }
+    } else {
+      if (import.meta.env.MODE === 'development') {
+        console.log('검색어가 비어있음');
+      }
+    }
+  };
+
+  // 검색어 변경 처리
+  const handleSearchValueChange = (value: string) => {
     setSearchValue(value);
+    setKeyword(value);
   };
 
   // 검색 취소 처리 (X 버튼 클릭 시)
   const handleSearchCancel = () => {
     setSearchValue('');
+    setKeyword('');
     setSearchFocused(false);
+    clearResults();
+    clearError();
   };
 
   // 지역 필터 변경 처리
@@ -79,7 +155,7 @@ export const MapControlsContainer: React.FC = () => {
   return (
     <MapTopControls
       searchValue={searchValue}
-      onSearchValueChange={setSearchValue}
+      onSearchValueChange={handleSearchValueChange}
       onSearch={handleSearch}
       onSearchCancel={handleSearchCancel}
       activeRegionFilter={activeRegionFilter}

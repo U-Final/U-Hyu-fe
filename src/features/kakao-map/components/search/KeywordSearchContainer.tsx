@@ -8,7 +8,7 @@ import { useMapBounds, useSearchMarkers } from '../../hooks/useSearchMarkers';
 import { ResponsiveManualSearchButton } from '../ManualSearchButton';
 import { KeywordInfoWindow } from '../marker/KeywordInfoWindow';
 import { KeywordMarker } from '../marker/KeywordMarker';
-import { KeywordSearchInput } from './KeywordSearchInput';
+import { MapSearchInput } from './MapSearchInput';
 import { SearchResultList, SearchResultSummary } from './SearchResultList';
 
 interface KeywordSearchContainerProps {
@@ -252,14 +252,14 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
       {/* 검색 입력 */}
       {(displayMode === 'list' || displayMode === 'both') && (
         <div className="absolute top-4 left-4 right-4 z-10">
-          <KeywordSearchInput
+          <MapSearchInput
             value={keyword}
             onChange={setKeyword}
             onSearch={handleSearch}
             onCancel={clearResults}
-            loading={loading}
             placeholder="장소, 업체명을 검색하세요"
-            autoFocus={false}
+            variant="gray"
+            className="w-full"
           />
 
           {error && (

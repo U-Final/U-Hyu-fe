@@ -7,8 +7,6 @@ import {
   useState,
 } from 'react';
 
-import { useBottomNavHeight } from '@/shared/utils/navigationHeight';
-
 // 🧾 컴포넌트 외부에서 바텀시트를 제어할 수 있게 만드는 props와 ref 인터페이스 정의
 interface MapDragBottomSheetProps {
   children: React.ReactNode;
@@ -73,7 +71,7 @@ export const MapDragBottomSheet = forwardRef<
   // 🔧 윈도우 크기 동기화 - 반응형 레이아웃 대응
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const bottomNavHeight = useBottomNavHeight(); // 고정 네비게이션 높이 사용
+  const bottomNavHeight = 48; // 고정 네비게이션 높이 사용
 
   useEffect(() => {
     const handleResize = () => {
@@ -105,7 +103,7 @@ export const MapDragBottomSheet = forwardRef<
     } else {
       // 데스크톱: 기존 로직 (더 큰 핸들 영역)
       const desktopRatio = 0.12; // 사용 가능 높이의 12%
-      const minHeight = 80; // 최소 80px
+      const minHeight = 70; // 최소 80px
       const maxHeight = 120; // 최대 120px
 
       return Math.min(

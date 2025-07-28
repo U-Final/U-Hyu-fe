@@ -2,7 +2,7 @@
 
 export const mockUserInfoData = {
   // user_name, grade
-  user_name: '김유휴',
+  userName: '김유휴',
   grade: 'VIP',
 }
 

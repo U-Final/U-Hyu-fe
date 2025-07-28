@@ -13,6 +13,7 @@ export interface UserInfomation {
   gender: UserGender | null;
   grade: UserGrade | null;
   markerId: number | null;
+  role?: UserRole;
   updatedAt: string;
 }
 

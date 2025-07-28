@@ -1,4 +1,4 @@
-import { type UserGrade, userApi } from '@user/index';
+import { type UserGrade, type UserRole, userApi } from '@user/index';
 import { create } from 'zustand';
 
 interface SimpleUserInfo {
@@ -6,6 +6,7 @@ interface SimpleUserInfo {
   grade: UserGrade | null;
   profileImage: string;
   markerId: number | null;
+  role: UserRole | null;
 }
 
 interface UserState {
@@ -36,8 +37,8 @@ export const userStore = create<UserState>(set => ({
   userInfo: async () => {
     try {
       const res = await userApi.getUserInfo();
-      const { userName, grade, profileImage, markerId } = res;
-      userStore.getState().setUser({ userName, grade, profileImage, markerId }); // 성공 시 저장
+      const { userName, grade, profileImage, markerId, role } = res;
+      userStore.getState().setUser({ userName, grade, profileImage, markerId, role: role || null }); // 성공 시 저장
     } catch (error) {
       console.warn('⚠️ 유저 정보 불러오기 실패:', error);
       userStore.getState().clearUser(); // 실패 시 초기화

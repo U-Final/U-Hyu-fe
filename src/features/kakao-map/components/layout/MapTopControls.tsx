@@ -4,6 +4,8 @@ import RegionFilterDropdown from '@kakao-map/components/layout/RegionFilterDropd
 
 import { FilterTabs, SearchInput } from '@/shared/components';
 
+import BottomSheetToggleButton from './BottomSheetToggleButton';
+
 /**
  * MapTopControls 컴포넌트의 Props 인터페이스
  */
@@ -24,8 +26,10 @@ interface MapTopControlsProps {
   activeCategoryFilter: string;
   /** 카테고리 필터 변경 핸들러 */
   onCategoryFilterChange: (value: string) => void;
-  /** 매장 목록 보기 핸들러 */
-  onShowStoreList?: () => void;
+  /** 바텀시트 토글 핸들러 */
+  onToggleBottomSheet: () => void;
+  /** 바텀시트 열림/닫힘 상태 */
+  isBottomSheetOpen: boolean;
 }
 
 /**
@@ -41,14 +45,15 @@ const MapTopControls: FC<MapTopControlsProps> = ({
   activeRegionFilter,
   onRegionFilterChange,
   onCategoryFilterChange,
-  onShowStoreList,
+  onToggleBottomSheet,
+  isBottomSheetOpen,
 }) => {
   return (
-    <div className="absolute top-4 left-4 right-4 z-10 space-y-3">
+    <div className="absolute top-4 left-4 right-4 z-10 space-y-2.5">
       {/* 상단 라인: 검색바 + 지역 필터 */}
-      <div className="flex items-center gap-3 ml-12">
+      <div className="flex items-stretch gap-2.5 ml-[52px]">
         {/* 검색바 - 대부분 공간 사용 */}
-        <div className="flex-1">
+        <div className="flex-1 h-[44px]">
           <SearchInput
             value={searchValue}
             onChange={onSearchValueChange}
@@ -60,37 +65,18 @@ const MapTopControls: FC<MapTopControlsProps> = ({
         </div>
 
         {/* 지역 필터 드롭다운 - 고정 크기 */}
-        <div className="flex-shrink-0">
+        <div className="flex-shrink-0 h-[44px]">
           <RegionFilterDropdown
             value={activeRegionFilter}
             onChange={onRegionFilterChange}
           />
         </div>
 
-        {/* 매장 목록 버튼 */}
-        {onShowStoreList && (
-          <div className="flex-shrink-0">
-            <button
-              onClick={onShowStoreList}
-              className="flex items-center justify-center w-12 h-12 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 hover:bg-gray-50"
-              aria-label="매장 목록 보기"
-            >
-              <svg
-                className="w-5 h-5 text-gray-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 10h16M4 14h16M4 18h16"
-                />
-              </svg>
-            </button>
-          </div>
-        )}
+        {/* 바텀시트 토글 버튼 */}
+        <BottomSheetToggleButton 
+          isOpen={isBottomSheetOpen} 
+          onToggle={onToggleBottomSheet} 
+        />
       </div>
 
       {/* 하단 라인: 카테고리 필터탭 전체 너비 사용 */}

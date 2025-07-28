@@ -37,13 +37,13 @@ export const BENEFIT_FILTER_TABS: FilterTabItem[] = [
 
 export const filterTabVariants = {
   gray: {
-    base: 'px-4 py-2 rounded-lg text-sm font-bold',
-    active: 'bg-light-gray text-black',
-    inactive: 'text-secondary',
+    base: 'px-[21px] h-[36px] flex items-center rounded-md text-sm font-semibold transition-all duration-200 shadow-lg hover:shadow-xl',
+    active: 'bg-light-gray text-black shadow-xl',
+    inactive: 'text-secondary hover:bg-gray-50',
   },
   white: {
-    base: 'px-4 py-2 bg-white rounded-lg shadow-md text-sm font-bold ',
-    active: 'border-black text-primary',
-    inactive: 'text-secondary',
+    base: 'px-[21px] h-[36px] flex items-center bg-white border border-gray-200 rounded-md text-sm font-semibold transition-all duration-200 shadow-lg hover:shadow-xl',
+    active: 'border-black text-primary shadow-xl',
+    inactive: 'text-secondary hover:bg-gray-50',
   },
 } as const;

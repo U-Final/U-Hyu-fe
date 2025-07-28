@@ -23,7 +23,7 @@ const FilterTabs: FC<FilterTabProps> = ({
 
   return (
     <div
-      className="filter-tabs-scroll flex whitespace-nowrap gap-2 py-1"
+      className="filter-tabs-scroll flex whitespace-nowrap gap-2 py-1 w-full overflow-x-auto"
       onWheel={e => {
         // 마우스 휠로 좌우 스크롤 지원
         e.preventDefault();

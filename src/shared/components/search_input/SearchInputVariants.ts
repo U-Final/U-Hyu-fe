@@ -1,12 +1,12 @@
 import { cva } from 'class-variance-authority';
 
 export const SearchInputVariants = cva(
-  'w-full px-4 py-2 text-sm font-bold text-black placeholder-text-teritary rounded-md pr-14',
+  'w-full h-[44px] px-[25px] text-sm font-semibold text-black placeholder-text-teritary rounded-md pr-14 transition-all duration-200',
   {
     variants: {
       variant: {
-        gray: 'bg-light-gray shadow-2xs',
-        white: 'bg-white shadow-md',
+        gray: 'bg-light-gray shadow-lg hover:shadow-xl focus-within:shadow-xl',
+        white: 'bg-white border border-gray-200 shadow-lg hover:shadow-xl focus-within:shadow-xl',
       },
     },
     defaultVariants: {

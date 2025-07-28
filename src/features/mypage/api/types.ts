@@ -23,6 +23,7 @@ export interface UserInfoData {
   grade: UserGrade | null;
   brandIdList?: number[];
   updatedAt: string;
+  role?: UserRole; // 백엔드 구현 전, USER 데이터 추가 필요
 }
 
 // 개인정보 수정 API 응답 데이터 구조

@@ -38,13 +38,26 @@ export const userStore = create<UserState>(set => ({
   },
   userInfo: async () => {
     try {
+      if (import.meta.env.DEV) {
+        console.log('🔄 유저 정보 조회 시작...');
+      }
       const res = await userApi.getUserInfo();
+      if (import.meta.env.DEV) {
+        console.log('✅ 유저 정보 조회 성공:', res);
+      }
       const { userName, grade, profileImage, markerId, role } = res;
+      const userInfo = { userName, grade, profileImage, markerId, role };
+      if (import.meta.env.DEV) {
+        console.log('📝 유저 정보 저장:', userInfo);
+      }
       userStore
         .getState()
-        .setUser({ userName, grade, profileImage, markerId, role }); // 성공 시 저장
+        .setUser(userInfo); // 성공 시 저장
     } catch (error) {
       console.warn('⚠️ 유저 정보 불러오기 실패:', error);
+      if (import.meta.env.DEV) {
+        console.error('❌ Error details:', error);
+      }
       userStore.getState().clearUser(); // 실패 시 초기화
     }
   },
@@ -53,7 +66,28 @@ export const userStore = create<UserState>(set => ({
 export const useIsLoggedIn = () => {
   const user = userStore(state => state.user);
   const isAuthChecked = userStore(state => state.isAuthChecked);
-  return isAuthChecked && user !== null;
+  if (import.meta.env.DEV) {
+    console.log('user', user);
+  }
+  // 인증 확인이 완료되지 않았다면 false 반환 (초기 로딩 중)
+  if (!isAuthChecked) {
+    return false;
+  }
+
+  // 인증 확인이 완료되었다면 user 존재 여부로 판단
+  return user !== null;
+};
+
+export const useAuthState = () => {
+  const user = userStore(state => state.user);
+  const isAuthChecked = userStore(state => state.isAuthChecked);
+
+  return {
+    user,
+    isLoggedIn: isAuthChecked && user !== null,
+    isAuthChecked,
+    isLoading: !isAuthChecked,
+  };
 };
 
 export const useUser = () => userStore(state => state.user);

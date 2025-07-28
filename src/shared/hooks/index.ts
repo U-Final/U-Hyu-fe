@@ -1,2 +1,2 @@
 export { useKakaoLogin } from './useKakaoLogin';
-export { useAuthCheck } from './useAuthCheck';
+export { useAuthCheckModal } from './useAuthCheckModal';

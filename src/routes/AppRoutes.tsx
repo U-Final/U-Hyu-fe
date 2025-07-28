@@ -4,7 +4,6 @@ import {
   AdminPage,
   BenefitPage,
   ExtraInfo,
-  HomePage,
   MapPage,
   MyPage,
   MyPageActivity,

@@ -12,6 +12,9 @@ interface MapControlsContainerProps {
   onKeywordSearchResults?: (results: NormalizedPlace[]) => void;
   keywordResults?: NormalizedPlace[];
   onClearMarkers?: () => void;
+  onCloseSearchResults?: () => void;
+  mapCenterSetter?: ((center: { lat: number; lng: number }) => void) | null;
+  onPlaceClick?: (place: NormalizedPlace) => void;
 }
 
 /**
@@ -22,6 +25,9 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
   onKeywordSearchResults,
   keywordResults = [],
   onClearMarkers,
+  onCloseSearchResults,
+  mapCenterSetter,
+  onPlaceClick,
 }) => {
   // UI 상태와 액션들 가져오기
   const {
@@ -138,6 +144,17 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
     // 검색어는 유지하되 검색 결과만 숨김 (사용자가 다시 볼 수 있도록)
     clearResults();
     clearError();
+    
+    // MapPage의 keywordResults 상태도 초기화하여 검색 결과 리스트 닫기
+    onCloseSearchResults?.();
+  };
+
+  // 검색 결과 아이템 클릭 전용 닫기 처리 (selectedPlace 유지)
+  const handleCloseSearchResultsForItemClick = () => {
+    // clearResults()를 호출하지 않고 MapPage의 keywordResults만 초기화
+    // 이렇게 하면 useKeywordSearch의 selectedPlace가 유지됨
+    onCloseSearchResults?.();
+    clearError();
   };
 
   // 지역 필터 변경 처리
@@ -164,6 +181,41 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
     }
   };
 
+  // 검색 결과 아이템 클릭 처리 (마커 클릭과 동일한 효과)
+  const handleSearchResultClick = (place: NormalizedPlace) => {
+    // 검색 결과 리스트 먼저 닫기 (selectedPlace 유지)
+    handleCloseSearchResultsForItemClick();
+    
+    // MapPage의 selectedPlace 상태 업데이트 (인포윈도우 표시용)
+    onPlaceClick?.(place);
+    
+    // useKeywordSearch 훅의 selectedPlace 업데이트 (검색 결과 하이라이트용)
+    selectPlace(place);
+    
+    // 지도 중심을 해당 위치로 이동 (인포윈도우가 화면 중앙에 오도록 오프셋 적용)
+    if (mapCenterSetter) {
+      const offset = 0.0017;
+      const targetLat = place.latitude + offset;
+      const targetLng = place.longitude;
+      
+      mapCenterSetter({
+        lat: targetLat,
+        lng: targetLng
+      });
+      
+      if (import.meta.env.MODE === 'development') {
+        console.log('🎯 지도 이동 - 검색 결과 클릭:', {
+          place: place.name,
+          coordinates: { lat: targetLat, lng: targetLng }
+        });
+      }
+    }
+    
+    if (import.meta.env.MODE === 'development') {
+      console.log('🎯 검색 결과 아이템 클릭:', place.name);
+    }
+  };
+
   return (
     <MapTopControls
       searchValue={searchValue}
@@ -179,7 +231,7 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
       keywordResults={keywordResults}
       isSearching={loading}
       selectedPlace={selectedPlace}
-      onSearchResultClick={selectPlace}
+      onSearchResultClick={handleSearchResultClick}
       onCloseSearchResults={handleCloseSearchResults}
     />
   );

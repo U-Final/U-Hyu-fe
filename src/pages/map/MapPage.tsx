@@ -27,11 +27,20 @@ const MapContent = () => {
 
   // 키워드 검색 결과 장소 클릭 핸들러
   const handlePlaceClick = useCallback((place: NormalizedPlace) => {
+    if (import.meta.env.MODE === 'development') {
+      console.log('🎯 MapPage - handlePlaceClick 호출됨:', {
+        placeName: place.name,
+        placeId: place.id
+      });
+    }
     setSelectedPlace(place);
   }, []);
 
   // 키워드 검색 결과 인포윈도우 닫기 핸들러
   const handlePlaceInfoClose = useCallback(() => {
+    if (import.meta.env.MODE === 'development') {
+      console.log('🎯 MapPage - handlePlaceInfoClose 호출됨');
+    }
     setSelectedPlace(null);
   }, []);
 
@@ -67,10 +76,27 @@ const MapContent = () => {
     setSelectedPlace(null);
   }, []);
 
+  // 검색 결과 리스트만 닫는 핸들러 (마커는 유지)
+  const handleCloseSearchResults = useCallback(() => {
+    setKeywordResults([]);
+  }, []);
+
   // MapContainer에서 setMapCenter 함수를 받는 핸들러
   const handleMapCenterUpdate = useCallback((setMapCenter: (center: { lat: number; lng: number }) => void) => {
     setMapCenterSetter(() => setMapCenter);
   }, []);
+
+  // selectedPlace 상태 변화 디버깅
+  useEffect(() => {
+    if (import.meta.env.MODE === 'development') {
+      console.log('🎯 MapPage - selectedPlace 상태 변화:', {
+        selectedPlace: selectedPlace ? {
+          name: selectedPlace.name,
+          id: selectedPlace.id
+        } : null
+      });
+    }
+  }, [selectedPlace]);
 
   // 바텀시트 초기화
   useEffect(() => {
@@ -101,6 +127,9 @@ const MapContent = () => {
           onKeywordSearchResults={handleKeywordSearchResults}
           keywordResults={keywordResults}
           onClearMarkers={handleClearMarkers}
+          onCloseSearchResults={handleCloseSearchResults}
+          mapCenterSetter={mapCenterSetter}
+          onPlaceClick={handlePlaceClick}
         />
         <LocationControlContainer />
       </div>

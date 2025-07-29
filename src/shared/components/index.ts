@@ -20,4 +20,5 @@ export { default as BaseModal } from './modals/BaseModal';
 export { default as LoginModal } from './modals/LoginModal';
 export { default as ModalRoot } from './modals/ModalRoot';
 export { default as PrimaryCheckbox } from './primary_checkbox/PrimaryCheckbox';
+export { AdminRoute, ProtectedRoute, UserRoute } from './route/ProtectedRoute';
 export { default as SearchInput } from './search_input/SearchInput';

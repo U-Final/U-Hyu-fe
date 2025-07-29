@@ -1,5 +1,5 @@
 export interface UserInfo {
-  user_name: string;
+  userName: string;
   grade: string;
 }
 

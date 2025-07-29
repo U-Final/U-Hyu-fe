@@ -1,25 +1,14 @@
-import type { UserInfo } from '@mypage/api/types';
+import type { UserInfoData } from '@mypage/api/types';
 
-export const mockUser: UserInfo = {
-  id: 1,
-  createdAt: '2025-07-21T05:49:15.658Z',
-  updatedAt: '2025-07-21T05:49:15.658Z',
+export const mockUser: UserInfoData = {
   userName: '김민수',
   nickName: 'GOOD4',
-  kakaoId: 12345,
   email: 'minsu.kim@email.com',
   age: 28,
   gender: 'MALE',
-  role: 'USER',
-  status: 'ACTIVE',
   grade: 'VVIP',
+  role: 'USER',
   profileImage: '/images/profile/image.png',
-  age_range: '20-29',
-  marker: {
-    id: 8,
-    createdAt: '2025-07-21T05:49:15.658Z',
-    updatedAt: '2025-07-21T05:49:15.658Z',
-    markerImage: 'marker8.png',
-  },
-  brandIds: [1, 4, 3],
+  brandIdList: [1, 4, 3],
+  updatedAt: '2025-07-21T05:49:15.658Z',
 };

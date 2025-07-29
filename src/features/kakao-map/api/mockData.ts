@@ -1,8 +1,11 @@
+import type { ApiResponse } from '@/shared/client/client.type';
+
 import type {
   CategoryBrand,
   CategoryBrandsResponse,
   StoreDetail,
   StoreSummary,
+  ToggleFavoriteResponse,
 } from './types';
 
 // 목데이터: 주변 매장 목록 (실제 카테고리 및 브랜드 기반)
@@ -498,13 +501,17 @@ export const MOCK_FAVORITES: Record<number, boolean> = {
 };
 
 // 목데이터 응답 헬퍼 함수들
-export const createMockStoreListResponse = (stores: StoreSummary[]) => ({
+export const createMockStoreListResponse = (
+  stores: StoreSummary[]
+): ApiResponse<StoreSummary[]> => ({
   data: stores,
   message: '주변 매장 목록을 성공적으로 조회했습니다.',
   statusCode: 200,
 });
 
-export const createMockStoreDetailResponse = (storeId: number) => {
+export const createMockStoreDetailResponse = (
+  storeId: number
+): ApiResponse<StoreDetail> => {
   const storeDetail = MOCK_STORE_DETAILS[storeId];
   if (!storeDetail) {
     throw new Error(`Store with ID ${storeId} not found`);
@@ -517,7 +524,9 @@ export const createMockStoreDetailResponse = (storeId: number) => {
   };
 };
 
-export const createMockToggleFavoriteResponse = (storeId: number) => {
+export const createMockToggleFavoriteResponse = (
+  storeId: number
+): ApiResponse<ToggleFavoriteResponse> => {
   const currentStatus = MOCK_FAVORITES[storeId] || false;
   const newStatus = !currentStatus;
 

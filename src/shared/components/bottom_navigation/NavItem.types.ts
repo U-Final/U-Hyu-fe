@@ -1,6 +1,7 @@
 export type NavItemProps = {
   label: string;
   icon: React.ReactNode;
-  onClick: () => void;
+  onClick: (e?: React.MouseEvent) => void;
   isActive: boolean;
+  disabled?: boolean;
 };

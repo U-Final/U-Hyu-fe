@@ -18,7 +18,7 @@ const AppInitializer = () => {
     } else if (isError) {
       clearUser();
     }
-  }, [isSuccess, isError, data]);
+  }, [isSuccess, isError, data, setUser, clearUser]);
 
   // 뷰포트 높이 및 스크롤 복원 초기화 (모바일 최적화)
   useEffect(() => {

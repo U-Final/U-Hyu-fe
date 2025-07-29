@@ -4,6 +4,7 @@ import { MyMapList, MymapUuid } from '@mymap/components';
 import { FaFilter } from 'react-icons/fa';
 import { useParams } from 'react-router-dom';
 
+import { BackButton } from '@/shared/components';
 import { useModalStore } from '@/shared/store';
 import { useIsLoggedIn } from '@/shared/store/userStore';
 
@@ -22,7 +23,6 @@ import {
 import StoreListContent from './layout/StoreListContent';
 import BrandSelectContent from './layout/steps/BrandSelectContent';
 import CategorySelectContent from './layout/steps/CategorySelectContent';
-import { BackButton } from '@/shared/components';
 
 export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
   (_, ref) => {
@@ -213,7 +213,7 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
                   {/* MyMap 버튼 */}
                   <div className="flex items-center gap-2">
                     <button
-                      className="flex items-center gap-1.5 px-3 py-2 text-sm font-bold text-black hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 border border-light-gray shadow-sm hover:shadow-md"
+                      className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 border border-gray hover:border-gray-300 cursor-pointer"
                       onClick={handleMyMapClick}
                       aria-label="MyMap으로 이동"
                     >
@@ -223,7 +223,7 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
                   {/* 개선된 필터 버튼 */}
                   <div className="flex items-center gap-2">
                     <button
-                      className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 border border-gray-200 hover:border-blue-300 shadow-sm hover:shadow-md"
+                      className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 border border-gray hover:border-gray-300 cursor-pointer"
                       onClick={handleFilterClick}
                       aria-label="필터 설정"
                     >

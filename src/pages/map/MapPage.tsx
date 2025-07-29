@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
+import type { NormalizedPlace } from '@kakao-map/api/types';
 import { BottomSheetContainer } from '@kakao-map/components/BottomSheetContainer';
 import { MapContainer } from '@kakao-map/components/MapContainer';
 import { MapControlsContainer } from '@kakao-map/components/MapControlsContainer';
 import { LocationControlContainer } from '@kakao-map/components/location/LocationControlContainer';
 import { MapUIProvider } from '@kakao-map/context/MapUIContext';
 import { useMapUIContext } from '@kakao-map/context/MapUIContext';
-import type { NormalizedPlace } from '@kakao-map/api/types';
 import useKakaoLoader from '@kakao-map/hooks/useKakaoLoader';
 
 /**
@@ -21,16 +21,22 @@ import useKakaoLoader from '@kakao-map/hooks/useKakaoLoader';
 const MapContent = () => {
   const { bottomSheetRef } = useMapUIContext();
   const [keywordResults, setKeywordResults] = useState<NormalizedPlace[]>([]);
-  const [persistentMarkers, setPersistentMarkers] = useState<NormalizedPlace[]>([]);
-  const [selectedPlace, setSelectedPlace] = useState<NormalizedPlace | null>(null);
-  const [mapCenterSetter, setMapCenterSetter] = useState<((center: { lat: number; lng: number }) => void) | null>(null);
+  const [persistentMarkers, setPersistentMarkers] = useState<NormalizedPlace[]>(
+    []
+  );
+  const [selectedPlace, setSelectedPlace] = useState<NormalizedPlace | null>(
+    null
+  );
+  const mapCenterSetterRef = useRef<
+    ((center: { lat: number; lng: number }) => void) | null
+  >(null);
 
   // 키워드 검색 결과 장소 클릭 핸들러
   const handlePlaceClick = useCallback((place: NormalizedPlace) => {
     if (import.meta.env.MODE === 'development') {
       console.log('🎯 MapPage - handlePlaceClick 호출됨:', {
         placeName: place.name,
-        placeId: place.id
+        placeId: place.id,
       });
     }
     setSelectedPlace(place);
@@ -45,30 +51,36 @@ const MapContent = () => {
   }, []);
 
   // MapControlsContainer에서 검색 결과를 받는 핸들러
-  const handleKeywordSearchResults = useCallback((results: NormalizedPlace[]) => {
-    setKeywordResults(results);
-    // 새로운 검색 결과가 있을 때만 persistent markers 업데이트
-    if (results.length > 0) {
-      setPersistentMarkers(results);
-      
-      // 검색 완료 시 첫 번째 결과 위치로 지도 이동
-      if (mapCenterSetter && results[0]) {
-        const firstResult = results[0];
-        mapCenterSetter({
-          lat: firstResult.latitude,
-          lng: firstResult.longitude
-        });
-        
-        if (import.meta.env.MODE === 'development') {
-          console.log('🎯 지도 이동 - 첫 번째 검색 결과:', {
-            place: firstResult.name,
-            coordinates: { lat: firstResult.latitude, lng: firstResult.longitude }
+  const handleKeywordSearchResults = useCallback(
+    (results: NormalizedPlace[]) => {
+      setKeywordResults(results);
+      // 새로운 검색 결과가 있을 때만 persistent markers 업데이트
+      if (results.length > 0) {
+        setPersistentMarkers(results);
+
+        // 검색 완료 시 첫 번째 결과 위치로 지도 이동
+        if (mapCenterSetterRef.current && results[0]) {
+          const firstResult = results[0];
+          mapCenterSetterRef.current({
+            lat: firstResult.latitude,
+            lng: firstResult.longitude,
           });
+
+          if (import.meta.env.MODE === 'development') {
+            console.log('🎯 지도 이동 - 첫 번째 검색 결과:', {
+              place: firstResult.name,
+              coordinates: {
+                lat: firstResult.latitude,
+                lng: firstResult.longitude,
+              },
+            });
+          }
         }
       }
-    }
-    setSelectedPlace(null); // 새 검색 시 선택 초기화
-  }, [mapCenterSetter]);
+      setSelectedPlace(null); // 새 검색 시 선택 초기화
+    },
+    []
+  );
 
   // 마커를 완전히 지우는 핸들러 (새 검색 시)
   const handleClearMarkers = useCallback(() => {
@@ -82,19 +94,23 @@ const MapContent = () => {
   }, []);
 
   // MapContainer에서 setMapCenter 함수를 받는 핸들러
-  const handleMapCenterUpdate = useCallback((setMapCenter: (center: { lat: number; lng: number }) => void) => {
-    setMapCenterSetter(() => setMapCenter);
-  }, []);
-
+  const handleMapCenterUpdate = useCallback(
+    (setMapCenter: (center: { lat: number; lng: number }) => void) => {
+      mapCenterSetterRef.current = setMapCenter;
+    },
+    []
+  );
 
   // selectedPlace 상태 변화 디버깅
   useEffect(() => {
     if (import.meta.env.MODE === 'development') {
       console.log('🎯 MapPage - selectedPlace 상태 변화:', {
-        selectedPlace: selectedPlace ? {
-          name: selectedPlace.name,
-          id: selectedPlace.id
-        } : null
+        selectedPlace: selectedPlace
+          ? {
+              name: selectedPlace.name,
+              id: selectedPlace.id,
+            }
+          : null,
       });
     }
   }, [selectedPlace]);
@@ -117,19 +133,19 @@ const MapContent = () => {
   return (
     <div className="h-screen relative">
       <div className="absolute inset-0">
-        <MapContainer 
+        <MapContainer
           keywordResults={persistentMarkers}
           selectedPlace={selectedPlace}
           onPlaceClick={handlePlaceClick}
           onPlaceInfoClose={handlePlaceInfoClose}
           onMapCenterUpdate={handleMapCenterUpdate}
         />
-        <MapControlsContainer 
+        <MapControlsContainer
           onKeywordSearchResults={handleKeywordSearchResults}
           keywordResults={keywordResults}
           onClearMarkers={handleClearMarkers}
           onCloseSearchResults={handleCloseSearchResults}
-          mapCenterSetter={mapCenterSetter}
+          mapCenterSetter={mapCenterSetterRef.current}
           onPlaceClick={handlePlaceClick}
         />
         <LocationControlContainer />

@@ -51,16 +51,16 @@ export const useMapData = () => {
         return undefined; // 전체 선택 시 필터 파라미터 제외
       }
 
-      // FilterTabs의 value를 백엔드 API의 category 값으로 매핑
+      // FilterTabs의 value를 백엔드 API의 category 값으로 매핑 (필터탭 label과 동일하게)
       const categoryMapping: Record<string, string> = {
-        activity: 'activity',
-        beauty: 'beauty',
-        shopping: 'shopping',
-        life: 'convenience', // 생활/편의 → convenience
-        food: 'restaurant', // 푸드 → restaurant
-        culture: 'culture',
-        education: 'education',
-        travel: 'travel',
+        activity: '액티비티',
+        beauty: '뷰티',
+        shopping: '쇼핑',
+        life: '생활/편의',
+        food: '푸드',
+        culture: '문화/여가',
+        education: '교육',
+        travel: '여행/교통',
       };
 
       return categoryMapping[frontendCategory];

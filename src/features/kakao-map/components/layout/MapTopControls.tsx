@@ -1,9 +1,12 @@
-import { type FC } from 'react';
+import { type FC, useEffect, useRef } from 'react';
 
 import RegionFilterDropdown from '@kakao-map/components/layout/RegionFilterDropdown';
 
-import { FilterTabs, SearchInput } from '@/shared/components';
+import { FilterTabs } from '@/shared/components';
 
+import type { NormalizedPlace } from '../../api/types';
+import { MapSearchInput } from '../search/MapSearchInput';
+import { SearchResultList } from '../search/SearchResultList';
 import BottomSheetToggleButton from './BottomSheetToggleButton';
 
 /**
@@ -30,6 +33,16 @@ interface MapTopControlsProps {
   onToggleBottomSheet: () => void;
   /** 바텀시트 열림/닫힘 상태 */
   isBottomSheetOpen: boolean;
+  /** 키워드 검색 결과 */
+  keywordResults?: NormalizedPlace[];
+  /** 검색 로딩 상태 */
+  isSearching?: boolean;
+  /** 선택된 장소 */
+  selectedPlace?: NormalizedPlace | null;
+  /** 검색 결과 아이템 클릭 핸들러 */
+  onSearchResultClick?: (place: NormalizedPlace) => void;
+  /** 검색 결과 닫기 핸들러 */
+  onCloseSearchResults?: () => void;
 }
 
 /**
@@ -47,14 +60,58 @@ const MapTopControls: FC<MapTopControlsProps> = ({
   onCategoryFilterChange,
   onToggleBottomSheet,
   isBottomSheetOpen,
+  keywordResults = [],
+  isSearching = false,
+  selectedPlace,
+  onSearchResultClick,
+  onCloseSearchResults,
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isSearchResultsVisible = keywordResults.length > 0 || isSearching;
+
+  // 외부 클릭 시 검색 결과 닫기
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        isSearchResultsVisible &&
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node) &&
+        onCloseSearchResults
+      ) {
+        onCloseSearchResults();
+      }
+    };
+
+    if (isSearchResultsVisible) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [isSearchResultsVisible, onCloseSearchResults]);
+
+  // ESC 키 눌렀을 때 검색 결과 닫기
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isSearchResultsVisible && onCloseSearchResults) {
+        onCloseSearchResults();
+      }
+    };
+
+    if (isSearchResultsVisible) {
+      document.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown);
+      };
+    }
+  }, [isSearchResultsVisible, onCloseSearchResults]);
   return (
-    <div className="absolute top-4 left-4 right-4 z-10 space-y-2.5">
+    <div ref={containerRef} className="absolute top-4 left-4 right-4 z-10 space-y-2.5">
       {/* 바텀시트 토글 버튼 - 오른쪽 고정 위치 */}
       <div className="absolute top-0 right-0 z-20">
-        <BottomSheetToggleButton 
-          isOpen={isBottomSheetOpen} 
-          onToggle={onToggleBottomSheet} 
+        <BottomSheetToggleButton
+          isOpen={isBottomSheetOpen}
+          onToggle={onToggleBottomSheet}
         />
       </div>
 
@@ -62,7 +119,7 @@ const MapTopControls: FC<MapTopControlsProps> = ({
       <div className="flex items-stretch gap-2.5 ml-[52px] mr-[52px]">
         {/* 검색바 - 대부분 공간 사용 */}
         <div className="flex-1 h-[44px]">
-          <SearchInput
+          <MapSearchInput
             value={searchValue}
             onChange={onSearchValueChange}
             onSearch={onSearch}
@@ -85,6 +142,20 @@ const MapTopControls: FC<MapTopControlsProps> = ({
       <div className="w-full">
         <FilterTabs variant="white" onChange={onCategoryFilterChange} />
       </div>
+
+      {/* 검색 결과 리스트 */}
+      {isSearchResultsVisible && (
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 max-h-80 z-30 backdrop-blur-sm overflow-hidden">
+          <SearchResultList
+            results={keywordResults}
+            loading={isSearching}
+            onItemClick={onSearchResultClick || (() => {})}
+            selectedPlaceId={selectedPlace?.id}
+            emptyMessage="검색 결과가 없습니다."
+            className="max-h-80 overflow-y-auto"
+          />
+        </div>
+      )}
     </div>
   );
 };

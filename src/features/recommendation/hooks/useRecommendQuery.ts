@@ -1,4 +1,4 @@
-import type { RecommendStore } from '@recommendation/api/recommendedStores.types';
+import type { Store } from '@kakao-map/types/store';
 import {
   type GetRecommendedStoresParams,
   getRecommendedStores,
@@ -8,7 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 export const useRecommendedStoresQuery = (
   params: GetRecommendedStoresParams
 ) => {
-  return useQuery<RecommendStore[]>({
+  return useQuery<Store[]>({
     queryKey: ['recommendStoresByLocation', params],
     queryFn: () => getRecommendedStores(params),
     enabled: !!params.lat && !!params.lon,

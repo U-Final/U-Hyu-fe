@@ -7,8 +7,6 @@ interface FilteringChartProps {
   data: CategoryStat[];
 }
 
-
-
 export function FilteringChart({ data }: FilteringChartProps) {
   if (!data || data.length === 0) {
     return (

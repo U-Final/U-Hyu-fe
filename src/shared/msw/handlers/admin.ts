@@ -1,4 +1,4 @@
-import { ADMIN_ENDPOINTS } from '@/features/admin/api/endpoints';
+import { ADMIN_ENDPOINTS } from '@admin/api/endpoints';
 import {
     mockAdminBrands,
     mockAdminCategories,
@@ -6,7 +6,7 @@ import {
     mockFilteringStats,
     mockMembershipStats,
     mockRecommendStats,
-    mockSearchStats,
+
     mockTotalStats,
 } from '@/features/admin/api/mockData';
 import type { AdminBrand } from '@/features/admin/api/types';
@@ -15,7 +15,7 @@ import { http, HttpResponse } from 'msw';
 
 const createResponse = <T>(data: T, message: string) =>
   HttpResponse.json({
-    statusCode: 0,
+    success: true,
     message,
     data,
   });
@@ -29,9 +29,7 @@ export const adminHandlers = [
   http.get(ADMIN_ENDPOINTS.STAT_FILTERING, () => {
     return createResponse(mockFilteringStats, '필터링 수 통계 조회 성공');
   }),
-  http.get(ADMIN_ENDPOINTS.STAT_SEARCH, () => {
-    return createResponse(mockSearchStats, '검색 수 통계 조회 성공');
-  }),
+
   http.get(ADMIN_ENDPOINTS.STAT_RECOMMEND, () => {
     return createResponse(mockRecommendStats, '추천 분포 통계 조회 성공');
   }),

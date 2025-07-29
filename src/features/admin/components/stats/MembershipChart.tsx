@@ -7,8 +7,6 @@ interface MembershipChartProps {
   data: CategoryStat[];
 }
 
-
-
 export function MembershipChart({ data }: MembershipChartProps) {
   if (!data || data.length === 0) {
     return (
@@ -91,4 +89,4 @@ export function MembershipChart({ data }: MembershipChartProps) {
       </CardContent>
     </Card>
   );
-} 
+}

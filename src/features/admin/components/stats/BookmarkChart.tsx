@@ -1,13 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/shadcn/ui/card';
 import { BookmarkIcon } from '@heroicons/react/24/outline';
 import { RadarChart, PolarGrid, PolarAngleAxis, Radar, Legend, ResponsiveContainer } from 'recharts';
-import type { CategoryStat } from '../../api/types';
+import type { CategoryStat, BrandStatDetail } from '../../api/types';
 
 interface BookmarkChartProps {
   data: CategoryStat[];
 }
-
-
 
 export function BookmarkChart({ data }: BookmarkChartProps) {
   if (!data || data.length === 0) {
@@ -70,7 +68,7 @@ export function BookmarkChart({ data }: BookmarkChartProps) {
                   </div>
                   {category.bookmarksByBrandList && category.bookmarksByBrandList.length > 0 && (
                     <div className="ml-4 space-y-1">
-                      {category.bookmarksByBrandList.map((brand) => (
+                      {category.bookmarksByBrandList.map((brand: BrandStatDetail) => (
                         <div key={brand.brandName} className="flex justify-between items-center text-sm">
                           <span className="text-muted-foreground">• {brand.brandName}</span>
                           <span className="text-muted-foreground">{brand.sumBookmarksByBrand}개</span>

@@ -1,13 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/shadcn/ui/card';
 import { HeartIcon } from '@heroicons/react/24/outline';
-import { ScatterChart, Scatter, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import type { RecommendStat } from '../../api/types';
 
 interface RecommendChartProps {
   data: RecommendStat[];
 }
-
-
 
 export function RecommendChart({ data }: RecommendChartProps) {
   if (!data || data.length === 0) {
@@ -27,10 +25,10 @@ export function RecommendChart({ data }: RecommendChartProps) {
   }
 
   // 차트 데이터 준비
-  const scatterData = data.map((category, index) => ({
-    x: index,
-    y: category.sumStatisticsRecommendByCategory || 0,
+  const chartData = data.map((category, index) => ({
     name: category.categoryName,
+    value: category.sumStatisticsRecommendByCategory || 0,
+    fill: index % 2 === 0 ? '#8884d8' : '#82ca9d',
   }));
 
   return (
@@ -43,16 +41,28 @@ export function RecommendChart({ data }: RecommendChartProps) {
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
-          {/* 산점도 차트 */}
+          {/* 파이 차트 */}
           <div>
-            <h4 className="text-sm font-medium mb-4">추천 분포</h4>
+            <h4 className="text-sm font-medium mb-4">카테고리별 추천 분포</h4>
             <ResponsiveContainer width="100%" height={300}>
-              <ScatterChart data={scatterData}>
-                <XAxis dataKey="x" />
-                <YAxis />
+              <PieChart>
+                <Pie
+                  data={chartData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {chartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.fill} />
+                  ))}
+                </Pie>
                 <Tooltip />
-                <Scatter dataKey="y" fill="--text-warning" />
-              </ScatterChart>
+                <Legend />
+              </PieChart>
             </ResponsiveContainer>
           </div>
 
@@ -74,4 +84,4 @@ export function RecommendChart({ data }: RecommendChartProps) {
       </CardContent>
     </Card>
   );
-} 
+}

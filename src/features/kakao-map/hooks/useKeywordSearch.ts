@@ -102,58 +102,35 @@ export const useKeywordSearch = () => {
   }, []);
 
   const reset = useCallback(() => {
-    // 진행 중인 검색 취소
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
     }
-
     setState(initialState);
   }, []);
 
-  const search = useCallback(
-    async (inputKeyword?: string, options?: KakaoKeywordSearchOptions) => {
-      const keyword = inputKeyword || state.keyword;
-
-      if (import.meta.env.MODE === 'development') {
-        console.log('🔍 useKeywordSearch.search 호출됨:', {
-          inputKeyword,
-          currentStateKeyword: state.keyword,
-          finalKeyword: keyword,
-          options,
-        });
-      }
-
+  const executeSearch = useCallback(
+    async (
+      searchFn: () => Promise<{
+        places: NormalizedPlace[];
+        meta: KakaoKeywordSearchResponse['meta'];
+      }>,
+      keyword: string
+    ) => {
       if (!keyword.trim()) {
-        if (import.meta.env.MODE === 'development') {
-          console.log('❌ 검색어가 비어있음:', keyword);
-        }
-        setState(prev => ({
-          ...prev,
-          error: '검색어를 입력해주세요.',
-        }));
+        setState(prev => ({ ...prev, error: '검색어를 입력해주세요.' }));
         return;
       }
 
-      // 이전 검색 취소
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
-
-      // 새로운 AbortController 생성
       abortControllerRef.current = new AbortController();
 
-      setState(prev => ({
-        ...prev,
-        keyword,
-        loading: true,
-        error: null,
-      }));
+      setState(prev => ({ ...prev, keyword, loading: true, error: null }));
 
       try {
-        const result = await getKeywordSearch(keyword.trim(), options);
-
-        // 검색이 취소되지 않았을 때만 결과 설정
+        const result = await searchFn();
         if (!abortControllerRef.current?.signal.aborted) {
           setState(prev => ({
             ...prev,
@@ -161,42 +138,48 @@ export const useKeywordSearch = () => {
             meta: result.meta,
             hasSearched: true,
             loading: false,
-            selectedPlace: null, // 새 검색 시 선택 초기화
+            selectedPlace: null,
           }));
-
           if (import.meta.env.MODE === 'development') {
-            console.log('🔍 키워드 검색 완료:', {
+            console.log('🔍 검색 완료:', {
               keyword,
               resultCount: result.places.length,
               totalCount: result.meta.total_count,
-              results: result.places,
             });
           }
         }
       } catch (error) {
-        // 검색이 취소되지 않았을 때만 에러 설정
         if (!abortControllerRef.current?.signal.aborted) {
           const errorMessage =
             error instanceof Error
               ? error.message
               : '검색 중 오류가 발생했습니다.';
-
           setState(prev => ({
             ...prev,
             loading: false,
             error: errorMessage,
             hasSearched: true,
           }));
-
           if (import.meta.env.MODE === 'development') {
-            console.error('🔍 키워드 검색 실패:', error);
+            console.error('🔍 검색 실패:', error);
           }
         }
       } finally {
         abortControllerRef.current = null;
       }
     },
-    [state.keyword]
+    []
+  );
+
+  const search = useCallback(
+    async (inputKeyword?: string, options?: KakaoKeywordSearchOptions) => {
+      const keyword = inputKeyword ?? state.keyword;
+      await executeSearch(
+        () => getKeywordSearch(keyword.trim(), options),
+        keyword
+      );
+    },
+    [state.keyword, executeSearch]
   );
 
   const searchByLocation = useCallback(
@@ -206,102 +189,23 @@ export const useKeywordSearch = () => {
       radius: number = 5000,
       categoryFilter?: string
     ) => {
-      if (!keyword.trim()) {
-        setState(prev => ({
-          ...prev,
-          error: '검색어를 입력해주세요.',
-        }));
-        return;
-      }
-
-      // 이전 검색 취소
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-
-      abortControllerRef.current = new AbortController();
-
-      setState(prev => ({
-        ...prev,
-        keyword,
-        loading: true,
-        error: null,
-      }));
-
-      try {
-        let result;
-
+      await executeSearch(async () => {
         if (categoryFilter && categoryFilter !== 'all') {
-          // 카테고리 필터가 있는 경우
           const kakaoCategory =
             getPrimaryKakaoCategoryForFilter(categoryFilter);
           if (kakaoCategory) {
-            result = await getKeywordSearchByCategory(
+            return getKeywordSearchByCategory(
               keyword.trim(),
               kakaoCategory,
               center,
               radius
             );
-          } else {
-            // 카테고리 매핑이 없는 경우 일반 검색
-            result = await getKeywordSearchByLocation(
-              keyword.trim(),
-              center,
-              radius
-            );
-          }
-        } else {
-          // 카테고리 필터가 없는 경우
-          result = await getKeywordSearchByLocation(
-            keyword.trim(),
-            center,
-            radius
-          );
-        }
-
-        if (!abortControllerRef.current?.signal.aborted) {
-          setState(prev => ({
-            ...prev,
-            results: result.places,
-            meta: result.meta,
-            hasSearched: true,
-            loading: false,
-            selectedPlace: null,
-          }));
-
-          if (import.meta.env.MODE === 'development') {
-            console.log('🔍 위치 기반 키워드 검색 완료:', {
-              keyword,
-              center,
-              radius,
-              categoryFilter,
-              resultCount: result.places.length,
-            });
           }
         }
-      } catch (error) {
-        if (!abortControllerRef.current?.signal.aborted) {
-          const errorMessage =
-            error instanceof Error
-              ? error.message
-              : '검색 중 오류가 발생했습니다.';
-
-          setState(prev => ({
-            ...prev,
-            loading: false,
-            error: errorMessage,
-            hasSearched: true,
-          }));
-
-          if (import.meta.env.MODE === 'development') {
-            console.error('🔍 위치 기반 키워드 검색 실패:', error);
-          }
-        }
-      } finally {
-        abortControllerRef.current = null;
-      }
+        return getKeywordSearchByLocation(keyword.trim(), center, radius);
+      }, keyword);
     },
-    []
+    [executeSearch]
   );
 
   const searchWithCategoryFilter = useCallback(
@@ -311,110 +215,27 @@ export const useKeywordSearch = () => {
       center?: { lat: number; lng: number },
       radius: number = 5000
     ) => {
-      if (!keyword.trim()) {
-        setState(prev => ({
-          ...prev,
-          error: '검색어를 입력해주세요.',
-        }));
-        return;
-      }
-
-      // 이전 검색 취소
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-
-      abortControllerRef.current = new AbortController();
-
-      setState(prev => ({
-        ...prev,
-        keyword,
-        loading: true,
-        error: null,
-      }));
-
-      try {
-        let result;
-
+      await executeSearch(async () => {
         if (categoryFilter === 'all') {
-          // 전체 카테고리인 경우
-          if (center) {
-            result = await getKeywordSearchByLocation(
-              keyword.trim(),
-              center,
-              radius
-            );
-          } else {
-            result = await getKeywordSearch(keyword.trim());
-          }
-        } else {
-          // 특정 카테고리인 경우
-          const kakaoCategory =
-            getPrimaryKakaoCategoryForFilter(categoryFilter);
-          if (kakaoCategory) {
-            result = await getKeywordSearchByCategory(
-              keyword.trim(),
-              kakaoCategory,
-              center,
-              radius
-            );
-          } else {
-            // 카테고리 매핑이 없는 경우 일반 검색
-            if (center) {
-              result = await getKeywordSearchByLocation(
-                keyword.trim(),
-                center,
-                radius
-              );
-            } else {
-              result = await getKeywordSearch(keyword.trim());
-            }
-          }
+          return center
+            ? getKeywordSearchByLocation(keyword.trim(), center, radius)
+            : getKeywordSearch(keyword.trim());
         }
-
-        if (!abortControllerRef.current?.signal.aborted) {
-          setState(prev => ({
-            ...prev,
-            results: result.places,
-            meta: result.meta,
-            hasSearched: true,
-            loading: false,
-            selectedPlace: null,
-          }));
-
-          if (import.meta.env.MODE === 'development') {
-            console.log('🔍 카테고리 필터 검색 완료:', {
-              keyword,
-              categoryFilter,
-              center,
-              radius,
-              resultCount: result.places.length,
-            });
-          }
+        const kakaoCategory = getPrimaryKakaoCategoryForFilter(categoryFilter);
+        if (kakaoCategory) {
+          return getKeywordSearchByCategory(
+            keyword.trim(),
+            kakaoCategory,
+            center,
+            radius
+          );
         }
-      } catch (error) {
-        if (!abortControllerRef.current?.signal.aborted) {
-          const errorMessage =
-            error instanceof Error
-              ? error.message
-              : '검색 중 오류가 발생했습니다.';
-
-          setState(prev => ({
-            ...prev,
-            loading: false,
-            error: errorMessage,
-            hasSearched: true,
-          }));
-
-          if (import.meta.env.MODE === 'development') {
-            console.error('🔍 카테고리 필터 검색 실패:', error);
-          }
-        }
-      } finally {
-        abortControllerRef.current = null;
-      }
+        return center
+          ? getKeywordSearchByLocation(keyword.trim(), center, radius)
+          : getKeywordSearch(keyword.trim());
+      }, keyword);
     },
-    []
+    [executeSearch]
   );
 
   const actions: KeywordSearchActions = {
@@ -431,84 +252,5 @@ export const useKeywordSearch = () => {
   return {
     ...state,
     ...actions,
-  };
-};
-
-/**
- * 검색 히스토리 관리를 위한 훅
- */
-export const useSearchHistory = (maxHistorySize: number = 10) => {
-  const [history, setHistory] = useState<string[]>(() => {
-    try {
-      const saved = localStorage.getItem('keyword-search-history');
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  const addToHistory = useCallback(
-    (keyword: string) => {
-      if (!keyword.trim()) return;
-
-      setHistory(prev => {
-        const filtered = prev.filter(item => item !== keyword.trim());
-        const newHistory = [keyword.trim(), ...filtered].slice(
-          0,
-          maxHistorySize
-        );
-
-        try {
-          localStorage.setItem(
-            'keyword-search-history',
-            JSON.stringify(newHistory)
-          );
-        } catch (error) {
-          if (import.meta.env.MODE === 'development') {
-            console.warn('검색 히스토리 저장 실패:', error);
-          }
-        }
-
-        return newHistory;
-      });
-    },
-    [maxHistorySize]
-  );
-
-  const removeFromHistory = useCallback((keyword: string) => {
-    setHistory(prev => {
-      const newHistory = prev.filter(item => item !== keyword);
-
-      try {
-        localStorage.setItem(
-          'keyword-search-history',
-          JSON.stringify(newHistory)
-        );
-      } catch (error) {
-        if (import.meta.env.MODE === 'development') {
-          console.warn('검색 히스토리 저장 실패:', error);
-        }
-      }
-
-      return newHistory;
-    });
-  }, []);
-
-  const clearHistory = useCallback(() => {
-    setHistory([]);
-    try {
-      localStorage.removeItem('keyword-search-history');
-    } catch (error) {
-      if (import.meta.env.MODE === 'development') {
-        console.warn('검색 히스토리 삭제 실패:', error);
-      }
-    }
-  }, []);
-
-  return {
-    history,
-    addToHistory,
-    removeFromHistory,
-    clearHistory,
   };
 };

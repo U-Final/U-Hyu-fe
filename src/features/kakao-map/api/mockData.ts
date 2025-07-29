@@ -19,8 +19,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: 'CGV 골드클래스 할인',
     logo_image: '/images/brands/CGV.png',
     brandName: 'CGV',
-    latitude: 37.54699,
-    longitude: 127.09598,
+    latitude: 37.503320984596634,
+    longitude: 127.04980263250734,
   },
   {
     storeId: 2,
@@ -30,8 +30,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '롯데시네마 포인트 적립',
     logo_image: '/images/brands/롯데시네마.png',
     brandName: '롯데시네마',
-    latitude: 37.5475,
-    longitude: 127.0965,
+    latitude: 37.5035,
+    longitude: 127.0499,
   },
   {
     storeId: 3,
@@ -41,8 +41,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '메가박스 멤버십 할인',
     logo_image: '/images/brands/메가박스.png',
     brandName: '메가박스',
-    latitude: 37.548,
-    longitude: 127.097,
+    latitude: 37.5038,
+    longitude: 127.0502,
   },
 
   // 액티비티 (activity)
@@ -54,8 +54,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '루지 체험 할인권',
     logo_image: '/images/brands/스카이라인루지.png',
     brandName: '스카이라인 루지',
-    latitude: 37.5485,
-    longitude: 127.0975,
+    latitude: 37.5041,
+    longitude: 127.0505,
   },
   {
     storeId: 5,
@@ -65,8 +65,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '액티비티 예약 할인',
     logo_image: '/images/brands/클룩.png',
     brandName: '클룩',
-    latitude: 37.549,
-    longitude: 127.098,
+    latitude: 37.5044,
+    longitude: 127.0508,
   },
   {
     storeId: 6,
@@ -76,8 +76,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '전망대 입장 할인',
     logo_image: '/images/brands/부산엑스더스카이.png',
     brandName: '부산 엑스 더 스카이',
-    latitude: 37.5495,
-    longitude: 127.0985,
+    latitude: 37.5047,
+    longitude: 127.0511,
   },
 
   // 뷰티/클리닉 (beauty)
@@ -89,8 +89,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '피부관리 프로그램 할인',
     logo_image: '/images/brands/오가나셀.png',
     brandName: '오가나셀 피부과 의원 청담점',
-    latitude: 37.55,
-    longitude: 127.099,
+    latitude: 37.505,
+    longitude: 127.0514,
   },
   {
     storeId: 8,
@@ -100,8 +100,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '미용 시술 할인',
     logo_image: '/images/brands/데이원클리닉.png',
     brandName: '데이원클리닉',
-    latitude: 37.5505,
-    longitude: 127.0995,
+    latitude: 37.5053,
+    longitude: 127.0517,
   },
   {
     storeId: 9,
@@ -111,8 +111,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '네일아트 서비스 할인',
     logo_image: '/images/brands/포쉬네일.png',
     brandName: '포쉬네일',
-    latitude: 37.551,
-    longitude: 127.1,
+    latitude: 37.5056,
+    longitude: 127.052,
   },
 
   // 건강/영양제 (pharmacy)
@@ -124,8 +124,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '건강기능식품 할인',
     logo_image: '/images/brands/동아제약.png',
     brandName: '동아제약 디몰',
-    latitude: 37.5515,
-    longitude: 127.1005,
+    latitude: 37.5059,
+    longitude: 127.0523,
   },
   {
     storeId: 11,
@@ -135,8 +135,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: 'LG생활건강 제품 할인',
     logo_image: '/images/brands/LG생활건강.png',
     brandName: 'LG생활건강샵 U+패밀리샵',
-    latitude: 37.552,
-    longitude: 127.101,
+    latitude: 37.5062,
+    longitude: 127.0526,
   },
   {
     storeId: 12,
@@ -146,8 +146,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '영양제 정기구독 할인',
     logo_image: '/images/brands/필리.png',
     brandName: '필리',
-    latitude: 37.5525,
-    longitude: 127.1015,
+    latitude: 37.5065,
+    longitude: 127.0529,
   },
 
   // 생활/편의 (lifestyle)
@@ -159,8 +159,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: 'GS&POINT 적립',
     logo_image: '/images/brands/GS25.png',
     brandName: 'GS25',
-    latitude: 37.553,
-    longitude: 127.102,
+    latitude: 37.5068,
+    longitude: 127.0532,
   },
   {
     storeId: 14,
@@ -170,8 +170,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '반려동물 용품 할인',
     logo_image: '/images/brands/펫생각.png',
     brandName: '펫생각',
-    latitude: 37.5535,
-    longitude: 127.1025,
+    latitude: 37.5071,
+    longitude: 127.0535,
   },
   {
     storeId: 15,
@@ -181,8 +181,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '생활용품 할인',
     logo_image: '/images/brands/셸로.png',
     brandName: '셸로',
-    latitude: 37.554,
-    longitude: 127.103,
+    latitude: 37.5074,
+    longitude: 127.0538,
   },
 
   // 쇼핑 (shopping)
@@ -194,8 +194,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: 'GS THE FRESH 적립',
     logo_image: '/images/brands/GSTHEFRESH.png',
     brandName: 'GS THE FRESH',
-    latitude: 37.5545,
-    longitude: 127.1035,
+    latitude: 37.5077,
+    longitude: 127.0541,
   },
   {
     storeId: 17,
@@ -205,8 +205,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: 'VYVY 멤버십 할인',
     logo_image: '/images/brands/VYVY.png',
     brandName: 'VYVY',
-    latitude: 37.555,
-    longitude: 127.104,
+    latitude: 37.508,
+    longitude: 127.0544,
   },
   {
     storeId: 18,
@@ -216,8 +216,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '롯데백화점 포인트 적립',
     logo_image: '/images/brands/롯데백화점.png',
     brandName: '롯데백화점몰',
-    latitude: 37.5555,
-    longitude: 127.1045,
+    latitude: 37.5083,
+    longitude: 127.0547,
   },
 
   // 음식점 (food)
@@ -229,8 +229,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: 'VIPS 멤버십 할인',
     logo_image: '/images/brands/VIPS.png',
     brandName: 'VIPS',
-    latitude: 37.556,
-    longitude: 127.105,
+    latitude: 37.5086,
+    longitude: 127.055,
   },
   {
     storeId: 20,
@@ -240,8 +240,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '디너코스 할인',
     logo_image: '/images/brands/더플레이스.png',
     brandName: '더플레이스',
-    latitude: 37.5565,
-    longitude: 127.1055,
+    latitude: 37.5089,
+    longitude: 127.0553,
   },
   {
     storeId: 21,
@@ -251,8 +251,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '면요리 할인',
     logo_image: '/images/brands/제일제면소.png',
     brandName: '제일제면소',
-    latitude: 37.557,
-    longitude: 127.106,
+    latitude: 37.5092,
+    longitude: 127.0556,
   },
 
   // 베이커리/디저트 (bakery)
@@ -264,8 +264,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '파리바게뜨 포인트 적립',
     logo_image: '/images/brands/파리바게뜨.png',
     brandName: '파리바게뜨',
-    latitude: 37.5575,
-    longitude: 127.1065,
+    latitude: 37.5095,
+    longitude: 127.0559,
   },
   {
     storeId: 23,
@@ -275,8 +275,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '뚜레쥬르 멤버십 할인',
     logo_image: '/images/brands/뚜레쥬르.png',
     brandName: '뚜레쥬르',
-    latitude: 37.558,
-    longitude: 127.107,
+    latitude: 37.5098,
+    longitude: 127.0562,
   },
   {
     storeId: 24,
@@ -286,8 +286,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '아이스크림 할인',
     logo_image: '/images/brands/베스킨라빈스.png',
     brandName: '베스킨라빈스',
-    latitude: 37.5585,
-    longitude: 127.1075,
+    latitude: 37.5101,
+    longitude: 127.0565,
   },
 
   // 추가 영화/미디어 매장 (문화/여가)
@@ -299,8 +299,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '씨네폭스 멤버십 할인',
     logo_image: '/images/brands/씨네폭스.png',
     brandName: '씨네폭스',
-    latitude: 37.559,
-    longitude: 127.108,
+    latitude: 37.5104,
+    longitude: 127.0568,
   },
 
   // 테마파크 (문화/여가)
@@ -312,8 +312,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '뽀로로파크 입장료 할인',
     logo_image: '/images/brands/뽀로로파크.png',
     brandName: '뽀로로파크',
-    latitude: 37.5595,
-    longitude: 127.1085,
+    latitude: 37.5107,
+    longitude: 127.0571,
   },
   {
     storeId: 27,
@@ -323,8 +323,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '서울랜드 자유이용권 할인',
     logo_image: '/images/brands/서울랜드.png',
     brandName: '서울랜드',
-    latitude: 37.56,
-    longitude: 127.109,
+    latitude: 37.511,
+    longitude: 127.0574,
   },
 
   // 워터파크/아쿠아리움 (액티비티)
@@ -336,8 +336,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '아쿠아필드 입장료 할인',
     logo_image: '/images/brands/아쿠아필드.png',
     brandName: '아쿠아필드',
-    latitude: 37.5605,
-    longitude: 127.1095,
+    latitude: 37.5113,
+    longitude: 127.0577,
   },
   {
     storeId: 29,
@@ -347,8 +347,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '코엑스아쿠아리움 입장료 할인',
     logo_image: '/images/brands/코엑스아쿠아리움.png',
     brandName: '코엑스아쿠아리움',
-    latitude: 37.561,
-    longitude: 127.11,
+    latitude: 37.5116,
+    longitude: 127.058,
   },
 
   // 추가 액티비티
@@ -360,8 +360,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: 'SEOUL SKY 전망대 할인',
     logo_image: '/images/brands/SEOULSKY.png',
     brandName: 'SEOUL SKY',
-    latitude: 37.5615,
-    longitude: 127.1105,
+    latitude: 37.5119,
+    longitude: 127.0583,
   },
   {
     storeId: 31,
@@ -371,8 +371,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '한강유람선 승선료 할인',
     logo_image: '/images/brands/이크루즈.png',
     brandName: '한강유람선 이크루즈',
-    latitude: 37.562,
-    longitude: 127.111,
+    latitude: 37.5122,
+    longitude: 127.0586,
   },
 
   // 추가 뷰티/건강
@@ -384,8 +384,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '피부과 진료 할인',
     logo_image: '/images/brands/유엔아이피부과.png',
     brandName: '유엔아이피부과의원',
-    latitude: 37.5625,
-    longitude: 127.1115,
+    latitude: 37.5125,
+    longitude: 127.0589,
   },
 
   // 추가 쇼핑
@@ -397,8 +397,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: 'U+콕 포인트 적립',
     logo_image: '/images/brands/U+콕.png',
     brandName: 'U+콕',
-    latitude: 37.563,
-    longitude: 127.112,
+    latitude: 37.5128,
+    longitude: 127.0592,
   },
   {
     storeId: 34,
@@ -408,8 +408,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '현대면세점 할인',
     logo_image: '/images/brands/현대면세점.png',
     brandName: '현대면세점',
-    latitude: 37.5635,
-    longitude: 127.1125,
+    latitude: 37.5131,
+    longitude: 127.0595,
   },
 
   // 추가 생활/편의
@@ -421,8 +421,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '다락 생활용품 할인',
     logo_image: '/images/brands/다락.png',
     brandName: '다락',
-    latitude: 37.564,
-    longitude: 127.113,
+    latitude: 37.5134,
+    longitude: 127.0598,
   },
   {
     storeId: 36,
@@ -432,8 +432,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '청소서비스 할인',
     logo_image: '/images/brands/청소연구소.png',
     brandName: '청소연구소',
-    latitude: 37.5645,
-    longitude: 127.1135,
+    latitude: 37.5137,
+    longitude: 127.0601,
   },
 
   // 추가 베이커리/디저트 (푸드)
@@ -445,8 +445,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '파리크라상 제품 할인',
     logo_image: '/images/brands/파리크라상.png',
     brandName: '파리크라상',
-    latitude: 37.565,
-    longitude: 127.114,
+    latitude: 37.514,
+    longitude: 127.0604,
   },
   {
     storeId: 38,
@@ -456,8 +456,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '브레댄코 베이커리 할인',
     logo_image: '/images/brands/브레댄코.png',
     brandName: '브레댄코',
-    latitude: 37.5655,
-    longitude: 127.1145,
+    latitude: 37.5143,
+    longitude: 127.0607,
   },
 
   // 추가 음식점 (푸드)
@@ -469,8 +469,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '굽네치킨 배달 할인',
     logo_image: '/images/brands/굽네치킨.png',
     brandName: '굽네치킨',
-    latitude: 37.566,
-    longitude: 127.115,
+    latitude: 37.5146,
+    longitude: 127.061,
   },
   {
     storeId: 40,
@@ -480,8 +480,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '도미노피자 할인',
     logo_image: '/images/brands/도미노피자.png',
     brandName: '도미노피자',
-    latitude: 37.5665,
-    longitude: 127.1155,
+    latitude: 37.5149,
+    longitude: 127.0613,
   },
 
   // 공연/전시 (문화/여가)
@@ -493,8 +493,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '빛의 벙커 입장료 할인',
     logo_image: '/images/brands/빛의벙커.png',
     brandName: '빛의 벙커',
-    latitude: 37.567,
-    longitude: 127.116,
+    latitude: 37.5152,
+    longitude: 127.0616,
   },
   {
     storeId: 42,
@@ -504,8 +504,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '페인터즈 공연 티켓 할인',
     logo_image: '/images/brands/페인터즈.png',
     brandName: '페인터즈',
-    latitude: 37.5675,
-    longitude: 127.1165,
+    latitude: 37.5155,
+    longitude: 127.0619,
   },
 
   // 교육
@@ -517,8 +517,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '영어교육 수강료 할인',
     logo_image: '/images/brands/월스트리트잉글리시.png',
     brandName: '월스트리트 잉글리시',
-    latitude: 37.568,
-    longitude: 127.117,
+    latitude: 37.5158,
+    longitude: 127.0622,
   },
   {
     storeId: 44,
@@ -528,8 +528,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '심리상담 할인',
     logo_image: '/images/brands/허그맘.png',
     brandName: '허그맘',
-    latitude: 37.5685,
-    longitude: 127.1175,
+    latitude: 37.5161,
+    longitude: 127.0625,
   },
 
   // 여행/교통
@@ -541,8 +541,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: 'SK렌터카 렌탈 할인',
     logo_image: '/images/brands/SK렌터카.png',
     brandName: 'SK렌터카',
-    latitude: 37.569,
-    longitude: 127.118,
+    latitude: 37.5164,
+    longitude: 127.0628,
   },
   {
     storeId: 46,
@@ -552,8 +552,8 @@ export const MOCK_STORES: StoreSummary[] = [
     benefit: '티웨이항공 항공료 할인',
     logo_image: '/images/brands/티웨이항공.png',
     brandName: '티웨이항공',
-    latitude: 37.5695,
-    longitude: 127.1185,
+    latitude: 37.5167,
+    longitude: 127.0631,
   },
 ];
 

@@ -5,6 +5,7 @@ import { RecommendedStoreList } from '@recommendation/components/RecommendedStor
 
 import { BrandCard } from '@/shared/components';
 import { useIsLoggedIn } from '@/shared/store/userStore';
+import { trackMarkerClick } from '@/shared/utils/actionlogTracker';
 
 interface StoreListContentProps {
   stores: Store[];
@@ -17,6 +18,12 @@ const StoreListContent: FC<StoreListContentProps> = ({
   onStoreClick,
 }) => {
   const isLoggedIn = useIsLoggedIn();
+
+  const handleStoreClick = (store: Store) => {
+    onStoreClick?.(store);
+    trackMarkerClick(store.storeId);
+  };
+
   return (
     <div className="flex flex-col h-full">
       {/* 필터 헤더 - 고정 */}
@@ -38,7 +45,7 @@ const StoreListContent: FC<StoreListContentProps> = ({
               <div
                 key={store.storeId}
                 className="p-4 hover:bg-gray-50 transition-colors cursor-pointer"
-                onClick={() => onStoreClick?.(store)}
+                onClick={() => handleStoreClick(store)}
               >
                 <BrandCard logoUrl={store.logo_image}>
                   <div className="flex-1 min-w-0">

@@ -11,6 +11,7 @@ import { useGetBrandListQuery } from '@benefit/hooks/useGetBrandListQuery';
 import { BrandCard, FilterTabs, SearchInput } from '@/shared/components';
 import { BENEFIT_FILTER_TABS } from '@/shared/components/filter_tabs/FilterTabs.variants';
 import { useModalStore } from '@/shared/store';
+import { trackFilterUsed } from '@/shared/utils/actionlogTracker';
 
 export const BenefitList = () => {
   const { params, setParam, setParams } = useBenefitQueryParams();
@@ -33,6 +34,15 @@ export const BenefitList = () => {
     });
   };
 
+  const handleFilterChange = (value: string) => {
+    setParam('category', value); // 기존 로직 유지
+
+    // 🎯 행동 추적 추가
+    if (value !== 'all' && value !== '전체') {
+      trackFilterUsed(value);
+    }
+  };
+
   return (
     <div>
       {/* 필터링 */}
@@ -42,10 +52,7 @@ export const BenefitList = () => {
           onChange={setSearchTerm}
           onSearch={value => setParam('brand_name', value)}
         />
-        <FilterTabs
-          tabs={BENEFIT_FILTER_TABS}
-          onChange={value => setParam('category', value)}
-        />
+        <FilterTabs tabs={BENEFIT_FILTER_TABS} onChange={handleFilterChange} />
         <CheckBoxList
           selectedItems={{
             storeType: params.storeType ?? '',

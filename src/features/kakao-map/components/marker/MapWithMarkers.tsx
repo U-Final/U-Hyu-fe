@@ -3,6 +3,8 @@ import { type FC, useCallback, useEffect, useRef, useState } from 'react';
 import { useSharedMapStore } from '@mymap/store/SharedMapStore';
 import { CustomOverlayMap, Map as KakaoMap } from 'react-kakao-maps-sdk';
 
+import { trackMarkerClick } from '@/shared/utils/actionlogTracker';
+
 import { useDistanceBasedSearch } from '../../hooks/useManualSearch';
 import { useToggleFavoriteMutation } from '../../hooks/useMapQueries';
 import type { Store } from '../../types/store';
@@ -116,6 +118,8 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
     (store: Store) => {
       setInternalSelectedStoreId(store.storeId);
       setInfoWindowStore(store);
+
+      trackMarkerClick(store.storeId);
 
       // 인포 윈도우가 화면 중앙에 오도록 오프셋 적용
       const offset = 0.0017;

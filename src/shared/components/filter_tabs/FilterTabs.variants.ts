@@ -12,14 +12,11 @@ import {
   Coffee,
   Building2,
   Palette,
-  Pill,
-  Baby,
 } from 'lucide-react';
 
 // React Icons (특정 카테고리용 추가 아이콘)
 import { 
   MdLocalConvenienceStore,
-  MdSchool,
 } from 'react-icons/md';
 
 import type { FilterTabItem } from './FilterTabs.types';

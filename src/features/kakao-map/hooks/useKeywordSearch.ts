@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 
-import { searchKeyword, searchKeywordByLocation } from '../api/keywordSearchApi';
+import { searchKeyword, searchKeywordByLocation, searchKeywordByCategory } from '../api/keywordSearchApi';
+import { getPrimaryKakaoCategoryForFilter } from '../config/categoryMapping';
 import type {
   KakaoKeywordSearchOptions,
   KakaoKeywordSearchResponse,
@@ -36,6 +37,14 @@ export interface KeywordSearchActions {
   searchByLocation: (
     keyword: string,
     center: { lat: number; lng: number },
+    radius?: number,
+    categoryFilter?: string
+  ) => Promise<void>;
+  /** 카테고리 필터로 검색 실행 */
+  searchWithCategoryFilter: (
+    keyword: string,
+    categoryFilter: string,
+    center?: { lat: number; lng: number },
     radius?: number
   ) => Promise<void>;
   /** 장소 선택 */
@@ -190,7 +199,8 @@ export const useKeywordSearch = () => {
     async (
       keyword: string,
       center: { lat: number; lng: number },
-      radius: number = 5000
+      radius: number = 5000,
+      categoryFilter?: string
     ) => {
       if (!keyword.trim()) {
         setState(prev => ({
@@ -215,11 +225,34 @@ export const useKeywordSearch = () => {
       }));
 
       try {
-        const result = await searchKeywordByLocation(
-          keyword.trim(),
-          center,
-          radius
-        );
+        let result;
+        
+        if (categoryFilter && categoryFilter !== 'all') {
+          // 카테고리 필터가 있는 경우
+          const kakaoCategory = getPrimaryKakaoCategoryForFilter(categoryFilter);
+          if (kakaoCategory) {
+            result = await searchKeywordByCategory(
+              keyword.trim(),
+              kakaoCategory,
+              center,
+              radius
+            );
+          } else {
+            // 카테고리 매핑이 없는 경우 일반 검색
+            result = await searchKeywordByLocation(
+              keyword.trim(),
+              center,
+              radius
+            );
+          }
+        } else {
+          // 카테고리 필터가 없는 경우
+          result = await searchKeywordByLocation(
+            keyword.trim(),
+            center,
+            radius
+          );
+        }
 
         if (!abortControllerRef.current?.signal.aborted) {
           setState(prev => ({
@@ -236,6 +269,7 @@ export const useKeywordSearch = () => {
               keyword,
               center,
               radius,
+              categoryFilter,
               resultCount: result.places.length,
             });
           }
@@ -265,10 +299,115 @@ export const useKeywordSearch = () => {
     []
   );
 
+  const searchWithCategoryFilter = useCallback(
+    async (
+      keyword: string,
+      categoryFilter: string,
+      center?: { lat: number; lng: number },
+      radius: number = 5000
+    ) => {
+      if (!keyword.trim()) {
+        setState(prev => ({
+          ...prev,
+          error: '검색어를 입력해주세요.',
+        }));
+        return;
+      }
+
+      // 이전 검색 취소
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      abortControllerRef.current = new AbortController();
+
+      setState(prev => ({
+        ...prev,
+        keyword,
+        loading: true,
+        error: null,
+      }));
+
+      try {
+        let result;
+
+        if (categoryFilter === 'all') {
+          // 전체 카테고리인 경우
+          if (center) {
+            result = await searchKeywordByLocation(keyword.trim(), center, radius);
+          } else {
+            result = await searchKeyword(keyword.trim());
+          }
+        } else {
+          // 특정 카테고리인 경우
+          const kakaoCategory = getPrimaryKakaoCategoryForFilter(categoryFilter);
+          if (kakaoCategory) {
+            result = await searchKeywordByCategory(
+              keyword.trim(),
+              kakaoCategory,
+              center,
+              radius
+            );
+          } else {
+            // 카테고리 매핑이 없는 경우 일반 검색
+            if (center) {
+              result = await searchKeywordByLocation(keyword.trim(), center, radius);
+            } else {
+              result = await searchKeyword(keyword.trim());
+            }
+          }
+        }
+
+        if (!abortControllerRef.current?.signal.aborted) {
+          setState(prev => ({
+            ...prev,
+            results: result.places,
+            meta: result.meta,
+            hasSearched: true,
+            loading: false,
+            selectedPlace: null,
+          }));
+
+          if (import.meta.env.MODE === 'development') {
+            console.log('🔍 카테고리 필터 검색 완료:', {
+              keyword,
+              categoryFilter,
+              center,
+              radius,
+              resultCount: result.places.length,
+            });
+          }
+        }
+      } catch (error) {
+        if (!abortControllerRef.current?.signal.aborted) {
+          const errorMessage =
+            error instanceof Error
+              ? error.message
+              : '검색 중 오류가 발생했습니다.';
+
+          setState(prev => ({
+            ...prev,
+            loading: false,
+            error: errorMessage,
+            hasSearched: true,
+          }));
+
+          if (import.meta.env.MODE === 'development') {
+            console.error('🔍 카테고리 필터 검색 실패:', error);
+          }
+        }
+      } finally {
+        abortControllerRef.current = null;
+      }
+    },
+    []
+  );
+
   const actions: KeywordSearchActions = {
     setKeyword,
     search,
     searchByLocation,
+    searchWithCategoryFilter,
     selectPlace,
     clearResults,
     clearError,

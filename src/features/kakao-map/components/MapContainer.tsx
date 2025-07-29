@@ -1,8 +1,10 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 
 import { useMapData } from '../hooks/useMapData';
 import { useMapInteraction } from '../hooks/useMapInteraction';
 import { useMapUIContext } from '../context/MapUIContext';
+import { useMapUI } from '../hooks/useMapUI';
+import { filterStoresByCategory } from '../config/categoryMapping';
 import type { NormalizedPlace } from '../api/types';
 import type { Store } from '../types/store';
 import MapWithMarkers from './marker/MapWithMarkers';
@@ -13,6 +15,7 @@ interface MapContainerProps {
   onPlaceClick?: (place: NormalizedPlace) => void;
   onPlaceInfoClose?: () => void;
   onMapCenterUpdate?: (setMapCenter: (center: { lat: number; lng: number }) => void) => void;
+  onMapCenterChange?: (center: { lat: number; lng: number }) => void;
 }
 
 export const MapContainer: React.FC<MapContainerProps> = ({
@@ -21,11 +24,18 @@ export const MapContainer: React.FC<MapContainerProps> = ({
   onPlaceClick,
   onPlaceInfoClose,
   onMapCenterUpdate,
+  onMapCenterChange,
 }) => {
   const { stores, mapCenter, userLocation, loading, setMapCenter } = useMapData();
   const { handleMapCenterChange, handleMapMarkerClick, selectedMarkerId } =
     useMapInteraction();
   const { bottomSheetRef } = useMapUIContext();
+  const { activeCategoryFilter } = useMapUI();
+
+  // 카테고리 필터가 적용된 매장 데이터
+  const filteredStores = useMemo(() => {
+    return filterStoresByCategory(stores, activeCategoryFilter);
+  }, [stores, activeCategoryFilter]);
 
   // setMapCenter 함수를 상위 컴포넌트로 전달
   useEffect(() => {
@@ -33,6 +43,13 @@ export const MapContainer: React.FC<MapContainerProps> = ({
       onMapCenterUpdate(setMapCenter);
     }
   }, [onMapCenterUpdate, setMapCenter]);
+
+  // 현재 지도 중심 좌표를 상위 컴포넌트로 전달
+  useEffect(() => {
+    if (onMapCenterChange) {
+      onMapCenterChange(mapCenter);
+    }
+  }, [onMapCenterChange, mapCenter]);
 
   // 키워드 검색 결과 디버깅
   useEffect(() => {
@@ -61,7 +78,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({
   return (
     <MapWithMarkers
       center={mapCenter}
-      stores={stores}
+      stores={filteredStores}
       keywordResults={keywordResults}
       selectedPlace={selectedPlace}
       currentLocation={userLocation}

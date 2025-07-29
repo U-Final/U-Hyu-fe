@@ -268,7 +268,6 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
             <BrandMarker
               store={store}
               isSelected={selectedStoreId === store.storeId}
-              hasPromotion={!!store.benefit}
               onClick={() => handleMarkerClick(store)}
             />
           </CustomOverlayMap>

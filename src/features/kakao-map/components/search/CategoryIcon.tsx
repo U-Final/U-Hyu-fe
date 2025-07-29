@@ -64,7 +64,7 @@ const CATEGORY_ICON_MAP = {
 /**
  * 카테고리별 색상 매핑
  */
-const CATEGORY_COLOR_MAP = {
+export const CATEGORY_COLOR_MAP = {
   MT1: '#ef4444', // red-500 - 대형마트
   CS2: '#22c55e', // green-500 - 편의점
   PS3: '#f59e0b', // amber-500 - 어린이집, 유치원
@@ -188,6 +188,8 @@ interface CategoryIconProps {
   isSelected?: boolean;
   /** 추가 CSS 클래스 */
   className?: string;
+  /** 아이콘 색상 오버라이드 */
+  color?: string;
 }
 
 /**
@@ -199,6 +201,7 @@ export const CategoryIcon: React.FC<CategoryIconProps> = ({
   size = 18,
   isSelected = false,
   className = '',
+  color,
 }) => {
   // 카테고리 그룹 코드 추출
   const code = getCategoryGroupCode(category, categoryGroupCode);
@@ -207,16 +210,16 @@ export const CategoryIcon: React.FC<CategoryIconProps> = ({
   const IconComponent =
     CATEGORY_ICON_MAP[code as keyof typeof CATEGORY_ICON_MAP] || MapPinIcon;
 
-  // 색상 가져오기
-  const iconColor =
-    CATEGORY_COLOR_MAP[code as keyof typeof CATEGORY_COLOR_MAP] || '#6b7280';
+  // 색상 가져오기 - color prop이 있으면 우선 사용
+  const iconColor = color || 
+    (isSelected ? '#3b82f6' : CATEGORY_COLOR_MAP[code as keyof typeof CATEGORY_COLOR_MAP] || '#6b7280');
 
   return (
     <IconComponent
       width={size}
       height={size}
       style={{
-        color: isSelected ? '#3b82f6' : iconColor,
+        color: iconColor,
       }}
       className={`transition-colors duration-200 ${className}`}
     />

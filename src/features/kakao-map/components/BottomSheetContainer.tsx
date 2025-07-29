@@ -22,6 +22,7 @@ import {
 import StoreListContent from './layout/StoreListContent';
 import BrandSelectContent from './layout/steps/BrandSelectContent';
 import CategorySelectContent from './layout/steps/CategorySelectContent';
+import { BackButton } from '@/shared/components';
 
 export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
   (_, ref) => {
@@ -247,13 +248,7 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
                 <div className="flex-1">
                   <h2 className="text-lg font-bold text-gray-900">My Map</h2>
                 </div>
-                <button
-                  className="px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md"
-                  onClick={handleBackToList}
-                  aria-label="이전 화면으로 돌아가기"
-                >
-                  뒤로
-                </button>
+                <BackButton onClick={handleBackToList} />
               </div>
               <MyMapList />
             </div>
@@ -266,13 +261,7 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
                 <div className="flex-1">
                   <h2 className="text-lg font-bold text-gray-900">필터</h2>
                 </div>
-                <button
-                  className="px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md"
-                  onClick={handleBackToList}
-                  aria-label="이전 화면으로 돌아가기"
-                >
-                  뒤로
-                </button>
+                <BackButton onClick={handleBackToList} />
               </div>
               <CategorySelectContent
                 selectedCategory={selectedCategory}
@@ -288,13 +277,7 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
                 <div className="flex-1">
                   <h2 className="text-lg font-bold text-gray-900">필터</h2>
                 </div>
-                <button
-                  className="px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md"
-                  onClick={handleBackToList}
-                  aria-label="이전 화면으로 돌아가기"
-                >
-                  뒤로
-                </button>
+                <BackButton onClick={handleBackToList} />
               </div>
               <BrandSelectContent
                 categoryKey={selectedCategory}

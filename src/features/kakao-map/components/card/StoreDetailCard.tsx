@@ -47,18 +47,16 @@ const ExpandButton: React.FC<{
   </button>
 );
 
-// 애니메이션 변형
+// 개선된 애니메이션 변형
 const expandVariants = {
   collapsed: { 
-    height: 'auto',
     opacity: 1 
   },
   expanded: { 
-    height: 'auto',
     opacity: 1,
     transition: {
-      height: { duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] },
-      opacity: { duration: 0.2 }
+      duration: 0.3,
+      ease: [0.25, 0.46, 0.45, 0.94]
     }
   }
 };
@@ -157,26 +155,46 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
               <span>{userGrade}</span>
             </div>
             <div className="bg-yellow-50 px-3 py-1 rounded-tr rounded-br text-sm flex-1 min-w-0">
-              <motion.div 
-                layout
-                className="break-words text-left"
-                variants={expandVariants}
-                initial="collapsed"
-                animate={expandedSections.benefits ? "expanded" : "collapsed"}
-              >
-                <span className="whitespace-pre-wrap block">
-                  {expandedSections.benefits 
-                    ? benefits 
-                    : getTruncatedText(benefits, TEXT_LIMITS.benefits)
-                  }
-                </span>
+              <div className="break-words text-left overflow-hidden">
+                <motion.div
+                  layout
+                  animate={{ 
+                    height: expandedSections.benefits ? 'auto' : 'auto'
+                  }}
+                  transition={{
+                    duration: 0.4,
+                    ease: [0.25, 0.46, 0.45, 0.94]
+                  }}
+                >
+                  <motion.span 
+                    className="whitespace-pre-wrap block"
+                    animate={{
+                      opacity: 1
+                    }}
+                    transition={{
+                      duration: 0.2,
+                      delay: expandedSections.benefits ? 0 : 0.1
+                    }}
+                  >
+                    {expandedSections.benefits 
+                      ? benefits 
+                      : getTruncatedText(benefits, TEXT_LIMITS.benefits)
+                    }
+                  </motion.span>
+                </motion.div>
                 {shouldShowExpand(benefits, TEXT_LIMITS.benefits) && (
-                  <ExpandButton
-                    isExpanded={expandedSections.benefits}
-                    onClick={() => toggleSection('benefits')}
-                  />
+                  <motion.div
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2, delay: 0.1 }}
+                  >
+                    <ExpandButton
+                      isExpanded={expandedSections.benefits}
+                      onClick={() => toggleSection('benefits')}
+                    />
+                  </motion.div>
                 )}
-              </motion.div>
+              </div>
             </div>
           </div>
         </div>
@@ -186,50 +204,90 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
         <div className="text-sm font-semibold text-gray-700 mb-2">
           제공 횟수
         </div>
-        <motion.div 
-          layout
-          className="text-sm"
-          variants={expandVariants}
-          initial="collapsed"
-          animate={expandedSections.usageLimit ? "expanded" : "collapsed"}
-        >
-          <span className="break-words whitespace-pre-wrap">
-            {expandedSections.usageLimit 
-              ? usageLimit 
-              : getTruncatedText(usageLimit, TEXT_LIMITS.usageLimit)
-            }
-          </span>
+        <div className="text-sm overflow-hidden">
+          <motion.div
+            layout
+            animate={{ 
+              height: expandedSections.usageLimit ? 'auto' : 'auto'
+            }}
+            transition={{
+              duration: 0.4,
+              ease: [0.25, 0.46, 0.45, 0.94]
+            }}
+          >
+            <motion.span 
+              className="break-words whitespace-pre-wrap block"
+              animate={{
+                opacity: 1
+              }}
+              transition={{
+                duration: 0.2,
+                delay: expandedSections.usageLimit ? 0 : 0.1
+              }}
+            >
+              {expandedSections.usageLimit 
+                ? usageLimit 
+                : getTruncatedText(usageLimit, TEXT_LIMITS.usageLimit)
+              }
+            </motion.span>
+          </motion.div>
           {shouldShowExpand(usageLimit, TEXT_LIMITS.usageLimit) && (
-            <ExpandButton
-              isExpanded={expandedSections.usageLimit}
-              onClick={() => toggleSection('usageLimit')}
-            />
+            <motion.div
+              initial={{ opacity: 0, y: -5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: 0.1 }}
+            >
+              <ExpandButton
+                isExpanded={expandedSections.usageLimit}
+                onClick={() => toggleSection('usageLimit')}
+              />
+            </motion.div>
           )}
-        </motion.div>
+        </div>
       </div>
       {/* 이용방법 */}
       <div className="relative z-10">
         <div className="text-sm font-semibold text-gray-700 mb-2">이용방법</div>
-        <motion.div 
-          layout
-          className="text-xs text-gray-600"
-          variants={expandVariants}
-          initial="collapsed"
-          animate={expandedSections.usageMethod ? "expanded" : "collapsed"}
-        >
-          <span className="break-words whitespace-pre-line">
-            {expandedSections.usageMethod 
-              ? usageMethod 
-              : getTruncatedText(usageMethod, TEXT_LIMITS.usageMethod)
-            }
-          </span>
+        <div className="text-xs text-gray-600 overflow-hidden">
+          <motion.div
+            layout
+            animate={{ 
+              height: expandedSections.usageMethod ? 'auto' : 'auto'
+            }}
+            transition={{
+              duration: 0.4,
+              ease: [0.25, 0.46, 0.45, 0.94]
+            }}
+          >
+            <motion.span 
+              className="break-words whitespace-pre-line block"
+              animate={{
+                opacity: 1
+              }}
+              transition={{
+                duration: 0.2,
+                delay: expandedSections.usageMethod ? 0 : 0.1
+              }}
+            >
+              {expandedSections.usageMethod 
+                ? usageMethod 
+                : getTruncatedText(usageMethod, TEXT_LIMITS.usageMethod)
+              }
+            </motion.span>
+          </motion.div>
           {shouldShowExpand(usageMethod, TEXT_LIMITS.usageMethod) && (
-            <ExpandButton
-              isExpanded={expandedSections.usageMethod}
-              onClick={() => toggleSection('usageMethod')}
-            />
+            <motion.div
+              initial={{ opacity: 0, y: -5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: 0.1 }}
+            >
+              <ExpandButton
+                isExpanded={expandedSections.usageMethod}
+                onClick={() => toggleSection('usageMethod')}
+              />
+            </motion.div>
           )}
-        </motion.div>
+        </div>
       </div>
     </div>
   );

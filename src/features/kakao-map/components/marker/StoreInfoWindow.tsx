@@ -48,26 +48,80 @@ const bubbleVariants = {
   },
 };
 
-// 그림자 효과 애니메이션
-const shadowVariants = {
+// 다층 그림자 효과 애니메이션
+const baseShadowVariants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.7,
+    y: 15,
+  },
+  visible: {
+    opacity: 0.12,
+    scale: 1.1,
+    y: 8,
+    transition: {
+      duration: 0.5,
+      ease: [0.25, 0.46, 0.45, 0.94] as const,
+    },
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.8,
+    y: 5,
+    transition: {
+      duration: 0.3,
+    },
+  },
+};
+
+// 주요 그림자 효과
+const mainShadowVariants = {
   hidden: {
     opacity: 0,
     scale: 0.8,
-    y: 10,
+    y: 12,
   },
   visible: {
-    opacity: [0, 0.3, 0.2],
-    scale: [0.8, 1.2, 1],
-    y: [10, 0, 0],
+    opacity: 0.25,
+    scale: 1.05,
+    y: 6,
     transition: {
-      duration: 0.6,
-      times: [0, 0.3, 1],
-      ease: 'easeOut' as const,
+      duration: 0.4,
+      delay: 0.1,
+      ease: [0.25, 0.46, 0.45, 0.94] as const,
     },
   },
   exit: {
     opacity: 0,
     scale: 0.9,
+    y: 3,
+    transition: {
+      duration: 0.25,
+    },
+  },
+};
+
+// 가까운 그림자 효과
+const nearShadowVariants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.9,
+    y: 8,
+  },
+  visible: {
+    opacity: 0.15,
+    scale: 1.02,
+    y: 2,
+    transition: {
+      duration: 0.3,
+      delay: 0.15,
+      ease: [0.25, 0.46, 0.45, 0.94] as const,
+    },
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.95,
+    y: 1,
     transition: {
       duration: 0.2,
     },
@@ -97,6 +151,7 @@ const contentVariants = {
     },
   },
 };
+
 
 // 로딩 상태 애니메이션
 const loadingVariants = {
@@ -172,19 +227,52 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
   return (
     <CustomOverlayMap
       position={position}
-      yAnchor={1.25}
+      yAnchor={1.12}
       xAnchor={0.5}
       zIndex={1000}
     >
-      <div className="relative perspective-1000">
-        {/* 그림자 효과 */}
+      <div className="relative perspective-1000" style={{ padding: '20px' }}>
+        {/* 베이스 그림자 (가장 넓고 흐린 그림자) */}
         <motion.div
-          className="absolute inset-0 bg-black/10 rounded-2xl blur-lg"
-          variants={shadowVariants}
+          className="absolute inset-0 rounded-2xl"
+          variants={baseShadowVariants}
           initial="hidden"
           animate="visible"
           exit="exit"
           style={{
+            background:
+              'radial-gradient(ellipse 120% 60% at center, rgba(0, 0, 0, 0.08) 0%, transparent 60%)',
+            filter: 'blur(20px)',
+            transform: 'translateZ(-30px)',
+          }}
+        />
+
+        {/* 메인 그림자 (중간 깊이) */}
+        <motion.div
+          className="absolute inset-0 rounded-2xl"
+          variants={mainShadowVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          style={{
+            background:
+              'radial-gradient(ellipse 100% 50% at center, rgba(0, 0, 0, 0.12) 0%, transparent 70%)',
+            filter: 'blur(12px)',
+            transform: 'translateZ(-20px)',
+          }}
+        />
+
+        {/* 가까운 그림자 (선명한 그림자) */}
+        <motion.div
+          className="absolute inset-0 rounded-2xl"
+          variants={nearShadowVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          style={{
+            background:
+              'radial-gradient(ellipse 90% 40% at center, rgba(0, 0, 0, 0.15) 0%, transparent 80%)',
+            filter: 'blur(6px)',
             transform: 'translateZ(-10px)',
           }}
         />
@@ -205,8 +293,13 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
           onMouseUp={e => {
             e.stopPropagation();
           }}
+          whileHover={{
+            y: -2,
+            transition: { duration: 0.2, ease: 'easeOut' },
+          }}
           style={{
-            filter: 'drop-shadow(0 10px 25px rgba(0, 0, 0, 0.15))',
+            filter:
+              'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1)) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.08))',
           }}
         >
           {/* 내용 컨테이너 */}
@@ -215,6 +308,10 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
             initial="hidden"
             animate="visible"
             exit="exit"
+            className="bg-white rounded-2xl overflow-hidden"
+            style={{
+              boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.6)',
+            }}
           >
             <StoreDetailCard
               storeName={storeDetail.storeName}
@@ -229,23 +326,55 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
 
           {/* 글로우 효과 */}
           <motion.div
-            className="absolute inset-0 rounded-2xl opacity-30"
+            className="absolute inset-0 rounded-2xl opacity-20"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{
-              opacity: [0, 0.3, 0.1, 0],
+              opacity: [0, 0.2, 0.05, 0],
               scale: [0.8, 1.1, 1.05, 1],
             }}
             transition={{
-              duration: 0.8,
-              times: [0, 0.3, 0.7, 1],
+              duration: 1.2,
+              times: [0, 0.25, 0.8, 1],
               ease: 'easeOut',
             }}
             style={{
               background:
-                'radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%)',
+                'conic-gradient(from 0deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.05) 120deg, rgba(59, 130, 246, 0.1) 240deg, rgba(59, 130, 246, 0.1) 360deg)',
               pointerEvents: 'none',
             }}
           />
+
+          {/* 하이라이트 효과 */}
+          <motion.div
+            className="absolute top-0 left-1/4 right-1/4 h-px rounded-full"
+            initial={{ opacity: 0, scaleX: 0 }}
+            animate={{
+              opacity: [0, 0.6, 0],
+              scaleX: [0, 1, 1],
+            }}
+            transition={{
+              duration: 0.8,
+              times: [0, 0.3, 1],
+              delay: 0.4,
+            }}
+            style={{
+              background:
+                'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent)',
+              pointerEvents: 'none',
+            }}
+          />
+
+          {/* 삼각형 꼬리 */}
+          <div className="absolute left-1/2 -bottom-4 -translate-x-1/2 w-8 h-8 z-0">
+            <svg width="32" height="32" viewBox="0 0 32 32">
+              <polygon
+                points="16,32 0,0 32,0"
+                fill="white"
+                stroke="rgba(226, 232, 240, 0.4)"
+                strokeWidth="0.5"
+              />
+            </svg>
+          </div>
         </motion.div>
       </div>
     </CustomOverlayMap>

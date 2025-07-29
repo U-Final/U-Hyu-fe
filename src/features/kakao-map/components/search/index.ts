@@ -17,12 +17,12 @@ export type {
 
 // API 함수 exports
 export {
-  searchKeyword,
-  searchKeywordByLocation,
-  searchKeywordByBounds,
-  searchKeywordByCategory,
+  getKeywordSearch,
+  getKeywordSearchByLocation,
+  getKeywordSearchByBounds,
+  getKeywordSearchByCategory,
   normalizeKakaoPlace,
-  checkKakaoApiKeyStatus,
+  getKakaoApiKeyStatus,
 } from '../../api/keywordSearchApi';
 
 // 훅 exports

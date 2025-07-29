@@ -1,12 +1,16 @@
 import { useCallback, useRef, useState } from 'react';
 
-import { searchKeyword, searchKeywordByLocation, searchKeywordByCategory } from '../api/keywordSearchApi';
-import { getPrimaryKakaoCategoryForFilter } from '../config/categoryMapping';
+import {
+  getKeywordSearch,
+  getKeywordSearchByCategory,
+  getKeywordSearchByLocation,
+} from '../api/keywordSearchApi';
 import type {
   KakaoKeywordSearchOptions,
   KakaoKeywordSearchResponse,
   NormalizedPlace,
 } from '../api/types';
+import { getPrimaryKakaoCategoryForFilter } from '../config/categoryMapping';
 
 export interface KeywordSearchState {
   /** 현재 검색어 */
@@ -116,7 +120,7 @@ export const useKeywordSearch = () => {
           inputKeyword,
           currentStateKeyword: state.keyword,
           finalKeyword: keyword,
-          options
+          options,
         });
       }
 
@@ -147,7 +151,7 @@ export const useKeywordSearch = () => {
       }));
 
       try {
-        const result = await searchKeyword(keyword.trim(), options);
+        const result = await getKeywordSearch(keyword.trim(), options);
 
         // 검색이 취소되지 않았을 때만 결과 설정
         if (!abortControllerRef.current?.signal.aborted) {
@@ -226,12 +230,13 @@ export const useKeywordSearch = () => {
 
       try {
         let result;
-        
+
         if (categoryFilter && categoryFilter !== 'all') {
           // 카테고리 필터가 있는 경우
-          const kakaoCategory = getPrimaryKakaoCategoryForFilter(categoryFilter);
+          const kakaoCategory =
+            getPrimaryKakaoCategoryForFilter(categoryFilter);
           if (kakaoCategory) {
-            result = await searchKeywordByCategory(
+            result = await getKeywordSearchByCategory(
               keyword.trim(),
               kakaoCategory,
               center,
@@ -239,7 +244,7 @@ export const useKeywordSearch = () => {
             );
           } else {
             // 카테고리 매핑이 없는 경우 일반 검색
-            result = await searchKeywordByLocation(
+            result = await getKeywordSearchByLocation(
               keyword.trim(),
               center,
               radius
@@ -247,7 +252,7 @@ export const useKeywordSearch = () => {
           }
         } else {
           // 카테고리 필터가 없는 경우
-          result = await searchKeywordByLocation(
+          result = await getKeywordSearchByLocation(
             keyword.trim(),
             center,
             radius
@@ -334,15 +339,20 @@ export const useKeywordSearch = () => {
         if (categoryFilter === 'all') {
           // 전체 카테고리인 경우
           if (center) {
-            result = await searchKeywordByLocation(keyword.trim(), center, radius);
+            result = await getKeywordSearchByLocation(
+              keyword.trim(),
+              center,
+              radius
+            );
           } else {
-            result = await searchKeyword(keyword.trim());
+            result = await getKeywordSearch(keyword.trim());
           }
         } else {
           // 특정 카테고리인 경우
-          const kakaoCategory = getPrimaryKakaoCategoryForFilter(categoryFilter);
+          const kakaoCategory =
+            getPrimaryKakaoCategoryForFilter(categoryFilter);
           if (kakaoCategory) {
-            result = await searchKeywordByCategory(
+            result = await getKeywordSearchByCategory(
               keyword.trim(),
               kakaoCategory,
               center,
@@ -351,9 +361,13 @@ export const useKeywordSearch = () => {
           } else {
             // 카테고리 매핑이 없는 경우 일반 검색
             if (center) {
-              result = await searchKeywordByLocation(keyword.trim(), center, radius);
+              result = await getKeywordSearchByLocation(
+                keyword.trim(),
+                center,
+                radius
+              );
             } else {
-              result = await searchKeyword(keyword.trim());
+              result = await getKeywordSearch(keyword.trim());
             }
           }
         }

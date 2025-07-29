@@ -79,7 +79,6 @@ export const normalizeKakaoPlace = (place: KakaoPlace): NormalizedPlace => {
   };
 };
 
-
 /**
  * 카카오 API 키 유효성 검증
  */
@@ -94,20 +93,20 @@ const validateKakaoApiKey = (apiKey: string): boolean => {
  */
 const createKakaoAuthHeaders = (): HeadersInit => {
   const KAKAO_REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
-  
+
   if (!KAKAO_REST_API_KEY) {
     throw new Error(
       '카카오 REST API 키가 설정되지 않았습니다. ' +
-      '.env 파일에 VITE_KAKAO_REST_API_KEY 환경변수를 설정해주세요.\n' +
-      '예시: VITE_KAKAO_REST_API_KEY=53a3872100096cdf985756a17ffb1634'
+        '.env 파일에 VITE_KAKAO_REST_API_KEY 환경변수를 설정해주세요.\n' +
+        '예시: VITE_KAKAO_REST_API_KEY=53a3872100096cdf985756a17ffb1634'
     );
   }
 
   if (!validateKakaoApiKey(KAKAO_REST_API_KEY)) {
     throw new Error(
       '카카오 REST API 키 형식이 올바르지 않습니다. ' +
-      '32자리 16진수 문자열이어야 합니다.\n' +
-      '카카오 개발자센터(https://developers.kakao.com)에서 올바른 REST API 키를 확인해주세요.'
+        '32자리 16진수 문자열이어야 합니다.\n' +
+        '카카오 개발자센터(https://developers.kakao.com)에서 올바른 REST API 키를 확인해주세요.'
     );
   }
 
@@ -119,7 +118,7 @@ const createKakaoAuthHeaders = (): HeadersInit => {
   }
 
   return {
-    'Authorization': `KakaoAK ${KAKAO_REST_API_KEY}`,
+    Authorization: `KakaoAK ${KAKAO_REST_API_KEY}`,
     'Content-Type': 'application/json',
   };
 };
@@ -127,7 +126,7 @@ const createKakaoAuthHeaders = (): HeadersInit => {
 /**
  * 카카오 키워드 검색 API 호출 (실제 REST API 사용)
  */
-export const searchKeyword = async (
+export const getKeywordSearch = async (
   keyword: string,
   options?: KakaoKeywordSearchOptions
 ): Promise<{
@@ -142,7 +141,7 @@ export const searchKeyword = async (
   // API 요청 파라미터 구성
   const params = new URLSearchParams();
   params.append('query', keyword.trim());
-  
+
   if (options?.x !== undefined && options?.y !== undefined) {
     params.append('x', options.x.toString());
     params.append('y', options.y.toString());
@@ -150,25 +149,31 @@ export const searchKeyword = async (
     params.append('x', options.location.lng.toString());
     params.append('y', options.location.lat.toString());
   }
-  
+
   if (options?.radius !== undefined) {
-    params.append('radius', Math.min(Math.max(options.radius, 0), 20000).toString());
+    params.append(
+      'radius',
+      Math.min(Math.max(options.radius, 0), 20000).toString()
+    );
   }
-  
+
   if (options?.category_group_code) {
     params.append('category_group_code', options.category_group_code);
   }
-  
+
   if (options?.size !== undefined) {
     params.append('size', Math.min(Math.max(options.size, 1), 15).toString());
   }
-  
+
   if (options?.page !== undefined) {
     params.append('page', Math.max(options.page, 1).toString());
   }
-  
+
   if (options?.sort) {
-    params.append('sort', options.sort === 'DISTANCE' ? 'distance' : 'accuracy');
+    params.append(
+      'sort',
+      options.sort === 'DISTANCE' ? 'distance' : 'accuracy'
+    );
   }
 
   const url = `https://dapi.kakao.com/v2/local/search/keyword.json?${params.toString()}`;
@@ -176,7 +181,7 @@ export const searchKeyword = async (
   try {
     // 카카오 API 전용 인증 헤더 사용
     const headers = createKakaoAuthHeaders();
-    
+
     const response = await fetch(url, {
       method: 'GET',
       headers,
@@ -195,17 +200,20 @@ export const searchKeyword = async (
     const normalizedPlaces = data.documents.map(normalizeKakaoPlace);
 
     // 페이지네이션 정보 구성
-    const pagination: KakaoPagination | null = data.meta.total_count > 0 ? {
-      totalCount: data.meta.total_count,
-      hasNextPage: !data.meta.is_end,
-      hasPrevPage: (options?.page || 1) > 1,
-      current: options?.page || 1,
-      gotoPage: () => {},
-      gotoFirst: () => {},
-      gotoLast: () => {},
-      nextPage: () => {},
-      prevPage: () => {},
-    } : null;
+    const pagination: KakaoPagination | null =
+      data.meta.total_count > 0
+        ? {
+            totalCount: data.meta.total_count,
+            hasNextPage: !data.meta.is_end,
+            hasPrevPage: (options?.page || 1) > 1,
+            current: options?.page || 1,
+            gotoPage: () => {},
+            gotoFirst: () => {},
+            gotoLast: () => {},
+            nextPage: () => {},
+            prevPage: () => {},
+          }
+        : null;
 
     if (import.meta.env.MODE === 'development') {
       console.log('🔍 카카오 키워드 검색 API 호출 성공:', {
@@ -240,12 +248,12 @@ export const searchKeyword = async (
 /**
  * 지도 중심 좌표 기준으로 키워드 검색
  */
-export const searchKeywordByLocation = (
+export const getKeywordSearchByLocation = (
   keyword: string,
   center: { lat: number; lng: number },
   radius: number = 5000
 ) => {
-  return searchKeyword(keyword, {
+  return getKeywordSearch(keyword, {
     location: center,
     radius,
     sort: 'DISTANCE',
@@ -256,14 +264,14 @@ export const searchKeywordByLocation = (
 /**
  * 현재 지도 영역 기준으로 키워드 검색
  */
-export const searchKeywordByBounds = (
+export const getKeywordSearchByBounds = (
   keyword: string,
   bounds: {
     sw: { lat: number; lng: number };
     ne: { lat: number; lng: number };
   }
 ) => {
-  return searchKeyword(keyword, {
+  return getKeywordSearch(keyword, {
     bounds,
     sort: 'ACCURACY',
     size: 15,
@@ -273,13 +281,13 @@ export const searchKeywordByBounds = (
 /**
  * 카테고리별 키워드 검색
  */
-export const searchKeywordByCategory = (
+export const getKeywordSearchByCategory = (
   keyword: string,
   categoryCode: string,
   center?: { lat: number; lng: number },
   radius: number = 5000
 ) => {
-  return searchKeyword(keyword, {
+  return getKeywordSearch(keyword, {
     category_group_code: categoryCode,
     location: center,
     radius,
@@ -292,13 +300,13 @@ export const searchKeywordByCategory = (
  * 카카오 API 키 설정 상태 확인
  * 개발 도구나 디버깅용으로 사용
  */
-export const checkKakaoApiKeyStatus = (): {
+export const getKakaoApiKeyStatus = (): {
   isConfigured: boolean;
   isValid: boolean;
   message: string;
 } => {
   const KAKAO_REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
-  
+
   if (!KAKAO_REST_API_KEY) {
     return {
       isConfigured: false,
@@ -308,11 +316,11 @@ export const checkKakaoApiKeyStatus = (): {
   }
 
   const isValid = validateKakaoApiKey(KAKAO_REST_API_KEY);
-  
+
   return {
     isConfigured: true,
     isValid,
-    message: isValid 
+    message: isValid
       ? '카카오 API 키가 올바르게 설정되었습니다.'
       : '카카오 API 키 형식이 올바르지 않습니다. (32자리 16진수 문자열이어야 함)',
   };

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
-import { checkKakaoApiKeyStatus } from '../api/keywordSearchApi';
+import { getKakaoApiKeyStatus } from '../api/keywordSearchApi';
+import type { NormalizedPlace } from '../api/types';
 import { useMapUIContext } from '../context/MapUIContext';
 import { useKeywordSearch } from '../hooks/useKeywordSearch';
 import { useMapUI } from '../hooks/useMapUI';
 import MapTopControls from './layout/MapTopControls';
-
-import type { NormalizedPlace } from '../api/types';
 
 interface MapControlsContainerProps {
   onKeywordSearchResults?: (results: NormalizedPlace[]) => void;
@@ -55,14 +54,14 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
 
   // 바텀시트 REF 가져오기
   const { bottomSheetRef } = useMapUIContext();
-  
+
   // 바텀시트 열림/닫힘 상태 추적
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   // 카카오 API 키 상태 확인 (개발 모드에서만)
   useEffect(() => {
     if (import.meta.env.MODE === 'development') {
-      const apiKeyStatus = checkKakaoApiKeyStatus();
+      const apiKeyStatus = getKakaoApiKeyStatus();
       console.log('🔑 카카오 API 키 상태:', apiKeyStatus);
     }
   }, []);
@@ -101,7 +100,7 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
     if (import.meta.env.MODE === 'development') {
       console.log('MapControlsContainer - handleSearch 호출됨, 검색어:', value);
     }
-    
+
     if (value.trim()) {
       try {
         if (import.meta.env.MODE === 'development') {
@@ -144,7 +143,7 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
     // 검색어는 유지하되 검색 결과만 숨김 (사용자가 다시 볼 수 있도록)
     clearResults();
     clearError();
-    
+
     // MapPage의 keywordResults 상태도 초기화하여 검색 결과 리스트 닫기
     onCloseSearchResults?.();
   };
@@ -168,11 +167,11 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
   // 카테고리 필터 변경 처리
   const handleCategoryFilterChange = (category: string) => {
     setCategoryFilter(category);
-    
+
     if (import.meta.env.MODE === 'development') {
       console.log('🔍 카테고리 필터 변경:', {
         category,
-        note: '마커만 필터링됨, 검색 결과 재요청 없음'
+        note: '마커만 필터링됨, 검색 결과 재요청 없음',
       });
     }
   };
@@ -180,7 +179,10 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
   // 바텀시트 토글 처리
   const handleToggleBottomSheet = () => {
     if (import.meta.env.MODE === 'development') {
-      console.log('바텀시트 토글 버튼 클릭 - 현재 상태:', isBottomSheetOpen ? '열림' : '닫힘');
+      console.log(
+        '바텀시트 토글 버튼 클릭 - 현재 상태:',
+        isBottomSheetOpen ? '열림' : '닫힘'
+      );
     }
 
     if (bottomSheetRef && bottomSheetRef.current) {
@@ -192,32 +194,32 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
   const handleSearchResultClick = (place: NormalizedPlace) => {
     // 검색 결과 리스트 먼저 닫기 (selectedPlace 유지)
     handleCloseSearchResultsForItemClick();
-    
+
     // MapPage의 selectedPlace 상태 업데이트 (인포윈도우 표시용)
     onPlaceClick?.(place);
-    
+
     // useKeywordSearch 훅의 selectedPlace 업데이트 (검색 결과 하이라이트용)
     selectPlace(place);
-    
+
     // 지도 중심을 해당 위치로 이동 (인포윈도우가 화면 중앙에 오도록 오프셋 적용)
     if (mapCenterSetter) {
       const offset = 0.0017;
       const targetLat = place.latitude + offset;
       const targetLng = place.longitude;
-      
+
       mapCenterSetter({
         lat: targetLat,
-        lng: targetLng
+        lng: targetLng,
       });
-      
+
       if (import.meta.env.MODE === 'development') {
         console.log('🎯 지도 이동 - 검색 결과 클릭:', {
           place: place.name,
-          coordinates: { lat: targetLat, lng: targetLng }
+          coordinates: { lat: targetLat, lng: targetLng },
         });
       }
     }
-    
+
     if (import.meta.env.MODE === 'development') {
       console.log('🎯 검색 결과 아이템 클릭:', place.name);
     }

@@ -243,7 +243,7 @@ export const getMarkerClickCount = (storeId: number) => {
 };
 
 export const getFilterUsageCount = (categoryName: string) => {
-  return getActionLogCounter().addFilterClick(categoryName);
+  return getActionLogCounter().getFilterClickCount(categoryName);
 };
 
 export const forceFlushCounters = () => {

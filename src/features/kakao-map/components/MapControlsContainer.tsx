@@ -22,23 +22,44 @@ export const MapControlsContainer: React.FC = () => {
 
   // 바텀시트 REF 가져오기
   const { bottomSheetRef } = useMapUIContext();
-  
+
   // 바텀시트 열림/닫힘 상태 추적
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
-  // 바텀시트 상태를 주기적으로 확인 (실제 위치 기반)
+  // 바텀시트 상태 동기화 (이벤트 기반으로 개선)
+  const BOTTOM_SHEET_THRESHOLD = 300;
+
   useEffect(() => {
     const checkBottomSheetState = () => {
       if (bottomSheetRef?.current) {
         const currentPosition = bottomSheetRef.current.getCurrentPosition();
-        // 바텀시트가 중간 지점보다 위에 있으면 열린 상태로 간주
-        const isOpen = currentPosition < 300; // 임계값 조정 가능
+        const isOpen = currentPosition < BOTTOM_SHEET_THRESHOLD;
         setIsBottomSheetOpen(isOpen);
       }
     };
 
-    const interval = setInterval(checkBottomSheetState, 100); // 100ms마다 체크
-    return () => clearInterval(interval);
+    // 초기 상태 확인
+    checkBottomSheetState();
+
+    // 바텀시트 상태 변경을 감지하기 위한 MutationObserver 설정
+    const observer = new MutationObserver(() => {
+      // DOM 변경 시 바텀시트 상태 재확인
+      setTimeout(checkBottomSheetState, 50);
+    });
+
+    // 바텀시트 요소가 있을 때만 관찰 시작
+    if (bottomSheetRef?.current) {
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['style', 'class'],
+      });
+    }
+
+    return () => {
+      observer.disconnect();
+    };
   }, [bottomSheetRef]);
 
   // 검색 실행 처리 (엔터키 입력 시)
@@ -68,7 +89,10 @@ export const MapControlsContainer: React.FC = () => {
   // 바텀시트 토글 처리
   const handleToggleBottomSheet = () => {
     if (import.meta.env.MODE === 'development') {
-      console.log('바텀시트 토글 버튼 클릭 - 현재 상태:', isBottomSheetOpen ? '열림' : '닫힘');
+      console.log(
+        '바텀시트 토글 버튼 클릭 - 현재 상태:',
+        isBottomSheetOpen ? '열림' : '닫힘'
+      );
     }
 
     if (bottomSheetRef && bottomSheetRef.current) {

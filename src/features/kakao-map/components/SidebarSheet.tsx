@@ -36,7 +36,7 @@ const SidebarSheet = () => {
             <div>
               <p>{user?.userName}님 반가워요!</p>
               <p>등급: {user?.grade}</p>
-              <p>마커 아이디: {user?.markerId}</p>
+              <p>유저 롤: {user?.role}</p>
               <img src={user?.profileImage} alt="프로필 이미지" />
             </div>
           ) : (

@@ -20,13 +20,11 @@ export const userStore = create<UserState>(set => ({
   clearUser: () => set({ user: null, isAuthChecked: true }),
   logout: async () => {
     try {
-      userStore.getState().clearUser();
       const res = await userApi.logout();
-      if (import.meta.env.DEV) console.log('로그아웃 성공:', res.message);
+      toast.info(res.message);
+      userStore.getState().clearUser();
     } catch (error) {
-      console.error('❌ 로그아웃 실패:', error);
-      if (import.meta.env.DEV)
-        toast.error('로그아웃에 실패했습니다. 다시 시도해주세요.');
+      toast.error('❌ 로그아웃 실패했습니다. 다시 시도해주세요');
       throw error;
     }
   },
@@ -39,14 +37,12 @@ export const userStore = create<UserState>(set => ({
       if (import.meta.env.DEV) {
         console.log('✅ 유저 정보 조회 성공:', res);
       }
-      const { userName, grade, profileImage, markerId, role } = res;
-      const userInfo = { userName, grade, profileImage, markerId, role };
+      const { userName, grade, profileImage, role } = res;
+      const userInfo = { userName, grade, profileImage, role };
       if (import.meta.env.DEV) {
         console.log('📝 유저 정보 저장:', userInfo);
       }
-      userStore
-        .getState()
-        .setUser(userInfo); // 성공 시 저장
+      userStore.getState().setUser(userInfo); // 성공 시 저장
     } catch (error) {
       console.warn('⚠️ 유저 정보 불러오기 실패:', error);
       if (import.meta.env.DEV) {

@@ -1,8 +1,5 @@
 // 키워드 검색 관련 컴포넌트 exports
-export {
-  KeywordSearchInput,
-  CompactKeywordSearchInput,
-} from './MapSearchInput';
+export { KeywordSearchInput } from './MapSearchInput';
 export {
   SearchResultList,
   SearchResultItem,

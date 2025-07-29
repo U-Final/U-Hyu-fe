@@ -25,7 +25,7 @@ interface KeywordSearchInputProps {
  * 컴팩트한 버전의 키워드 검색 입력
  * 모바일이나 좁은 공간에서 사용
  */
-export const CompactKeywordSearchInput: React.FC<KeywordSearchInputProps> = ({
+export const KeywordSearchInput: React.FC<KeywordSearchInputProps> = ({
   value,
   onChange,
   onSearch,

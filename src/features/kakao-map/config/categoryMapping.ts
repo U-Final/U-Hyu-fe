@@ -100,68 +100,36 @@ export const getPrimaryKakaoCategoryForFilter = (filterCategory: string): string
 };
 
 /**
- * LG U+ 제휴 매장 카테고리를 FilterTabs 카테고리로 매핑
- * 실제 매장 데이터의 categoryName 값들을 기반으로 설정
+ * LG U+ 제휴 매장 카테고리(StoreCategory)를 FilterTabs 카테고리로 매핑
+ * constants/categoryMapping.ts의 실제 카테고리 키값들을 기반으로 설정
  */
 export const STORE_CATEGORY_TO_FILTER_TAB: Record<string, string> = {
-  // 쇼핑 관련
-  '쇼핑': 'shopping',
-  '대형마트': 'shopping',
-  '편의점': 'shopping',
-  '백화점': 'shopping',
+  // LG U+ 제휴 매장의 실제 카테고리 키값들
+  'all': 'all',
+  'culture': 'culture',           // 영화/미디어 → 문화/여가
+  'activity': 'activity',         // 액티비티 → 액티비티
+  'beauty': 'beauty',             // 뷰티/클리닉 → 뷰티/건강
+  'pharmacy': 'beauty',           // 건강/영양제 → 뷰티/건강 (건강 관련)
+  'lifestyle': 'life',            // 생활/편의 → 생활/편의
+  'convenience': 'life',          // 생활/편의 → 생활/편의
+  'shopping': 'shopping',         // 쇼핑 → 쇼핑
+  'food': 'food',                 // 음식점 → 푸드
+  'restaurant': 'food',           // 음식점 → 푸드
+  'fastfood': 'food',             // 음식점 → 푸드
+  'bakery': 'food',               // 베이커리/디저트 → 푸드
+  'cafe': 'food',                 // 베이커리/디저트 → 푸드
+  'default': 'all',               // 기타 → 전체
   
-  // 음식 관련
-  '음식점': 'food',
-  '카페': 'food',
-  '베이커리': 'food',
-  '디저트': 'food',
-  '푸드코트': 'food',
-  
-  // 생활/편의 관련
+  // 추가로 가능한 문자열 형태의 카테고리명들 (호환성)
+  '영화/미디어': 'culture',
+  '액티비티': 'activity', 
+  '뷰티/클리닉': 'beauty',
+  '건강/영양제': 'beauty',
   '생활/편의': 'life',
-  '은행': 'life',
-  '공공기관': 'life',
-  '부동산': 'life',
-  '생활서비스': 'life',
-  
-  // 문화/여가 관련
-  '문화/여가': 'culture',
-  '영화관': 'culture',
-  '공연': 'culture',
-  '전시': 'culture',
-  '테마파크': 'culture',
-  '워터파크': 'culture',
-  '아쿠아리움': 'culture',
-  
-  // 뷰티/건강 관련
-  '뷰티': 'beauty',
-  '건강': 'beauty',
-  '병원': 'beauty',
-  '약국': 'beauty',
-  '헬스': 'beauty',
-  '스파': 'beauty',
-  
-  // 액티비티 관련
-  '액티비티': 'activity',
-  '스포츠': 'activity',
-  '골프': 'activity',
-  '볼링': 'activity',
-  
-  // 교육 관련
-  '교육': 'education',
-  '학원': 'education',
-  '어학원': 'education',
-  
-  // 여행/교통 관련
-  '여행/교통': 'travel',
-  '숙박': 'travel',
-  '호텔': 'travel',
-  '모텔': 'travel',
-  '펜션': 'travel',
-  '렌터카': 'travel',
-  
-  // 기타
-  'APP/기기': 'shopping', // 기술 관련을 쇼핑으로 분류
+  '쇼핑': 'shopping',
+  '음식점': 'food',
+  '베이커리/디저트': 'food',
+  '기타': 'all',
 };
 
 /**
@@ -173,6 +141,8 @@ export const getFilterCategoryForStore = (storeCategoryName: string): string => 
 
 /**
  * 매장 데이터를 FilterTabs 카테고리로 필터링
+ * 주의: 현재는 백엔드에서 필터링을 처리하므로 사용하지 않음
+ * 향후 프론트엔드 필터링이 필요한 경우를 위해 보존
  */
 export const filterStoresByCategory = <T extends { categoryName: string }>(
   stores: T[],

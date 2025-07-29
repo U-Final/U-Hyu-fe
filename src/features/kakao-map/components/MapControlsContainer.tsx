@@ -15,7 +15,6 @@ interface MapControlsContainerProps {
   onCloseSearchResults?: () => void;
   mapCenterSetter?: ((center: { lat: number; lng: number }) => void) | null;
   onPlaceClick?: (place: NormalizedPlace) => void;
-  currentMapCenter?: { lat: number; lng: number } | null;
 }
 
 /**
@@ -29,7 +28,6 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
   onCloseSearchResults,
   mapCenterSetter,
   onPlaceClick,
-  currentMapCenter,
 }) => {
   // UI 상태와 액션들 가져오기
   const {
@@ -50,7 +48,6 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
     selectedPlace,
     setKeyword,
     search,
-    searchWithCategoryFilter,
     selectPlace,
     clearResults,
     clearError,
@@ -169,31 +166,14 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
   };
 
   // 카테고리 필터 변경 처리
-  const handleCategoryFilterChange = async (category: string) => {
+  const handleCategoryFilterChange = (category: string) => {
     setCategoryFilter(category);
     
-    // 기존 검색어가 있고 지도 중심 좌표가 있을 때만 재검색
-    if (keyword.trim() && currentMapCenter) {
-      try {
-        if (import.meta.env.MODE === 'development') {
-          console.log('🔍 카테고리 필터 변경으로 인한 재검색:', {
-            keyword: keyword.trim(),
-            category,
-            center: currentMapCenter
-          });
-        }
-        
-        await searchWithCategoryFilter(
-          keyword.trim(),
-          category,
-          currentMapCenter,
-          5000 // 5km 반경
-        );
-      } catch (error) {
-        if (import.meta.env.MODE === 'development') {
-          console.error('🔍 카테고리 필터 재검색 실패:', error);
-        }
-      }
+    if (import.meta.env.MODE === 'development') {
+      console.log('🔍 카테고리 필터 변경:', {
+        category,
+        note: '마커만 필터링됨, 검색 결과 재요청 없음'
+      });
     }
   };
 

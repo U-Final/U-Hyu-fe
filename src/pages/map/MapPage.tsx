@@ -24,7 +24,6 @@ const MapContent = () => {
   const [persistentMarkers, setPersistentMarkers] = useState<NormalizedPlace[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<NormalizedPlace | null>(null);
   const [mapCenterSetter, setMapCenterSetter] = useState<((center: { lat: number; lng: number }) => void) | null>(null);
-  const [currentMapCenter, setCurrentMapCenter] = useState<{ lat: number; lng: number } | null>(null);
 
   // 키워드 검색 결과 장소 클릭 핸들러
   const handlePlaceClick = useCallback((place: NormalizedPlace) => {
@@ -87,10 +86,6 @@ const MapContent = () => {
     setMapCenterSetter(() => setMapCenter);
   }, []);
 
-  // MapContainer에서 현재 지도 중심 정보를 받는 핸들러
-  const handleMapCenterChange = useCallback((center: { lat: number; lng: number }) => {
-    setCurrentMapCenter(center);
-  }, []);
 
   // selectedPlace 상태 변화 디버깅
   useEffect(() => {
@@ -128,7 +123,6 @@ const MapContent = () => {
           onPlaceClick={handlePlaceClick}
           onPlaceInfoClose={handlePlaceInfoClose}
           onMapCenterUpdate={handleMapCenterUpdate}
-          onMapCenterChange={handleMapCenterChange}
         />
         <MapControlsContainer 
           onKeywordSearchResults={handleKeywordSearchResults}
@@ -137,7 +131,6 @@ const MapContent = () => {
           onCloseSearchResults={handleCloseSearchResults}
           mapCenterSetter={mapCenterSetter}
           onPlaceClick={handlePlaceClick}
-          currentMapCenter={currentMapCenter}
         />
         <LocationControlContainer />
       </div>

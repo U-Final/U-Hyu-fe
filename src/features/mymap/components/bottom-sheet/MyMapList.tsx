@@ -1,6 +1,13 @@
-import { AddMyMapButton } from '@mymap/components/mymap-list';
+import type { FC } from 'react';
+
+import {
+  AddMyMapButton,
+  MyMapFormModal,
+  MymapDeleteModal,
+  ShareModal,
+} from '@mymap/components';
 import { MYMAP_COLOR, type MarkerColor } from '@mymap/constants/mymapColor';
-import { useMyMapListQuery } from '@mymap/hooks/useMyMapListQuery';
+import { useMyMapListQuery } from '@mymap/hooks';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MdStars } from 'react-icons/md';
 import { MdIosShare } from 'react-icons/md';
@@ -16,11 +23,7 @@ import {
 } from '@/shared/components/shadcn/ui/dropdown-menu';
 import { useModalStore } from '@/shared/store';
 
-import { MyMapForm } from '../InputMymap';
-import { MymapDeleteModal } from '../MymapDeleteModal';
-import { ShareModal } from '../ShareModal';
-
-const MyMapList: React.FC = () => {
+const MyMapList: FC = () => {
   const { data, isLoading, isError } = useMyMapListQuery();
   const openModal = useModalStore(state => state.openModal);
   const navigate = useNavigate();
@@ -53,7 +56,7 @@ const MyMapList: React.FC = () => {
     openModal('base', {
       title: '수정',
       children: (
-        <MyMapForm
+        <MyMapFormModal
           mode="edit"
           myMapListId={myMapListId}
           defaultTitle={myMapTitle}
@@ -67,7 +70,7 @@ const MyMapList: React.FC = () => {
   const handleCreate = () => {
     openModal('base', {
       title: '새 지도 만들기',
-      children: <MyMapForm mode="create" />,
+      children: <MyMapFormModal mode="create" />,
     });
   };
 

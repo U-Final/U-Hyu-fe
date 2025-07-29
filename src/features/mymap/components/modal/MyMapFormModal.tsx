@@ -1,8 +1,7 @@
 import { useState } from 'react';
 
 import { MYMAP_COLOR, type MarkerColor } from '@mymap/constants/mymapColor';
-import { useAddMyMapMutation } from '@mymap/hooks/useAddMyMapMutation';
-import { useUpdateMyMapMutation } from '@mymap/hooks/useUpdateMyMapMutation';
+import { useAddMyMapMutation, useUpdateMyMapMutation } from '@mymap/hooks';
 
 import { PrimaryButton } from '@/shared/components';
 import { useModalStore } from '@/shared/store';
@@ -23,7 +22,7 @@ const COLOR_OPTIONS: MarkerColor[] = [
   'PURPLE',
 ];
 
-export const MyMapForm = ({
+export const MyMapFormModal = ({
   mode,
   myMapListId,
   defaultTitle,

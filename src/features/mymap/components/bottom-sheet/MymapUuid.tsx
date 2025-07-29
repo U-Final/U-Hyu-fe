@@ -1,17 +1,15 @@
 import { useEffect } from 'react';
 
 import type { Store } from '@mymap/api/types';
+import { ShareModal, StoreDeleteModal } from '@mymap/components';
 import { MYMAP_COLOR, type MarkerColor } from '@mymap/constants/mymapColor';
-import { useMyMapUuidQuery } from '@mymap/hooks/useMyMapUuidQuery';
+import { useMyMapUuidQuery } from '@mymap/hooks';
 import { useSharedMapStore } from '@mymap/store/SharedMapStore';
 import { MdIosShare, MdStars } from 'react-icons/md';
 import { PiTrashBold } from 'react-icons/pi';
 
 import { BrandCard } from '@/shared/components';
 import { useModalStore } from '@/shared/store';
-
-import { ShareModal } from '../ShareModal';
-import { StoreDeleteModal } from '../StoreDeleteModal';
 
 interface MyMapUuidProps {
   uuid: string;

@@ -1,6 +1,13 @@
-import { AddMyMapButton } from '@mymap/components/mymap-list';
+import type { FC } from 'react';
+
+import {
+  AddMyMapButton,
+  MyMapFormModal,
+  MymapDeleteModal,
+  ShareModal,
+} from '@mymap/components';
 import { MYMAP_COLOR, type MarkerColor } from '@mymap/constants/mymapColor';
-import { useMyMapListQuery } from '@mymap/hooks/useMyMapListQuery';
+import { useMyMapListQuery } from '@mymap/hooks';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MdStars } from 'react-icons/md';
 import { MdIosShare } from 'react-icons/md';
@@ -16,11 +23,7 @@ import {
 } from '@/shared/components/shadcn/ui/dropdown-menu';
 import { useModalStore } from '@/shared/store';
 
-import { MyMapForm } from './InputMymap';
-import { MymapDeleteModal } from './MymapDeleteModal';
-import { ShareModal } from './ShareModal';
-
-const MyMapBody: React.FC = () => {
+const MyMapBody: FC = () => {
   const { data, isLoading, isError } = useMyMapListQuery();
   const openModal = useModalStore(state => state.openModal);
   const navigate = useNavigate();
@@ -36,7 +39,7 @@ const MyMapBody: React.FC = () => {
     });
   };
 
-  // 추후 uuid를 받아서 보내는 기능 추가
+  // 공유 모달
   const handleShare = (uuid: string) => {
     openModal('base', {
       title: 'My Map 공유',
@@ -53,7 +56,7 @@ const MyMapBody: React.FC = () => {
     openModal('base', {
       title: '수정',
       children: (
-        <MyMapForm
+        <MyMapFormModal
           mode="edit"
           myMapListId={myMapListId}
           defaultTitle={myMapTitle}
@@ -67,7 +70,7 @@ const MyMapBody: React.FC = () => {
   const handleCreate = () => {
     openModal('base', {
       title: '새 지도 만들기',
-      children: <MyMapForm mode="create" />,
+      children: <MyMapFormModal mode="create" />,
     });
   };
 

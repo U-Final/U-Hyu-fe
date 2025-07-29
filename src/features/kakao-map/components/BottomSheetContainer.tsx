@@ -1,7 +1,6 @@
 import { forwardRef, useCallback } from 'react';
 
-import { MyMapList } from '@mymap/components/mymap-list';
-import MyMapUuid from '@mymap/components/mymap-uuid/MymapUuid';
+import { MyMapList, MymapUuid } from '@mymap/components';
 import { FaFilter } from 'react-icons/fa';
 import { useParams } from 'react-router-dom';
 
@@ -317,7 +316,7 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
     return (
       <MapDragBottomSheet ref={ref}>
         {isShared ? (
-          <MyMapUuid uuid={uuid} onStoreClick={handleStoreClick} />
+          <MymapUuid uuid={uuid} onStoreClick={handleStoreClick} />
         ) : (
           getCurrentStepContent()
         )}

@@ -12,7 +12,6 @@ export type {
   UpdateUserRequest,
 } from '@/shared/types';
 
-// 개인정보 수정 API 응답 데이터 구조
 export interface UpdateUserResponseData {
   userId: number;
 }
@@ -21,28 +20,41 @@ export interface UpdateUserResponseData {
 export type UserInfoResponse = ApiResponse<UserInfoData>;
 export type UpdateUserResponse = ApiResponse<UpdateUserResponseData>;
 
-// 즐겨찾기 관련 타입
-export interface Bookmark {
-  id: number;
+// 액티비티(활동내역) 관련 타입 (Postman API 기준)
+export interface ActivityBrand {
+  brandId: number;
+  brandName: string;
+  logoImage: string;
+  visitCount: number;
+  lastVisitAt: string;
+}
+
+export interface ActivityStore {
   storeId: number;
   storeName: string;
-  storeAddress: string;
-  brandName: string;
-  createdAt: string;
+  logoImage: string;
+  addressDetail: string;
+  visitAt: string;
 }
 
-export interface BookmarkListData {
-  bookmarks: Bookmark[];
-  totalCount: number;
+export interface ActivityStatistics {
+  discountMoney: number | null;
+  bestBrandList: ActivityBrand[];
+  recentStoreList: ActivityStore[];
 }
 
-export type BookmarkListResponse = ApiResponse<BookmarkListData>;
-
-export interface AddBookmarkRequest {
+// 즐겨찾기(Bookmark) 관련 타입 (Postman API 기준)
+export interface Bookmark {
+  bookmarkId: number;
   storeId: number;
+  logoImage: string;
+  storeName: string;
+  addressDetail: string;
+  benefit: string | null;
 }
 
-// 활동 내역 관련 타입
+export type BookmarkListResponse = ApiResponse<Bookmark[]>;
+
 export interface ActivityBenefit {
   id: number;
   benefitName: string;
@@ -50,19 +62,3 @@ export interface ActivityBenefit {
   usedAt: string;
   benefitType: string;
 }
-
-export interface ActivityBrand {
-  id: number;
-  brandName: string;
-  visitCount: number;
-  lastVisitAt: string;
-}
-
-export interface ActivityData {
-  benefits: ActivityBenefit[];
-  brands: ActivityBrand[];
-  totalBenefitCount: number;
-  totalBrandCount: number;
-}
-
-export type ActivityResponse = ApiResponse<ActivityData>;

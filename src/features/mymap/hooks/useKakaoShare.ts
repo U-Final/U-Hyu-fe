@@ -16,7 +16,7 @@ export const useKakaoShare = () => {
       content: {
         title: 'u-hyu',
         description: 'U+ 제휴처 공유 지도 도착! 혜택 받기 전, 먼저 확인하세요 ',
-        imageUrl: 'https://www.u-hyu.site/images/share.png',
+        imageUrl: 'https://www.u-hyu.site/images/share/share.png',
         link: {
           mobileWebUrl: url,
           webUrl: url,

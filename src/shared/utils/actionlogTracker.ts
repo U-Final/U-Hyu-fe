@@ -9,7 +9,6 @@ const CLICK_THRESHOLD = 15;
 const STORAGE_KEY = 'Action_log';
 const ENDPOINTS_ACTION_LOG = '/user/action-logs';
 
-// TODO: 주석 관련 코드 삭제 필요
 class ActionLogCounter {
   private markerClicks: Map<number, number> = new Map();
   private filterClicks: Map<string, number> = new Map();
@@ -31,13 +30,6 @@ class ActionLogCounter {
           Object.entries(data.markerClicks).map(([k, v]) => [parseInt(k), v])
         );
         this.filterClicks = new Map(Object.entries(data.filterClicks || {}));
-
-        if (import.meta.env.MODE === 'development') {
-          console.log('📊 Loaded counters from storage:', {
-            markerClicks: Object.fromEntries(this.markerClicks),
-            filterClicks: Object.fromEntries(this.filterClicks),
-          });
-        }
       }
     } catch (error) {
       console.error('스토리지 카운터 로드 실패', error);
@@ -63,12 +55,6 @@ class ActionLogCounter {
     const newCount = currentCount + 1;
     this.markerClicks.set(storeId, newCount);
 
-    if (import.meta.env.MODE === 'development') {
-      console.log(
-        `🎃🎃🎃🎃🎃 Store: ${storeId} clicked: ${newCount} / ${CLICK_THRESHOLD}`
-      );
-    }
-
     if (newCount >= CLICK_THRESHOLD) {
       // 임계점 도달시
       this.sendMarkerClickData(storeId);
@@ -82,12 +68,6 @@ class ActionLogCounter {
     const currentCount = this.filterClicks.get(filterValue) || 0;
     const newCount = currentCount + 1;
     this.filterClicks.set(filterValue, newCount);
-
-    if (import.meta.env.MODE === 'development') {
-      console.log(
-        `🎃🎃🎃🎃🎃 Category ${filterValue} filtered: ${newCount} / ${CLICK_THRESHOLD}`
-      );
-    }
 
     if (newCount >= CLICK_THRESHOLD) {
       this.sendFilterClickData(filterValue);
@@ -104,11 +84,7 @@ class ActionLogCounter {
       storeId,
       categoryId: null,
     };
-    await this.sendToServer([actionData]);
-
-    if (import.meta.env.MODE === 'development') {
-      console.log('🎃🎃🎃🎃🎃 🚀 Marker click data sent:', actionData);
-    }
+    await this.sendSingleActionToServer(actionData);
   }
 
   private async sendFilterClickData(filterValue: string) {
@@ -119,24 +95,7 @@ class ActionLogCounter {
       categoryId,
     };
 
-    await this.sendToServer([actionData]);
-
-    if (import.meta.env.MODE === 'development') {
-      console.log('🎃🎃🎃🎃🎃 🚀 Filter usage data sent:', actionData);
-    }
-  }
-
-  private async sendToServer(actions: UserAction[]) {
-    try {
-      const res = await client.post(ENDPOINTS_ACTION_LOG, { actions });
-      if (import.meta.env.MODE === 'development') {
-        console.log('🎃🎃🎃🎃🎃 ✅ Behavior data sent successfully:', res.data);
-      }
-
-      this.saveToStorage();
-    } catch (error) {
-      console.error('🎃🎃🎃🎃🎃 Failed to send behavior data:', error);
-    }
+    await this.sendSingleActionToServer(actionData);
   }
 
   getCounters() {
@@ -159,10 +118,6 @@ class ActionLogCounter {
 
     window.addEventListener('beforeunload', () => {
       this.saveToStorage();
-
-      if (import.meta.env.MODE === 'development') {
-        console.log('Counters saved on page unload');
-      }
     });
 
     document.addEventListener('visibilitychange', () => {
@@ -172,36 +127,52 @@ class ActionLogCounter {
     });
   }
 
-  async forceFlush() {
-    const actions: UserAction[] = [];
+  private async sendSingleActionToServer(action: UserAction) {
+    try {
+      await client.post(ENDPOINTS_ACTION_LOG, action);
+      this.saveToStorage();
+    } catch (error) {
+      console.error('Failed to send action:', error);
+    }
+  }
 
-    // 현재 카운터가 있는 모든 항목을 전송
+  async forceFlush() {
+    const promises: Promise<void>[] = [];
+
+    // 마커 클릭들을 각각 개별 전송
     for (const [storeId, count] of this.markerClicks.entries()) {
       if (count > 0) {
-        actions.push({
+        const actionData: UserAction = {
           actionType: 'MARKER_CLICK',
           storeId,
           categoryId: null,
-        });
+        };
+        promises.push(this.sendSingleActionToServer(actionData));
       }
     }
 
+    // 필터 클릭들을 각각 개별 전송
     for (const [filterValue, count] of this.filterClicks.entries()) {
       if (count > 0) {
         const categoryId = getCategoryIdFromFilterValue(filterValue);
-        actions.push({
+        const actionData: UserAction = {
           actionType: 'FILTER_USED',
           storeId: null,
           categoryId,
-        });
+        };
+        promises.push(this.sendSingleActionToServer(actionData));
       }
     }
 
-    if (actions.length > 0) {
-      await this.sendToServer(actions);
-      this.markerClicks.clear();
-      this.filterClicks.clear();
-      this.saveToStorage();
+    if (promises.length > 0) {
+      try {
+        await Promise.all(promises);
+        this.markerClicks.clear();
+        this.filterClicks.clear();
+        this.saveToStorage();
+      } catch (error) {
+        console.error('❌ Force flush failed:', error);
+      }
     }
   }
 
@@ -210,10 +181,6 @@ class ActionLogCounter {
     this.markerClicks.clear();
     this.filterClicks.clear();
     localStorage.removeItem(STORAGE_KEY);
-
-    if (import.meta.env.MODE === 'development') {
-      console.log('🗑️ All counters reset');
-    }
   }
 }
 

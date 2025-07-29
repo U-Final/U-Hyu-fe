@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 export interface StoreDetailCardProps {
   storeName: string;
@@ -36,7 +35,7 @@ const ExpandButton: React.FC<{
   onClick: () => void;
 }> = ({ isExpanded, onClick }) => (
   <button
-    onClick={(e) => {
+    onClick={e => {
       e.stopPropagation();
       onClick();
     }}
@@ -46,7 +45,6 @@ const ExpandButton: React.FC<{
     {isExpanded ? '접기' : '더보기'}
   </button>
 );
-
 
 const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
   storeName,
@@ -144,10 +142,9 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
             <div className="bg-yellow-50 px-3 py-1 rounded-tr rounded-br text-sm flex-1 min-w-0">
               <div className="break-words text-left">
                 <span className="whitespace-pre-wrap block">
-                  {expandedSections.benefits 
-                    ? benefits 
-                    : getTruncatedText(benefits, TEXT_LIMITS.benefits)
-                  }
+                  {expandedSections.benefits
+                    ? benefits
+                    : getTruncatedText(benefits, TEXT_LIMITS.benefits)}
                 </span>
                 {shouldShowExpand(benefits, TEXT_LIMITS.benefits) && (
                   <ExpandButton
@@ -167,10 +164,9 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
         </div>
         <div className="text-sm">
           <span className="break-words whitespace-pre-wrap block">
-            {expandedSections.usageLimit 
-              ? usageLimit 
-              : getTruncatedText(usageLimit, TEXT_LIMITS.usageLimit)
-            }
+            {expandedSections.usageLimit
+              ? usageLimit
+              : getTruncatedText(usageLimit, TEXT_LIMITS.usageLimit)}
           </span>
           {shouldShowExpand(usageLimit, TEXT_LIMITS.usageLimit) && (
             <ExpandButton
@@ -185,10 +181,9 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
         <div className="text-sm font-semibold text-gray-700 mb-2">이용방법</div>
         <div className="text-xs text-gray-600">
           <span className="break-words whitespace-pre-line block">
-            {expandedSections.usageMethod 
-              ? usageMethod 
-              : getTruncatedText(usageMethod, TEXT_LIMITS.usageMethod)
-            }
+            {expandedSections.usageMethod
+              ? usageMethod
+              : getTruncatedText(usageMethod, TEXT_LIMITS.usageMethod)}
           </span>
           {shouldShowExpand(usageMethod, TEXT_LIMITS.usageMethod) && (
             <ExpandButton

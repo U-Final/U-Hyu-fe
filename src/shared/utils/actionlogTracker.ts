@@ -104,7 +104,7 @@ class ActionLogCounter {
       storeId,
       categoryId: null,
     };
-    await this.sendToServer([actionData]);
+    await this.sendSingleActionToServer(actionData);
 
     if (import.meta.env.MODE === 'development') {
       console.log('🎃🎃🎃🎃🎃 🚀 Marker click data sent:', actionData);
@@ -119,23 +119,10 @@ class ActionLogCounter {
       categoryId,
     };
 
-    await this.sendToServer([actionData]);
+    await this.sendSingleActionToServer(actionData);
 
     if (import.meta.env.MODE === 'development') {
       console.log('🎃🎃🎃🎃🎃 🚀 Filter usage data sent:', actionData);
-    }
-  }
-
-  private async sendToServer(actions: UserAction[]) {
-    try {
-      const res = await client.post(ENDPOINTS_ACTION_LOG, { actions });
-      if (import.meta.env.MODE === 'development') {
-        console.log('🎃🎃🎃🎃🎃 ✅ Behavior data sent successfully:', res.data);
-      }
-
-      this.saveToStorage();
-    } catch (error) {
-      console.error('🎃🎃🎃🎃🎃 Failed to send behavior data:', error);
     }
   }
 
@@ -172,36 +159,69 @@ class ActionLogCounter {
     });
   }
 
-  async forceFlush() {
-    const actions: UserAction[] = [];
+  private async sendSingleActionToServer(action: UserAction) {
+    try {
+      if (import.meta.env.MODE === 'development') {
+        console.log('🚀 Sending single action to server:', action);
+      }
 
-    // 현재 카운터가 있는 모든 항목을 전송
+      // ❌ 기존: { actions: [action] }
+      // ✅ 수정: action 객체 직접 전송
+      const res = await client.post(ENDPOINTS_ACTION_LOG, action);
+
+      if (import.meta.env.MODE === 'development') {
+        console.log('🎃🎃🎃🎃🎃 ✅ Action sent successfully:', res.data);
+      }
+
+      this.saveToStorage();
+    } catch (error) {
+      console.error('🎃🎃🎃🎃🎃 Failed to send action:', error);
+    }
+  }
+
+  async forceFlush() {
+    const promises: Promise<void>[] = [];
+
+    // 마커 클릭들을 각각 개별 전송
     for (const [storeId, count] of this.markerClicks.entries()) {
       if (count > 0) {
-        actions.push({
+        const actionData: UserAction = {
           actionType: 'MARKER_CLICK',
           storeId,
           categoryId: null,
-        });
+        };
+        promises.push(this.sendSingleActionToServer(actionData));
       }
     }
 
+    // 필터 클릭들을 각각 개별 전송
     for (const [filterValue, count] of this.filterClicks.entries()) {
       if (count > 0) {
         const categoryId = getCategoryIdFromFilterValue(filterValue);
-        actions.push({
+        const actionData: UserAction = {
           actionType: 'FILTER_USED',
           storeId: null,
           categoryId,
-        });
+        };
+        promises.push(this.sendSingleActionToServer(actionData));
       }
     }
 
-    if (actions.length > 0) {
-      await this.sendToServer(actions);
-      this.markerClicks.clear();
-      this.filterClicks.clear();
-      this.saveToStorage();
+    if (promises.length > 0) {
+      try {
+        await Promise.all(promises);
+        this.markerClicks.clear();
+        this.filterClicks.clear();
+        this.saveToStorage();
+
+        if (import.meta.env.MODE === 'development') {
+          console.log(
+            `✅ Force flush completed: ${promises.length} actions sent`
+          );
+        }
+      } catch (error) {
+        console.error('❌ Force flush failed:', error);
+      }
     }
   }
 

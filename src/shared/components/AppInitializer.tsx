@@ -1,10 +1,18 @@
 import { useEffect } from 'react';
 
 import { useUserInfo } from '@user/hooks/useUserQuery';
+import type { AxiosError } from 'axios';
 
+import type { ApiError } from '@/shared/client/client.type';
 import { userStore } from '@/shared/store/userStore';
-import { initViewportHeight, cleanupViewportHeight } from '@/shared/utils/viewport';
-import { initScrollRestore, initKeyboardHandler } from '@/shared/utils/scrollRestore';
+import {
+  initKeyboardHandler,
+  initScrollRestore,
+} from '@/shared/utils/scrollRestore';
+import {
+  cleanupViewportHeight,
+  initViewportHeight,
+} from '@/shared/utils/viewport';
 
 const AppInitializer = () => {
   const { data, isSuccess, isError } = useUserInfo();
@@ -13,10 +21,17 @@ const AppInitializer = () => {
 
   // 사용자 정보 초기화
   useEffect(() => {
-    if (isSuccess && data) {
-      setUser(data);
+    if (isSuccess && data.data) {
+      setUser(data.data);
     } else if (isError) {
-      clearUser();
+      const err = data as unknown as AxiosError<ApiError>;
+
+      // 401 Unauthorized일 때만 clearUser() 처리
+      if (err?.response?.data?.statusCode === 401) {
+        clearUser();
+      } else {
+        console.warn('⚠️ 사용자 정보 로딩 실패(비401): 상태 유지');
+      }
     }
   }, [isSuccess, isError, data, setUser, clearUser]);
 
@@ -24,13 +39,13 @@ const AppInitializer = () => {
   useEffect(() => {
     // 뷰포트 높이 초기화 (iOS Safari 주소창 대응)
     initViewportHeight();
-    
+
     // 스크롤 복원 시스템 초기화
     const cleanupScrollRestore = initScrollRestore();
-    
+
     // 키보드 핸들러 초기화 (iOS Safari 키보드 대응)
     const cleanupKeyboardHandler = initKeyboardHandler();
-    
+
     return () => {
       cleanupViewportHeight();
       cleanupScrollRestore();

@@ -9,7 +9,7 @@ export const mockRecommendStores: RecommendStore[] = [
     addr_detail: '서울 강남구 테헤란로 1',
     description: '아메리카노 1잔 무료!',
     geom: 'POINT (127.02758 37.49794)',
-    logo_image: '/public/images/brands/default-brand-logo.png',
+    logoImage: '/public/images/brands/default-brand-logo.png',
     favorite_count: 123,
   },
   {
@@ -20,7 +20,7 @@ export const mockRecommendStores: RecommendStore[] = [
     addr_detail: '서울 서대문구 연세로 10',
     description: '50% 할인 쿠폰!',
     geom: 'POINT (126.9371 37.561)',
-    logo_image: '/public/images/brands/뚜레쥬르.png',
+    logoImage: '/public/images/brands/뚜레쥬르.png',
   },
   {
     store_id: 3,
@@ -30,6 +30,6 @@ export const mockRecommendStores: RecommendStore[] = [
     addr_detail: '서울 서대문구 연세로 10',
     description: '50% 할인 쿠폰!',
     geom: 'POINT (126.9371 37.561)',
-    logo_image: '/public/images/brands/뚜레쥬르.png',
+    logoImage: '/public/images/brands/뚜레쥬르.png',
   },
 ];

@@ -86,7 +86,7 @@ const MyMapUuid = ({ uuid, onStoreClick }: MyMapUuidProps) => {
               onStoreClick?.(store);
             }}
           >
-            <BrandCard logoUrl={store.logo_image}>
+            <BrandCard logoUrl={store.logoImage}>
               <div className="flex-1 min-w-0 ">
                 <div className="flex flex-row items-center justify-between">
                   <div className="text-black font-bold">{store.storeName}</div>

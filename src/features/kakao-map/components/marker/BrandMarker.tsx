@@ -16,7 +16,7 @@ const BrandMarker: FC<BrandMarkerProps> = ({
 }) => {
   const category = store.categoryName as keyof typeof CATEGORY_CONFIGS;
   const categoryConfig = CATEGORY_CONFIGS[category] || CATEGORY_CONFIGS.default;
-  const brandImageSrc = store.logo_image;
+  const brandImageSrc = store.logoImage;
 
   return (
     <div className="relative" onClick={onClick}>

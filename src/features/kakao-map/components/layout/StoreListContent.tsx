@@ -47,7 +47,7 @@ const StoreListContent: FC<StoreListContentProps> = ({
                 className="p-4 hover:bg-gray-50 transition-colors cursor-pointer"
                 onClick={() => handleStoreClick(store)}
               >
-                <BrandCard logoUrl={store.logo_image}>
+                <BrandCard logoUrl={store.logoImage}>
                   <div className="flex-1 min-w-0">
                     <div className="font-semibold text-gray-900 truncate">
                       {store.storeName}

@@ -1,7 +1,10 @@
 import { type FC } from 'react';
+
+import { trackFilterUsed } from '@/shared/utils/actionlogTracker';
+
 import {
-  FILTERED_CATEGORIES,
   type CategoryType,
+  FILTERED_CATEGORIES,
 } from '../../../constants/categories';
 import type { StoreCategory } from '../../../types/category';
 
@@ -18,6 +21,11 @@ const CategorySelectContent: FC<CategorySelectContentProps> = ({
 
   const handleCategoryClick = (categoryKey: StoreCategory) => {
     onCategorySelect(categoryKey);
+
+    // 행동 추적 추가
+    if (categoryKey !== 'all') {
+      trackFilterUsed(categoryKey);
+    }
   };
 
   return (

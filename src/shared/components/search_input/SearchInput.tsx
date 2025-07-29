@@ -11,7 +11,7 @@ const SearchInput: FC<SearchInputProps> = ({
   onChange,
   onSearch,
   onCancel,
-  placeholder = '카카오 지도 검색',
+  placeholder = '제휴 브랜드 검색',
   variant = 'gray',
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);

@@ -15,6 +15,8 @@ const MyPage = () => {
   const [editMode, setEditMode] = useState(false);
   const [pendingChanges, setPendingChanges] = useState<UpdateUserRequest>({});
 
+
+
   useEffect(() => {
     if (user) setLocalUser(user);
   }, [user]);
@@ -48,7 +50,7 @@ const MyPage = () => {
 
   return (
     <div className="min-h-screen max-w-[22.5rem] mx-auto">
-      <div className="p-[1rem] space-y-[1.5rem] pb-[6rem]">
+      <div className="space-y-[1.5rem] pb-[6rem]">
         <MyPageHeader user={localUser} />
         <MyPageUserInfo 
           user={localUser} 

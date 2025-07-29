@@ -1,7 +1,7 @@
-import { useActivityBenefitQuery } from '@mypage/hooks/useActivityQuery';
+import { useActivityStatisticsQuery } from '@mypage/hooks/useActivityQuery';
 
 const ActivityBenefit = () => {
-  const { data, isLoading, error } = useActivityBenefitQuery();
+  const { data, isLoading, error } = useActivityStatisticsQuery();
   if (isLoading) return <div>로딩중...</div>;
   if (error || !data) return <div>에러 발생</div>;
   return (
@@ -10,13 +10,7 @@ const ActivityBenefit = () => {
         <p className="text-[0.75rem] text-gray mb-[0.5rem]">이번 달 받은 혜택</p>
         <img src="/images/benefit/image.png" alt="benefit" className="mx-auto h-[4.5rem]" />
         <p className="font-bold text-[1.125rem] text-black mt-[0.5rem]">
-          {data.benefitName}
-        </p>
-        <p className="text-[0.875rem] text-gray mt-[0.25rem]">
-          {data.brandName} • {data.benefitType}
-        </p>
-        <p className="text-[0.75rem] text-gray mt-[0.25rem]">
-          {new Date(data.usedAt).toLocaleDateString()}
+          {data.discountMoney !== null ? `${data.discountMoney.toLocaleString()}원` : '-'}
         </p>
       </div>
     </div>

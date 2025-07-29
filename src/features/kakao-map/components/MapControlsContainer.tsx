@@ -80,19 +80,40 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
     }
   }, [results, onKeywordSearchResults]);
 
-  // 바텀시트 상태를 주기적으로 확인 (실제 위치 기반)
+  // 바텀시트 상태 동기화 (MutationObserver 기반으로 개선)
+  const BOTTOM_SHEET_THRESHOLD = 300;
+
   useEffect(() => {
     const checkBottomSheetState = () => {
       if (bottomSheetRef?.current) {
         const currentPosition = bottomSheetRef.current.getCurrentPosition();
-        // 바텀시트가 중간 지점보다 위에 있으면 열린 상태로 간주
-        const isOpen = currentPosition < 300; // 임계값 조정 가능
+        const isOpen = currentPosition < BOTTOM_SHEET_THRESHOLD;
         setIsBottomSheetOpen(isOpen);
       }
     };
 
-    const interval = setInterval(checkBottomSheetState, 100); // 100ms마다 체크
-    return () => clearInterval(interval);
+    // 초기 상태 확인
+    checkBottomSheetState();
+
+    // 바텀시트 상태 변경을 감지하기 위한 MutationObserver 설정
+    const observer = new MutationObserver(() => {
+      // DOM 변경 시 바텀시트 상태 재확인
+      setTimeout(checkBottomSheetState, 50);
+    });
+
+    // 바텀시트 요소가 있을 때만 관찰 시작
+    if (bottomSheetRef?.current) {
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['style', 'class'],
+      });
+    }
+
+    return () => {
+      observer.disconnect();
+    };
   }, [bottomSheetRef]);
 
   // 검색 실행 처리 (엔터키 입력 시)

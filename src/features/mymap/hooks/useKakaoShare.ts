@@ -1,9 +1,5 @@
 import { useEffect } from 'react';
 
-
-
-
-
 const { Kakao } = window;
 
 export const useKakaoShare = () => {
@@ -14,17 +10,16 @@ export const useKakaoShare = () => {
     Kakao.init(key);
   }, []);
 
-  const share = () => {
+  const share = (url: string) => {
     Kakao.Share.sendDefault({
       objectType: 'feed',
       content: {
         title: 'u-hyu',
         description: 'U+ 제휴처 공유 지도 도착! 혜택 받기 전, 먼저 확인하세요 ',
-        imageUrl:
-          'https://www.u-hyu.site/images/share.png',
+        imageUrl: 'https://www.u-hyu.site/images/share.png',
         link: {
-          mobileWebUrl: location.href,
-          webUrl: location.href,
+          mobileWebUrl: url,
+          webUrl: url,
         },
       },
 
@@ -32,8 +27,8 @@ export const useKakaoShare = () => {
         {
           title: '지도 보러가기',
           link: {
-            mobileWebUrl: location.href,
-            webUrl: location.href,
+            mobileWebUrl: url,
+            webUrl: url,
           },
         },
       ],

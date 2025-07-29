@@ -1,9 +1,17 @@
 import { useState } from 'react';
 
+
+
 import { useKakaoShare } from '@mymap/hooks/useKakaoShare';
+
+
 
 import { BaseModal } from '@/shared/components';
 import { useModalStore } from '@/shared/store';
+
+
+
+
 
 interface ShareModalProps {
   uuid: string;
@@ -15,9 +23,9 @@ export const ShareModal = ({ uuid }: ShareModalProps) => {
   );
   const closeModal = useModalStore(state => state.closeModal);
   const shareToKakao = useKakaoShare();
+  const shareUrl = `${location.origin}/map/${uuid}`;
 
   const handleCopy = () => {
-    const shareUrl = `${location.origin}/map/${uuid}`;
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard
         .writeText(shareUrl)
@@ -36,7 +44,6 @@ export const ShareModal = ({ uuid }: ShareModalProps) => {
   };
 
   const handleKakaoShare = () => {
-    const shareUrl = `${location.origin}/map/${uuid}`;
     shareToKakao(shareUrl);
     closeModal();
   };

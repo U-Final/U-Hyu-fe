@@ -6,6 +6,6 @@ export interface RecommendStore {
   addr_detail: string;
   description: string;
   geom: string;
-  logo_image: string;
+  logoImage: string;
   favorite_count?: number; // 선택적으로 포함 (있을 수도, 없을 수도 있음)
 }

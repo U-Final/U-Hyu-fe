@@ -8,7 +8,7 @@ interface RecommendedStoreCardProps {
 
 const RecommendedStoreCard = ({ store }: RecommendedStoreCardProps) => {
   return (
-    <BrandCard logoUrl={store.logo_image}>
+    <BrandCard logoUrl={store.logoImage}>
       <div className="flex flex-col gap-2">
         <p className="text-black text-lg font-bold">{store.store_name}</p>
         <p className="text-black text-sm">{store.addr_detail}</p>

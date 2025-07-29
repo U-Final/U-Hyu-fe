@@ -7,7 +7,7 @@ export interface NearbyStore {
   store_name: string;
   addr_detail: string;
   description: string;
-  logo_image?: string;
+  logoImage?: string;
   latitude?: number;
   longitude?: number;
   isFavorite?: boolean;
@@ -16,7 +16,7 @@ export interface NearbyStore {
 export interface Benefit {
   benefit_type: 'DISCOUNT' | 'GIFT';
   description: string;
-  logo_image?: string;
+  logoImage?: string;
 }
 
 export interface Recommendation {
@@ -24,6 +24,6 @@ export interface Recommendation {
   brand_name: string;
   benefit_title: string;
   description: string;
-  logo_image: string;
+  logoImage: string;
   tags: string[];
 }

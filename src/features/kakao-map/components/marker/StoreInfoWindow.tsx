@@ -152,6 +152,38 @@ const contentVariants = {
   },
 };
 
+// 꼬리 애니메이션
+const tailVariants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.3,
+    y: -15,
+    rotateX: -30,
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    rotateX: 0,
+    transition: {
+      delay: 0.15,
+      type: 'spring' as const,
+      stiffness: 400,
+      damping: 20,
+      mass: 0.8,
+    },
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.8,
+    y: -10,
+    rotateX: 15,
+    transition: {
+      duration: 0.2,
+      ease: [0.4, 0, 0.2, 1] as const,
+    },
+  },
+};
 
 // 로딩 상태 애니메이션
 const loadingVariants = {
@@ -365,7 +397,16 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
           />
 
           {/* 삼각형 꼬리 */}
-          <div className="absolute left-1/2 -bottom-4 -translate-x-1/2 w-8 h-8 z-0">
+          <motion.div
+            className="absolute left-1/2 -bottom-4 -translate-x-1/2 w-8 h-8 z-0"
+            variants={tailVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            style={{
+              transformOrigin: 'center top',
+            }}
+          >
             <svg width="32" height="32" viewBox="0 0 32 32">
               <polygon
                 points="16,32 0,0 32,0"
@@ -374,7 +415,7 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
                 strokeWidth="0.5"
               />
             </svg>
-          </div>
+          </motion.div>
         </motion.div>
       </div>
     </CustomOverlayMap>

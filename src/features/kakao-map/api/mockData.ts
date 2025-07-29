@@ -563,9 +563,12 @@ export const MOCK_STORE_DETAILS: Record<number, StoreDetail> = {
     storeName: 'CGV 강남점',
     isFavorite: false,
     favoriteCount: 245,
-    benefits: 'CGV 골드클래스 할인, VIP 라운지 이용',
-    usageLimit: '월 3회',
-    usageMethod: 'CGV 앱에서 예매 시 자동 적용',
+    benefits:
+      'CGV 골드클래스 할인 30%, VIP 라운지 무료 이용, 팝콘세트 50% 할인, 생일자 무료 영화 관람권 증정, CGV 포인트 2배 적립, 프리미엄 좌석 우선 예매, 스낵바 할인 쿠폰 제공, 영화 관람 후 리뷰 작성 시 추가 포인트 적립',
+    usageLimit:
+      '월 3회 사용 가능하며, 매월 1일 자정에 사용 횟수가 초기화됩니다. 연속 3개월 미사용 시 혜택이 일시 중단될 수 있습니다.',
+    usageMethod:
+      'CGV 앱에서 예매 시 자동 적용되며, 현장 매표소에서도 할인코드를 제시하면 동일한 혜택을 받을 수 있습니다. 온라인 예매 시에는 로그인 후 U+ 멤버십 인증을 완료해야 합니다.',
   },
   2: {
     storeName: '롯데시네마 강남역점',

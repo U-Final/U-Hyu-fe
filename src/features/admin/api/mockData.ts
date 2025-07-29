@@ -41,26 +41,7 @@ export const mockFilteringStats = [
   },
 ];
 
-export const mockSearchStats = [
-  {
-    categoryId: 1,
-    categoryName: '영화관',
-    count: 900,
-    details: [
-      { brandName: 'CGV', count: 7 },
-      { brandName: '롯데시네마', count: 9 },
-    ],
-  },
-  {
-    categoryId: 2,
-    categoryName: '편의점',
-    count: 800,
-    details: [
-      { brandName: 'GS25', count: 6 },
-      { brandName: 'CU', count: 2 },
-    ],
-  },
-];
+
 
 export const mockRecommendStats = [
   {
@@ -99,7 +80,7 @@ export const mockMembershipStats = [
 export const mockTotalStats = {
   totalBookmark: 13123,
   totalFiltering: 13123,
-  totalSearch: 13123,
+
   totalMembership: 13123,
 };
 
@@ -235,25 +216,7 @@ export const mockAdminStatistics = {
       ],
     },
   ],
-  search: [
-    {
-      categoryId: 1,
-      categoryName: '영화관',
-      count: 900,
-      details: [
-        { brandName: 'CGV', count: 7 },
-        { brandName: '롯데시네마', count: 9 },
-      ],
-    },
-    {
-      categoryId: 2,
-      categoryName: '편의점',
-      count: 800,
-      details: [
-        { brandName: 'GS25', count: 6 },
-      ],
-    },
-  ],
+
   recommend: [
     {
       categoryId: 1,
@@ -295,7 +258,7 @@ export const mockAdminStatistics = {
   total: {
     totalBookmark: 1561 + 1200, // 2761
     totalFiltering: 1000 + 900, // 1900
-    totalSearch: 900 + 800, // 1700
+
     totalMembership: 300 + 200, // 500
   },
 };

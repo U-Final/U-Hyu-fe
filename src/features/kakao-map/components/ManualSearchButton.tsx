@@ -141,7 +141,7 @@ export const MobileManualSearchButton: React.FC<ManualSearchButtonProps> = ({
           `}
         />
         <span className="whitespace-nowrap">
-          {loading ? '검색중' : '재검색'}
+          {loading ? '매장 검색 중' : '현재 위치에서 재검색'}
         </span>
       </button>
     </div>

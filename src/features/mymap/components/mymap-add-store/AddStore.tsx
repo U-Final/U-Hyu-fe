@@ -21,6 +21,7 @@ const AddStore: FC<AddStoreProps> = ({ storeId }) => {
   const toggleMutation = useToggleMyMapStoreMutation();
   const toggleFavoriteMutation = useToggleFavoriteMutation();
   const openModal = useModalStore(state => state.openModal);
+  const closeModal = useModalStore(state => state.closeModal);
 
   // my map 초기 체크 상태 저장용
   const [initialCheckedMap, setInitialCheckedMap] = useState<
@@ -62,7 +63,7 @@ const AddStore: FC<AddStoreProps> = ({ storeId }) => {
   const handleBookmarkToggle = (checked: boolean) => {
     setIsBookmarked(checked);
   };
-  
+
   // 지도 생성 모달
   const handleCreate = () => {
     openModal('base', {
@@ -90,6 +91,7 @@ const AddStore: FC<AddStoreProps> = ({ storeId }) => {
         toggleMutation.mutate({ myMapListId, store_id: storeId });
       }
     });
+    closeModal();
   };
 
   if (isLoading) return <div>로딩 중...</div>;

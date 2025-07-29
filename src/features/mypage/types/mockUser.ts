@@ -7,6 +7,7 @@ export const mockUser: UserInfoData = {
   age: 28,
   gender: 'MALE',
   grade: 'VVIP',
+  role: 'USER',
   profileImage: '/images/profile/image.png',
   brandIdList: [1, 4, 3],
   updatedAt: '2025-07-21T05:49:15.658Z',

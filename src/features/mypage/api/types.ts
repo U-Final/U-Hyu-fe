@@ -1,38 +1,24 @@
 import type { ApiResponse } from '@/shared/client/client.type';
+import type { UserInfoData } from '@/shared/types';
 
-export type UserRole = 'USER' | 'ADMIN';
-export type UserStatus = 'ACTIVE' | 'DELETED';
-export type UserGrade = 'GOOD' | 'VIP' | 'VVIP';
-export type Gender = 'MALE' | 'FEMALE';
-
-export interface Marker {
-  id: number;
-  createdAt: string;
-  updatedAt: string;
-  markerImage: string;
-}
-
-export interface UserInfoData {
-  profileImage: string;
-  userName: string;
-  nickName: string | null;
-  email: string;
-  age: number | null;
-  gender: Gender | null;
-  grade: UserGrade | null;
-  brandIdList?: number[];
-  updatedAt: string;
-}
+// 공통 타입들은 @/shared/types에서 import하여 사용
+export type {
+  UserRole,
+  UserGrade,
+  UserGender,
+  Marker,
+  UserInfo,
+  UserInfoData,
+  UpdateUserRequest,
+} from '@/shared/types';
 
 export interface UpdateUserResponseData {
   userId: number;
 }
 
-export interface UpdateUserRequest {
-  updatedNickName?: string;
-  updatedGrade?: UserGrade;
-  updatedBrandIdList?: number[];
-}
+// API 응답 타입들 - 공통 ApiResponse 타입 사용
+export type UserInfoResponse = ApiResponse<UserInfoData>;
+export type UpdateUserResponse = ApiResponse<UpdateUserResponseData>;
 
 // 액티비티(활동내역) 관련 타입 (Postman API 기준)
 export interface ActivityBrand {

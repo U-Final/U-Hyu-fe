@@ -12,7 +12,7 @@
   align-items: center;
   box-sizing: border-box;
   width: 100vw;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   background: #f3f4f6;
   padding: 1rem;
 }
@@ -49,26 +49,63 @@
 
 /* Responsive: Mobile devices use full screen */
 @media (max-width: 640px) {
+  /* iOS Safari 전용 최적화 */
+  @supports (-webkit-touch-callout: none) {
+    html, body {
+      position: relative; /* fixed 대신 relative 사용 */
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior: none;
+      -webkit-overflow-scrolling: touch;
+      touch-action: manipulation;
+    }
+    
+    #root {
+      min-height: calc(var(--vh, 1vh) * 100);
+      height: auto; /* 고정 높이 대신 자동 높이 */
+    }
+  }
+  
+  /* 기본 모바일 스타일 */
+  html, body {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: calc(var(--vh, 1vh) * 100); /* 동적 뷰포트 높이 사용 */
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: auto;
+    touch-action: manipulation;
+  }
+
   #root {
     justify-content: flex-start;
     align-items: flex-start;
     padding: 0;
     background: white;
+    overflow: hidden;
+    position: fixed;
+    width: 100vw;
+    height: calc(var(--vh, 1vh) * 100); /* 동적 뷰포트 높이 사용 */
   }
 
   .mobile-frame {
     width: 100vw;
-    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100); /* 동적 뷰포트 높이 사용 */
     max-width: none;
     max-height: none;
     border-radius: 0;
     box-shadow: none;
     background: transparent;
     padding: 0;
+    overflow: hidden;
+    position: relative;
   }
 
   .mobile-content {
     border-radius: 0;
+    overflow: hidden;
+    height: calc(var(--vh, 1vh) * 100); /* 동적 뷰포트 높이 사용 */
+    position: relative;
   }
 }
 
@@ -661,4 +698,24 @@
 /* 필터탭 컨테이너 강제 스크롤 */
 .mobile-content .filter-tabs-scroll * {
   pointer-events: auto !important;
+}
+
+/* 모바일에서 지정된 스크롤 영역만 스크롤 허용 */
+@media (max-width: 640px) {
+  /* 바텀시트 콘텐츠 영역 스크롤 허용 */
+  [data-scrollable] {
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
+  }
+
+  /* 메인 콘텐츠 영역 스크롤 허용 */
+  #main-content {
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
+    height: 100vh !important;
+  }
 }

@@ -43,7 +43,7 @@ const MyPageActivity = () => {
   if (error || !user) return <div>에러 발생</div>;
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen max-w-[22.5rem] mx-auto">
       <div className="pb-[6rem]">
         <MyPageHeader user={user} />
         <ActivityTabs activeTab={activeTab} setActiveTab={handleTabClick} />

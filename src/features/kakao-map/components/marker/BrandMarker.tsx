@@ -1,18 +1,17 @@
 import { type FC } from 'react';
+
 import { CATEGORY_CONFIGS } from '../../types/category.ts';
 import type { Store } from '../../types/store.ts';
 
 interface BrandMarkerProps {
   store: Store;
   isSelected?: boolean;
-  hasPromotion?: boolean;
   onClick?: () => void;
 }
 
 const BrandMarker: FC<BrandMarkerProps> = ({
   store,
   isSelected = false,
-  hasPromotion = false,
   onClick,
 }) => {
   const category = store.categoryName as keyof typeof CATEGORY_CONFIGS;
@@ -21,13 +20,6 @@ const BrandMarker: FC<BrandMarkerProps> = ({
 
   return (
     <div className="relative" onClick={onClick}>
-      {/* 프로모션 배지 */}
-      {hasPromotion && (
-        <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center z-10">
-          <span className="text-white text-xs font-bold">!</span>
-        </div>
-      )}
-
       {/* 메인 마커 */}
       <div
         className={`

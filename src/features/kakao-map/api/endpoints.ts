@@ -4,7 +4,7 @@ export const MAP_ENDPOINTS = {
   /** 매장 상세 정보 조회 */
   GET_STORE_DETAIL: '/map/detail/stores',
   /** 매장 즐겨찾기 토글 */
-  TOGGLE_FAVORITE: '/map/stores',
+  TOGGLE_FAVORITE: '/map',
   /** 카테고리별 브랜드 조회 */
   GET_CATEGORY_BRANDS: '/category',
 } as const;

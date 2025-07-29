@@ -1,4 +1,6 @@
 import React from 'react';
+
+import { useMapUIContext } from '../context/MapUIContext';
 import { useMapUI } from '../hooks/useMapUI';
 import MapTopControls from './layout/MapTopControls';
 
@@ -18,43 +20,43 @@ export const MapControlsContainer: React.FC = () => {
     activeCategoryFilter,
   } = useMapUI();
 
-  /**
-   * 검색 실행 핸들러
-   * 엔터키 입력 시 호출됨
-   */
+  // 바텀시트 REF 가져오기
+  const { bottomSheetRef } = useMapUIContext();
+
+  // 검색 실행 처리 (엔터키 입력 시)
   const handleSearch = (value: string) => {
     setSearchValue(value);
-    // 검색어가 변경되면 useMapData에서 자동으로 API 호출
   };
 
-  /**
-   * 검색 취소 핸들러
-   * X 버튼 클릭 시 호출됨
-   */
+  // 검색 취소 처리 (X 버튼 클릭 시)
   const handleSearchCancel = () => {
     setSearchValue('');
     setSearchFocused(false);
   };
 
-  /**
-   * 지역 필터 변경 핸들러
-   * RegionFilterDropdown에서 선택 시 호출됨
-   */
+  // 지역 필터 변경 처리
   const handleRegionFilterChange = (region: string) => {
     if (import.meta.env.MODE === 'development') {
-      console.log('🌍 지역 필터 변경:', region);
+      console.log('지역 필터 변경:', region);
     }
     setRegionFilter(region);
-    // 지역 필터 변경 시 useMapData에서 자동으로 지도 중심점 이동
   };
 
-  /**
-   * 카테고리 필터 변경 핸들러
-   * FilterTabs에서 선택 시 호출됨
-   */
+  // 카테고리 필터 변경 처리
   const handleCategoryFilterChange = (category: string) => {
     setCategoryFilter(category);
-    // 카테고리 필터 변경 시 useMapData에서 자동으로 API 호출
+  };
+
+  // 매장 목록 보기 버튼 클릭 시 바텀시트 열기
+  const handleShowStoreList = () => {
+    if (import.meta.env.MODE === 'development') {
+      console.log('매장 목록 버튼 클릭 - 바텀시트 열기');
+    }
+
+    // REF를 통해 바텀시트 중간 위치로 열기
+    if (bottomSheetRef && bottomSheetRef.current) {
+      bottomSheetRef.current.open();
+    }
   };
 
   return (
@@ -67,6 +69,7 @@ export const MapControlsContainer: React.FC = () => {
       onRegionFilterChange={handleRegionFilterChange}
       activeCategoryFilter={activeCategoryFilter}
       onCategoryFilterChange={handleCategoryFilterChange}
+      onShowStoreList={handleShowStoreList}
     />
   );
 };

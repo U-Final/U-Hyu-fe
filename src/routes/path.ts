@@ -1,5 +1,6 @@
 export const PATH = {
   HOME: '/',
+  MYMAP: '/mymap',
   MAP: '/map',
   BENEFIT: '/benefit',
   MYPAGE: '/mypage',

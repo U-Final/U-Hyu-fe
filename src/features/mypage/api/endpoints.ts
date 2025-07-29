@@ -1,10 +1,9 @@
+export const MYPAGE_ROOT = '/user';
+
 export const MYPAGE_ENDPOINTS = {
-  USER_INFO: '/user',
-  UPDATE_USER: '/user',
-  UPLOAD_PROFILE_IMAGE: '/user/profile-image',
-  BOOKMARK_LIST: '/user/bookmark',
-  ADD_BOOKMARK: '/user/bookmark',
-  DELETE_BOOKMARK: (id: number) => `/user/bookmark/${id}`,
-  BOOKMARK_MAP: '/user/bookmark/map',
-  ACTIVITY: '/user/activity',
+  USER_INFO: `${MYPAGE_ROOT}`,
+  UPDATE_USER: `${MYPAGE_ROOT}`,
+  BOOKMARK_LIST: `${MYPAGE_ROOT}/bookmark`,
+  BOOKMARK_DETAIL: (id: number | string = ':bookmarkId') => `${MYPAGE_ROOT}/bookmark/${id}`,
+  STATISTICS: `${MYPAGE_ROOT}/statistics`,
 }; 

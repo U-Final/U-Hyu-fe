@@ -1,8 +1,10 @@
 import { type FC } from 'react';
 
 import type { Store } from '@kakao-map/types/store';
+import { RecommendedStoreList } from '@recommendation/components/RecommendedStoreList';
 
 import { BrandCard } from '@/shared/components';
+import { useIsLoggedIn } from '@/shared/store/userStore';
 
 interface StoreListContentProps {
   stores: Store[];
@@ -14,12 +16,15 @@ const StoreListContent: FC<StoreListContentProps> = ({
   stores,
   onStoreClick,
 }) => {
+  const isLoggedIn = useIsLoggedIn();
   return (
     <div className="flex flex-col h-full">
       {/* 필터 헤더 - 고정 */}
-      <div className="flex-shrink-0 px-4 py-3 border-b border-gray-100">
-        <div className="flex justify-between items-center"></div>
-      </div>
+      {isLoggedIn && (
+        <div className="flex-shrink-0 py-3 border-y border-primary rounded-[1px]">
+          <RecommendedStoreList />
+        </div>
+      )}
 
       {/* 스토어 리스트 - 스크롤 가능 */}
       <div className="flex-1 overflow-y-auto">

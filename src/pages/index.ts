@@ -5,3 +5,4 @@ export { default as ExtraInfo } from './user/extra-info/ExtraInfo';
 export { default as AdminPage } from './admin/AdminPage';
 export { default as MyPage } from './mypage/MyPage';
 export { default as MyPageActivity } from './mypage/MyPageActivity';
+export { default as MymapPage } from './mymap/MymapPage';

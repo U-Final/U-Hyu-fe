@@ -1,15 +1,12 @@
-import { type FC, useEffect, useRef } from 'react';
+import { type FC, useEffect } from 'react';
 
-import { postNearbyStore } from '@barcode/api/nearbyStoreApi';
-import { VisitConfirmModal } from '@barcode/components/VisitConfirmModal';
 import { X } from 'lucide-react';
 
-import { PrimaryButton } from '@/shared/components';
-import { useModalStore } from '@/shared/store';
-
-import { useImageCropStore } from '../../../store/useImageCropStore';
-import { BarcodeCropModal } from './BarcodeCropModal';
-import { CroppedImg } from './CroppedImg';
+import {
+  GuestBarcodeContent,
+  LoggedInBarcodeContent,
+} from '@/shared/components/bottom_navigation/barcode/contents';
+import { useIsLoggedIn, useUser } from '@/shared/store/userStore';
 
 interface BarcodeBottomSheetProps {
   isOpen: boolean;
@@ -20,87 +17,54 @@ export const BarcodeBottomSheet: FC<BarcodeBottomSheetProps> = ({
   isOpen,
   onClose,
 }) => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const { croppedImage, setImageSrc } = useImageCropStore();
-
-  const openModal = useModalStore(state => state.openModal);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      setImageSrc(reader.result as string);
-      openModal('base', {
-        title: '바코드 자르기',
-        children: <BarcodeCropModal />,
-      });
-    };
-    reader.readAsDataURL(file);
-  };
+  const isLoggedIn = useIsLoggedIn();
+  const user = useUser();
 
   useEffect(() => {
-    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
 
-    navigator.geolocation.getCurrentPosition(async pos => {
-      const coords = {
-        lat: pos.coords.latitude,
-        lon: pos.coords.longitude,
-        radius: 50,
-      };
-
-      console.log(coords);
-      const store = await postNearbyStore(coords);
-      console.log(store);
-      if (store) {
-        onClose(); // 시트 닫기
-        openModal('base', {
-          children: <VisitConfirmModal store={store} />,
-        });
-      } else {
-        console.log('근처에 방문 가능한 제휴 매장이 없습니다.');
-        return;
-      }
-    });
-  }, [isOpen, onClose, openModal]);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   if (!isOpen) return null;
 
   return (
-    <div
-      role="dialog"
-      aria-label="바코드 업로드 바텀시트"
-      className="absolute bottom-12 left-0 right-0 z-10"
-    >
-      <div className="bg-white rounded-t-2xl shadow-2xl z-50 flex flex-col border border-light-gray p-4">
-        <header className="flex justify-between items-center mb-4">
-          <h2 className="text-sm font-semibold">OOO님 멤버십</h2>
-          <button
-            onClick={onClose}
-            aria-label="닫기"
-            className="cursor-pointer hover:bg-gray-200 rounded-md"
-          >
-            <X size={20} />
-          </button>
-        </header>
-        <div className="flex flex-col gap-4">
-          {croppedImage && <CroppedImg image={croppedImage} />}
-          <PrimaryButton
-            className="w-full"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            바코드 업로드 하기
-          </PrimaryButton>
-          <input
-            type="file"
-            accept="image/*"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            hidden
-          />
+    <>
+      <div
+        onClick={onClose}
+        role="presentation"
+        className="fixed inset-0 bg-black/4"
+      />
+
+      <div
+        role="dialog"
+        aria-label="바코드 바텀시트"
+        className="absolute bottom-[0.5px] left-0 right-0"
+      >
+        <div className="bg-white rounded-t-2xl z-30 flex flex-col border border-light-gray p-4 min-h-[150px]">
+          <header className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold flex-1">
+              {user
+                ? `${user.userName} ${user.grade} 멤버십 바코드`
+                : '멤버십 바코드'}
+            </h2>
+            <div className="flex gap-4">
+              <button
+                onClick={onClose}
+                aria-label="닫기"
+                className="cursor-pointer hover:bg-gray-200 rounded-md"
+              >
+                <X size={20} />
+              </button>
+            </div>
+          </header>
+
+          {isLoggedIn ? <LoggedInBarcodeContent /> : <GuestBarcodeContent />}
         </div>
       </div>
-    </div>
+    </>
   );
 };

@@ -1,16 +1,18 @@
-import type { FC } from 'react';
+import type { FC, MouseEventHandler } from 'react';
 
 interface CroppedImgProps {
-  image: string;
+  imageUrl: string;
+  onClick?: MouseEventHandler<HTMLImageElement>;
 }
 
-export const CroppedImg: FC<CroppedImgProps> = ({ image }) => {
+export const CroppedImg: FC<CroppedImgProps> = ({ imageUrl, onClick }) => {
   return (
     <figure>
       <img
-        src={image}
+        src={imageUrl}
         alt="크롭된 바코드 이미지"
-        className="max-w-full max-h-48 object-contain"
+        onClick={onClick}
+        className="max-w-full max-h-[600px] object-contain w-full"
       />
     </figure>
   );

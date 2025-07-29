@@ -32,13 +32,20 @@ export const StepContent: React.FC<StepContentProps> = ({
 
   const handleEmailVerification = async () => {
     try {
-      setEmailError(''); // 에러 메시지 초기화
-      const result = await checkEmailMutation.mutateAsync(data.email);
-      if (result.data?.isAvailable) {
+      setEmailError('');
+
+      const result = await checkEmailMutation.mutateAsync({
+        email: data.email,
+      });
+
+      if (result.statusCode === 4002) {
+        // 사용 가능한 이메일
         onUpdateData({ emailVerified: true });
+      } else if (result.statusCode === 4003) {
+        // 이미 사용 중인 이메일
+        setEmailError(result.message || '이미 사용 중인 이메일입니다.');
       } else {
-        // 이미 사용중인 이메일인 경우
-        setEmailError('이미 사용중인 이메일입니다.');
+        setEmailError('알 수 없는 응답입니다.');
       }
     } catch (error) {
       console.error('이메일 중복확인 오류:', error);

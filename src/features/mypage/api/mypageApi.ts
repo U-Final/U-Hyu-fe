@@ -1,46 +1,52 @@
-import type { UserInfo } from './types';
-import axios from 'axios';
+import type { 
+  UserInfoData, 
+  UpdateUserResponseData,
+  UpdateUserRequest,
+  ActivityStatistics,
+  Bookmark
+} from './types';
 import { MYPAGE_ENDPOINTS } from './endpoints';
 import { mockBenefit, mockBrands, mockFavoriteBrands } from '../types/mockActivity';
 import type { ApiResponse } from '@/shared/client/client.type';
-import type { UpdateUserRequest } from './types';
+import { client } from '@/shared/client';
 
-export const fetchUserInfo = async (): Promise<UserInfo> => {
-  const res = await axios.get<ApiResponse<UserInfo>>(MYPAGE_ENDPOINTS.USER_INFO);
-  if (!res.data.data) throw new Error('유저 정보가 없습니다');
+// --- 마이페이지(개인정보/브랜드 등) 기존 API ---
+export const fetchUserInfo = async (): Promise<UserInfoData> => {
+  const res = await client.get<ApiResponse<UserInfoData>>(MYPAGE_ENDPOINTS.USER_INFO);
+  if (!res.data.data) throw new Error('Invalid API response: missing data');
   return res.data.data;
 };
 
-export const updateUserInfo = async (update: Partial<UpdateUserRequest>): Promise<UserInfo> => {
-  try {
-    const res = await axios.patch<ApiResponse<UserInfo>>(MYPAGE_ENDPOINTS.USER_INFO, update);
-    if (!res.data.data) throw new Error('업데이트된 사용자 정보가 없습니다');
-    return res.data.data;
-  } catch (error) {
-    console.error('사용자 정보 업데이트 실패:', error);
-    throw error;
-  }
+export const updateUserInfo = async (update: UpdateUserRequest): Promise<UpdateUserResponseData> => {
+  const res = await client.patch<ApiResponse<UpdateUserResponseData>>(MYPAGE_ENDPOINTS.UPDATE_USER, update);
+  if (!res.data.data) throw new Error('Invalid API response: missing data');
+  return res.data.data;
 };
 
-export const updateUserProfileImage = async (file: File): Promise<string> => {
-  const formData = new FormData();
-  formData.append('profileImage', file);
-  // 실제 엔드포인트는 백엔드 명세에 맞게 수정 필요
-  const res = await axios.post(MYPAGE_ENDPOINTS.UPLOAD_PROFILE_IMAGE, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
-  // 서버는 업로드된 이미지의 URL을 반환한다고 가정
-  return res.data.url;
+// --- 액티비티(활동내역/즐겨찾기) API ---
+export const fetchActivityStatistics = async (): Promise<ActivityStatistics> => {
+  const res = await client.get<ApiResponse<ActivityStatistics>>(MYPAGE_ENDPOINTS.STATISTICS);
+  if (!res.data.data) throw new Error('Invalid API response: missing data');
+  return res.data.data;
 };
 
-export const fetchActivityBenefit = async () => {
-  return mockBenefit;
+export const fetchBookmarkList = async (page = 1, size = 5): Promise<Bookmark[]> => {
+  const res = await client.get<ApiResponse<Bookmark[]>>(
+    `${MYPAGE_ENDPOINTS.BOOKMARK_LIST}?page=${page}&size=${size}`
+  );
+  if (!res.data.data) throw new Error('Invalid API response: missing data');
+  return res.data.data;
 };
 
-export const fetchActivityBrands = async () => {
-  return mockBrands;
+export const deleteBookmark = async (bookmarkId: number): Promise<{ statusCode: number; message: string }> => {
+  const res = await client.delete<ApiResponse<string>>(MYPAGE_ENDPOINTS.BOOKMARK_DETAIL(bookmarkId));
+  return {
+    statusCode: res.data.statusCode,
+    message: res.data.message,
+  };
 };
 
-export const fetchActivityFavorites = async () => {
-  return mockFavoriteBrands;
-}; 
+// --- (개발용) 기존 Mock 데이터 함수는 필요시 유지 ---
+export const fetchActivityBenefit = async () => mockBenefit;
+export const fetchActivityBrands = async () => mockBrands;
+export const fetchActivityFavorites = async () => mockFavoriteBrands; 

@@ -13,7 +13,7 @@ interface MyMapFormProps {
   defaultColor?: MarkerColor;
 }
 
-const MAX_LENGTH = 20;
+const MAX_LENGTH = 10;
 const COLOR_OPTIONS: MarkerColor[] = [
   'RED',
   'ORANGE',

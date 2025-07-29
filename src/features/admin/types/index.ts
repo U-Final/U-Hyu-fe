@@ -1,3 +1,4 @@
+// 관리자 통계 관련 타입
 export interface BrandStatDetail {
   brandName: string;
   sumBookmarksByBrand: number;
@@ -55,4 +56,4 @@ export interface Tab {
   icon: React.ComponentType<{ className?: string }>;
 }
 
-export type TabKey = 'bookmark' | 'filtering' | 'recommendation' | 'membership' | 'total' | 'brands'; 
+export type TabKey = 'bookmark' | 'filtering' | 'recommendation' | 'membership' | 'total' | 'brands';

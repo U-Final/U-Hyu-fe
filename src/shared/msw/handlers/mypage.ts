@@ -1,7 +1,7 @@
 import { MYPAGE_ENDPOINTS } from '@/features/mypage/api/endpoints';
 import { mockUserInfoData, mockUpdateUserResponse } from '@/features/mypage/api/mockData';
 import { http, HttpResponse } from 'msw';
-import type { UpdateUserRequest } from '@/features/mypage/api/types';
+import type { UpdateUserRequest } from '@mypage/api/types';
 import type { ApiResponse } from '@/shared/client/client.type';
 import { delay } from 'msw';
 import { mockActivityStatistics, mockBookmarks } from '@/features/mypage/types/mockActivity';

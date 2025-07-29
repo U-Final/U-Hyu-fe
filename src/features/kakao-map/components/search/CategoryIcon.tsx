@@ -1,64 +1,74 @@
 import React from 'react';
 
+// Lucide React icons (더 나은 카테고리별 아이콘)
 import {
-  AcademicCapIcon,
-  BanknotesIcon,
-  BeakerIcon,
-  BuildingLibraryIcon,
-  BuildingOffice2Icon,
-  BuildingStorefrontIcon,
-  CakeIcon,
-  CameraIcon,
-  FilmIcon,
-  HeartIcon,
-  HomeIcon,
-  HomeModernIcon,
-  KeyIcon,
-  MapPinIcon,
-  SparklesIcon,
-  TruckIcon,
-} from '@heroicons/react/24/solid';
+  ShoppingCart,
+  Coffee,
+  GraduationCap,
+  Building2,
+  Car,
+  Train,
+  Banknote,
+  Palette,
+  Home,
+  MapPin,
+  Camera,
+  Bed,
+  UtensilsCrossed,
+  Heart,
+  Pill,
+  Baby,
+} from 'lucide-react';
+
+// React Icons (특정 카테고리용 추가 아이콘)
+import { 
+  MdLocalConvenienceStore,
+  MdLocalGasStation,
+  MdSchool,
+} from 'react-icons/md';
 
 /**
- * 카카오 맵 카테고리 그룹 코드별 아이콘 매핑
+ * 카카오 맵 카테고리 그룹 코드별 아이콘 매핑 (더 적절한 아이콘 사용)
  */
 const CATEGORY_ICON_MAP = {
-  // 대형마트
-  MT1: BuildingStorefrontIcon,
-  // 편의점
-  CS2: HomeIcon,
-  // 어린이집, 유치원
-  PS3: HomeIcon,
-  // 학교
-  SC4: AcademicCapIcon,
-  // 학원
-  AC5: BuildingLibraryIcon,
-  // 주차장
-  PK6: MapPinIcon,
-  // 주유소, 충전소
-  OL7: TruckIcon,
-  // 지하철역
-  SW8: MapPinIcon,
-  // 은행
-  BK9: BanknotesIcon,
-  // 문화시설
-  CT1: FilmIcon,
-  // 중개업소
-  AG2: KeyIcon,
-  // 공공기관
-  PO3: BuildingOffice2Icon,
-  // 관광명소
-  AT4: CameraIcon,
-  // 숙박
-  AD5: HomeModernIcon,
-  // 음식점
-  FD6: SparklesIcon,
-  // 카페
-  CE7: CakeIcon,
-  // 병원
-  HP8: HeartIcon,
-  // 약국
-  PM9: BeakerIcon,
+  // 대형마트 - 쇼핑카트 아이콘
+  MT1: ShoppingCart,
+  // 편의점 - 편의점 전용 아이콘
+  CS2: MdLocalConvenienceStore,
+  // 어린이집, 유치원 - 아기 아이콘
+  PS3: Baby,
+  // 학교 - 학교 건물 아이콘
+  SC4: MdSchool,
+  // 학원 - 졸업모 아이콘
+  AC5: GraduationCap,
+  // 주차장 - 자동차 아이콘
+  PK6: Car,
+  // 주유소, 충전소 - 주유소 전용 아이콘
+  OL7: MdLocalGasStation,
+  // 지하철역 - 기차 아이콘
+  SW8: Train,
+  // 은행 - 지폐 아이콘
+  BK9: Banknote,
+  // 문화시설 - 팔레트 아이콘
+  CT1: Palette,
+  // 중개업소 - 집 아이콘
+  AG2: Home,
+  // 공공기관 - 건물 아이콘
+  PO3: Building2,
+  // 관광명소 - 카메라 아이콘
+  AT4: Camera,
+  // 숙박 - 침대 아이콘
+  AD5: Bed,
+  // 음식점 - 식기 아이콘
+  FD6: UtensilsCrossed,
+  // 카페 - 커피 아이콘
+  CE7: Coffee,
+  // 병원 - 하트 아이콘
+  HP8: Heart,
+  // 약국 - 알약 아이콘
+  PM9: Pill,
+  // 일반 마커 (카테고리 코드가 없거나 매칭되지 않는 경우)
+  DEFAULT: MapPin,
 } as const;
 
 /**
@@ -83,6 +93,7 @@ export const CATEGORY_COLOR_MAP = {
   CE7: '#a855f7', // purple-500 - 카페
   HP8: '#ef4444', // red-500 - 병원
   PM9: '#059669', // emerald-600 - 약국
+  DEFAULT: '#6b7280', // gray-500 - 일반 마커
 } as const;
 
 /**
@@ -98,6 +109,11 @@ export const getCategoryGroupCode = (
   // categoryGroupCode가 있고 빈 문자열이 아니면 우선 사용
   if (categoryGroupCode && categoryGroupCode.trim() !== '') {
     return categoryGroupCode;
+  }
+
+  // category도 비어있으면 기본 마커 사용
+  if (!category || category.trim() === '') {
+    return 'DEFAULT';
   }
 
   // 기존 로직 (하위 호환성을 위해 유지)
@@ -134,6 +150,7 @@ export const getCategoryGroupCode = (
       병원: 'HP8',
       약국: 'PM9',
       부동산: 'AG2',
+      여행: 'AT4', // 여행 카테고리 추가
       '가정,생활': 'CS2',
       '서비스,산업': 'PO3',
       '교통,수송': 'SW8',
@@ -153,6 +170,7 @@ export const getCategoryGroupCode = (
       도로시설: 'SW8',
       미용: 'PO3',
       식품판매: 'CS2',
+      '관광,명소': 'AT4', // 관광,명소 카테고리 추가
     };
 
     // 첫 번째 카테고리로 매칭 시도
@@ -170,8 +188,8 @@ export const getCategoryGroupCode = (
       return categoryMappings[thirdCategory];
     }
 
-    // 기본값: 음식점
-    return 'FD6';
+    // 기본값: 일반 마커 (매칭되지 않는 카테고리)
+    return 'DEFAULT';
   };
 
   return matchCategory(categoryParts);
@@ -208,7 +226,7 @@ export const CategoryIcon: React.FC<CategoryIconProps> = ({
 
   // 아이콘 컴포넌트 가져오기
   const IconComponent =
-    CATEGORY_ICON_MAP[code as keyof typeof CATEGORY_ICON_MAP] || MapPinIcon;
+    CATEGORY_ICON_MAP[code as keyof typeof CATEGORY_ICON_MAP] || CATEGORY_ICON_MAP.DEFAULT;
 
   // 색상 가져오기 - color prop이 있으면 우선 사용
   const iconColor = color || 

@@ -40,7 +40,7 @@ export const KeywordMarker: React.FC<KeywordMarkerProps> = ({
       `}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => {
+      onKeyDown={e => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           handleClick();
@@ -56,9 +56,7 @@ export const KeywordMarker: React.FC<KeywordMarkerProps> = ({
           flex items-center justify-center
           transition-all duration-200
           ${
-            isSelected
-              ? 'bg-blue-500 scale-110'
-              : 'bg-red-500 hover:bg-red-600'
+            isSelected ? 'bg-blue-500 scale-110' : 'bg-red-500 hover:bg-red-600'
           }
         `}
       >
@@ -97,7 +95,10 @@ export const KeywordMarker: React.FC<KeywordMarkerProps> = ({
 
       {/* 선택 상태일 때 펄스 효과 */}
       {isSelected && (
-        <div className="absolute inset-0 w-8 h-8 rounded-full bg-blue-400 opacity-30 animate-ping" />
+        <>
+          <div className="absolute inset-0 w-8 h-8 rounded-full bg-blue-400 opacity-30 animate-ping" />
+          <div className="absolute inset-0 w-12 h-12 rounded-full bg-blue-300 opacity-20 animate-pulse" />
+        </>
       )}
     </div>
   );
@@ -115,7 +116,7 @@ export const createKeywordMarkerContent = (
 ): HTMLElement => {
   const container = document.createElement('div');
   container.className = 'keyword-marker-container';
-  
+
   // 마커 스타일과 구조를 HTML로 생성
   container.innerHTML = `
     <div class="relative cursor-pointer transform transition-all duration-200 hover:scale-110 active:scale-95" 
@@ -128,14 +129,12 @@ export const createKeywordMarkerContent = (
         border-2 border-white shadow-lg
         flex items-center justify-center
         transition-all duration-200
-        ${isSelected 
-          ? 'bg-blue-500 scale-110' 
-          : 'bg-red-500 hover:bg-red-600'
-        }
+        ${isSelected ? 'bg-blue-500 scale-110' : 'bg-red-500 hover:bg-red-600'}
       `}">
-        ${index 
-          ? `<span class="text-white font-bold text-xs">${index}</span>`
-          : `<div class="w-2 h-2 rounded-full bg-white"></div>`
+        ${
+          index
+            ? `<span class="text-white font-bold text-xs">${index}</span>`
+            : `<div class="w-2 h-2 rounded-full bg-white"></div>`
         }
       </div>
       
@@ -147,16 +146,17 @@ export const createKeywordMarkerContent = (
         ${isSelected ? 'border-t-blue-500' : 'border-t-red-500'}
       `}"></div>
       
-      ${isSelected 
-        ? '<div class="absolute inset-0 w-8 h-8 rounded-full bg-blue-400 opacity-30 animate-ping"></div>'
-        : ''
+      ${
+        isSelected
+          ? '<div class="absolute inset-0 w-8 h-8 rounded-full bg-blue-400 opacity-30 animate-ping"></div>'
+          : ''
       }
     </div>
   `;
 
   // 클릭 이벤트 추가
   container.addEventListener('click', () => onClick(place));
-  container.addEventListener('keydown', (e) => {
+  container.addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       onClick(place);
@@ -188,8 +188,10 @@ export const ClusterMarker: React.FC<ClusterMarkerProps> = ({
   };
 
   const count = places.length;
-  const sizeClass = count > 50 ? 'w-16 h-16' : count > 10 ? 'w-12 h-12' : 'w-10 h-10';
-  const textSizeClass = count > 50 ? 'text-lg' : count > 10 ? 'text-base' : 'text-sm';
+  const sizeClass =
+    count > 50 ? 'w-16 h-16' : count > 10 ? 'w-12 h-12' : 'w-10 h-10';
+  const textSizeClass =
+    count > 50 ? 'text-lg' : count > 10 ? 'text-base' : 'text-sm';
 
   return (
     <div
@@ -204,7 +206,7 @@ export const ClusterMarker: React.FC<ClusterMarkerProps> = ({
       `}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => {
+      onKeyDown={e => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           handleClick();

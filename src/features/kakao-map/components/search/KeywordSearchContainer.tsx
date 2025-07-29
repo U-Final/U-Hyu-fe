@@ -226,9 +226,15 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
       selectMarker(place);
       onPlaceSelect?.(place);
 
-      // 선택된 장소로 지도 중심 이동
+      // 선택된 장소로 지도 중심 이동 (부드러운 애니메이션)
       if (map) {
-        map.setCenter(new kakao.maps.LatLng(place.latitude, place.longitude));
+        // 인포윈도우가 화면 중앙에 오도록 오프셋 적용
+        const offset = 0.0017;
+        const targetLat = place.latitude + offset;
+        const targetLng = place.longitude;
+
+        // 부드러운 이동을 위해 panTo 사용
+        map.panTo(new kakao.maps.LatLng(targetLat, targetLng));
       }
     },
     [selectPlace, selectMarker, onPlaceSelect, map]

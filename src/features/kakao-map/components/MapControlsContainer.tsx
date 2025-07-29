@@ -10,6 +10,8 @@ import type { NormalizedPlace } from '../api/types';
 
 interface MapControlsContainerProps {
   onKeywordSearchResults?: (results: NormalizedPlace[]) => void;
+  keywordResults?: NormalizedPlace[];
+  onClearMarkers?: () => void;
 }
 
 /**
@@ -18,6 +20,8 @@ interface MapControlsContainerProps {
  */
 export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
   onKeywordSearchResults,
+  keywordResults = [],
+  onClearMarkers,
 }) => {
   // UI 상태와 액션들 가져오기
   const {
@@ -35,8 +39,6 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
     keyword,
     results,
     loading,
-    error,
-    hasSearched,
     selectedPlace,
     setKeyword,
     search,
@@ -128,6 +130,7 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
     setSearchFocused(false);
     clearResults();
     clearError();
+    onClearMarkers?.(); // 마커도 함께 지우기
   };
 
   // 검색 결과 닫기 처리 (외부 클릭 또는 ESC 키)
@@ -173,7 +176,7 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
       onCategoryFilterChange={handleCategoryFilterChange}
       onToggleBottomSheet={handleToggleBottomSheet}
       isBottomSheetOpen={isBottomSheetOpen}
-      keywordResults={results}
+      keywordResults={keywordResults}
       isSearching={loading}
       selectedPlace={selectedPlace}
       onSearchResultClick={selectPlace}

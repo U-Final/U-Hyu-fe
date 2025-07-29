@@ -12,6 +12,7 @@ interface MapContainerProps {
   selectedPlace?: NormalizedPlace | null;
   onPlaceClick?: (place: NormalizedPlace) => void;
   onPlaceInfoClose?: () => void;
+  onMapCenterUpdate?: (setMapCenter: (center: { lat: number; lng: number }) => void) => void;
 }
 
 export const MapContainer: React.FC<MapContainerProps> = ({
@@ -19,11 +20,19 @@ export const MapContainer: React.FC<MapContainerProps> = ({
   selectedPlace,
   onPlaceClick,
   onPlaceInfoClose,
+  onMapCenterUpdate,
 }) => {
-  const { stores, mapCenter, userLocation, loading } = useMapData();
+  const { stores, mapCenter, userLocation, loading, setMapCenter } = useMapData();
   const { handleMapCenterChange, handleMapMarkerClick, selectedMarkerId } =
     useMapInteraction();
   const { bottomSheetRef } = useMapUIContext();
+
+  // setMapCenter 함수를 상위 컴포넌트로 전달
+  useEffect(() => {
+    if (onMapCenterUpdate) {
+      onMapCenterUpdate(setMapCenter);
+    }
+  }, [onMapCenterUpdate, setMapCenter]);
 
   // 키워드 검색 결과 디버깅
   useEffect(() => {

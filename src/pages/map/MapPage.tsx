@@ -21,7 +21,9 @@ import useKakaoLoader from '@kakao-map/hooks/useKakaoLoader';
 const MapContent = () => {
   const { bottomSheetRef } = useMapUIContext();
   const [keywordResults, setKeywordResults] = useState<NormalizedPlace[]>([]);
+  const [persistentMarkers, setPersistentMarkers] = useState<NormalizedPlace[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<NormalizedPlace | null>(null);
+  const [mapCenterSetter, setMapCenterSetter] = useState<((center: { lat: number; lng: number }) => void) | null>(null);
 
   // 키워드 검색 결과 장소 클릭 핸들러
   const handlePlaceClick = useCallback((place: NormalizedPlace) => {
@@ -36,7 +38,38 @@ const MapContent = () => {
   // MapControlsContainer에서 검색 결과를 받는 핸들러
   const handleKeywordSearchResults = useCallback((results: NormalizedPlace[]) => {
     setKeywordResults(results);
+    // 새로운 검색 결과가 있을 때만 persistent markers 업데이트
+    if (results.length > 0) {
+      setPersistentMarkers(results);
+      
+      // 검색 완료 시 첫 번째 결과 위치로 지도 이동
+      if (mapCenterSetter && results[0]) {
+        const firstResult = results[0];
+        mapCenterSetter({
+          lat: firstResult.latitude,
+          lng: firstResult.longitude
+        });
+        
+        if (import.meta.env.MODE === 'development') {
+          console.log('🎯 지도 이동 - 첫 번째 검색 결과:', {
+            place: firstResult.name,
+            coordinates: { lat: firstResult.latitude, lng: firstResult.longitude }
+          });
+        }
+      }
+    }
     setSelectedPlace(null); // 새 검색 시 선택 초기화
+  }, [mapCenterSetter]);
+
+  // 마커를 완전히 지우는 핸들러 (새 검색 시)
+  const handleClearMarkers = useCallback(() => {
+    setPersistentMarkers([]);
+    setSelectedPlace(null);
+  }, []);
+
+  // MapContainer에서 setMapCenter 함수를 받는 핸들러
+  const handleMapCenterUpdate = useCallback((setMapCenter: (center: { lat: number; lng: number }) => void) => {
+    setMapCenterSetter(() => setMapCenter);
   }, []);
 
   // 바텀시트 초기화
@@ -58,12 +91,17 @@ const MapContent = () => {
     <div className="h-screen relative">
       <div className="absolute inset-0">
         <MapContainer 
-          keywordResults={keywordResults}
+          keywordResults={persistentMarkers}
           selectedPlace={selectedPlace}
           onPlaceClick={handlePlaceClick}
           onPlaceInfoClose={handlePlaceInfoClose}
+          onMapCenterUpdate={handleMapCenterUpdate}
         />
-        <MapControlsContainer onKeywordSearchResults={handleKeywordSearchResults} />
+        <MapControlsContainer 
+          onKeywordSearchResults={handleKeywordSearchResults}
+          keywordResults={keywordResults}
+          onClearMarkers={handleClearMarkers}
+        />
         <LocationControlContainer />
       </div>
 

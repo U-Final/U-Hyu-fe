@@ -3,14 +3,14 @@ import { type FC, useCallback, useEffect, useRef, useState } from 'react';
 import { useSharedMapStore } from '@mymap/store/SharedMapStore';
 import { CustomOverlayMap, Map as KakaoMap } from 'react-kakao-maps-sdk';
 
+import type { NormalizedPlace } from '../../api/types';
 import { useDistanceBasedSearch } from '../../hooks/useManualSearch';
 import { useToggleFavoriteMutation } from '../../hooks/useMapQueries';
-import type { NormalizedPlace } from '../../api/types';
 import type { Store } from '../../types/store';
 import ResponsiveManualSearchButton from '../ManualSearchButton';
 import BrandMarker from './BrandMarker';
-import { KeywordMarker } from './KeywordMarker';
 import { KeywordInfoWindow } from './KeywordInfoWindow';
+import { KeywordMarker } from './KeywordMarker';
 import StoreInfoWindow from './StoreInfoWindow';
 
 interface MapWithMarkersProps {
@@ -283,22 +283,39 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         )}
 
         {/* 키워드 검색 결과 마커들 */}
-        {keywordResults.length > 0 && import.meta.env.MODE === 'development' && console.log('🗺️ MapWithMarkers - 키워드 마커 렌더링:', keywordResults.length)}
-        {keywordResults.map((place, index) => (
-          <CustomOverlayMap
-            key={place.id}
-            position={{ lat: place.latitude, lng: place.longitude }}
-            yAnchor={1}
-            xAnchor={0.5}
-          >
-            <KeywordMarker
-              place={place}
-              onClick={() => onPlaceClick?.(place)}
-              isSelected={selectedPlace?.id === place.id}
-              index={index + 1}
-            />
-          </CustomOverlayMap>
-        ))}
+        {keywordResults.length > 0 && (
+          <>
+            {keywordResults.map((place, index) => (
+              <CustomOverlayMap
+                key={place.id}
+                position={{ lat: place.latitude, lng: place.longitude }}
+                yAnchor={1}
+                xAnchor={0.5}
+              >
+                <KeywordMarker
+                  place={place}
+                  onClick={clickedPlace => {
+                    // 마커 클릭 시 지도 이동 애니메이션 적용
+                    if (mapRef.current) {
+                      const offset = 0.0017;
+                      const targetLat = clickedPlace.latitude + offset;
+                      const targetLng = clickedPlace.longitude;
+
+                      // 부드러운 이동을 위해 panTo 사용
+                      mapRef.current.panTo(
+                        new kakao.maps.LatLng(targetLat, targetLng)
+                      );
+                    }
+
+                    onPlaceClick?.(clickedPlace);
+                  }}
+                  isSelected={selectedPlace?.id === place.id}
+                  index={index + 1}
+                />
+              </CustomOverlayMap>
+            ))}
+          </>
+        )}
 
         {/* 선택된 키워드 검색 결과의 인포윈도우 */}
         {selectedPlace && (

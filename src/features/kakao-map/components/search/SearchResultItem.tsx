@@ -70,7 +70,7 @@ export const SearchResultItem: React.FC<SearchResultItemProps> = ({
         transition: { duration: 0.15, ease: 'easeOut' },
       }}
       whileTap={{
-        scale: 0.98,
+        scale: 0.95,
         transition: { duration: 0.1, ease: 'easeInOut' },
       }}
       animate={{
@@ -83,12 +83,20 @@ export const SearchResultItem: React.FC<SearchResultItemProps> = ({
     >
       {/* 선택 표시 */}
       {isSelected && (
-        <motion.div
-          className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500"
-          initial={{ scaleY: 0 }}
-          animate={{ scaleY: 1 }}
-          transition={{ duration: 0.2 }}
-        />
+        <>
+          <motion.div
+            className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500"
+            initial={{ scaleY: 0 }}
+            animate={{ scaleY: 1 }}
+            transition={{ duration: 0.2 }}
+          />
+          <motion.div
+            className="absolute inset-0 bg-blue-50 border-l-4 border-blue-500"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          />
+        </>
       )}
 
       {/* 카테고리별 아이콘 */}

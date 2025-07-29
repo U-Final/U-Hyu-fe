@@ -10,12 +10,12 @@ import {
     mockTotalStats,
 } from '@/features/admin/api/mockData';
 import type { AdminBrand } from '@/features/admin/api/types';
+import type { CreateBrandRequest, UpdateBrandRequest } from '@/features/admin/api/adminApi';
 import { http, HttpResponse } from 'msw';
 
 const createResponse = <T>(data: T, message: string) =>
   HttpResponse.json({
-    code: 0,
-    status: 200,
+    statusCode: 0,
     message,
     data,
   });
@@ -47,35 +47,45 @@ export const adminHandlers = [
   http.get(ADMIN_ENDPOINTS.BRAND_LIST, () => {
     return createResponse(adminBrands, '브랜드 목록 조회 성공');
   }),
+  http.get('/admin/brands/:brandId', ({ params }) => {
+    const { brandId } = params;
+    const brand = adminBrands.find(b => b.brandId === Number(brandId));
+    if (!brand) {
+      return HttpResponse.json({
+        statusCode: 404,
+        message: '존재하지 않는 브랜드입니다.',
+        data: null,
+      }, { status: 404 });
+    }
+    return createResponse(brand, '브랜드 상세 조회 성공');
+  }),
   http.post(ADMIN_ENDPOINTS.BRAND_CREATE, async ({ request }) => {
-    const body = (await request.json()) as Omit<AdminBrand, 'brandId'>;
+    const body = (await request.json()) as CreateBrandRequest;
     const newId = adminBrands.length ? Math.max(...adminBrands.map(b => b.brandId)) + 1 : 1;
-    const newBrand: AdminBrand = { ...body, brandId: newId };
+    const newBrand: AdminBrand = { ...body, brandId: newId, status: true };
     adminBrands.push(newBrand);
-    return createResponse(newBrand, '브랜드 추가 성공');
+    return createResponse({ brandId: newId }, '브랜드 추가 성공');
   }),
   http.put('/admin/brands/:brandId', async ({ params, request }) => {
     const { brandId } = params;
     const idx = adminBrands.findIndex(b => b.brandId === Number(brandId));
     if (idx === -1) {
       return HttpResponse.json({
-        code: 404,
-        status: 404,
+        statusCode: 404,
         message: '존재하지 않는 브랜드입니다.',
         data: null,
       }, { status: 404 });
     }
-    const body = (await request.json()) as Partial<AdminBrand>;
+    const body = (await request.json()) as UpdateBrandRequest;
     adminBrands[idx] = { ...adminBrands[idx], ...body };
-    return createResponse(adminBrands[idx], '브랜드 수정 성공');
+    return createResponse({ brandId: Number(brandId) }, '브랜드 수정 성공');
   }),
   http.delete('/admin/brands/:brandId', ({ params }) => {
     const { brandId } = params;
     const idx = adminBrands.findIndex(b => b.brandId === Number(brandId));
     if (idx === -1) {
       return HttpResponse.json({
-        code: 404,
-        status: 404,
+        statusCode: 404,
         message: '존재하지 않는 브랜드입니다.',
         data: null,
       }, { status: 404 });

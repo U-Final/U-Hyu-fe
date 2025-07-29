@@ -9,7 +9,6 @@ const CLICK_THRESHOLD = 15;
 const STORAGE_KEY = 'Action_log';
 const ENDPOINTS_ACTION_LOG = '/user/action-logs';
 
-// TODO: 주석 관련 코드 삭제 필요
 class ActionLogCounter {
   private markerClicks: Map<number, number> = new Map();
   private filterClicks: Map<string, number> = new Map();
@@ -31,13 +30,6 @@ class ActionLogCounter {
           Object.entries(data.markerClicks).map(([k, v]) => [parseInt(k), v])
         );
         this.filterClicks = new Map(Object.entries(data.filterClicks || {}));
-
-        if (import.meta.env.MODE === 'development') {
-          console.log('📊 Loaded counters from storage:', {
-            markerClicks: Object.fromEntries(this.markerClicks),
-            filterClicks: Object.fromEntries(this.filterClicks),
-          });
-        }
       }
     } catch (error) {
       console.error('스토리지 카운터 로드 실패', error);
@@ -63,12 +55,6 @@ class ActionLogCounter {
     const newCount = currentCount + 1;
     this.markerClicks.set(storeId, newCount);
 
-    if (import.meta.env.MODE === 'development') {
-      console.log(
-        `🎃🎃🎃🎃🎃 Store: ${storeId} clicked: ${newCount} / ${CLICK_THRESHOLD}`
-      );
-    }
-
     if (newCount >= CLICK_THRESHOLD) {
       // 임계점 도달시
       this.sendMarkerClickData(storeId);
@@ -82,12 +68,6 @@ class ActionLogCounter {
     const currentCount = this.filterClicks.get(filterValue) || 0;
     const newCount = currentCount + 1;
     this.filterClicks.set(filterValue, newCount);
-
-    if (import.meta.env.MODE === 'development') {
-      console.log(
-        `🎃🎃🎃🎃🎃 Category ${filterValue} filtered: ${newCount} / ${CLICK_THRESHOLD}`
-      );
-    }
 
     if (newCount >= CLICK_THRESHOLD) {
       this.sendFilterClickData(filterValue);
@@ -105,10 +85,6 @@ class ActionLogCounter {
       categoryId: null,
     };
     await this.sendSingleActionToServer(actionData);
-
-    if (import.meta.env.MODE === 'development') {
-      console.log('🎃🎃🎃🎃🎃 🚀 Marker click data sent:', actionData);
-    }
   }
 
   private async sendFilterClickData(filterValue: string) {
@@ -120,10 +96,6 @@ class ActionLogCounter {
     };
 
     await this.sendSingleActionToServer(actionData);
-
-    if (import.meta.env.MODE === 'development') {
-      console.log('🎃🎃🎃🎃🎃 🚀 Filter usage data sent:', actionData);
-    }
   }
 
   getCounters() {
@@ -146,10 +118,6 @@ class ActionLogCounter {
 
     window.addEventListener('beforeunload', () => {
       this.saveToStorage();
-
-      if (import.meta.env.MODE === 'development') {
-        console.log('Counters saved on page unload');
-      }
     });
 
     document.addEventListener('visibilitychange', () => {
@@ -161,21 +129,10 @@ class ActionLogCounter {
 
   private async sendSingleActionToServer(action: UserAction) {
     try {
-      if (import.meta.env.MODE === 'development') {
-        console.log('🚀 Sending single action to server:', action);
-      }
-
-      // ❌ 기존: { actions: [action] }
-      // ✅ 수정: action 객체 직접 전송
-      const res = await client.post(ENDPOINTS_ACTION_LOG, action);
-
-      if (import.meta.env.MODE === 'development') {
-        console.log('🎃🎃🎃🎃🎃 ✅ Action sent successfully:', res.data);
-      }
-
+      await client.post(ENDPOINTS_ACTION_LOG, action);
       this.saveToStorage();
     } catch (error) {
-      console.error('🎃🎃🎃🎃🎃 Failed to send action:', error);
+      console.error('Failed to send action:', error);
     }
   }
 
@@ -213,12 +170,6 @@ class ActionLogCounter {
         this.markerClicks.clear();
         this.filterClicks.clear();
         this.saveToStorage();
-
-        if (import.meta.env.MODE === 'development') {
-          console.log(
-            `✅ Force flush completed: ${promises.length} actions sent`
-          );
-        }
       } catch (error) {
         console.error('❌ Force flush failed:', error);
       }
@@ -230,10 +181,6 @@ class ActionLogCounter {
     this.markerClicks.clear();
     this.filterClicks.clear();
     localStorage.removeItem(STORAGE_KEY);
-
-    if (import.meta.env.MODE === 'development') {
-      console.log('🗑️ All counters reset');
-    }
   }
 }
 

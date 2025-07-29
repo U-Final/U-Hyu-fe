@@ -8,6 +8,7 @@ import {
   FILTER_TABS,
   filterTabVariants,
 } from '@/shared/components/filter_tabs/FilterTabs.variants';
+import { trackFilterUsed } from '@/shared/utils/actionlogTracker';
 
 const FilterTabs: FC<FilterTabProps> = ({
   tabs = FILTER_TABS,
@@ -19,6 +20,11 @@ const FilterTabs: FC<FilterTabProps> = ({
   const handleClick = (value: string) => {
     setActive(value);
     onChange?.(value);
+
+    // 🎯 이게 전부!
+    if (value !== 'all') {
+      trackFilterUsed(value); // 'shopping' 그대로 전달
+    }
   };
 
   return (

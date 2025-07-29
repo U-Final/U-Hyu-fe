@@ -60,12 +60,13 @@ export const ProtectedRoute = ({
       return;
     }
 
-    // 권한이 맞지 않는 경우
-    if (requiredRole && user?.role !== requiredRole) {
+    // 권한이 맞지 않는 경우 (관리자는 모든 라우트 접근 가능)
+    if (requiredRole && user?.role !== requiredRole && user?.role !== 'ADMIN') {
       if (import.meta.env.DEV) {
         console.log('❌ ProtectedRoute - 권한 불일치:', {
           requiredRole,
           userRole: user?.role,
+          note: '관리자는 모든 라우트 접근 가능',
         });
       }
       setHasTriggeredModal(true);
@@ -77,7 +78,14 @@ export const ProtectedRoute = ({
     }
 
     if (import.meta.env.DEV) {
-      console.log('✅ ProtectedRoute - 접근 허용');
+      const accessReason = user?.role === 'ADMIN' && requiredRole && user.role !== requiredRole 
+        ? '관리자 권한으로 접근 허용' 
+        : '권한 일치로 접근 허용';
+      console.log('✅ ProtectedRoute - 접근 허용:', {
+        reason: accessReason,
+        userRole: user?.role,
+        requiredRole,
+      });
     }
 
     // 성공적으로 접근 가능한 경우 모달 상태 리셋

@@ -26,10 +26,7 @@ export {
 } from '../../api/keywordSearchApi';
 
 // 훅 exports
-export {
-  useKeywordSearch,
-  useSearchHistory,
-} from '../../hooks/useKeywordSearch';
+export { useKeywordSearch } from '../../hooks/useKeywordSearch';
 export {
   useSearchMarkers,
   useMapBounds,

@@ -88,7 +88,7 @@ const MyMapBody: FC = () => {
         data.map(map => (
           <div
             key={map.myMapListId}
-            className="flex items-center justify-between py-3 cursor-pointer hover:bg-light-gray-hover rounded"
+            className="flex items-center justify-between py-3 cursor-pointer hover:bg-light-gray-hover rounded "
           >
             <div
               className="flex flex-9 items-center"
@@ -112,7 +112,7 @@ const MyMapBody: FC = () => {
                   onClick={() => {
                     handleUpdate(map.myMapListId, map.title, map.markerColor);
                   }}
-                  className="flex justify-between font-medium"
+                  className="flex justify-between font-medium cursor-pointer "
                 >
                   수정
                   <RiPencilFill className="mr-2 h-4 w-4" />
@@ -123,7 +123,7 @@ const MyMapBody: FC = () => {
                     e.stopPropagation();
                     handleShare(map.uuid);
                   }}
-                  className="flex justify-between font-medium"
+                  className="flex justify-between font-medium cursor-pointer "
                 >
                   공유
                   <MdIosShare className="mr-2 h-4 w-4" />
@@ -134,7 +134,7 @@ const MyMapBody: FC = () => {
                     e.stopPropagation();
                     handleDelete(map.myMapListId);
                   }}
-                  className="flex justify-between font-medium"
+                  className="flex justify-between font-medium cursor-pointer "
                 >
                   삭제
                   <PiTrashBold className="mr-2 h-4 w-4" />

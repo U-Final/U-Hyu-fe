@@ -15,6 +15,11 @@ const MyPage = () => {
   const [editMode, setEditMode] = useState(false);
   const [pendingChanges, setPendingChanges] = useState<UpdateUserRequest>({});
 
+  // 마이페이지에서 활동 내역으로 이동할 때 유저 정보 refetch
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
   useEffect(() => {
     if (user) setLocalUser(user);
   }, [user]);
@@ -47,8 +52,8 @@ const MyPage = () => {
   if (error || !localUser) return <div>에러 발생</div>;
 
   return (
-    <div className="min-h-screen max-w-[22.5rem] mx-auto">
-      <div className="p-[1rem] space-y-[1.5rem] pb-[6rem]">
+    <div className="min-h-screen">
+      <div className="space-y-[1.5rem] pb-[6rem]">
         <MyPageHeader user={localUser} />
         <MyPageUserInfo 
           user={localUser} 

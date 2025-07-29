@@ -23,6 +23,7 @@ const ActivityFavorite = ({ enabled }: Props) => {
 
   useEffect(() => {
     if (!hasNextPage || !enabled) return;
+    const currentLoader = loaderRef.current;
     const observer = new window.IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
@@ -31,11 +32,14 @@ const ActivityFavorite = ({ enabled }: Props) => {
       },
       { threshold: 0.3 }
     );
-    if (loaderRef.current) observer.observe(loaderRef.current);
+    if (currentLoader) observer.observe(currentLoader);
     return () => {
-      if (loaderRef.current) observer.unobserve(loaderRef.current);
+      if (currentLoader) observer.unobserve(currentLoader);
     };
   }, [hasNextPage, isFetchingNextPage, fetchNextPage, enabled]);
+
+  // enabled가 false일 때는 아무것도 렌더링하지 않음
+  if (!enabled) return null;
 
   if (isLoading) return <div>로딩중...</div>;
   if (error) return <div>에러 발생</div>;
@@ -44,8 +48,15 @@ const ActivityFavorite = ({ enabled }: Props) => {
 
   const handleFavoriteClick = async (bookmarkId: number) => {
     setRemovingIds((prev) => [...prev, bookmarkId]);
-    await deleteBookmark(bookmarkId);
-    await refetch();
+    try {
+      await deleteBookmark(bookmarkId);
+      await refetch();
+    } catch (error) {
+      console.error('즐겨찾기 삭제 실패:', error);
+      // 에러 발생 시 removingIds에서 제거
+      setRemovingIds((prev) => prev.filter((id) => id !== bookmarkId));
+      return;
+    }
     setTimeout(() => {
       setRemovingIds((prev) => prev.filter((id) => id !== bookmarkId));
     }, 300);

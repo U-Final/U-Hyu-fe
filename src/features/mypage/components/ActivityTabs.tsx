@@ -8,12 +8,13 @@ interface Props {
 
 const ActivityTabs = ({ activeTab, setActiveTab }: Props) => {
   return (
-    <div className="sticky top-[2.5rem] z-10 pt-[1rem] pb-[0.5rem]">
-      <div
-        className="relative flex items-center justify-between bg-gray-100 rounded-[1rem] px-[0.25rem] h-[3rem]"
-        role="tablist"
-        aria-label="활동 내역 및 즐겨찾기 탭"
-      >
+    <div className="sticky top-0 z-10">
+      <div className="py-[0.5rem]">
+        <div
+          className="relative flex items-center justify-between bg-gray-100 rounded-[1rem] px-[0.25rem] h-[3rem]"
+          role="tablist"
+          aria-label="활동 내역 및 즐겨찾기 탭"
+        >
         <div
           className={`
             absolute top-[0.35rem] bottom-[0.35rem] left-[0.25rem]
@@ -48,6 +49,7 @@ const ActivityTabs = ({ activeTab, setActiveTab }: Props) => {
             </button>
           );
         })}
+        </div>
       </div>
     </div>
   );

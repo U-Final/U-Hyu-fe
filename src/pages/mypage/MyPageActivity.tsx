@@ -21,39 +21,45 @@ const MyPageActivity = () => {
   const { refetch: refetchStatistics } = useActivityStatisticsQuery();
   const { refetch: refetchBookmarks } = useBookmarkListInfiniteQuery(activeTab === MYPAGE_TABS[1]);
 
-  // 페이지 이동(경로 변경) 시 모든 쿼리 refetch
+  // 페이지 이동(경로 변경) 시 유저 정보와 통계만 refetch
   useEffect(() => {
     refetchUserInfo();
     refetchStatistics();
-    refetchBookmarks();
-  }, [location.pathname, refetchUserInfo, refetchStatistics, refetchBookmarks]);
+    // 북마크는 즐겨찾기 탭이 활성화될 때만 요청
+  }, [location.pathname, refetchUserInfo, refetchStatistics]);
 
   // 탭 클릭 시 해당 refetch 호출
   const handleTabClick = useCallback((tab: MyPageTab) => {
     setActiveTab(tab);
-    if (tab === MYPAGE_TABS[0]) refetchStatistics();
-    if (tab === MYPAGE_TABS[1]) refetchBookmarks();
+    if (tab === MYPAGE_TABS[0]) {
+      refetchStatistics();
+    }
+    if (tab === MYPAGE_TABS[1]) {
+      refetchBookmarks();
+    }
   }, [refetchStatistics, refetchBookmarks]);
 
   if (isLoading) return <div>로딩중...</div>;
   if (error || !user) return <div>에러 발생</div>;
 
   return (
-    <div className="min-h-screen max-w-[22.5rem] mx-auto">
-      <div
-        ref={scrollRef}
-        className="p-[1rem] space-y-[1.5rem] pb-[6rem] overflow-auto"
-      >
+    <div className="min-h-screen">
+      <div className="pb-[6rem]">
         <MyPageHeader user={user} />
         <ActivityTabs activeTab={activeTab} setActiveTab={handleTabClick} />
-        {activeTab === MYPAGE_TABS[0] ? (
-          <>
-            <ActivityBenefit />
-            <ActivityBrands />
-          </>
-        ) : (
-          <ActivityFavorite enabled={activeTab === MYPAGE_TABS[1]} />
-        )}
+        <div
+          ref={scrollRef}
+          className="space-y-[1.5rem] overflow-auto"
+        >
+          {activeTab === MYPAGE_TABS[0] ? (
+            <>
+              <ActivityBenefit />
+              <ActivityBrands />
+            </>
+          ) : (
+            <ActivityFavorite enabled={activeTab === MYPAGE_TABS[1]} />
+          )}
+        </div>
       </div>
     </div>
   );

@@ -38,11 +38,11 @@ export const userApi = {
   },
 
   // 유저 정보 조회
-  getUserInfo: async (): Promise<UserInfomation> => {
+  getUserInfo: async (): Promise<ApiResponse<UserInfomation>> => {
     const res = await client.get<ApiResponse<UserInfomation>>(
       USER_ENDPOINTS.USER.ROOT
     );
-    return res.data.data!;
+    return res.data;
   },
 
   // 로그아웃

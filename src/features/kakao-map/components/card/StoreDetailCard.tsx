@@ -1,3 +1,6 @@
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
 export interface StoreDetailCardProps {
   storeName: string;
   isFavorite: boolean;
@@ -9,6 +12,57 @@ export interface StoreDetailCardProps {
   handleToggleFavorite?: () => void;
 }
 
+// 텍스트 길이 제한 상수
+const TEXT_LIMITS = {
+  benefits: 50,
+  usageLimit: 30,
+  usageMethod: 40,
+};
+
+// 텍스트가 제한을 초과하는지 확인하는 헬퍼 함수
+const shouldShowExpand = (text: string, limit: number): boolean => {
+  return text.length > limit;
+};
+
+// 축약된 텍스트를 반환하는 헬퍼 함수
+const getTruncatedText = (text: string, limit: number): string => {
+  if (text.length <= limit) return text;
+  return text.substring(0, limit) + '...';
+};
+
+// 더보기 버튼 컴포넌트
+const ExpandButton: React.FC<{
+  isExpanded: boolean;
+  onClick: () => void;
+}> = ({ isExpanded, onClick }) => (
+  <button
+    onClick={(e) => {
+      e.stopPropagation();
+      onClick();
+    }}
+    className="inline text-blue-500 hover:text-blue-700 font-medium text-xs ml-1 transition-colors duration-200"
+    aria-label={isExpanded ? '접기' : '더보기'}
+  >
+    {isExpanded ? '접기' : '더보기'}
+  </button>
+);
+
+// 애니메이션 변형
+const expandVariants = {
+  collapsed: { 
+    height: 'auto',
+    opacity: 1 
+  },
+  expanded: { 
+    height: 'auto',
+    opacity: 1,
+    transition: {
+      height: { duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] },
+      opacity: { duration: 0.2 }
+    }
+  }
+};
+
 const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
   storeName,
   isFavorite,
@@ -19,6 +73,20 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
   userGrade = '우수', // 기본값 설정
   handleToggleFavorite,
 }) => {
+  // 각 섹션의 확장 상태 관리
+  const [expandedSections, setExpandedSections] = useState({
+    benefits: false,
+    usageLimit: false,
+    usageMethod: false,
+  });
+
+  // 섹션 확장/축소 토글 함수
+  const toggleSection = (section: keyof typeof expandedSections) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
   return (
     <div className="relative w-[20rem] bg-white rounded-2xl shadow-lg p-6 pt-5 pb-8">
       {/* 말풍선 꼬리 */}
@@ -89,9 +157,26 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
               <span>{userGrade}</span>
             </div>
             <div className="bg-yellow-50 px-3 py-1 rounded-tr rounded-br text-sm flex-1 min-w-0">
-              <span className="break-words whitespace-pre-wrap text-left block">
-                {benefits}
-              </span>
+              <motion.div 
+                layout
+                className="break-words text-left"
+                variants={expandVariants}
+                initial="collapsed"
+                animate={expandedSections.benefits ? "expanded" : "collapsed"}
+              >
+                <span className="whitespace-pre-wrap block">
+                  {expandedSections.benefits 
+                    ? benefits 
+                    : getTruncatedText(benefits, TEXT_LIMITS.benefits)
+                  }
+                </span>
+                {shouldShowExpand(benefits, TEXT_LIMITS.benefits) && (
+                  <ExpandButton
+                    isExpanded={expandedSections.benefits}
+                    onClick={() => toggleSection('benefits')}
+                  />
+                )}
+              </motion.div>
             </div>
           </div>
         </div>
@@ -101,14 +186,50 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
         <div className="text-sm font-semibold text-gray-700 mb-2">
           제공 횟수
         </div>
-        <div className="text-sm">{usageLimit}</div>
+        <motion.div 
+          layout
+          className="text-sm"
+          variants={expandVariants}
+          initial="collapsed"
+          animate={expandedSections.usageLimit ? "expanded" : "collapsed"}
+        >
+          <span className="break-words whitespace-pre-wrap">
+            {expandedSections.usageLimit 
+              ? usageLimit 
+              : getTruncatedText(usageLimit, TEXT_LIMITS.usageLimit)
+            }
+          </span>
+          {shouldShowExpand(usageLimit, TEXT_LIMITS.usageLimit) && (
+            <ExpandButton
+              isExpanded={expandedSections.usageLimit}
+              onClick={() => toggleSection('usageLimit')}
+            />
+          )}
+        </motion.div>
       </div>
       {/* 이용방법 */}
       <div className="relative z-10">
         <div className="text-sm font-semibold text-gray-700 mb-2">이용방법</div>
-        <div className="text-xs text-gray-600 whitespace-pre-line">
-          {usageMethod}
-        </div>
+        <motion.div 
+          layout
+          className="text-xs text-gray-600"
+          variants={expandVariants}
+          initial="collapsed"
+          animate={expandedSections.usageMethod ? "expanded" : "collapsed"}
+        >
+          <span className="break-words whitespace-pre-line">
+            {expandedSections.usageMethod 
+              ? usageMethod 
+              : getTruncatedText(usageMethod, TEXT_LIMITS.usageMethod)
+            }
+          </span>
+          {shouldShowExpand(usageMethod, TEXT_LIMITS.usageMethod) && (
+            <ExpandButton
+              isExpanded={expandedSections.usageMethod}
+              onClick={() => toggleSection('usageMethod')}
+            />
+          )}
+        </motion.div>
       </div>
     </div>
   );

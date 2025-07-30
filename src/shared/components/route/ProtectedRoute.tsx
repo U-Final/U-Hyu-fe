@@ -60,22 +60,30 @@ export const ProtectedRoute = ({
       return;
     }
 
-    // 권한이 맞지 않는 경우 (관리자는 모든 라우트 접근 가능)
-    if (requiredRole && user?.role !== requiredRole && user?.role !== 'ADMIN') {
-      if (import.meta.env.DEV) {
-        console.log('❌ ProtectedRoute - 권한 불일치:', {
-          requiredRole,
-          userRole: user?.role,
-          note: '관리자는 모든 라우트 접근 가능',
-        });
-      }
-      setHasTriggeredModal(true);
-      openModal('login', {}, () => {
-        // 모달 닫힐 때 홈으로 리다이렉트
+    // 이미 로그인된 상태에서 권한만 확인
+    if (isLoggedIn && requiredRole) {
+      // 관리자는 모든 라우트에 접근 가능
+      if (user?.role === 'ADMIN') {
+        if (import.meta.env.DEV) {
+          console.log('✅ ProtectedRoute - 관리자 권한으로 접근 허용:', {
+            requiredRole,
+            userRole: user?.role,
+          });
+        }
+      } else if (user?.role !== requiredRole) {
+        if (import.meta.env.DEV) {
+          console.log('❌ ProtectedRoute - 권한 불일치:', {
+            requiredRole,
+            userRole: user?.role,
+          });
+        }
+        // 권한이 없는 경우 홈으로 리다이렉트 (로그인 모달 대신)
         navigate(redirectTo, { replace: true });
-      });
-      return;
+        return;
+      }
     }
+
+
 
     if (import.meta.env.DEV) {
       const accessReason = user?.role === 'ADMIN' && requiredRole && user.role !== requiredRole 

@@ -4,12 +4,10 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AppRoutes } from '@/routes/AppRoutes';
 
 import { queryClient } from '@/shared/client';
-import AppInitializer from '@/shared/components/AppInitializer';
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AppInitializer />
       <AppRoutes />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

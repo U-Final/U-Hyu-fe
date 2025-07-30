@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { useAdminBrandDetailQuery } from '@admin/hooks/useAdminBrandQuery';
+import { useAdminBrandDetailQuery } from '@admin/hooks';
 import { useModalStore } from '@/shared/store';
 
 import { AdminBrandForm } from './AdminBrandForm';

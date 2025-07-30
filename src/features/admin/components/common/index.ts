@@ -1,5 +1,6 @@
 export { StatsSummaryCards } from './StatsSummaryCards';
-export { StatsTabButtons } from './StatsTabButtons';
 export { StatsSkeleton } from './StatsSkeleton';
 export { ChartSkeleton } from './ChartSkeleton';
-export { BrandListSkeleton } from './BrandListSkeleton'; 
+export { BrandListSkeleton } from './BrandListSkeleton';
+export { default as AdminToggleTabs } from './AdminToggleTabs';
+export { CategoryFilter } from './CategoryFilter'; 

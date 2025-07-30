@@ -5,9 +5,9 @@ import {
   useUpdateAdminBrandMutation,
   useDeleteAdminBrandMutation,
 } from '@admin/hooks';
-import { useAdminCategoriesQuery } from '@admin/hooks/useAdminStatsQuery';
+import { useAdminCategoriesQuery } from '@admin/hooks';
 import type { AdminBrand, BrandBenefit } from '@admin/api/types';
-import type { CreateBrandRequest, UpdateBrandRequest } from '@admin/api/adminApi';
+import type { CreateBrandRequest, UpdateBrandRequest } from '@admin/api/types';
 
 interface AdminBrandFormProps {
   brand?: AdminBrand;

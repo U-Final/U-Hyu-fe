@@ -8,14 +8,14 @@ import {
     mockRecommendStats,
 
     mockTotalStats,
-} from '@/features/admin/api/mockData';
-import type { AdminBrand } from '@/features/admin/api/types';
-import type { CreateBrandRequest, UpdateBrandRequest } from '@/features/admin/api/adminApi';
+} from '@admin/api/mockData';
+import type { AdminBrand } from '@admin/api/types';
+import type { CreateBrandRequest, UpdateBrandRequest } from '@admin/api/types';
 import { http, HttpResponse } from 'msw';
 
 const createResponse = <T>(data: T, message: string) =>
   HttpResponse.json({
-    success: true,
+    statusCode: 0,
     message,
     data,
   });

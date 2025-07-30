@@ -1,13 +1,9 @@
 import { useState, useEffect } from 'react';
 
-import {
-  useCreateAdminBrandMutation,
-  useUpdateAdminBrandMutation,
-  useDeleteAdminBrandMutation,
-} from '@admin/hooks';
-import { useAdminCategoriesQuery } from '@admin/hooks';
+import { useAdminBrandMutation } from '@admin/hooks';
 import type { AdminBrand, BrandBenefit } from '@admin/api/types';
 import type { CreateBrandRequest, UpdateBrandRequest } from '@admin/api/types';
+import { ADMIN_CATEGORIES } from '@admin/constants/categories';
 
 interface AdminBrandFormProps {
   brand?: AdminBrand;
@@ -22,14 +18,15 @@ export const AdminBrandForm = ({ brand, onSuccess }: AdminBrandFormProps) => {
     categoryId: 1,
     usageLimit: '',
     usageMethod: '',
-    storeType: 'OFFLINE',
   });
 
-  const createMutation = useCreateAdminBrandMutation();
-  const updateMutation = useUpdateAdminBrandMutation();
-  const deleteMutation = useDeleteAdminBrandMutation();
-  const { data: categories } = useAdminCategoriesQuery();
-  const categoryList = categories || [];
+  const { createMutation, updateMutation, deleteMutation } = useAdminBrandMutation();
+  
+  // 14개 카테고리 목록 사용
+  const categoryList = ADMIN_CATEGORIES.map(cat => ({
+    categoryId: cat.id,
+    categoryName: cat.name
+  }));
 
   // 기존 브랜드 데이터로 폼 초기화
   useEffect(() => {
@@ -41,7 +38,6 @@ export const AdminBrandForm = ({ brand, onSuccess }: AdminBrandFormProps) => {
         categoryId: brand.categoryId,
         usageLimit: brand.usageLimit,
         usageMethod: brand.usageMethod,
-        storeType: brand.storeType,
       });
     }
   }, [brand]);
@@ -65,7 +61,7 @@ export const AdminBrandForm = ({ brand, onSuccess }: AdminBrandFormProps) => {
       data: [
         ...prev.data,
         {
-          grade: '',
+          grade: 'GOOD',
           description: '',
           benefitType: 'DISCOUNT',
         },
@@ -170,7 +166,7 @@ export const AdminBrandForm = ({ brand, onSuccess }: AdminBrandFormProps) => {
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
           required
         >
-                          {categoryList.map(category => (
+          {categoryList.map((category: { categoryId: number; categoryName: string }) => (
             <option key={category.categoryId} value={category.categoryId}>
               {category.categoryName}
             </option>
@@ -208,21 +204,7 @@ export const AdminBrandForm = ({ brand, onSuccess }: AdminBrandFormProps) => {
         />
       </div>
 
-      {/* 매장 유형 */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          매장 유형 *
-        </label>
-        <select
-          value={formData.storeType}
-          onChange={(e) => handleInputChange('storeType', e.target.value as 'ONLINE' | 'OFFLINE')}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-          required
-        >
-          <option value="OFFLINE">오프라인</option>
-          <option value="ONLINE">온라인</option>
-        </select>
-      </div>
+
 
       {/* 혜택 목록 */}
       <div>

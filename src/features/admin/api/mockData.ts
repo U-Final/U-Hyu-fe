@@ -1,431 +1,464 @@
-// 13개 카테고리에 정확히 맞춘 즐겨찾기 통계 mock 데이터
+// 14개 카테고리에 정확히 맞춘 즐겨찾기 통계 mock 데이터
+// APP/기기는 즐겨찾기 데이터가 없으므로 제외
 export const mockBookmarkStats = [
   {
-    categoryId: 1,
-    categoryName: '영화 / 미디어',
-    sumStatisticsBookmarksByCategory: 15,
-    bookmarksByBrandList: [
-      {
-        brandName: 'CGV',
-        sumBookmarksByBrand: 8
-      },
-      {
-        brandName: '롯데시네마',
-        sumBookmarksByBrand: 7
-      }
-    ]
-  },
-  {
     categoryId: 2,
-    categoryName: '테마파크',
+    categoryName: '영화 / 미디어',
     sumStatisticsBookmarksByCategory: 12,
     bookmarksByBrandList: [
       {
-        brandName: '롯데월드',
+        brandName: 'CGV',
         sumBookmarksByBrand: 7
       },
       {
-        brandName: '에버랜드',
+        brandName: '롯데시네마',
         sumBookmarksByBrand: 5
       }
     ]
   },
   {
     categoryId: 3,
-    categoryName: '워터파크/아쿠아리움',
+    categoryName: '테마파크',
     sumStatisticsBookmarksByCategory: 8,
     bookmarksByBrandList: [
       {
-        brandName: '워터파크 오션',
+        brandName: '뽀로로파크',
         sumBookmarksByBrand: 5
       },
       {
-        brandName: '아쿠아플라넷',
+        brandName: '서울랜드',
         sumBookmarksByBrand: 3
       }
     ]
   },
   {
     categoryId: 4,
-    categoryName: '액티비티',
+    categoryName: '워터파크/아쿠아리움',
     sumStatisticsBookmarksByCategory: 10,
     bookmarksByBrandList: [
       {
-        brandName: '스카이라인 루지',
+        brandName: '아쿠아필드',
         sumBookmarksByBrand: 6
       },
       {
-        brandName: '클룩',
+        brandName: '캐리비안베이',
         sumBookmarksByBrand: 4
       }
     ]
   },
   {
     categoryId: 5,
-    categoryName: '뷰티(피부과, 클리닉)',
+    categoryName: '액티비티',
     sumStatisticsBookmarksByCategory: 14,
     bookmarksByBrandList: [
       {
-        brandName: '강남차앤박',
+        brandName: '스카이라인 루지',
         sumBookmarksByBrand: 8
       },
       {
-        brandName: '유어클리닉',
+        brandName: 'SEOUL SKY',
         sumBookmarksByBrand: 6
       }
     ]
   },
   {
     categoryId: 6,
-    categoryName: '건강(제약, 영양제 등)',
-    sumStatisticsBookmarksByCategory: 9,
-    bookmarksByBrandList: [
-      {
-        brandName: '종근당',
-        sumBookmarksByBrand: 5
-      },
-      {
-        brandName: '뉴트리코어',
-        sumBookmarksByBrand: 4
-      }
-    ]
-  },
-  {
-    categoryId: 7,
-    categoryName: '쇼핑',
-    sumStatisticsBookmarksByCategory: 11,
-    bookmarksByBrandList: [
-      {
-        brandName: '올리브클럽',
-        sumBookmarksByBrand: 6
-      },
-      {
-        brandName: '무신사',
-        sumBookmarksByBrand: 5
-      }
-    ]
-  },
-  {
-    categoryId: 8,
-    categoryName: '생활/편의',
-    sumStatisticsBookmarksByCategory: 13,
-    bookmarksByBrandList: [
-      {
-        brandName: 'GS25',
-        sumBookmarksByBrand: 7
-      },
-      {
-        brandName: 'CU',
-        sumBookmarksByBrand: 6
-      }
-    ]
-  },
-  {
-    categoryId: 9,
-    categoryName: '베이커리/디저트',
-    sumStatisticsBookmarksByCategory: 16,
-    bookmarksByBrandList: [
-      {
-        brandName: '파리크라상',
-        sumBookmarksByBrand: 9
-      },
-      {
-        brandName: '던킨도너츠',
-        sumBookmarksByBrand: 7
-      }
-    ]
-  },
-  {
-    categoryId: 10,
-    categoryName: '음식점',
-    sumStatisticsBookmarksByCategory: 18,
-    bookmarksByBrandList: [
-      {
-        brandName: '굽네치킨',
-        sumBookmarksByBrand: 10
-      },
-      {
-        brandName: '교촌치킨',
-        sumBookmarksByBrand: 8
-      }
-    ]
-  },
-  {
-    categoryId: 11,
-    categoryName: '공연/전시',
-    sumStatisticsBookmarksByCategory: 7,
-    bookmarksByBrandList: [
-      {
-        brandName: '빛의 벙커',
-        sumBookmarksByBrand: 4
-      },
-      {
-        brandName: '그라운드시소',
-        sumBookmarksByBrand: 3
-      }
-    ]
-  },
-  {
-    categoryId: 12,
-    categoryName: '교육',
+    categoryName: '뷰티(피부과, 클리닉)',
     sumStatisticsBookmarksByCategory: 6,
     bookmarksByBrandList: [
       {
-        brandName: '젠지',
+        brandName: '오가나셀 피부과 의원 청담점',
         sumBookmarksByBrand: 4
       },
       {
-        brandName: '월스트리트 잉글리시',
+        brandName: '데이원클리닉',
         sumBookmarksByBrand: 2
       }
     ]
   },
   {
-    categoryId: 13,
-    categoryName: '여행/교통',
-    sumStatisticsBookmarksByCategory: 12,
+    categoryId: 7,
+    categoryName: '건강(제약, 영양제 등)',
+    sumStatisticsBookmarksByCategory: 8,
     bookmarksByBrandList: [
       {
-        brandName: 'SK렌터카',
+        brandName: '동아제약 디몰',
+        sumBookmarksByBrand: 5
+      },
+      {
+        brandName: 'LG생활건강샵 U+패밀리샵',
+        sumBookmarksByBrand: 3
+      }
+    ]
+  },
+  {
+    categoryId: 8,
+    categoryName: '쇼핑',
+    sumStatisticsBookmarksByCategory: 22,
+    bookmarksByBrandList: [
+      {
+        brandName: 'GS THE FRESH',
+        sumBookmarksByBrand: 8
+      },
+      {
+        brandName: '롯데백화점몰',
         sumBookmarksByBrand: 7
       },
       {
-        brandName: '야놀자글로벌',
+        brandName: '현대면세점',
+        sumBookmarksByBrand: 7
+      }
+    ]
+  },
+  {
+    categoryId: 9,
+    categoryName: '생활/편의',
+    sumStatisticsBookmarksByCategory: 18,
+    bookmarksByBrandList: [
+      {
+        brandName: 'GS25',
+        sumBookmarksByBrand: 10
+      },
+      {
+        brandName: '펫생각',
+        sumBookmarksByBrand: 8
+      }
+    ]
+  },
+  {
+    categoryId: 10,
+    categoryName: '베이커리/디저트',
+    sumStatisticsBookmarksByCategory: 12,
+    bookmarksByBrandList: [
+      {
+        brandName: '파리바게트',
+        sumBookmarksByBrand: 6
+      },
+      {
+        brandName: '베스킨라빈스',
+        sumBookmarksByBrand: 6
+      }
+    ]
+  },
+  {
+    categoryId: 11,
+    categoryName: '음식점',
+    sumStatisticsBookmarksByCategory: 25,
+    bookmarksByBrandList: [
+      {
+        brandName: 'VIPS',
+        sumBookmarksByBrand: 8
+      },
+      {
+        brandName: '굽네치킨',
+        sumBookmarksByBrand: 7
+      },
+      {
+        brandName: '도미노피자',
+        sumBookmarksByBrand: 5
+      },
+      {
+        brandName: '미스터피자',
+        sumBookmarksByBrand: 5
+      }
+    ]
+  },
+  {
+    categoryId: 12,
+    categoryName: '공연/전시',
+    sumStatisticsBookmarksByCategory: 9,
+    bookmarksByBrandList: [
+      {
+        brandName: '빛의 벙커',
+        sumBookmarksByBrand: 5
+      },
+      {
+        brandName: '그라운드시소',
+        sumBookmarksByBrand: 4
+      }
+    ]
+  },
+  {
+    categoryId: 13,
+    categoryName: '교육',
+    sumStatisticsBookmarksByCategory: 7,
+    bookmarksByBrandList: [
+      {
+        brandName: '월스트리트 잉글리시',
+        sumBookmarksByBrand: 4
+      },
+      {
+        brandName: 'YBM NET',
+        sumBookmarksByBrand: 3
+      }
+    ]
+  },
+  {
+    categoryId: 14,
+    categoryName: '여행/교통',
+    sumStatisticsBookmarksByCategory: 11,
+    bookmarksByBrandList: [
+      {
+        brandName: 'SK렌터카',
+        sumBookmarksByBrand: 6
+      },
+      {
+        brandName: '야놀자글로벌 해외 숙박',
         sumBookmarksByBrand: 5
       }
     ]
   }
 ];
 
-// 13개 카테고리에 정확히 맞춘 필터링 통계 mock 데이터
+// 14개 카테고리에 정확히 맞춘 필터링 통계 mock 데이터
 export const mockFilteringStats = [
   {
     categoryId: 1,
+    categoryName: 'APP/기기',
+    sumStatisticsFilterByCategory: 20
+  },
+  {
+    categoryId: 2,
     categoryName: '영화 / 미디어',
     sumStatisticsFilterByCategory: 25
   },
   {
-    categoryId: 2,
+    categoryId: 3,
     categoryName: '테마파크',
     sumStatisticsFilterByCategory: 18
   },
   {
-    categoryId: 3,
+    categoryId: 4,
     categoryName: '워터파크/아쿠아리움',
     sumStatisticsFilterByCategory: 12
   },
   {
-    categoryId: 4,
+    categoryId: 5,
     categoryName: '액티비티',
     sumStatisticsFilterByCategory: 15
   },
   {
-    categoryId: 5,
+    categoryId: 6,
     categoryName: '뷰티(피부과, 클리닉)',
     sumStatisticsFilterByCategory: 22
   },
   {
-    categoryId: 6,
+    categoryId: 7,
     categoryName: '건강(제약, 영양제 등)',
     sumStatisticsFilterByCategory: 14
   },
   {
-    categoryId: 7,
+    categoryId: 8,
     categoryName: '쇼핑',
     sumStatisticsFilterByCategory: 28
   },
   {
-    categoryId: 8,
+    categoryId: 9,
     categoryName: '생활/편의',
     sumStatisticsFilterByCategory: 32
   },
   {
-    categoryId: 9,
+    categoryId: 10,
     categoryName: '베이커리/디저트',
-    sumStatisticsFilterByCategory: 19
+    sumStatisticsFilterByCategory: 16
   },
   {
-    categoryId: 10,
+    categoryId: 11,
     categoryName: '음식점',
     sumStatisticsFilterByCategory: 35
   },
   {
-    categoryId: 11,
-    categoryName: '공연/전시',
-    sumStatisticsFilterByCategory: 8
-  },
-  {
     categoryId: 12,
-    categoryName: '교육',
-    sumStatisticsFilterByCategory: 6
+    categoryName: '공연/전시',
+    sumStatisticsFilterByCategory: 11
   },
   {
     categoryId: 13,
+    categoryName: '교육',
+    sumStatisticsFilterByCategory: 19
+  },
+  {
+    categoryId: 14,
     categoryName: '여행/교통',
-    sumStatisticsFilterByCategory: 16
+    sumStatisticsFilterByCategory: 23
   }
 ];
 
-// 13개 카테고리에 정확히 맞춘 추천 통계 mock 데이터
+// 14개 카테고리에 정확히 맞춘 추천 통계 mock 데이터 (APP/기기만 포함)
 export const mockRecommendStats = [
   {
     categoryId: 1,
-    categoryName: '영화 / 미디어',
+    categoryName: 'APP/기기',
     sumStatisticsRecommendationByCategory: 8,
     recommendationsByBrandList: [
       {
-        brandName: 'CGV',
+        brandName: 'V컬러링 멤버십 프로모션',
         sumRecommendationsByBrand: 5
       },
       {
-        brandName: '롯데시네마',
+        brandName: '원스토어',
         sumRecommendationsByBrand: 3
       }
     ]
   },
   {
     categoryId: 2,
-    categoryName: '테마파크',
+    categoryName: '영화 / 미디어',
     sumStatisticsRecommendationByCategory: 6,
     recommendationsByBrandList: [
       {
-        brandName: '롯데월드',
+        brandName: 'CGV',
         sumRecommendationsByBrand: 4
       },
       {
-        brandName: '에버랜드',
+        brandName: '롯데시네마',
         sumRecommendationsByBrand: 2
       }
     ]
   },
   {
     categoryId: 3,
-    categoryName: '워터파크/아쿠아리움',
+    categoryName: '테마파크',
     sumStatisticsRecommendationByCategory: 4,
     recommendationsByBrandList: [
       {
-        brandName: '워터파크 오션',
+        brandName: '뽀로로파크',
         sumRecommendationsByBrand: 2
       },
       {
-        brandName: '아쿠아플라넷',
+        brandName: '서울랜드',
         sumRecommendationsByBrand: 2
       }
     ]
   },
   {
     categoryId: 4,
-    categoryName: '액티비티',
+    categoryName: '워터파크/아쿠아리움',
     sumStatisticsRecommendationByCategory: 3,
     recommendationsByBrandList: [
       {
-        brandName: '스카이라인 루지',
+        brandName: '아쿠아필드',
         sumRecommendationsByBrand: 2
       },
       {
-        brandName: '클룩',
+        brandName: '캐리비안베이',
         sumRecommendationsByBrand: 1
       }
     ]
   },
   {
     categoryId: 5,
-    categoryName: '뷰티(피부과, 클리닉)',
+    categoryName: '액티비티',
     sumStatisticsRecommendationByCategory: 7,
     recommendationsByBrandList: [
       {
-        brandName: '강남차앤박',
+        brandName: '스카이라인 루지',
         sumRecommendationsByBrand: 4
       },
       {
-        brandName: '유어클리닉',
+        brandName: 'SEOUL SKY',
         sumRecommendationsByBrand: 3
       }
     ]
   },
   {
     categoryId: 6,
-    categoryName: '건강(제약, 영양제 등)',
+    categoryName: '뷰티(피부과, 클리닉)',
     sumStatisticsRecommendationByCategory: 5,
     recommendationsByBrandList: [
       {
-        brandName: '종근당',
+        brandName: '오가나셀 피부과 의원 청담점',
         sumRecommendationsByBrand: 3
       },
       {
-        brandName: '뉴트리코어',
+        brandName: '데이원클리닉',
         sumRecommendationsByBrand: 2
       }
     ]
   },
   {
     categoryId: 7,
-    categoryName: '쇼핑',
+    categoryName: '건강(제약, 영양제 등)',
     sumStatisticsRecommendationByCategory: 9,
     recommendationsByBrandList: [
       {
-        brandName: '올리브클럽',
+        brandName: '동아제약 디몰',
         sumRecommendationsByBrand: 5
       },
       {
-        brandName: '무신사',
+        brandName: 'LG생활건강샵 U+패밀리샵',
         sumRecommendationsByBrand: 4
       }
     ]
   },
   {
     categoryId: 8,
-    categoryName: '생활/편의',
+    categoryName: '쇼핑',
     sumStatisticsRecommendationByCategory: 6,
     recommendationsByBrandList: [
       {
-        brandName: 'GS25',
+        brandName: 'GS THE FRESH',
         sumRecommendationsByBrand: 4
       },
       {
-        brandName: 'CU',
+        brandName: '롯데백화점몰',
         sumRecommendationsByBrand: 2
       }
     ]
   },
   {
     categoryId: 9,
-    categoryName: '베이커리/디저트',
+    categoryName: '생활/편의',
     sumStatisticsRecommendationByCategory: 4,
     recommendationsByBrandList: [
       {
-        brandName: '파리크라상',
+        brandName: 'GS25',
         sumRecommendationsByBrand: 3
       },
       {
-        brandName: '던킨도너츠',
+        brandName: '펫생각',
         sumRecommendationsByBrand: 1
       }
     ]
   },
   {
     categoryId: 10,
-    categoryName: '음식점',
+    categoryName: '베이커리/디저트',
     sumStatisticsRecommendationByCategory: 11,
     recommendationsByBrandList: [
       {
-        brandName: '굽네치킨',
+        brandName: '파리바게트',
         sumRecommendationsByBrand: 6
       },
       {
-        brandName: '교촌치킨',
+        brandName: '베스킨라빈스',
         sumRecommendationsByBrand: 5
       }
     ]
   },
   {
     categoryId: 11,
-    categoryName: '공연/전시',
+    categoryName: '음식점',
     sumStatisticsRecommendationByCategory: 3,
     recommendationsByBrandList: [
       {
-        brandName: '빛의 벙커',
+        brandName: 'VIPS',
         sumRecommendationsByBrand: 2
+      },
+      {
+        brandName: '굽네치킨',
+        sumRecommendationsByBrand: 1
+      }
+    ]
+  },
+  {
+    categoryId: 12,
+    categoryName: '공연/전시',
+    sumStatisticsRecommendationByCategory: 2,
+    recommendationsByBrandList: [
+      {
+        brandName: '빛의 벙커',
+        sumRecommendationsByBrand: 1
       },
       {
         brandName: '그라운드시소',
@@ -434,22 +467,22 @@ export const mockRecommendStats = [
     ]
   },
   {
-    categoryId: 12,
+    categoryId: 13,
     categoryName: '교육',
-    sumStatisticsRecommendationByCategory: 2,
+    sumStatisticsRecommendationByCategory: 7,
     recommendationsByBrandList: [
       {
         brandName: '젠지',
-        sumRecommendationsByBrand: 1
+        sumRecommendationsByBrand: 4
       },
       {
         brandName: '월스트리트 잉글리시',
-        sumRecommendationsByBrand: 1
+        sumRecommendationsByBrand: 3
       }
     ]
   },
   {
-    categoryId: 13,
+    categoryId: 14,
     categoryName: '여행/교통',
     sumStatisticsRecommendationByCategory: 7,
     recommendationsByBrandList: [
@@ -465,10 +498,10 @@ export const mockRecommendStats = [
   }
 ];
 
-// 13개 카테고리에 정확히 맞춘 멤버십 통계 mock 데이터
+// 14개 카테고리에 정확히 맞춘 멤버십 통계 mock 데이터 (APP/기기 제외)
 export const mockMembershipStats = [
   {
-    categoryId: 1,
+    categoryId: 2,
     categoryName: '영화 / 미디어',
     sumStatisticsMembershipUsageByCategory: 12,
     membershipUsageByBrandList: [
@@ -483,37 +516,37 @@ export const mockMembershipStats = [
     ]
   },
   {
-    categoryId: 2,
+    categoryId: 3,
     categoryName: '테마파크',
     sumStatisticsMembershipUsageByCategory: 8,
     membershipUsageByBrandList: [
       {
-        brandName: '롯데월드',
+        brandName: '뽀로로파크',
         sumMembershipUsageByBrand: 5
       },
       {
-        brandName: '에버랜드',
+        brandName: '서울랜드',
         sumMembershipUsageByBrand: 3
-      }
-    ]
-  },
-  {
-    categoryId: 3,
-    categoryName: '워터파크/아쿠아리움',
-    sumStatisticsMembershipUsageByCategory: 5,
-    membershipUsageByBrandList: [
-      {
-        brandName: '워터파크 오션',
-        sumMembershipUsageByBrand: 3
-      },
-      {
-        brandName: '아쿠아플라넷',
-        sumMembershipUsageByBrand: 2
       }
     ]
   },
   {
     categoryId: 4,
+    categoryName: '워터파크/아쿠아리움',
+    sumStatisticsMembershipUsageByCategory: 5,
+    membershipUsageByBrandList: [
+      {
+        brandName: '아쿠아필드',
+        sumMembershipUsageByBrand: 3
+      },
+      {
+        brandName: '캐리비안베이',
+        sumMembershipUsageByBrand: 2
+      }
+    ]
+  },
+  {
+    categoryId: 5,
     categoryName: '액티비티',
     sumStatisticsMembershipUsageByCategory: 6,
     membershipUsageByBrandList: [
@@ -522,109 +555,113 @@ export const mockMembershipStats = [
         sumMembershipUsageByBrand: 4
       },
       {
-        brandName: '클룩',
+        brandName: 'SEOUL SKY',
         sumMembershipUsageByBrand: 2
-      }
-    ]
-  },
-  {
-    categoryId: 5,
-    categoryName: '뷰티(피부과, 클리닉)',
-    sumStatisticsMembershipUsageByCategory: 15,
-    membershipUsageByBrandList: [
-      {
-        brandName: '강남차앤박',
-        sumMembershipUsageByBrand: 9
-      },
-      {
-        brandName: '유어클리닉',
-        sumMembershipUsageByBrand: 6
       }
     ]
   },
   {
     categoryId: 6,
-    categoryName: '건강(제약, 영양제 등)',
-    sumStatisticsMembershipUsageByCategory: 11,
+    categoryName: '뷰티(피부과, 클리닉)',
+    sumStatisticsMembershipUsageByCategory: 15,
     membershipUsageByBrandList: [
       {
-        brandName: '종근당',
-        sumMembershipUsageByBrand: 7
+        brandName: '오가나셀 피부과 의원 청담점',
+        sumMembershipUsageByBrand: 9
       },
       {
-        brandName: '뉴트리코어',
-        sumMembershipUsageByBrand: 4
+        brandName: '데이원클리닉',
+        sumMembershipUsageByBrand: 6
       }
     ]
   },
   {
     categoryId: 7,
-    categoryName: '쇼핑',
-    sumStatisticsMembershipUsageByCategory: 18,
+    categoryName: '건강(제약, 영양제 등)',
+    sumStatisticsMembershipUsageByCategory: 11,
     membershipUsageByBrandList: [
       {
-        brandName: '올리브클럽',
-        sumMembershipUsageByBrand: 10
+        brandName: '동아제약 디몰',
+        sumMembershipUsageByBrand: 7
       },
       {
-        brandName: '무신사',
-        sumMembershipUsageByBrand: 8
-      }
-    ]
-  },
-  {
-    categoryId: 8,
-    categoryName: '생활/편의',
-    sumStatisticsMembershipUsageByCategory: 22,
-    membershipUsageByBrandList: [
-      {
-        brandName: 'GS25',
-        sumMembershipUsageByBrand: 12
-      },
-      {
-        brandName: 'CU',
-        sumMembershipUsageByBrand: 10
-      }
-    ]
-  },
-  {
-    categoryId: 9,
-    categoryName: '베이커리/디저트',
-    sumStatisticsMembershipUsageByCategory: 9,
-    membershipUsageByBrandList: [
-      {
-        brandName: '파리크라상',
-        sumMembershipUsageByBrand: 5
-      },
-      {
-        brandName: '던킨도너츠',
+        brandName: 'LG생활건강샵 U+패밀리샵',
         sumMembershipUsageByBrand: 4
       }
     ]
   },
   {
-    categoryId: 10,
-    categoryName: '음식점',
-    sumStatisticsMembershipUsageByCategory: 25,
+    categoryId: 8,
+    categoryName: '쇼핑',
+    sumStatisticsMembershipUsageByCategory: 18,
     membershipUsageByBrandList: [
       {
-        brandName: '굽네치킨',
-        sumMembershipUsageByBrand: 14
+        brandName: 'GS THE FRESH',
+        sumMembershipUsageByBrand: 10
       },
       {
-        brandName: '교촌치킨',
-        sumMembershipUsageByBrand: 11
+        brandName: '롯데백화점몰',
+        sumMembershipUsageByBrand: 8
+      }
+    ]
+  },
+  {
+    categoryId: 9,
+    categoryName: '생활/편의',
+    sumStatisticsMembershipUsageByCategory: 14,
+    membershipUsageByBrandList: [
+      {
+        brandName: 'GS25',
+        sumMembershipUsageByBrand: 8
+      },
+      {
+        brandName: '펫생각',
+        sumMembershipUsageByBrand: 6
+      }
+    ]
+  },
+  {
+    categoryId: 10,
+    categoryName: '베이커리/디저트',
+    sumStatisticsMembershipUsageByCategory: 9,
+    membershipUsageByBrandList: [
+      {
+        brandName: '파리바게트',
+        sumMembershipUsageByBrand: 5
+      },
+      {
+        brandName: '베스킨라빈스',
+        sumMembershipUsageByBrand: 4
       }
     ]
   },
   {
     categoryId: 11,
+    categoryName: '음식점',
+    sumStatisticsMembershipUsageByCategory: 22,
+    membershipUsageByBrandList: [
+      {
+        brandName: 'VIPS',
+        sumMembershipUsageByBrand: 10
+      },
+      {
+        brandName: '굽네치킨',
+        sumMembershipUsageByBrand: 7
+      },
+      {
+        brandName: '도미노피자',
+        sumMembershipUsageByBrand: 5
+      }
+    ]
+  },
+  {
+    categoryId: 12,
     categoryName: '공연/전시',
-    sumStatisticsMembershipUsageByCategory: 4,
+    sumStatisticsMembershipUsageByCategory: 6,
     membershipUsageByBrandList: [
       {
         brandName: '빛의 벙커',
-        sumMembershipUsageByBrand: 2
+        sumMembershipUsageByBrand: 4
       },
       {
         brandName: '그라운드시소',
@@ -633,41 +670,43 @@ export const mockMembershipStats = [
     ]
   },
   {
-    categoryId: 12,
+    categoryId: 13,
     categoryName: '교육',
-    sumStatisticsMembershipUsageByCategory: 3,
+    sumStatisticsMembershipUsageByCategory: 8,
     membershipUsageByBrandList: [
       {
-        brandName: '젠지',
-        sumMembershipUsageByBrand: 2
+        brandName: '젝지',
+        sumMembershipUsageByBrand: 5
       },
       {
         brandName: '월스트리트 잉글리시',
-        sumMembershipUsageByBrand: 1
+        sumMembershipUsageByBrand: 3
       }
     ]
   },
   {
-    categoryId: 13,
+    categoryId: 14,
     categoryName: '여행/교통',
-    sumStatisticsMembershipUsageByCategory: 14,
+    sumStatisticsMembershipUsageByCategory: 10,
     membershipUsageByBrandList: [
       {
         brandName: 'SK렌터카',
-        sumMembershipUsageByBrand: 8
+        sumMembershipUsageByBrand: 6
       },
       {
         brandName: '야놀자글로벌',
-        sumMembershipUsageByBrand: 6
+        sumMembershipUsageByBrand: 4
       }
     ]
   }
 ];
 
+// 전체 통계 총합 mock 데이터
 export const mockTotalStats = {
-  totalBookmark: 60,
-  totalFiltering: 26,
-  totalMembershipUsage: 33
+  totalBookmark: 162, // 즐겨찾기 총합 (APP/기기 제외)
+  totalFiltering: 290, // 필터링 총합 (모든 카테고리 포함)
+  totalRecommendation: 80, // 추천 총합 (모든 카테고리 포함)
+  totalMembershipUsage: 129 // 멤버십 총합 (APP/기기 제외)
 };
 
 // 관리자 카테고리 목록 mock 데이터
@@ -693,11 +732,9 @@ export const mockAdminBrands = [
     brandId: 1,
     brandName: 'CGV',
     brandImg: '/images/brands/CGV.png',
-    categoryId: 1, // 영화관
+    categoryId: 2, // 영화/미디어
     usageLimit: '1일 1회',
     usageMethod: '모바일 앱 쿠폰 제시',
-    storeType: 'OFFLINE',
-    status: true,
     data: [
       { grade: 'VVIP', description: '영화 티켓 100% 할인', benefitType: 'DISCOUNT' },
       { grade: 'VIP', description: '팝콘 무료', benefitType: 'GIFT' },
@@ -707,24 +744,20 @@ export const mockAdminBrands = [
     brandId: 2,
     brandName: 'GS25',
     brandImg: '/images/brands/GS25.png',
-    categoryId: 2, // 편의점
+    categoryId: 9, // 생활/편의
     usageLimit: '1일 2회',
     usageMethod: '바코드 제시',
-    storeType: 'OFFLINE',
-    status: true,
     data: [
       { grade: 'VIP', description: '1000원 할인', benefitType: 'DISCOUNT' },
     ],
   },
   {
     brandId: 3,
-    brandName: '파리바게뜨',
+    brandName: '파리바게트',
     brandImg: '/images/brands/파리바게뜨.png',
-    categoryId: 3, // 베이커리
+    categoryId: 10, // 베이커리/디저트
     usageLimit: '월 5회',
     usageMethod: '모바일 쿠폰',
-    storeType: 'OFFLINE',
-    status: true,
     data: [
       { grade: 'VVIP', description: '10% 할인', benefitType: 'DISCOUNT' },
     ],
@@ -733,11 +766,9 @@ export const mockAdminBrands = [
     brandId: 4,
     brandName: '굽네치킨',
     brandImg: '/images/brands/굽네치킨.png',
-    categoryId: 4, // 치킨
+    categoryId: 11, // 음식점
     usageLimit: '주 1회',
     usageMethod: '온라인 주문 시 적용',
-    storeType: 'ONLINE',
-    status: false,
     data: [
       { grade: 'VIP', description: '2000원 할인', benefitType: 'DISCOUNT' },
     ],
@@ -746,7 +777,7 @@ export const mockAdminBrands = [
     brandId: 5,
     brandName: '베스킨라빈스',
     brandImg: '/images/brands/베스킨라빈스.png',
-    categoryId: 5, // 아이스크림
+    categoryId: 10, // 베이커리/디저트
     usageLimit: '월 3회',
     usageMethod: '모바일 쿠폰',
     storeType: 'OFFLINE',
@@ -759,11 +790,9 @@ export const mockAdminBrands = [
     brandId: 6,
     brandName: '원더파크',
     brandImg: '/images/brands/원더파크.png',
-    categoryId: 6, // 테마파크
+    categoryId: 3, // 테마파크
     usageLimit: '연 1회',
     usageMethod: '현장 매표소 쿠폰 제시',
-    storeType: 'OFFLINE',
-    status: true,
     data: [
       { grade: 'VVIP', description: '입장권 50% 할인', benefitType: 'DISCOUNT' },
     ],

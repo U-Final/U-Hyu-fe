@@ -1,4 +1,4 @@
-import { ButtonBase, GhostButton } from '@/shared/components';
+import { GhostButton, KakaoLoginButton } from '@/shared/components';
 import { useKakaoLogin } from '@/shared/hooks';
 import { useModalStore } from '@/shared/store';
 
@@ -24,9 +24,12 @@ const LoginModal = () => {
           로그인을 해주시면 <br /> 더 많은 기능을 이용할 수 있습니다!
         </p>
         <div className="flex flex-col gap-[8px]">
-          <ButtonBase onClick={handleLogin} variant="nav">
-            로그인 하러 가기
-          </ButtonBase>
+          <KakaoLoginButton
+            onClick={handleLogin}
+            size="lg"
+            variant="full"
+            className="w-full"
+          />
           <GhostButton onClick={handleCancel}>
             취소
           </GhostButton>

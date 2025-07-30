@@ -15,6 +15,7 @@ export { ButtonBase } from './buttons/ButtonBase';
 export { FileUploadButton } from './buttons/FileUploadButton';
 export { GhostButton } from './buttons/GhostButton';
 export { IconButton } from './buttons/IconButton';
+export { KakaoLoginButton } from './buttons/KakaoLoginButton';
 export { NavButton } from './buttons/NavButton';
 export { PrimaryButton } from './buttons/PrimaryButton';
 export { default as BackButton } from './buttons/BackButton';

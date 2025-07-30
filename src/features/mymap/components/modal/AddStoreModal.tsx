@@ -1,7 +1,6 @@
 import { type FC, useEffect, useState } from 'react';
 
 import { useToggleFavoriteMutation } from '@kakao-map/hooks/useMapQueries';
-import { AddMyMapButton, MyMapFormModal } from '@mymap/components';
 import { MYMAP_COLOR, type MarkerColor } from '@mymap/constants/mymapColor';
 import {
   useStoreBookmarkStatusQuery,
@@ -20,7 +19,6 @@ const AddStoreModal: FC<AddStoreProps> = ({ storeId }) => {
   const { data, isLoading, isError } = useStoreBookmarkStatusQuery(storeId);
   const toggleMutation = useToggleMyMapStoreMutation();
   const toggleFavoriteMutation = useToggleFavoriteMutation();
-  const openModal = useModalStore(state => state.openModal);
   const closeModal = useModalStore(state => state.closeModal);
 
   // my map 초기 체크 상태 저장용
@@ -64,14 +62,6 @@ const AddStoreModal: FC<AddStoreProps> = ({ storeId }) => {
     setIsBookmarked(checked);
   };
 
-  // 지도 생성 모달
-  const handleCreate = () => {
-    openModal('base', {
-      title: '새 지도 만들기',
-      children: <MyMapFormModal mode="create" />,
-    });
-  };
-
   // 저장 버튼 클릭 시 변경된 것만 요청
   const handleSave = () => {
     // 즐겨찾기 상태 변경 감지
@@ -99,9 +89,6 @@ const AddStoreModal: FC<AddStoreProps> = ({ storeId }) => {
 
   return (
     <div className="flex flex-col w-full max-w-md mx-auto p-4 divide-y divide-gray-200">
-      {/* 새 지도 만들기 */}
-      <AddMyMapButton onCreateNewMap={handleCreate} />
-
       {/* 즐겨찾기 */}
       <div
         className="flex items-center justify-between py-3"

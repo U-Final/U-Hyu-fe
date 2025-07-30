@@ -12,6 +12,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import BarcodeItem from '@/shared/components/bottom_navigation/BarcodeItem';
 import NavItem from '@/shared/components/bottom_navigation/NavItem';
 import { useAuthCheckModal } from '@/shared/hooks/useAuthCheckModal';
+import { useUser } from '@/shared/store/userStore';
 
 import { BarcodeBottomSheet } from './barcode/BarcodeBottomSheet';
 
@@ -19,6 +20,7 @@ const BottomNavigation = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { checkAuthAndExecuteModal, isLoggedIn } = useAuthCheckModal();
   const location = useLocation();
+  const user = useUser();
 
   // URL 기반으로 활성 탭 결정
   const getActiveTab = (pathname: string) => {
@@ -28,7 +30,7 @@ const BottomNavigation = () => {
     if (pathname === PATH.BENEFIT) return '혜택';
     if (pathname === PATH.MYPAGE || pathname === PATH.MYPAGE_ACTIVITY)
       return '마이페이지';
-    if (pathname === PATH.ADMIN) return '마이페이지'; // 관리자도 마이페이지로 표시
+    if (pathname === PATH.ADMIN) return '관리자';
     return '';
   };
 
@@ -100,11 +102,11 @@ const BottomNavigation = () => {
           />
         </NavLink>
         {isLoggedIn ? (
-          <NavLink to={PATH.MYPAGE} className="flex gap-4">
+          <NavLink to={user?.role === 'ADMIN' ? PATH.ADMIN : PATH.MYPAGE} className="flex gap-4">
             <NavItem
-              label="마이페이지"
+              label={user?.role === 'ADMIN' ? '관리자' : '마이페이지'}
               icon={<FaUser />}
-              isActive={activeTab === '마이페이지'}
+              isActive={activeTab === (user?.role === 'ADMIN' ? '관리자' : '마이페이지')}
               onClick={() => {}}
             />
           </NavLink>

@@ -26,6 +26,7 @@ import {
   ModalRoot,
   UserRoute,
 } from '@/shared/components';
+import AppInitializer from '@/shared/components/AppInitializer';
 
 const Layout = () => {
   const { pathname } = useLocation();
@@ -84,6 +85,7 @@ const Layout = () => {
 export const AppRoutes = () => {
   return (
     <BrowserRouter>
+      <AppInitializer />
       <Routes>
         <Route element={<Layout />}>
           <Route path={PATH.HOME} element={<MapPage />} />

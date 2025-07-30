@@ -1,13 +1,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/shadcn/ui/card';
 import { HeartIcon } from '@heroicons/react/24/outline';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
-import type { RecommendStat } from '../../api/types';
+import type { RecommendStat } from '@admin/api/types';
+import { getCategoryDisplayName } from '@admin/utils/categoryUtils';
+import { filterDataByCategory } from '@admin/utils/categoryMapping';
 
 interface RecommendChartProps {
   data: RecommendStat[];
+  selectedCategory?: string;
 }
 
-export function RecommendChart({ data }: RecommendChartProps) {
+export function RecommendChart({ data, selectedCategory = 'all' }: RecommendChartProps) {
   if (!data || data.length === 0) {
     return (
       <Card>
@@ -24,12 +27,28 @@ export function RecommendChart({ data }: RecommendChartProps) {
     );
   }
 
-  // 차트 데이터 준비
-  const chartData = data.map((category, index) => ({
-    name: category.categoryName,
-    value: category.sumStatisticsRecommendByCategory || 0,
-    fill: index % 2 === 0 ? '#8884d8' : '#82ca9d',
-  }));
+  // 카테고리 필터링 적용
+  const filteredData = filterDataByCategory(data, selectedCategory);
+
+  // 차트 데이터 준비 - 큰 값부터 정렬
+  const sortedData = [...filteredData].sort((a, b) => 
+    (b.sumStatisticsRecommendationByCategory || 0) - (a.sumStatisticsRecommendationByCategory || 0)
+  );
+  
+  // 카테고리별 필터가 선택된 경우 브랜드별 데이터 준비
+  const chartData = selectedCategory === 'all' 
+    ? sortedData.map((category, index) => ({
+        name: category.categoryName,
+        value: category.sumStatisticsRecommendationByCategory || 0,
+        fill: index % 2 === 0 ? 'var(--admin-recommendation)' : 'var(--admin-recommendation-light)',
+      }))
+    : sortedData.flatMap(category => 
+        category.recommendationsByBrandList?.map((brand, index) => ({
+          name: brand.brandName,
+          value: brand.sumRecommendationsByBrand || 0,
+          fill: index % 2 === 0 ? 'var(--admin-recommendation)' : 'var(--admin-recommendation-light)',
+        })) || []
+      ).sort((a, b) => b.value - a.value);
 
   return (
     <Card>
@@ -43,17 +62,40 @@ export function RecommendChart({ data }: RecommendChartProps) {
         <div className="space-y-6">
           {/* 파이 차트 */}
           <div>
-            <h4 className="text-sm font-medium mb-4">카테고리별 추천 분포</h4>
-            <ResponsiveContainer width="100%" height={300}>
+            <h4 className="text-sm font-medium mb-4">
+              {selectedCategory === 'all' ? '추천 분포' : `${getCategoryDisplayName(selectedCategory)} 상세`}
+            </h4>
+            <ResponsiveContainer width="100%" height={400}>
               <PieChart>
                 <Pie
                   data={chartData}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
-                  outerRadius={80}
-                  fill="#8884d8"
+                  label={({ name, percent, cx, cy, midAngle, outerRadius }) => {
+                    if ((percent || 0) * 100 > 8) {  // 8% 이상만 표시
+                      const RADIAN = Math.PI / 180;
+                      const radius = outerRadius + 20;
+                      const x = cx + radius * Math.cos(-(midAngle || 0) * RADIAN);
+                      const y = cy + radius * Math.sin(-(midAngle || 0) * RADIAN);
+                      
+                      return (
+                        <text
+                          x={x}
+                          y={y}
+                          fill="var(--admin-recommendation)"
+                          textAnchor={x > cx ? 'start' : 'end'}
+                          dominantBaseline="central"
+                          fontSize="10"
+                        >
+                          {`${name} ${((percent || 0) * 100).toFixed(0)}%`}
+                        </text>
+                      );
+                    }
+                    return null;
+                  }}
+                  outerRadius={70}
+                  fill="var(--admin-recommendation)"
                   dataKey="value"
                 >
                   {chartData.map((entry, index) => (
@@ -69,13 +111,25 @@ export function RecommendChart({ data }: RecommendChartProps) {
           {/* 상세 데이터 */}
           <div>
             <h4 className="text-sm font-medium mb-4">카테고리별 상세</h4>
-            <div className="space-y-3">
-              {data.map((category) => (
-                <div key={category.categoryId} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                  <span className="font-medium">{category.categoryName}</span>
-                  <span className="text-sm text-muted-foreground">
-                    {category.sumStatisticsRecommendByCategory || 0}회
-                  </span>
+            <div className="space-y-2">
+              {sortedData.map((category, index) => (
+                <div key={`recommend-${category.categoryId}-${category.categoryName}-${index}`} className="space-y-1">
+                  <div className="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                    <span className="font-medium text-sm">{category.categoryName}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {category.sumStatisticsRecommendationByCategory || 0}회
+                    </span>
+                  </div>
+                  {category.recommendationsByBrandList && category.recommendationsByBrandList.length > 0 && (
+                    <div className="ml-3 space-y-0.5">
+                      {category.recommendationsByBrandList.map((brand, brandIndex) => (
+                        <div key={`recommend-brand-${category.categoryId}-${brand.brandName}-${brandIndex}`} className="flex justify-between items-center text-xs">
+                          <span className="text-muted-foreground">• {brand.brandName}</span>
+                          <span className="text-muted-foreground">{brand.sumRecommendationsByBrand}회</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

@@ -1,7 +1,7 @@
 import { type FC } from 'react';
 
 import type { Store } from '@kakao-map/types/store';
-import { RecommendedStoreList } from '@recommendation/components/RecommendedStoreList';
+import { RecommendedStoreListWrapper } from '@recommendation/components/RecommendedStoreListWrapper';
 
 import { BrandCard } from '@/shared/components';
 import { useIsLoggedIn } from '@/shared/store/userStore';
@@ -28,8 +28,8 @@ const StoreListContent: FC<StoreListContentProps> = ({
     <div className="flex flex-col h-full">
       {/* 필터 헤더 - 고정 */}
       {isLoggedIn && (
-        <div className="flex-shrink-0 py-3 border-y border-primary rounded-[1px]">
-          <RecommendedStoreList />
+        <div className="flex-shrink-0 py-3 rounded-[1px] bg-[#f4f8ff]">
+          <RecommendedStoreListWrapper />
         </div>
       )}
 

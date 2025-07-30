@@ -1,5 +1,6 @@
+import type { Store } from '@kakao-map/types/store';
+import type { RecommendedRanking } from '@recommendation/Recommendation.types';
 import { RECOMMEND_ENDPOINT } from '@recommendation/api/endpoints';
-import type { RecommendStore } from '@recommendation/api/recommendedStores.types';
 
 import { client } from '@/shared/client';
 import type { ApiResponse } from '@/shared/client/client.type';
@@ -12,13 +13,22 @@ export interface GetRecommendedStoresParams {
 
 export const getRecommendedStores = async (
   params: GetRecommendedStoresParams
-): Promise<RecommendStore[]> => {
-  const res = await client.get<ApiResponse<RecommendStore[]>>(
-    RECOMMEND_ENDPOINT,
-    { params }
+): Promise<Store[]> => {
+  const res = await client.get<ApiResponse<Store[]>>(
+    RECOMMEND_ENDPOINT.NEARBY,
+    {
+      params,
+    }
   );
-  if (!res.data.data) {
-    throw new Error('추천 매장 데이터를 불러올 수 없음!');
-  }
-  return res.data.data;
+
+  return res.data.data ?? [];
+};
+
+export const getRecommendedRanking = async (): Promise<
+  RecommendedRanking[]
+> => {
+  const res = await client.get<ApiResponse<RecommendedRanking[]>>(
+    RECOMMEND_ENDPOINT.RANKING
+  );
+  return res.data.data ?? [];
 };

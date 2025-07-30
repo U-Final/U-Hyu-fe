@@ -3,7 +3,11 @@ import { useCallback, useEffect, useMemo } from 'react';
 import type { GetNearbyStoresParams } from '../api/types';
 import { getRegionInfo } from '../constants/regions';
 import { useMapUIContext } from '../context/MapUIContext';
-import { useMapStore } from '../store/MapStore';
+import {
+  useMapStore,
+  useRecommendedStores,
+  useShowRecommendedStores,
+} from '../store/MapStore';
 import {
   useInvalidateStoreQueries,
   useStoreDetailQuery,
@@ -31,12 +35,26 @@ export const useMapData = () => {
   const loading = useMapStore(state => state.loading);
   const errors = useMapStore(state => state.errors);
 
+  // 추천 매장 상태 추가
+  const recommendedStores = useRecommendedStores();
+  const showRecommendedStores = useShowRecommendedStores();
+
   // 액션 함수들을 개별적으로 구독
   const setStoresFromQuery = useMapStore(state => state.setStoresFromQuery);
   const setStoreDetail = useMapStore(state => state.setStoreDetail);
   const selectStore = useMapStore(state => state.selectStore);
   const getCurrentLocation = useMapStore(state => state.getCurrentLocation);
   const setMapCenter = useMapStore(state => state.setMapCenter);
+  // 추천 매장 액션들 추가
+  const fetchRecommendedStores = useMapStore(
+    state => state.fetchRecommendedStores
+  );
+  const setShowRecommendedStores = useMapStore(
+    state => state.setShowRecommendedStores
+  );
+  const toggleRecommendedStores = useMapStore(
+    state => state.toggleRecommendedStores
+  );
 
   // UI 상태에서 필터 관련 상태 가져오기
   const { state: uiState } = useMapUIContext();
@@ -200,6 +218,9 @@ export const useMapData = () => {
     // 위치 관련 상태
     userLocation,
     mapCenter,
+    // 추천 매장 상태 추가
+    recommendedStores,
+    showRecommendedStores,
 
     // 로딩 상태 (React Query + MapStore 조합)
     loading: {
@@ -223,6 +244,10 @@ export const useMapData = () => {
     getCurrentLocation,
     setMapCenter,
     toggleFavorite,
+    // 추천 매장 액션들 추가
+    fetchRecommendedStores,
+    setShowRecommendedStores,
+    toggleRecommendedStores,
 
     // 디버깅 및 모니터링 정보
     queryStatus: {

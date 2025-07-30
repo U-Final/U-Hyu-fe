@@ -1,17 +1,9 @@
 import { useState } from 'react';
 
-
-
-import { useKakaoShare } from '@mymap/hooks/useKakaoShare';
-
-
+import { useKakaoShare } from '@mymap/hooks';
 
 import { BaseModal } from '@/shared/components';
 import { useModalStore } from '@/shared/store';
-
-
-
-
 
 interface ShareModalProps {
   uuid: string;

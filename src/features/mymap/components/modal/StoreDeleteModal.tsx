@@ -1,4 +1,4 @@
-import { useToggleMyMapStoreMutation } from '@mymap/hooks/useToggleMyMapStoreMutation';
+import { useToggleMyMapStoreMutation } from '@mymap/hooks';
 import { useSharedMapStore } from '@mymap/store/SharedMapStore';
 
 import { BaseModal, PrimaryButton } from '@/shared/components';

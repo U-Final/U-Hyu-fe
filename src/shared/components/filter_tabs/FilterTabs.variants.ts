@@ -65,15 +65,15 @@ export const BENEFIT_FILTER_TABS: FilterTabItem[] = [
 
 export const filterTabVariants = {
   gray: {
-    base: 'px-3 h-[36px] flex items-center rounded-xl text-sm font-medium transition-all duration-300 shadow-lg hover:shadow-xl min-w-fit backdrop-blur-sm',
+    base: 'px-3 h-[36px] flex items-center rounded-xl text-sm font-medium transition-all duration-300 shadow-sm hover:shadow-sm min-w-fit backdrop-blur-sm',
     active:
-      'bg-light-gray text-black shadow-2xl scale-105 ring-2 ring-offset-2',
+      'bg-light-gray text-black shadow-sm scale-105 ring-2 ring-offset-2',
     inactive:
       'text-gray-600 hover:bg-white/50 hover:text-gray-800 hover:scale-102',
   },
   white: {
-    base: 'px-3 h-[36px] flex items-center bg-white/90 border border-gray-200/50 rounded-xl text-sm font-medium transition-all duration-300 shadow-lg hover:shadow-xl min-w-fit backdrop-blur-sm',
-    active: 'shadow-2xl scale-105 ring-2 ring-offset-2 bg-white',
+    base: 'px-3 h-[36px] flex items-center bg-white/90 border border-gray-200/50 rounded-xl text-sm font-medium transition-all duration-300 shadow-sm hover:shadow-sm min-w-fit backdrop-blur-sm',
+    active: 'shadow-sm scale-105 ring-2 ring-offset-2 bg-white',
     inactive:
       'text-gray-600 hover:bg-white hover:text-gray-800 hover:border-gray-300/70 hover:scale-102',
   },

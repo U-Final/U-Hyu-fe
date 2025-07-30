@@ -34,40 +34,38 @@ const RecommendedStoreCard = ({
   return (
     <div
       onClick={handleCardClick}
-      className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] group"
+      className="cursor-pointer hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] group pb-8"
     >
       <BrandCard logoUrl={store.logoImage}>
-        {' '}
-        {/* logoImage -> logo_image 수정 */}
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <p className="text-black text-lg font-bold group-hover:text-blue-600 transition-colors">
-              {store.storeName}
-            </p>
-            {/* 추천 매장 배지 */}
-            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 border border-yellow-200 group-hover:shadow-sm transition-shadow">
-              <span className="mr-1">⭐</span>
-              추천
-            </span>
-          </div>
+        <div className="flex gap-2 space-around items-center">
+          <div className="flex-1 flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+              <p className="text-black text-lg font-bold group-hover:text-blue-600 transition-colors">
+                {store.storeName}
+              </p>
+              {/* 추천 매장 배지 */}
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 border border-yellow-200 group-hover:shadow-sm transition-shadow font-semibold">
+                <span className="mr-1">🔥</span>
+                핫플
+              </span>
+            </div>
 
-          <p className="text-black text-sm group-hover:text-gray-700 transition-colors">
-            📍 {store.addressDetail}
-          </p>
-
-          {/* 혜택 정보 - 강조된 스타일 */}
-          <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-md p-2 mt-1 group-hover:shadow-sm transition-shadow">
-            <p className="text-yellow-900 font-semibold text-sm flex items-center gap-1">
-              <span>🎁</span>
-              <span>{store.benefit}</span>
+            <p className="text-black text-sm group-hover:text-gray-700 transition-colors">
+              📍 {store.addressDetail}
             </p>
+
+            {/* 혜택 정보 - 강조된 스타일 */}
+            <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-md p-2 group-hover:shadow-sm transition-shadow">
+              <p className="text-yellow-900 font-semibold text-sm flex items-center gap-1">
+                <span>🎁</span>
+                <span>{store.benefit}</span>
+              </p>
+            </div>
           </div>
 
           {/* 클릭 힌트 */}
-          <div className="flex items-center gap-1 text-xs text-gray-500 mt-1 group-hover:text-blue-600 transition-colors">
-            <span>👆</span>
-            <span>탭하여 지도에서 확인하기</span>
-            <span className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="flex items-center justify-center text-xs text-gray-500 mt-1 group-hover:text-blue-600 transition-colors">
+            <span className="opacity-0 group-hover:opacity-100 transition-opacity">
               →
             </span>
           </div>

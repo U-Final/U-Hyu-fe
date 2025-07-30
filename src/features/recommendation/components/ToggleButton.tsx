@@ -17,10 +17,10 @@ export const RecommendedStoresToggle: React.FC = () => {
       onClick={toggleRecommendedStores}
       className={`
         flex items-center gap-2 px-3 py-2 rounded-lg
-        transition-all duration-200 text-sm font-medium
+        transition-all duration-200 text-sm font-medium cursor-pointer
         ${
           showRecommendedStores
-            ? 'bg-yellow-100 text-yellow-700 border border-yellow-300'
+            ? 'bg-yellow text-yellow-700 border border-yellow-100'
             : 'bg-gray-100 text-gray-600 border border-gray-300'
         }
         hover:shadow-sm active:scale-95

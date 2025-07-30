@@ -7,6 +7,7 @@ import { useRecommendedStoresQuery } from '@recommendation/hooks/useRecommendQue
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import { Autoplay, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { useUser } from '@/shared/store/userStore';
@@ -59,9 +60,12 @@ export const RecommendedStoreListLoggedIn = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between px-4 pt-2 pb-2">
+      <div className="flex items-center justify-between px-4 py-2">
         <p className="text-black font-semibold text-lg">
-          {user?.userName}님 안녕하세요, 오늘은 이런 혜택 어떠세요?
+          <span className="text-primary text-h3">{user?.userName}</span> 님
+          안녕하세요,
+          <br />
+          오늘 이런 혜택 어떠세요?
         </p>
         {/* 토글 버튼 추가 */}
         <RecommendedStoresToggle />
@@ -69,18 +73,33 @@ export const RecommendedStoreListLoggedIn = () => {
 
       {/* 토글 상태에 따라 조건부 렌더링 */}
       {showRecommendedStores && (
-        <Swiper
-          spaceBetween={4}
-          slidesPerView={1.2}
-          grabCursor
-          style={{ paddingRight: '1rem' }}
-        >
-          {stores?.map(store => (
-            <SwiperSlide key={store.storeId}>
-              <RecommendedStoreCard store={store} autoCloseBottomSheet={true} />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        <div className="pl-4">
+          <Swiper
+            modules={[Pagination, Autoplay]}
+            spaceBetween={8}
+            slidesPerView={1}
+            centeredSlides={true}
+            grabCursor
+            pagination={{
+              clickable: true,
+              dynamicBullets: true,
+            }}
+            autoplay={{
+              delay: 2000,
+              disableOnInteraction: false,
+            }}
+            style={{ paddingRight: '1rem' }}
+          >
+            {stores?.map(store => (
+              <SwiperSlide key={store.storeId}>
+                <RecommendedStoreCard
+                  store={store}
+                  autoCloseBottomSheet={true}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
       )}
     </div>
   );

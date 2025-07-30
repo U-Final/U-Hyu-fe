@@ -1,10 +1,10 @@
 import { forwardRef, useCallback } from 'react';
 
-import { MyMapList } from '@mymap/components/mymap-list';
-import MyMapUuid from '@mymap/components/mymap-uuid/MymapUuid';
+import { MyMapList, MymapUuid } from '@mymap/components';
 import { FaFilter } from 'react-icons/fa';
 import { useParams } from 'react-router-dom';
 
+import { BackButton } from '@/shared/components';
 import { useModalStore } from '@/shared/store';
 import { useIsLoggedIn } from '@/shared/store/userStore';
 
@@ -213,7 +213,7 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
                   {/* MyMap 버튼 */}
                   <div className="flex items-center gap-2">
                     <button
-                      className="flex items-center gap-1.5 px-3 py-2 text-sm font-bold text-black hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 border border-light-gray shadow-sm hover:shadow-md"
+                      className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 border border-gray hover:border-gray-300 cursor-pointer"
                       onClick={handleMyMapClick}
                       aria-label="MyMap으로 이동"
                     >
@@ -223,7 +223,7 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
                   {/* 개선된 필터 버튼 */}
                   <div className="flex items-center gap-2">
                     <button
-                      className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 border border-gray-200 hover:border-blue-300 shadow-sm hover:shadow-md"
+                      className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 border border-gray hover:border-gray-300 cursor-pointer"
                       onClick={handleFilterClick}
                       aria-label="필터 설정"
                     >
@@ -248,13 +248,7 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
                 <div className="flex-1">
                   <h2 className="text-lg font-bold text-gray-900">My Map</h2>
                 </div>
-                <button
-                  className="px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md"
-                  onClick={handleBackToList}
-                  aria-label="이전 화면으로 돌아가기"
-                >
-                  뒤로
-                </button>
+                <BackButton onClick={handleBackToList} />
               </div>
               <MyMapList />
             </div>
@@ -267,13 +261,7 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
                 <div className="flex-1">
                   <h2 className="text-lg font-bold text-gray-900">필터</h2>
                 </div>
-                <button
-                  className="px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md"
-                  onClick={handleBackToList}
-                  aria-label="이전 화면으로 돌아가기"
-                >
-                  뒤로
-                </button>
+                <BackButton onClick={handleBackToList} />
               </div>
               <CategorySelectContent
                 selectedCategory={selectedCategory}
@@ -289,13 +277,7 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
                 <div className="flex-1">
                   <h2 className="text-lg font-bold text-gray-900">필터</h2>
                 </div>
-                <button
-                  className="px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md"
-                  onClick={handleBackToList}
-                  aria-label="이전 화면으로 돌아가기"
-                >
-                  뒤로
-                </button>
+                <BackButton onClick={handleBackToList} />
               </div>
               <BrandSelectContent
                 categoryKey={selectedCategory}
@@ -317,7 +299,7 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
     return (
       <MapDragBottomSheet ref={ref}>
         {isShared ? (
-          <MyMapUuid uuid={uuid} onStoreClick={handleStoreClick} />
+          <MymapUuid uuid={uuid} onStoreClick={handleStoreClick} />
         ) : (
           getCurrentStepContent()
         )}

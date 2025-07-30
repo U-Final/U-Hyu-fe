@@ -1,6 +1,13 @@
-import { AddMyMapButton } from '@mymap/components/mymap-list';
+import type { FC } from 'react';
+
+import {
+  AddMyMapButton,
+  MyMapFormModal,
+  MymapDeleteModal,
+  ShareModal,
+} from '@mymap/components';
 import { MYMAP_COLOR, type MarkerColor } from '@mymap/constants/mymapColor';
-import { useMyMapListQuery } from '@mymap/hooks/useMyMapListQuery';
+import { useMyMapListQuery } from '@mymap/hooks';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MdStars } from 'react-icons/md';
 import { MdIosShare } from 'react-icons/md';
@@ -16,11 +23,7 @@ import {
 } from '@/shared/components/shadcn/ui/dropdown-menu';
 import { useModalStore } from '@/shared/store';
 
-import { MyMapForm } from './InputMymap';
-import { MymapDeleteModal } from './MymapDeleteModal';
-import { ShareModal } from './ShareModal';
-
-const MyMapBody: React.FC = () => {
+const MyMapList: FC = () => {
   const { data, isLoading, isError } = useMyMapListQuery();
   const openModal = useModalStore(state => state.openModal);
   const navigate = useNavigate();
@@ -53,7 +56,7 @@ const MyMapBody: React.FC = () => {
     openModal('base', {
       title: '수정',
       children: (
-        <MyMapForm
+        <MyMapFormModal
           mode="edit"
           myMapListId={myMapListId}
           defaultTitle={myMapTitle}
@@ -67,14 +70,25 @@ const MyMapBody: React.FC = () => {
   const handleCreate = () => {
     openModal('base', {
       title: '새 지도 만들기',
-      children: <MyMapForm mode="create" />,
+      children: <MyMapFormModal mode="create" />,
     });
   };
 
+  // 마이페이지 이동
+  const handleGoToMypage = () => {
+    navigate('/mypage/activity');
+  };
+
   return (
-    <div className="flex flex-col w-full max-w-md mx-auto divide-y divide-gray-200">
+    <div className="flex flex-col w-full max-w-md mx-auto p-4 divide-y divide-gray-200">
       {/* 새 지도 만들기 */}
       <AddMyMapButton onCreateNewMap={handleCreate} />
+
+      {/* 즐겨찾기 */}
+      <div className="flex items-center py-3" onClick={handleGoToMypage}>
+        <MdStars className="w-5 h-5 text-primary mr-2" />
+        <span className="text-body2 font-semibold">즐겨찾기</span>
+      </div>
 
       {/* map 리스트 */}
       {data.length === 0 ? (
@@ -109,7 +123,7 @@ const MyMapBody: React.FC = () => {
                   onClick={() => {
                     handleUpdate(map.myMapListId, map.title, map.markerColor);
                   }}
-                  className="flex justify-between font-medium"
+                  className="flex justify-between font-medium cursor-pointer"
                 >
                   수정
                   <RiPencilFill className="mr-2 h-4 w-4" />
@@ -120,7 +134,7 @@ const MyMapBody: React.FC = () => {
                     e.stopPropagation();
                     handleShare(map.uuid);
                   }}
-                  className="flex justify-between font-medium"
+                  className="flex justify-between font-medium cursor-pointer"
                 >
                   공유
                   <MdIosShare className="mr-2 h-4 w-4" />
@@ -131,7 +145,7 @@ const MyMapBody: React.FC = () => {
                     e.stopPropagation();
                     handleDelete(map.myMapListId);
                   }}
-                  className="flex justify-between font-medium"
+                  className="flex justify-between font-medium cursor-pointer"
                 >
                   삭제
                   <PiTrashBold className="mr-2 h-4 w-4" />
@@ -145,4 +159,4 @@ const MyMapBody: React.FC = () => {
   );
 };
 
-export default MyMapBody;
+export default MyMapList;

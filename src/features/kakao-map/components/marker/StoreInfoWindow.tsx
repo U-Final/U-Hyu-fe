@@ -1,4 +1,6 @@
-import AddStore from '@mymap/components/mymap-add-store/AddStore';
+import React from 'react';
+
+import { AddStoreModal } from '@mymap/components';
 import { motion } from 'framer-motion';
 import { CustomOverlayMap } from 'react-kakao-maps-sdk';
 
@@ -215,7 +217,7 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
   const handleFavoriteClick = () => {
     openModal('base', {
       title: '매장 추가',
-      children: <AddStore storeId={storeId} />,
+      children: <AddStoreModal storeId={storeId} />,
     });
   };
 

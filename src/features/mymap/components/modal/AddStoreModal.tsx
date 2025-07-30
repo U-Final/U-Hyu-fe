@@ -1,22 +1,22 @@
 import { type FC, useEffect, useState } from 'react';
 
 import { useToggleFavoriteMutation } from '@kakao-map/hooks/useMapQueries';
+import { AddMyMapButton, MyMapFormModal } from '@mymap/components';
 import { MYMAP_COLOR, type MarkerColor } from '@mymap/constants/mymapColor';
-import { useStoreBookmarkStatusQuery } from '@mymap/hooks/useStoreBookmarkStatusQuery';
-import { useToggleMyMapStoreMutation } from '@mymap/hooks/useToggleMyMapStoreMutation';
+import {
+  useStoreBookmarkStatusQuery,
+  useToggleMyMapStoreMutation,
+} from '@mymap/hooks';
 import { MdStars } from 'react-icons/md';
 
 import { PrimaryButton, PrimaryCheckbox } from '@/shared/components';
 import { useModalStore } from '@/shared/store';
 
-import { MyMapForm } from '../InputMymap';
-import { AddMyMapButton } from '../mymap-list';
-
 interface AddStoreProps {
   storeId: number;
 }
 
-const AddStore: FC<AddStoreProps> = ({ storeId }) => {
+const AddStoreModal: FC<AddStoreProps> = ({ storeId }) => {
   const { data, isLoading, isError } = useStoreBookmarkStatusQuery(storeId);
   const toggleMutation = useToggleMyMapStoreMutation();
   const toggleFavoriteMutation = useToggleFavoriteMutation();
@@ -68,7 +68,7 @@ const AddStore: FC<AddStoreProps> = ({ storeId }) => {
   const handleCreate = () => {
     openModal('base', {
       title: '새 지도 만들기',
-      children: <MyMapForm mode="create" />,
+      children: <MyMapFormModal mode="create" />,
     });
   };
 
@@ -154,4 +154,4 @@ const AddStore: FC<AddStoreProps> = ({ storeId }) => {
   );
 };
 
-export default AddStore;
+export default AddStoreModal;

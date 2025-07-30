@@ -1,6 +1,5 @@
-import { create } from 'zustand';
-
 import type { Store } from '@kakao-map/types/store';
+import { create } from 'zustand';
 
 interface SharedMapState {
   isMine: boolean;

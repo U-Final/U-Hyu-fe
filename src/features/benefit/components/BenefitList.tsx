@@ -5,8 +5,7 @@ import {
   CheckBoxList,
   Pagination,
 } from '@benefit/components';
-import { useBenefitQueryParams } from '@benefit/hooks/useBenefitQueryParams';
-import { useGetBrandListQuery } from '@benefit/hooks/useGetBrandListQuery';
+import { useGetBrandListQuery, useBenefitQueryParams } from '@benefit/hooks';
 
 import { BrandCard, FilterTabs, SearchInput } from '@/shared/components';
 import { BENEFIT_FILTER_TABS } from '@/shared/components/filter_tabs/FilterTabs.variants';

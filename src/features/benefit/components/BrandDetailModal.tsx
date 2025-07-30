@@ -1,4 +1,4 @@
-import { useGetBrandDetailQuery } from '@benefit/hooks/useGetBrandDetailQuery';
+import { useGetBrandDetailQuery } from '@benefit/hooks';
 import clsx from 'clsx';
 
 const BrandDetailModal = ({ brandId }: { brandId: number }) => {

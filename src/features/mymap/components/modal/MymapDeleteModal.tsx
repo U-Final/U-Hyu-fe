@@ -1,4 +1,4 @@
-import { useDeleteMyMapMutation } from '@mymap/hooks/useDeleteMyMapMutation';
+import { useDeleteMyMapMutation } from '@mymap/hooks';
 
 import { BaseModal, PrimaryButton } from '@/shared/components';
 import { useModalStore } from '@/shared/store';

@@ -40,7 +40,7 @@ const BrandDetailModal = ({ brandId }: { brandId: number }) => {
                   bg
                 )}
               >
-                <span className={clsx('font-bold', text)}>
+                <span className={clsx('font-bold shrink-0 w-10', text)}>
                   {formatGrade(benefit.grade)}
                 </span>
                 <span>{formatNewlines(benefit.description)}</span>

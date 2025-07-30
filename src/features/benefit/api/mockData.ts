@@ -105,6 +105,16 @@ export const MOCK_ALL_BRANDS: BrandMock[] = [
     storeTypes: 'OFFLINE',
     benefitTypes: 'GIFT',
   },
+  {
+    brandId: 124,
+    brandName: '곤지암리조트',
+    logoImage:
+      'https://uhyu-bucket.s3.ap-northeast-2.amazonaws.com/logo/%E1%84%80%E1%85%A9%E1%86%AB%E1%84%8C%E1%85%B5%E1%84%8B%E1%85%A1%E1%86%B7%E1%84%85%E1%85%B5%E1%84%8C%E1%85%A9%E1%84%90%E1%85%B3.png',
+    description: '2+1 행사 상품 제공',
+    category: '생활/편의',
+    storeTypes: 'OFFLINE',
+    benefitTypes: 'GIFT',
+  },
 ];
 
 /**
@@ -242,6 +252,32 @@ export const MOCK_BRAND_DETAILS: BrandDetailRes[] = [
       {
         grade: 'GOOD',
         description: '①일산점, 광교점 20% 할인\\n②여수점, 제주점 15% 할인',
+      },
+    ],
+  },
+  {
+    brandId: 124,
+    brandName: '곤지암리조트',
+    logoImage:
+      'https://uhyu-bucket.s3.ap-northeast-2.amazonaws.com/logo/%E1%84%80%E1%85%A9%E1%86%AB%E1%84%8C%E1%85%B5%E1%84%8B%E1%85%A1%E1%86%B7%E1%84%85%E1%85%B5%E1%84%8C%E1%85%A9%E1%84%90%E1%85%B3.png',
+    usageMethod:
+      '- U+멤버십패키지(객실) : 예약 방법과 객실 별 요금은 곤지암리조트 홈페이지 www.konjiamresort.co.kr 에서 확인 가능 - 패밀리스파 : 결제 시 직원에게 멤버십 카드 제시  *꼭 확인하세요 - 혜택안내  [VVIP/VIP] : [객실]U+멤버십패키지 10% 할인 및 카페 라운지 음료 쿠폰 2매 / [스파]패밀리스파 입장료 30% 할인(본인포함 4인까지) [우수]: [객실]U+멤버십패키지 예약, 카페라운지 음료 / [스파]입장료 25% 할인(본인포함 4인까지) - U+멤버십패키지(객실)는 일요일~목요일만 숙박할 수 있으며, 예약 현황에 따라 원하는 날짜 또는 객실을 선택하지 못할 수 있습니다.   대표문의 곤지암리조트 1661- 8787 (무료)',
+    usageLimit: '객실 : 제한없음패밀리스파 : 일 1회(본인포함 4인까지)',
+    benefitRes: [
+      {
+        grade: 'VVIP',
+        description:
+          '[객실]U+멤버십패키지 최대 10% 할인 및 카페 라운지 음료 쿠폰 2매',
+      },
+      {
+        grade: 'VIP',
+        description:
+          '[객실]U+멤버십패키지 최대 10% 할인 및 카페 라운지 음료 쿠폰 2매',
+      },
+      {
+        grade: 'GOOD',
+        description:
+          '[객실]U+멤버십패키지 최대 10% 할인 및 카페 라운지 음료 쿠폰 2매',
       },
     ],
   },

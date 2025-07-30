@@ -1,5 +1,6 @@
 import { useGetBrandDetailQuery } from '@benefit/hooks';
 import clsx from 'clsx';
+import he from 'he';
 
 const BrandDetailModal = ({ brandId }: { brandId: number }) => {
   const { data: brand, isLoading, error } = useGetBrandDetailQuery(brandId);
@@ -52,7 +53,7 @@ const BrandDetailModal = ({ brandId }: { brandId: number }) => {
       </div>
       <div className="flex flex-col gap-1 ">
         <h3 className="font-bold">이용방법</h3>
-        <p className="text-black">{brand.usageMethod}</p>
+        <p className="text-black">{he.decode(brand.usageMethod)}</p>
       </div>
     </div>
   );

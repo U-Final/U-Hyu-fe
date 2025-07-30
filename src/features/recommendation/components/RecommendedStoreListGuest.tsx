@@ -35,8 +35,8 @@ export const RecommendedStoreListGuest = () => {
       <Swiper
         modules={[Pagination, Autoplay]}
         direction="vertical"
-        spaceBetween={30}
-        slidesPerView={1.9}
+        spaceBetween={10}
+        slidesPerView={1}
         centeredSlides={true}
         grabCursor
         pagination={{
@@ -47,7 +47,7 @@ export const RecommendedStoreListGuest = () => {
           delay: 2000, // 2초마다 자동 이동
           disableOnInteraction: false,
         }}
-        style={{ height: '100px' }}
+        style={{ height: '80px' }}
       >
         {brands?.map(brand => (
           <SwiperSlide key={brand.brandId}>

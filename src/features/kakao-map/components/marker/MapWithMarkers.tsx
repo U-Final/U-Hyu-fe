@@ -2,6 +2,7 @@ import { type FC, useCallback, useEffect, useRef, useState } from 'react';
 
 import { useSharedMapStore } from '@mymap/store/SharedMapStore';
 import { CustomOverlayMap, Map as KakaoMap } from 'react-kakao-maps-sdk';
+import { useParams } from 'react-router-dom';
 
 import { useAuthCheckModal } from '@/shared/hooks/useAuthCheckModal';
 import { trackMarkerClick } from '@/shared/utils/actionlogTracker';
@@ -14,6 +15,7 @@ import ResponsiveManualSearchButton from '../ManualSearchButton';
 import BrandMarker from './BrandMarker';
 import { KeywordInfoWindow } from './KeywordInfoWindow';
 import { KeywordMarker } from './KeywordMarker';
+import MyMapMarker from './MyMapMarker';
 import StoreInfoWindow from './StoreInfoWindow';
 
 interface MapWithMarkersProps {
@@ -61,7 +63,8 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
 
   // 내부 상태 정의(mymap)
   const sharedStores = useSharedMapStore(state => state.stores);
-  const isShared = useSharedMapStore(state => !!state.uuid);
+  const { uuid } = useParams();
+  const isShared = !!uuid;
 
   // 마커에 사용할 store 배열 결정(mymap)
   const storesToRender = isShared ? sharedStores : stores;
@@ -275,11 +278,18 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
             yAnchor={1}
             xAnchor={0.5}
           >
-            <BrandMarker
-              store={store}
-              isSelected={selectedStoreId === store.storeId}
-              onClick={() => handleMarkerClick(store)}
-            />
+            {isShared ? (
+              <MyMapMarker
+                isSelected={selectedStoreId === store.storeId}
+                onClick={() => handleMarkerClick(store)}
+              />
+            ) : (
+              <BrandMarker
+                store={store}
+                isSelected={selectedStoreId === store.storeId}
+                onClick={() => handleMarkerClick(store)}
+              />
+            )}
           </CustomOverlayMap>
         ))}
 

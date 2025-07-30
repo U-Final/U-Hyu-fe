@@ -50,7 +50,7 @@ export const RecommendedStoreListLoggedIn = () => {
           현재 위치 근처에 추천 매장이 없어요.
         </p>
         <img
-          src="/public/images/recommedation/empty-state-2.png"
+          src="/images/recommendation/empty-state-2.png"
           alt="추천 매장이 없습니다."
           className="w-[300px]"
         />

@@ -1,24 +1,205 @@
 // 통계별 mock 데이터 생성 (포스트맨 기준) - 실제 데이터처럼 수십 개 생성
 export const mockBookmarkStats = [
   {
-    categoryId: 10,
-    categoryName: '베이커리/디저트',
-    sumStatisticsBookmarksByCategory: 3,
+    categoryId: 1,
+    categoryName: '영화 / 미디어',
+    sumStatisticsBookmarksByCategory: 4,
     bookmarksByBrandList: [
       {
-        brandName: '파리크라상',
-        sumBookmarksByBrand: 3
+        brandName: 'CGV',
+        sumBookmarksByBrand: 2
+      },
+      {
+        brandName: '롯데시네마',
+        sumBookmarksByBrand: 2
       }
     ]
   },
   {
     categoryId: 2,
-    categoryName: '영화/미디어',
+    categoryName: '테마파크',
+    sumStatisticsBookmarksByCategory: 6,
+    bookmarksByBrandList: [
+      {
+        brandName: '뽀로로파크',
+        sumBookmarksByBrand: 2
+      },
+      {
+        brandName: '롯데월드',
+        sumBookmarksByBrand: 4
+      }
+    ]
+  },
+  {
+    categoryId: 3,
+    categoryName: '워터파크/아쿠아리움',
+    sumStatisticsBookmarksByCategory: 5,
+    bookmarksByBrandList: [
+      {
+        brandName: '아쿠아필드',
+        sumBookmarksByBrand: 3
+      },
+      {
+        brandName: '코엑스아쿠아리움',
+        sumBookmarksByBrand: 2
+      }
+    ]
+  },
+  {
+    categoryId: 4,
+    categoryName: '액티비티',
+    sumStatisticsBookmarksByCategory: 8,
+    bookmarksByBrandList: [
+      {
+        brandName: '스카이라인 루지',
+        sumBookmarksByBrand: 4
+      },
+      {
+        brandName: '클룩',
+        sumBookmarksByBrand: 4
+      }
+    ]
+  },
+  {
+    categoryId: 5,
+    categoryName: '뷰티(피부과, 클리닉)',
+    sumStatisticsBookmarksByCategory: 7,
+    bookmarksByBrandList: [
+      {
+        brandName: '오가나셀 피부과 의원 청담점',
+        sumBookmarksByBrand: 4
+      },
+      {
+        brandName: '데이원클리닉',
+        sumBookmarksByBrand: 3
+      }
+    ]
+  },
+  {
+    categoryId: 6,
+    categoryName: '건강(제약, 영양제 등)',
+    sumStatisticsBookmarksByCategory: 3,
+    bookmarksByBrandList: [
+      {
+        brandName: '동아제약 디몰',
+        sumBookmarksByBrand: 2
+      },
+      {
+        brandName: 'LG생활건강샵',
+        sumBookmarksByBrand: 1
+      }
+    ]
+  },
+  {
+    categoryId: 7,
+    categoryName: '쇼핑',
+    sumStatisticsBookmarksByCategory: 12,
+    bookmarksByBrandList: [
+      {
+        brandName: 'GS THE FRESH',
+        sumBookmarksByBrand: 4
+      },
+      {
+        brandName: '롯데백화점몰',
+        sumBookmarksByBrand: 4
+      },
+      {
+        brandName: '현대면세점',
+        sumBookmarksByBrand: 4
+      }
+    ]
+  },
+  {
+    categoryId: 8,
+    categoryName: '생활/편의',
+    sumStatisticsBookmarksByCategory: 9,
+    bookmarksByBrandList: [
+      {
+        brandName: 'GS25',
+        sumBookmarksByBrand: 5
+      },
+      {
+        brandName: '펫생각',
+        sumBookmarksByBrand: 4
+      }
+    ]
+  },
+  {
+    categoryId: 9,
+    categoryName: '베이커리/디저트',
+    sumStatisticsBookmarksByCategory: 6,
+    bookmarksByBrandList: [
+      {
+        brandName: '파리바게트',
+        sumBookmarksByBrand: 3
+      },
+      {
+        brandName: '베스킨라빈스',
+        sumBookmarksByBrand: 3
+      }
+    ]
+  },
+  {
+    categoryId: 10,
+    categoryName: '음식점',
+    sumStatisticsBookmarksByCategory: 15,
+    bookmarksByBrandList: [
+      {
+        brandName: 'VIPS',
+        sumBookmarksByBrand: 5
+      },
+      {
+        brandName: '더플레이스',
+        sumBookmarksByBrand: 5
+      },
+      {
+        brandName: '굽네치킨',
+        sumBookmarksByBrand: 5
+      }
+    ]
+  },
+  {
+    categoryId: 11,
+    categoryName: '공연/전시',
     sumStatisticsBookmarksByCategory: 4,
     bookmarksByBrandList: [
       {
-        brandName: 'CGV',
-        sumBookmarksByBrand: 4
+        brandName: '빛의 벙커',
+        sumBookmarksByBrand: 2
+      },
+      {
+        brandName: '그라운드시소',
+        sumBookmarksByBrand: 2
+      }
+    ]
+  },
+  {
+    categoryId: 12,
+    categoryName: '교육',
+    sumStatisticsBookmarksByCategory: 3,
+    bookmarksByBrandList: [
+      {
+        brandName: '젠지',
+        sumBookmarksByBrand: 2
+      },
+      {
+        brandName: '월스트리트 잉글리시',
+        sumBookmarksByBrand: 1
+      }
+    ]
+  },
+  {
+    categoryId: 13,
+    categoryName: '여행/교통',
+    sumStatisticsBookmarksByCategory: 5,
+    bookmarksByBrandList: [
+      {
+        brandName: 'SK렌터카',
+        sumBookmarksByBrand: 3
+      },
+      {
+        brandName: '야놀자글로벌',
+        sumBookmarksByBrand: 2
       }
     ]
   },

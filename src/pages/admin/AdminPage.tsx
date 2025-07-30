@@ -3,11 +3,9 @@ import {
   BookmarkIcon, 
   FunnelIcon, 
   HeartIcon, 
-  UserGroupIcon,
-  ChartBarIcon,
-  BuildingStorefrontIcon
+  UserGroupIcon
 } from '@heroicons/react/24/outline';
-import { StatsSummaryCards, StatsTabButtons, StatsSkeleton, ChartSkeleton } from '@/features/admin/components/common';
+import { StatsSummaryCards, StatsSkeleton, ChartSkeleton, AdminToggleTabs, CategoryFilter } from '@/features/admin/components/common';
 import { 
   BookmarkChart, 
   FilteringChart, 
@@ -15,6 +13,7 @@ import {
   MembershipChart 
 } from '@/features/admin/components/stats';
 import { AdminBrandList } from '@/features/admin/components/brand';
+import FilterTabs from '@/shared/components/filter_tabs/FilterTabs';
 import { 
   useAdminBookmarkStatsQuery,
   useAdminFilteringStatsQuery,
@@ -22,73 +21,25 @@ import {
   useAdminMembershipStatsQuery,
   useAdminTotalStatsQuery
 } from '@/features/admin/hooks/useAdminStatsQuery';
-import type { Tab, TabKey } from '@/features/admin/api/types';
+import type { TabKey } from '@/features/admin/api/types';
+import type { CategoryId } from '@/features/admin/constants/categories';
 
-const TABS: Tab[] = [
-  {
-    key: 'bookmark',
-    label: '즐겨찾기',
-    icon: BookmarkIcon,
-  },
-  {
-    key: 'filtering',
-    label: '필터링',
-    icon: FunnelIcon,
-  },
-  {
-    key: 'recommendation',
-    label: '추천',
-    icon: HeartIcon,
-  },
-  {
-    key: 'membership',
-    label: '멤버십',
-    icon: UserGroupIcon,
-  },
-  {
-    key: 'total',
-    label: '전체',
-    icon: ChartBarIcon,
-  },
-  {
-    key: 'brands',
-    label: '브랜드 관리',
-    icon: BuildingStorefrontIcon,
-  },
+// 통계 탭 정의
+const STATS_TABS = [
+  { label: '즐겨찾기', value: 'bookmark', icon: BookmarkIcon, color: 'var(--admin-bookmark)' },
+  { label: '필터링', value: 'filtering', icon: FunnelIcon, color: 'var(--admin-filtering)' },
+  { label: '추천', value: 'recommendation', icon: HeartIcon, color: 'var(--admin-recommendation)' },
+  { label: '멤버십', value: 'membership', icon: UserGroupIcon, color: 'var(--admin-membership)' },
 ];
 
+
+
 export default function AdminPage() {
-  const [selectedTab, setSelectedTab] = useState<TabKey>('total');
+  const [mainTab, setMainTab] = useState<'stats' | 'brands'>('stats');
+  const [selectedStatsTab, setSelectedStatsTab] = useState<TabKey>('bookmark');
+  const [selectedCategory, setSelectedCategory] = useState<CategoryId>('all');
 
-  // 탭 변경 핸들러 - 탭 변경 시 해당 데이터 새로 가져오기
-  const handleTabChange = (tab: TabKey) => {
-    setSelectedTab(tab);
-    
-    // 탭 변경 시 해당 데이터 refetch
-    if (import.meta.env.DEV) {
-      console.log('🔄 관리자 페이지 탭 변경:', tab);
-    }
-    
-    switch (tab) {
-      case 'bookmark':
-        refetchBookmark();
-        break;
-      case 'filtering':
-        refetchFiltering();
-        break;
-      case 'recommendation':
-        refetchRecommend();
-        break;
-      case 'membership':
-        refetchMembership();
-        break;
-      case 'total':
-        refetchTotal();
-        break;
-    }
-  };
-
-  // 통계 데이터 쿼리 - 페이지 로드 시 모든 데이터 자동으로 가져오기
+  // 통계 데이터 쿼리 - 즐겨찾기와 전체만 초기 요청
   const { data: bookmarkStats, isLoading: bookmarkLoading, refetch: refetchBookmark } = useAdminBookmarkStatsQuery();
   const { data: filteringStats, isLoading: filteringLoading, refetch: refetchFiltering } = useAdminFilteringStatsQuery();
   const { data: recommendStats, isLoading: recommendLoading, refetch: refetchRecommend } = useAdminRecommendStatsQuery();
@@ -111,61 +62,125 @@ export default function AdminPage() {
     });
   }
 
-  const renderContent = () => {
-    if (selectedTab === 'brands') {
-      return <AdminBrandList />;
+  // 통계 탭 변경 핸들러
+  const handleStatsTabChange = (tab: string) => {
+    setSelectedStatsTab(tab as TabKey);
+    setSelectedCategory('all'); // 카테고리별 필터를 전체로 초기화
+    
+    // 탭 변경 시 해당 데이터와 전체 데이터 refetch
+    if (import.meta.env.DEV) {
+      console.log('🔄 관리자 페이지 통계 탭 변경:', tab);
     }
-
-    if (selectedTab === 'total') {
-      if (totalLoading) return <StatsSkeleton />;
-      if (!totalStats) return <div>데이터가 없습니다.</div>;
-      return <StatsSummaryCards totalStats={totalStats} />;
+    
+    switch (tab) {
+      case 'bookmark':
+        refetchBookmark();
+        refetchTotal();
+        break;
+      case 'filtering':
+        refetchFiltering();
+        refetchTotal();
+        break;
+      case 'recommendation':
+        refetchRecommend();
+        refetchTotal();
+        break;
+      case 'membership':
+        refetchMembership();
+        refetchTotal();
+        break;
     }
+  };
 
-    if (selectedTab === 'bookmark') {
+  // 메인 탭 변경 핸들러
+  const handleMainTabChange = (tab: string) => {
+    setMainTab(tab as 'stats' | 'brands');
+  };
+
+  const renderStatsContent = () => {
+    if (selectedStatsTab === 'bookmark') {
       if (bookmarkLoading) return <ChartSkeleton />;
-      return <BookmarkChart data={bookmarkStats || []} />;
+      return <BookmarkChart data={bookmarkStats || []} selectedCategory={selectedCategory} />;
     }
 
-    if (selectedTab === 'filtering') {
+    if (selectedStatsTab === 'filtering') {
       if (filteringLoading) return <ChartSkeleton />;
-      return <FilteringChart data={filteringStats || []} />;
+      return <FilteringChart data={filteringStats || []} selectedCategory={selectedCategory} />;
     }
 
-    if (selectedTab === 'recommendation') {
+    if (selectedStatsTab === 'recommendation') {
       if (recommendLoading) return <ChartSkeleton />;
-      return <RecommendChart data={recommendStats || []} />;
+      return <RecommendChart data={recommendStats || []} selectedCategory={selectedCategory} />;
     }
 
-    if (selectedTab === 'membership') {
+    if (selectedStatsTab === 'membership') {
       if (membershipLoading) return <ChartSkeleton />;
-      return <MembershipChart data={membershipStats || []} />;
+      return <MembershipChart data={membershipStats || []} selectedCategory={selectedCategory} />;
     }
 
     return null;
   };
 
-  // 전체 로딩 상태 확인
-  const isAnyLoading = bookmarkLoading || filteringLoading || recommendLoading || membershipLoading || totalLoading;
+  const renderContent = () => {
+    if (mainTab === 'brands') {
+      return <AdminBrandList />;
+    }
+
+    return (
+      <div className="space-y-6">
+        {/* 전체 통계 카드 - 항상 표시 */}
+        <div>
+          <h2 className="text-xl font-semibold mb-4">전체 통계</h2>
+          {totalLoading ? (
+            <StatsSkeleton />
+          ) : (
+            totalStats && <StatsSummaryCards totalStats={totalStats} />
+          )}
+        </div>
+
+        {/* 통계 탭 버튼 */}
+        <div>
+          <h2 className="text-xl font-semibold mb-4">상세 통계</h2>
+          <FilterTabs 
+            tabs={STATS_TABS}
+            onChange={handleStatsTabChange}
+            variant="gray"
+          />
+        </div>
+
+        {/* 카테고리 필터 - 필터링 통계에서는 숨김 */}
+        {selectedStatsTab !== 'filtering' && (
+          <div>
+            <h3 className="text-sm font-medium mb-3">카테고리별 필터</h3>
+            <CategoryFilter 
+              selectedCategory={selectedCategory}
+              onCategoryChange={setSelectedCategory}
+            />
+          </div>
+        )}
+
+        {/* 선택된 통계 차트 */}
+        <div className="mt-6">
+          {renderStatsContent()}
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="container">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">관리자 대시보드</h1>
       </div>
 
-      <StatsTabButtons 
-        tabs={TABS} 
-        selectedTab={selectedTab} 
-        onTabChange={handleTabChange} 
+      {/* 메인 토글 탭 (통계/브랜드 관리) */}
+      <AdminToggleTabs 
+        activeTab={mainTab}
+        setActiveTab={handleMainTabChange}
       />
 
       <div className="mt-6">
-        {isAnyLoading && selectedTab === 'total' ? (
-          <StatsSkeleton />
-        ) : (
-          renderContent()
-        )}
+        {renderContent()}
       </div>
     </div>
   );

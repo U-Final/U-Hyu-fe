@@ -1,4 +1,5 @@
 import type { Store } from '@kakao-map/types/store';
+import type { RecommendedRanking } from '@recommendation/recommended.types';
 
 export const mockRecommendStores: Store[] = [
   {
@@ -32,6 +33,24 @@ export const mockRecommendStores: Store[] = [
     benefit: '케이크 1조각 무료!',
     latitude: 37.5552,
     longitude: 126.9237,
+    logoImage: '/images/brands/뚜레쥬르.png',
+  },
+];
+
+export const mockRecommendedRanking: RecommendedRanking[] = [
+  {
+    brandId: 1,
+    brandName: '스타벅스',
+    logoImage: '/images/brands/뚜레쥬르.png',
+  },
+  {
+    brandId: 2,
+    brandName: '투썸플레이스',
+    logoImage: '/images/brands/뚜레쥬르.png',
+  },
+  {
+    brandId: 3,
+    brandName: '이마트',
     logoImage: '/images/brands/뚜레쥬르.png',
   },
 ];

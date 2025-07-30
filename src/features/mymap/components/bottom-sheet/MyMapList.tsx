@@ -15,6 +15,7 @@ import { PiTrashBold } from 'react-icons/pi';
 import { RiPencilFill } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 
+import { SkeletonMyMapItem } from '@/shared/components/Skeleton/SkeletonMyMapItem';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,12 +25,9 @@ import {
 import { useModalStore } from '@/shared/store';
 
 const MyMapList: FC = () => {
-  const { data, isLoading, isError } = useMyMapListQuery();
+  const { data, isPending, isError } = useMyMapListQuery();
   const openModal = useModalStore(state => state.openModal);
   const navigate = useNavigate();
-
-  if (isLoading) return <div>로딩 중...</div>;
-  if (isError || !data) return <div>에러 발생</div>;
 
   // 삭제 모달
   const handleDelete = (mapId: number) => {
@@ -91,8 +89,16 @@ const MyMapList: FC = () => {
       </div>
 
       {/* map 리스트 */}
-      {data.length === 0 ? (
-        <div className="flex  text-sm text-gray-400 mt-4">
+      {isPending ? (
+        <div className="flex flex-col gap-2 mt-4">
+          {[...Array(3)].map((_, i) => (
+            <SkeletonMyMapItem key={i} />
+          ))}
+        </div>
+      ) : isError ? (
+        <div className="text-sm text-red-500 mt-4">에러 발생</div>
+      ) : !data || data.length === 0 ? (
+        <div className="flex text-sm text-gray-400 mt-4">
           새 지도를 만들어주세요
         </div>
       ) : (

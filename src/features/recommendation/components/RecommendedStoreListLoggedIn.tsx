@@ -77,7 +77,7 @@ export const RecommendedStoreListLoggedIn = () => {
         >
           {stores?.map(store => (
             <SwiperSlide key={store.storeId}>
-              <RecommendedStoreCard store={store} />
+              <RecommendedStoreCard store={store} autoCloseBottomSheet={true} />
             </SwiperSlide>
           ))}
         </Swiper>

@@ -6,7 +6,7 @@ import {
   getAdminMembershipStats,
   getAdminTotalStats,
   getAdminCategories,
-} from '../api/adminApi';
+} from '@admin/api';
 
 export function useAdminBookmarkStatsQuery() {
   return useQuery({

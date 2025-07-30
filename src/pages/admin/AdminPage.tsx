@@ -5,24 +5,25 @@ import {
   HeartIcon, 
   UserGroupIcon
 } from '@heroicons/react/24/outline';
-import { StatsSummaryCards, StatsSkeleton, ChartSkeleton, AdminToggleTabs, CategoryFilter } from '@/features/admin/components/common';
+import { StatsSummaryCards, StatsSkeleton, ChartSkeleton, AdminToggleTabs, CategoryFilter } from '@admin/components/common';
 import { 
   BookmarkChart, 
   FilteringChart, 
   RecommendChart, 
   MembershipChart 
-} from '@/features/admin/components/stats';
-import { AdminBrandList } from '@/features/admin/components/brand';
-import FilterTabs from '@/shared/components/filter_tabs/FilterTabs';
+} from '@admin/components/stats';
+import { AdminBrandList } from '@admin/components/brand';
+import { FilterTabs } from '@/shared/components';
 import { 
   useAdminBookmarkStatsQuery,
   useAdminFilteringStatsQuery,
   useAdminRecommendStatsQuery,
   useAdminMembershipStatsQuery,
-  useAdminTotalStatsQuery
-} from '@/features/admin/hooks/useAdminStatsQuery';
-import type { TabKey } from '@/features/admin/api/types';
-import type { CategoryId } from '@/features/admin/constants/categories';
+  useAdminTotalStatsQuery,
+  useAdminBrandsQuery
+} from '@admin/hooks';
+import type { TabKey } from '@admin/api/types';
+import type { CategoryId } from '@admin/constants/categories';
 
 // 통계 탭 정의
 const STATS_TABS = [
@@ -45,6 +46,9 @@ export default function AdminPage() {
   const { data: recommendStats, isLoading: recommendLoading, refetch: refetchRecommend } = useAdminRecommendStatsQuery();
   const { data: membershipStats, isLoading: membershipLoading, refetch: refetchMembership } = useAdminMembershipStatsQuery();
   const { data: totalStats, isLoading: totalLoading, refetch: refetchTotal } = useAdminTotalStatsQuery();
+  
+  // 브랜드 데이터 쿼리
+  const { data: brandsData, isLoading: brandsLoading, refetch: refetchBrands } = useAdminBrandsQuery();
 
   // 개발 환경에서 데이터 로딩 상태 로깅
   if (import.meta.env.DEV) {
@@ -54,11 +58,13 @@ export default function AdminPage() {
       recommendLoading,
       membershipLoading,
       totalLoading,
+      brandsLoading,
       bookmarkStats: bookmarkStats?.length || 0,
       filteringStats: filteringStats?.length || 0,
       recommendStats: recommendStats?.length || 0,
       membershipStats: membershipStats?.length || 0,
       totalStats,
+      brandsData: brandsData?.length || 0,
     });
   }
 
@@ -94,7 +100,35 @@ export default function AdminPage() {
 
   // 메인 탭 변경 핸들러
   const handleMainTabChange = (tab: string) => {
-    setMainTab(tab as 'stats' | 'brands');
+    const newTab = tab as 'stats' | 'brands';
+    setMainTab(newTab);
+    
+    // 탭 변경 시 해당 데이터 refetch
+    if (import.meta.env.DEV) {
+      console.log('🔄 관리자 페이지 메인 탭 변경:', newTab);
+    }
+    
+    if (newTab === 'stats') {
+      // 통계 탭: 현재 선택된 통계와 전체 통계 refetch
+      refetchTotal();
+      switch (selectedStatsTab) {
+        case 'bookmark':
+          refetchBookmark();
+          break;
+        case 'filtering':
+          refetchFiltering();
+          break;
+        case 'recommendation':
+          refetchRecommend();
+          break;
+        case 'membership':
+          refetchMembership();
+          break;
+      }
+    } else if (newTab === 'brands') {
+      // 브랜드 관리 탭: 브랜드 데이터 refetch
+      refetchBrands();
+    }
   };
 
   const renderStatsContent = () => {
@@ -123,6 +157,9 @@ export default function AdminPage() {
 
   const renderContent = () => {
     if (mainTab === 'brands') {
+      if (brandsLoading) {
+        return <StatsSkeleton />;
+      }
       return <AdminBrandList />;
     }
 

@@ -1,8 +1,8 @@
 
 
-import { useAdminBrandsQuery } from '@admin/hooks/useAdminBrandQuery';
+import { useAdminBrandsQuery } from '@admin/hooks';
 import { useModalStore } from '@/shared/store';
-import { BrandListSkeleton } from '@/features/admin/components/common';
+import { BrandListSkeleton } from '@admin/components/common';
 
 import { AdminBrandCard } from './AdminBrandCard';
 import { AdminBrandModal } from './AdminBrandModal';

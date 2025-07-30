@@ -291,30 +291,30 @@ export const mockBookmarkStats = [
   },
   {
     categoryId: 9,
-    categoryName: '음식점',
+    categoryName: '베이커리/디저트',
     sumStatisticsBookmarksByCategory: 12,
     bookmarksByBrandList: [
       {
-        brandName: '키사라',
+        brandName: '파리크라상',
         sumBookmarksByBrand: 8
       },
       {
-        brandName: '스시로',
+        brandName: '던킨도너츠',
         sumBookmarksByBrand: 4
       }
     ]
   },
   {
-    categoryId: 11,
-    categoryName: '카페/음료',
+    categoryId: 12,
+    categoryName: '교육',
     sumStatisticsBookmarksByCategory: 4,
     bookmarksByBrandList: [
       {
-        brandName: '스타벅스',
+        brandName: '젠지',
         sumBookmarksByBrand: 3
       },
       {
-        brandName: '투썸플레이스',
+        brandName: '월스트리트 잉글리시',
         sumBookmarksByBrand: 1
       }
     ]
@@ -378,8 +378,8 @@ export const mockFilteringStats = [
 
 export const mockRecommendStats = [
   {
-    categoryId: 9,
-    categoryName: '음식점',
+    categoryId: 4,
+    categoryName: '액티비티',
     sumStatisticsRecommendationByCategory: 1,
     recommendationsByBrandList: [
       {
@@ -389,7 +389,7 @@ export const mockRecommendStats = [
     ]
   },
   {
-    categoryId: 7,
+    categoryId: 8,
     categoryName: '생활/편의',
     sumStatisticsRecommendationByCategory: 1,
     recommendationsByBrandList: [
@@ -411,8 +411,8 @@ export const mockRecommendStats = [
     ]
   },
   {
-    categoryId: 2,
-    categoryName: '영화/미디어',
+    categoryId: 1,
+    categoryName: '영화 / 미디어',
     sumStatisticsRecommendationByCategory: 2,
     recommendationsByBrandList: [
       {
@@ -422,8 +422,8 @@ export const mockRecommendStats = [
     ]
   },
   {
-    categoryId: 4,
-    categoryName: '치킨/피자',
+    categoryId: 10,
+    categoryName: '음식점',
     sumStatisticsRecommendationByCategory: 3,
     recommendationsByBrandList: [
       {
@@ -437,8 +437,8 @@ export const mockRecommendStats = [
     ]
   },
   {
-    categoryId: 5,
-    categoryName: '아이스크림/디저트',
+    categoryId: 9,
+    categoryName: '베이커리/디저트',
     sumStatisticsRecommendationByCategory: 2,
     recommendationsByBrandList: [
       {
@@ -448,8 +448,8 @@ export const mockRecommendStats = [
     ]
   },
   {
-    categoryId: 6,
-    categoryName: '테마파크/놀이공원',
+    categoryId: 2,
+    categoryName: '테마파크',
     sumStatisticsRecommendationByCategory: 1,
     recommendationsByBrandList: [
       {
@@ -459,7 +459,7 @@ export const mockRecommendStats = [
     ]
   },
   {
-    categoryId: 8,
+    categoryId: 7,
     categoryName: '쇼핑',
     sumStatisticsRecommendationByCategory: 4,
     recommendationsByBrandList: [
@@ -474,8 +474,8 @@ export const mockRecommendStats = [
     ]
   },
   {
-    categoryId: 10,
-    categoryName: '베이커리/디저트',
+    categoryId: 5,
+    categoryName: '뷰티(피부과, 클리닉)',
     sumStatisticsRecommendationByCategory: 2,
     recommendationsByBrandList: [
       {
@@ -485,8 +485,8 @@ export const mockRecommendStats = [
     ]
   },
   {
-    categoryId: 11,
-    categoryName: '카페/음료',
+    categoryId: 6,
+    categoryName: '건강(제약, 영양제 등)',
     sumStatisticsRecommendationByCategory: 3,
     recommendationsByBrandList: [
       {
@@ -503,8 +503,8 @@ export const mockRecommendStats = [
 
 export const mockMembershipStats = [
   {
-    categoryId: 2,
-    categoryName: '영화/미디어',
+    categoryId: 1,
+    categoryName: '영화 / 미디어',
     sumStatisticsMembershipUsageByCategory: 5,
     membershipUsageByBrandList: [
       {
@@ -514,8 +514,8 @@ export const mockMembershipStats = [
     ]
   },
   {
-    categoryId: 3,
-    categoryName: '편의점',
+    categoryId: 8,
+    categoryName: '생활/편의',
     sumStatisticsMembershipUsageByCategory: 3,
     membershipUsageByBrandList: [
       {
@@ -529,8 +529,8 @@ export const mockMembershipStats = [
     ]
   },
   {
-    categoryId: 4,
-    categoryName: '치킨/피자',
+    categoryId: 10,
+    categoryName: '음식점',
     sumStatisticsMembershipUsageByCategory: 4,
     membershipUsageByBrandList: [
       {
@@ -544,8 +544,8 @@ export const mockMembershipStats = [
     ]
   },
   {
-    categoryId: 5,
-    categoryName: '아이스크림/디저트',
+    categoryId: 9,
+    categoryName: '베이커리/디저트',
     sumStatisticsMembershipUsageByCategory: 2,
     membershipUsageByBrandList: [
       {
@@ -555,8 +555,8 @@ export const mockMembershipStats = [
     ]
   },
   {
-    categoryId: 6,
-    categoryName: '테마파크/놀이공원',
+    categoryId: 2,
+    categoryName: '테마파크',
     sumStatisticsMembershipUsageByCategory: 1,
     membershipUsageByBrandList: [
       {
@@ -567,7 +567,7 @@ export const mockMembershipStats = [
   },
   {
     categoryId: 7,
-    categoryName: '생활/편의',
+    categoryName: '쇼핑',
     sumStatisticsMembershipUsageByCategory: 3,
     membershipUsageByBrandList: [
       {
@@ -581,8 +581,8 @@ export const mockMembershipStats = [
     ]
   },
   {
-    categoryId: 8,
-    categoryName: '쇼핑',
+    categoryId: 3,
+    categoryName: '워터파크/아쿠아리움',
     sumStatisticsMembershipUsageByCategory: 6,
     membershipUsageByBrandList: [
       {
@@ -596,42 +596,91 @@ export const mockMembershipStats = [
     ]
   },
   {
-    categoryId: 9,
-    categoryName: '음식점',
-    sumStatisticsMembershipUsageByCategory: 4,
+    categoryId: 4,
+    categoryName: '액티비티',
+    sumStatisticsMembershipUsageByCategory: 3,
     membershipUsageByBrandList: [
       {
-        brandName: '키사라',
-        sumMembershipUsageByBrand: 3
+        brandName: '더플레이스',
+        sumMembershipUsageByBrand: 2
       },
       {
-        brandName: '스시로',
+        brandName: '키사라',
         sumMembershipUsageByBrand: 1
       }
     ]
   },
   {
-    categoryId: 10,
-    categoryName: '베이커리/디저트',
-    sumStatisticsMembershipUsageByCategory: 2,
+    categoryId: 5,
+    categoryName: '뷰티(피부과, 클리닉)',
+    sumStatisticsMembershipUsageByCategory: 5,
     membershipUsageByBrandList: [
       {
-        brandName: '파리크라상',
+        brandName: '강남차앤박',
+        sumMembershipUsageByBrand: 3
+      },
+      {
+        brandName: '유어클리닉',
         sumMembershipUsageByBrand: 2
       }
     ]
   },
   {
+    categoryId: 6,
+    categoryName: '건강(제약, 영양제 등)',
+    sumStatisticsMembershipUsageByCategory: 4,
+    membershipUsageByBrandList: [
+      {
+        brandName: '종근당',
+        sumMembershipUsageByBrand: 3
+      },
+      {
+        brandName: '뉴트리코어',
+        sumMembershipUsageByBrand: 1
+      }
+    ]
+  },
+  {
     categoryId: 11,
-    categoryName: '카페/음료',
+    categoryName: '공연/전시',
+    sumStatisticsMembershipUsageByCategory: 2,
+    membershipUsageByBrandList: [
+      {
+        brandName: '빛의 벙커',
+        sumMembershipUsageByBrand: 1
+      },
+      {
+        brandName: '그라운드시소',
+        sumMembershipUsageByBrand: 1
+      }
+    ]
+  },
+  {
+    categoryId: 12,
+    categoryName: '교육',
     sumStatisticsMembershipUsageByCategory: 3,
     membershipUsageByBrandList: [
       {
-        brandName: '스타벅스',
+        brandName: '젠지',
         sumMembershipUsageByBrand: 2
       },
       {
-        brandName: '투썸플레이스',
+        brandName: '월스트리트 잉글리시',
+        sumMembershipUsageByBrand: 1
+      }
+    ]
+  },
+  {
+    categoryId: 13,
+    categoryName: '여행/교통',
+    sumStatisticsMembershipUsageByCategory: 4,
+    membershipUsageByBrandList: [
+      {
+        brandName: 'SK렌터카',
+        sumMembershipUsageByBrand: 3
+      },
+      {
+        brandName: '야놀자글로벌',
         sumMembershipUsageByBrand: 1
       }
     ]

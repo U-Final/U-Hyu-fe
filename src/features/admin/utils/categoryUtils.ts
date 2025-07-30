@@ -1,4 +1,4 @@
-import { ADMIN_CATEGORIES } from '../constants/categories';
+import { ADMIN_CATEGORIES } from '@admin/constants/categories';
 
 export function getCategoryDisplayName(categoryId: string): string {
   const category = ADMIN_CATEGORIES.find(cat => cat.id === categoryId);

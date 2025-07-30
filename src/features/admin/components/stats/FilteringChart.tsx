@@ -1,8 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/shadcn/ui/card';
 import { FunnelIcon } from '@heroicons/react/24/outline';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import type { CategoryStat } from '../../api/types';
-import { getCategoryDisplayName } from '../../utils/categoryUtils';
+import type { CategoryStat } from '@admin/api/types';
+import { getCategoryDisplayName } from '@admin/utils/categoryUtils';
+import { filterDataByCategory } from '@admin/utils/categoryMapping';
 
 interface FilteringChartProps {
   data: CategoryStat[];
@@ -27,26 +28,7 @@ export function FilteringChart({ data, selectedCategory = 'all' }: FilteringChar
   }
 
   // 카테고리 필터링 적용
-  const filteredData = selectedCategory === 'all' 
-    ? data 
-    : data.filter(category => {
-        const categoryMap: Record<string, string[]> = {
-          'movie': ['영화 / 미디어'],
-          'themepark': ['테마파크'],
-          'waterpark': ['워터파크/아쿠아리움'],
-          'activity': ['액티비티'],
-          'beauty': ['뷰티(피부과, 클리닉)'],
-          'health': ['건강(제약, 영양제 등)'],
-          'shopping': ['쇼핑'],
-          'convenience': ['생활/편의'],
-          'bakery': ['베이커리/디저트'],
-          'restaurant': ['음식점'],
-          'performance': ['공연/전시'],
-          'education': ['교육'],
-          'travel': ['여행/교통'],
-        };
-        return categoryMap[selectedCategory]?.includes(category.categoryName) || false;
-      });
+  const filteredData = filterDataByCategory(data, selectedCategory);
 
   // 차트 데이터 준비 - 큰 값부터 정렬
   const sortedData = [...filteredData].sort((a, b) => 
@@ -87,8 +69,8 @@ export function FilteringChart({ data, selectedCategory = 'all' }: FilteringChar
           <div>
             <h4 className="text-sm font-medium mb-4">카테고리별 상세</h4>
             <div className="space-y-3">
-              {sortedData.map((category) => (
-                <div key={`${category.categoryId}-${category.categoryName}`} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+              {sortedData.map((category, index) => (
+                <div key={`filtering-${category.categoryId}-${category.categoryName}-${index}`} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                   <span className="font-medium">{category.categoryName}</span>
                   <span className="text-sm text-muted-foreground">
                     {category.sumStatisticsFilterByCategory || 0}회

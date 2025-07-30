@@ -4,8 +4,8 @@ import {
   createAdminBrand,
   updateAdminBrand,
   deleteAdminBrand,
-} from '../api/adminApi';
-import type { UpdateBrandRequest } from '../api/types';
+} from '@admin/api';
+import type { UpdateBrandRequest } from '@admin/api/types';
 
 // 브랜드 생성 뮤테이션
 export function useCreateAdminBrandMutation() {

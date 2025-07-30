@@ -1,8 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/shadcn/ui/card';
 import { HeartIcon } from '@heroicons/react/24/outline';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
-import type { RecommendStat } from '../../api/types';
-import { getCategoryDisplayName } from '../../utils/categoryUtils';
+import type { RecommendStat } from '@admin/api/types';
+import { getCategoryDisplayName } from '@admin/utils/categoryUtils';
+import { filterDataByCategory } from '@admin/utils/categoryMapping';
 
 interface RecommendChartProps {
   data: RecommendStat[];
@@ -27,37 +28,27 @@ export function RecommendChart({ data, selectedCategory = 'all' }: RecommendChar
   }
 
   // 카테고리 필터링 적용
-  const filteredData = selectedCategory === 'all' 
-    ? data 
-    : data.filter(category => {
-        const categoryMap: Record<string, string[]> = {
-          'movie': ['영화 / 미디어'],
-          'themepark': ['테마파크'],
-          'waterpark': ['워터파크/아쿠아리움'],
-          'activity': ['액티비티'],
-          'beauty': ['뷰티(피부과, 클리닉)'],
-          'health': ['건강(제약, 영양제 등)'],
-          'shopping': ['쇼핑'],
-          'convenience': ['생활/편의'],
-          'bakery': ['베이커리/디저트'],
-          'restaurant': ['음식점'],
-          'performance': ['공연/전시'],
-          'education': ['교육'],
-          'travel': ['여행/교통'],
-        };
-        return categoryMap[selectedCategory]?.includes(category.categoryName) || false;
-      });
+  const filteredData = filterDataByCategory(data, selectedCategory);
 
   // 차트 데이터 준비 - 큰 값부터 정렬
   const sortedData = [...filteredData].sort((a, b) => 
     (b.sumStatisticsRecommendationByCategory || 0) - (a.sumStatisticsRecommendationByCategory || 0)
   );
   
-  const chartData = sortedData.map((category, index) => ({
-    name: category.categoryName,
-    value: category.sumStatisticsRecommendationByCategory || 0,
-    fill: index % 2 === 0 ? 'var(--admin-recommendation)' : 'var(--admin-recommendation-light)',
-  }));
+  // 카테고리별 필터가 선택된 경우 브랜드별 데이터 준비
+  const chartData = selectedCategory === 'all' 
+    ? sortedData.map((category, index) => ({
+        name: category.categoryName,
+        value: category.sumStatisticsRecommendationByCategory || 0,
+        fill: index % 2 === 0 ? 'var(--admin-recommendation)' : 'var(--admin-recommendation-light)',
+      }))
+    : sortedData.flatMap(category => 
+        category.recommendationsByBrandList?.map((brand, index) => ({
+          name: brand.brandName,
+          value: brand.sumRecommendationsByBrand || 0,
+          fill: index % 2 === 0 ? 'var(--admin-recommendation)' : 'var(--admin-recommendation-light)',
+        })) || []
+      ).sort((a, b) => b.value - a.value);
 
   return (
     <Card>
@@ -121,8 +112,8 @@ export function RecommendChart({ data, selectedCategory = 'all' }: RecommendChar
           <div>
             <h4 className="text-sm font-medium mb-4">카테고리별 상세</h4>
             <div className="space-y-2">
-              {sortedData.map((category) => (
-                <div key={`${category.categoryId}-${category.categoryName}`} className="space-y-1">
+              {sortedData.map((category, index) => (
+                <div key={`recommend-${category.categoryId}-${category.categoryName}-${index}`} className="space-y-1">
                   <div className="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
                     <span className="font-medium text-sm">{category.categoryName}</span>
                     <span className="text-xs text-muted-foreground">
@@ -131,8 +122,8 @@ export function RecommendChart({ data, selectedCategory = 'all' }: RecommendChar
                   </div>
                   {category.recommendationsByBrandList && category.recommendationsByBrandList.length > 0 && (
                     <div className="ml-3 space-y-0.5">
-                      {category.recommendationsByBrandList.map((brand) => (
-                        <div key={brand.brandName} className="flex justify-between items-center text-xs">
+                      {category.recommendationsByBrandList.map((brand, brandIndex) => (
+                        <div key={`recommend-brand-${category.categoryId}-${brand.brandName}-${brandIndex}`} className="flex justify-between items-center text-xs">
                           <span className="text-muted-foreground">• {brand.brandName}</span>
                           <span className="text-muted-foreground">{brand.sumRecommendationsByBrand}회</span>
                         </div>

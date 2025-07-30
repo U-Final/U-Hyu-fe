@@ -1,9 +1,15 @@
 import type { FC } from 'react';
 
+
+
 import { MYMAP_COLOR } from '@mymap/constants/mymapColor';
 import type { MarkerColor } from '@mymap/constants/mymapColor';
 import { useSharedMapStore } from '@mymap/store/SharedMapStore';
 import { MdStars } from 'react-icons/md';
+
+
+
+
 
 interface MyMapMarkerProps {
   isSelected?: boolean;
@@ -13,7 +19,7 @@ interface MyMapMarkerProps {
 const MyMapMarker: FC<MyMapMarkerProps> = ({ isSelected = false, onClick }) => {
   const markerColor = useSharedMapStore(state => state.markerColor);
   const markerColorClass =
-    MYMAP_COLOR[markerColor as MarkerColor] ?? 'RED';
+    MYMAP_COLOR[markerColor as MarkerColor] ?? MYMAP_COLOR.RED;
 
   return (
     <div className="relative" onClick={onClick}>

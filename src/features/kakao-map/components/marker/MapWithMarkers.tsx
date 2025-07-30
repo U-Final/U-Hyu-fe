@@ -16,6 +16,7 @@ import { useSharedMapStore } from '@mymap/store/SharedMapStore';
 import { RecommendStoreInfoWindow } from '@recommendation/components/StoreInfoWindow';
 import { CustomOverlayMap, Map as KakaoMap } from 'react-kakao-maps-sdk';
 
+import { useAuthCheckModal } from '@/shared/hooks/useAuthCheckModal';
 import { trackMarkerClick } from '@/shared/utils/actionlogTracker';
 
 import type { NormalizedPlace } from '../../api/types';
@@ -123,6 +124,9 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
     handleSearch,
     updateSearchPosition,
   } = useDistanceBasedSearch();
+
+  // 인증 확인 및 로그인 모달 관리
+  const { checkAuthAndExecuteModal } = useAuthCheckModal();
 
   // center prop 동기화 및 검색 기준 위치 설정
   useEffect(() => {
@@ -244,52 +248,44 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
 
   const handleMarkerClick = useCallback(
     (store: Store) => {
-      setInternalSelectedStoreId(store.storeId);
-      setInfoWindowStore(store);
-
-      // 추천 매장인지 확인
-      const isRecommended = recommendedStores.some(
-        s => s.storeId === store.storeId
-      );
-
-      trackMarkerClick(store.storeId);
-
-      // 기존 인포윈도우들 닫기
-      setInfoWindowStore(null);
-      setRecommendedInfoWindowStore(null);
-
-      // 적절한 인포윈도우 표시
-      if (isRecommended) {
-        setRecommendedInfoWindowStore(store);
-      } else {
+      // 로그인 상태 확인 후 인포윈도우 표시
+      checkAuthAndExecuteModal(() => {
+        setInternalSelectedStoreId(store.storeId);
         setInfoWindowStore(store);
-      }
 
-      // 인포 윈도우가 화면 중앙에 오도록 오프셋 적용
-      const offset = 0.0017;
-      const targetLat = store.latitude + offset;
-      const targetLng = store.longitude;
-      const targetCenter = { lat: targetLat, lng: targetLng };
+        // 추천 매장인지 확인
+        const isRecommended = recommendedStores.some(
+          s => s.storeId === store.storeId
+        );
 
-      // KakaoMap의 isPanto를 사용한 부드러운 이동
-      setIsPanto(true);
-      setMapCenter(targetCenter);
+        trackMarkerClick(store.storeId);
 
-      // 기존 timeout이 있다면 정리
-      if (pantoTimeoutRef.current) {
-        clearTimeout(pantoTimeoutRef.current);
-      }
+        // 인포 윈도우가 화면 중앙에 오도록 오프셋 적용
+        const offset = 0.0017;
+        const targetLat = store.latitude + offset;
+        const targetLng = store.longitude;
+        const targetCenter = { lat: targetLat, lng: targetLng };
 
-      // 애니메이션 완료 후 isPanto 리셋
-      pantoTimeoutRef.current = setTimeout(() => {
-        setIsPanto(false);
-        pantoTimeoutRef.current = null;
-      }, 500); // 애니메이션 시간을 500ms로 증가
+        // KakaoMap의 isPanto를 사용한 부드러운 이동
+        setIsPanto(true);
+        setMapCenter(targetCenter);
 
-      // 외부에서 전달받은 onStoreClick 콜백도 호출
-      onStoreClick?.(store);
+        // 기존 timeout이 있다면 정리
+        if (pantoTimeoutRef.current) {
+          clearTimeout(pantoTimeoutRef.current);
+        }
+
+        // 애니메이션 완료 후 isPanto 리셋
+        pantoTimeoutRef.current = setTimeout(() => {
+          setIsPanto(false);
+          pantoTimeoutRef.current = null;
+        }, 500); // 애니메이션 시간을 500ms로 증가
+
+        // 외부에서 전달받은 onStoreClick 콜백도 호출
+        onStoreClick?.(store);
+      });
     },
-    [onStoreClick, recommendedStores]
+    [onStoreClick, checkAuthAndExecuteModal, recommendedStores]
   );
 
   // 추천 매장인지 확인하는 함수
@@ -320,15 +316,18 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
 
       if (!infoWindowStore) return;
 
-      try {
-        await toggleFavoriteMutation.mutateAsync({
-          storeId: infoWindowStore.storeId,
-        });
-      } catch (error) {
-        console.error('즐겨찾기 토글 실패:', error);
-      }
+      // 로그인 상태 확인 후 즐겨찾기 토글 실행
+      checkAuthAndExecuteModal(async () => {
+        try {
+          await toggleFavoriteMutation.mutateAsync({
+            storeId: infoWindowStore.storeId,
+          });
+        } catch (error) {
+          console.error('즐겨찾기 토글 실패:', error);
+        }
+      });
     },
-    [infoWindowStore, toggleFavoriteMutation]
+    [infoWindowStore, toggleFavoriteMutation, checkAuthAndExecuteModal]
   );
 
   const handleDragEnd = useCallback(

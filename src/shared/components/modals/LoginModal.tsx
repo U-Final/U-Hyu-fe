@@ -1,4 +1,4 @@
-import { ButtonBase, GhostButton } from '@/shared/components';
+import { GhostButton, KakaoLoginButton } from '@/shared/components';
 import { useKakaoLogin } from '@/shared/hooks';
 import { useModalStore } from '@/shared/store';
 
@@ -18,18 +18,20 @@ const LoginModal = () => {
   };
 
   return (
-    <BaseModal title="로그인이 필요합니다">
+    <BaseModal title="유휴 혜택을 위해 로그인이 필요합니다">
       <div className="flex flex-col gap-[12px]">
         <p>
-          로그인을 해주시면 <br /> 더 많은 기능을 이용할 수 있습니다!
+          등급별 맞춤 혜택 정보, 개인화 추천 서비스, 마이맵 생성 및 즐겨찾기,
+          바코드 방문 확인, 활동 내역 관리 등 모든 기능을 이용하실 수 있습니다!
         </p>
         <div className="flex flex-col gap-[8px]">
-          <ButtonBase onClick={handleLogin} variant="nav">
-            로그인 하러 가기
-          </ButtonBase>
-          <GhostButton onClick={handleCancel}>
-            취소
-          </GhostButton>
+          <KakaoLoginButton
+            onClick={handleLogin}
+            size="lg"
+            variant="full"
+            className="w-full"
+          />
+          <GhostButton onClick={handleCancel}>취소</GhostButton>
         </div>
       </div>
     </BaseModal>

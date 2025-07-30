@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 
+import type { StoreBenefit } from '../../api/types';
+
 export interface StoreDetailCardProps {
   storeName: string;
   isFavorite: boolean;
   favoriteCount: number;
-  benefits: string;
+  benefits: StoreBenefit;
   usageLimit: string;
   usageMethod: string;
-  userGrade?: string; // "우수", "VIP" , "VVIP"
   handleToggleFavorite?: () => void;
 }
 
@@ -53,7 +54,6 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
   benefits,
   usageLimit,
   usageMethod,
-  userGrade = '우수', // 기본값 설정
   handleToggleFavorite,
 }) => {
   // 각 섹션의 확장 상태 관리
@@ -137,16 +137,16 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
         <div className="flex flex-col w-full">
           <div className="flex flex-row items-stretch">
             <div className="bg-yellow-50 text-yellow-700 px-2 py-1 rounded-tl rounded-bl font-bold text-sm min-w-[48px] text-center shrink-0 flex items-center justify-center">
-              <span>{userGrade}</span>
+              <span>{benefits.grade}</span>
             </div>
             <div className="bg-yellow-50 px-3 py-1 rounded-tr rounded-br text-sm flex-1 min-w-0">
               <div className="break-words text-left">
                 <span className="whitespace-pre-wrap block">
                   {expandedSections.benefits
-                    ? benefits
-                    : getTruncatedText(benefits, TEXT_LIMITS.benefits)}
+                    ? benefits.benefitText
+                    : getTruncatedText(benefits.benefitText, TEXT_LIMITS.benefits)}
                 </span>
-                {shouldShowExpand(benefits, TEXT_LIMITS.benefits) && (
+                {shouldShowExpand(benefits.benefitText, TEXT_LIMITS.benefits) && (
                   <ExpandButton
                     isExpanded={expandedSections.benefits}
                     onClick={() => toggleSection('benefits')}

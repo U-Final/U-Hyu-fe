@@ -43,6 +43,7 @@ const initialState: MapStoreState = {
     stores: false,
     storeDetail: false,
     favorite: false,
+    recommendedStores: false,
   },
 
   // 에러 상태

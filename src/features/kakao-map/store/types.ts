@@ -15,6 +15,7 @@ export interface LoadingState {
   stores: boolean;
   storeDetail: boolean;
   favorite: boolean;
+  recommendedStores: boolean;
 }
 
 export interface ErrorState {

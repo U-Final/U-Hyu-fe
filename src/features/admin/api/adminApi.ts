@@ -1,6 +1,8 @@
 import { ADMIN_ENDPOINTS } from './endpoints';
 import type { 
-  CategoryStat, 
+  BookmarkStat,
+  FilteringStat,
+  MembershipStat,
   AdminBrand, 
   TotalStat, 
   RecommendStat,
@@ -13,16 +15,16 @@ import { client } from '@/shared/client';
 import type { ApiResponse } from '@/shared/client/client.type';
 
 // 통계 관련 API
-export const getAdminBookmarkStats = async (): Promise<CategoryStat[]> => {
-  const res = await client.get<ApiResponse<CategoryStat[]>>(ADMIN_ENDPOINTS.STAT_BOOKMARK);
+export const getAdminBookmarkStats = async (): Promise<BookmarkStat[]> => {
+  const res = await client.get<ApiResponse<BookmarkStat[]>>(ADMIN_ENDPOINTS.STAT_BOOKMARK);
   if (!res.data.data) {
     throw new Error('Invalid API response: missing data');
   }
   return res.data.data;
 };
 
-export const getAdminFilteringStats = async (): Promise<CategoryStat[]> => {
-  const res = await client.get<ApiResponse<CategoryStat[]>>(ADMIN_ENDPOINTS.STAT_FILTERING);
+export const getAdminFilteringStats = async (): Promise<FilteringStat[]> => {
+  const res = await client.get<ApiResponse<FilteringStat[]>>(ADMIN_ENDPOINTS.STAT_FILTERING);
   if (!res.data.data) {
     throw new Error('Invalid API response: missing data');
   }
@@ -37,8 +39,8 @@ export const getAdminRecommendStats = async (): Promise<RecommendStat[]> => {
   return res.data.data;
 };
 
-export const getAdminMembershipStats = async (): Promise<CategoryStat[]> => {
-  const res = await client.get<ApiResponse<CategoryStat[]>>(ADMIN_ENDPOINTS.STAT_MEMBERSHIP);
+export const getAdminMembershipStats = async (): Promise<MembershipStat[]> => {
+  const res = await client.get<ApiResponse<MembershipStat[]>>(ADMIN_ENDPOINTS.STAT_MEMBERSHIP);
   if (!res.data.data) {
     throw new Error('Invalid API response: missing data');
   }

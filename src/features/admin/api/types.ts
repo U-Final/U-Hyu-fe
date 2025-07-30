@@ -1,8 +1,51 @@
+// 기본 통계 응답 타입
 export interface BrandStatDetail {
   brandName: string;
   sumBookmarksByBrand: number;
 }
 
+export interface MembershipBrandDetail {
+  brandName: string;
+  sumMembershipUsageByBrand: number;
+}
+
+export interface RecommendBrandDetail {
+  brandName: string;
+  sumRecommendationsByBrand: number;
+}
+
+// 즐겨찾기 통계
+export interface BookmarkStat {
+  categoryId: number;
+  categoryName: string;
+  sumStatisticsBookmarksByCategory: number;
+  bookmarksByBrandList: BrandStatDetail[];
+}
+
+// 필터링 통계
+export interface FilteringStat {
+  categoryId: number;
+  categoryName: string;
+  sumStatisticsFilterByCategory: number;
+}
+
+// 추천 통계
+export interface RecommendStat {
+  categoryId: number;
+  categoryName: string;
+  sumStatisticsRecommendationByCategory: number;
+  recommendationsByBrandList: RecommendBrandDetail[];
+}
+
+// 멤버십 통계
+export interface MembershipStat {
+  categoryId: number;
+  categoryName: string;
+  sumStatisticsMembershipUsageByCategory: number;
+  membershipUsageByBrandList: MembershipBrandDetail[];
+}
+
+// 통합 카테고리 통계 (하위 호환성을 위해 유지)
 export interface CategoryStat {
   categoryId: number;
   categoryName: string;
@@ -10,26 +53,14 @@ export interface CategoryStat {
   sumStatisticsFilterByCategory?: number;
   sumStatisticsMembershipUsageByCategory?: number;
   bookmarksByBrandList?: BrandStatDetail[];
-  membershipUsageByBrandList?: {
-    brandName: string;
-    sumMembershipUsageByBrand: number;
-  }[];
+  membershipUsageByBrandList?: MembershipBrandDetail[];
 }
 
+// 전체 통계
 export interface TotalStat {
   totalBookmark: number;
   totalFiltering: number;
   totalMembershipUsage: number;
-}
-
-export interface RecommendStat {
-  categoryId: number;
-  categoryName: string;
-  sumStatisticsRecommendationByCategory: number;
-  recommendationsByBrandList: {
-    brandName: string;
-    sumRecommendationsByBrand: number;
-  }[];
 }
 
 export interface Category {

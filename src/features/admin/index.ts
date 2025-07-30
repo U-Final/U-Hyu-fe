@@ -8,9 +8,6 @@ export * from './components/stats';
 // Hooks
 export * from './hooks';
 
-// Types
-export * from './types';
-
 // Utils
 export * from './utils/categoryUtils';
 export * from './utils/categoryMapping';

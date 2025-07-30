@@ -22,8 +22,8 @@ export const userStore = create<UserState>(set => ({
   clearUser: () => set({ user: null, isAuthChecked: true }),
   logout: async () => {
     try {
-      userStore.getState().clearUser();
       const res = await userApi.logout();
+      userStore.getState().clearUser();
       toast.info(res.message);
     } catch (error) {
       toast.error('❌ 로그아웃 실패했습니다. 다시 시도해주세요');

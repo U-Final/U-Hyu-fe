@@ -1,9 +1,10 @@
 import { useState } from 'react';
 
-import { useAdminBrandDetailQuery } from '@admin/hooks';
+import { useAdminBrandsQuery } from '@admin/hooks';
 import { useModalStore } from '@/shared/store';
 
 import { AdminBrandForm } from './AdminBrandForm';
+import type { BrandBenefit } from '@admin/api/types';
 
 interface AdminBrandModalProps {
   brandId?: number;
@@ -14,7 +15,8 @@ export const AdminBrandModal = ({ brandId }: AdminBrandModalProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const { data: brand, isLoading, error } = useAdminBrandDetailQuery(brandId!);
+  const { data: brands, isLoading, error } = useAdminBrandsQuery(true);
+  const brand = brands?.find(b => b.brandId === brandId);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -88,15 +90,6 @@ export const AdminBrandModal = ({ brandId }: AdminBrandModalProps) => {
         />
         <div>
           <h3 className="text-lg font-bold text-black">{brand.brandName}</h3>
-          <span
-            className={`px-2 py-1 text-xs rounded-full ${
-              brand.status
-                ? 'bg-green-100 text-green-800'
-                : 'bg-red-100 text-red-800'
-            }`}
-          >
-            {brand.status ? '활성' : '비활성'}
-          </span>
         </div>
       </div>
 
@@ -114,19 +107,14 @@ export const AdminBrandModal = ({ brandId }: AdminBrandModalProps) => {
           <label className="text-sm font-medium text-gray-700">사용 방법</label>
           <p className="text-sm text-gray-600">{brand.usageMethod}</p>
         </div>
-        <div>
-          <label className="text-sm font-medium text-gray-700">매장 유형</label>
-          <p className="text-sm text-gray-600">
-            {brand.storeType === 'ONLINE' ? '온라인' : '오프라인'}
-          </p>
-        </div>
+
       </div>
 
       {/* 혜택 목록 */}
       <div>
         <label className="text-sm font-medium text-gray-700">혜택 목록</label>
         <div className="mt-2 space-y-2">
-          {brand.data.map((benefit, index) => (
+          {brand.data.map((benefit: BrandBenefit, index: number) => (
             <div
               key={index}
               className="p-3 bg-gray-50 rounded-lg border border-gray-200"

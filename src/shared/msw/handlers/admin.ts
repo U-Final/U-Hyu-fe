@@ -89,6 +89,6 @@ export const adminHandlers = [
       }, { status: 404 });
     }
     adminBrands.splice(idx, 1);
-    return createResponse({ brandId: Number(brandId) }, '브랜드 삭제 성공');
+    return createResponse('DELETE_BRAND_SUCCESS', '브랜드 처리 되었습니다.');
   }),
 ];

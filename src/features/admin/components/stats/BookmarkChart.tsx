@@ -30,18 +30,41 @@ export function BookmarkChart({ data, selectedCategory = 'all' }: BookmarkChartP
   // 카테고리 필터링 적용
   const filteredData = filterDataByCategory(data, selectedCategory);
 
-  // 차트 데이터 준비 - 큰 값부터 정렬
-  const sortedData = [...filteredData].sort((a, b) => 
-    (b.sumStatisticsBookmarksByCategory || 0) - (a.sumStatisticsBookmarksByCategory || 0)
-  );
-  
-  // 카테고리별 필터가 선택된 경우 브랜드별 데이터 준비
+  // 필터링된 데이터가 없는 경우
+  if (filteredData.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <BookmarkIcon className="h-5 w-5" />
+            즐겨찾기 통계
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8">
+            <p className="text-muted-foreground">데이터가 없습니다.</p>
+            {selectedCategory !== 'all' && (
+              <p className="text-sm text-muted-foreground mt-2">
+                {getCategoryDisplayName(selectedCategory)} 카테고리에 대한 즐겨찾기 데이터가 없습니다.
+              </p>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // 차트 데이터 준비
   const lineData = selectedCategory === 'all' 
-    ? sortedData.map((category) => ({
-        name: category.categoryName,
-        즐겨찾기: category.sumStatisticsBookmarksByCategory || 0,
-      }))
-    : sortedData.flatMap(category => 
+    ? // 전체 선택시: 카테고리별 데이터
+      [...filteredData]
+        .sort((a, b) => (b.sumStatisticsBookmarksByCategory || 0) - (a.sumStatisticsBookmarksByCategory || 0))
+        .map((category) => ({
+          name: category.categoryName,
+          즐겨찾기: category.sumStatisticsBookmarksByCategory || 0,
+        }))
+    : // 특정 카테고리 선택시: 해당 카테고리의 브랜드별 데이터만
+      filteredData.flatMap(category => 
         category.bookmarksByBrandList?.map(brand => ({
           name: brand.brandName,
           즐겨찾기: brand.sumBookmarksByBrand || 0,
@@ -84,28 +107,64 @@ export function BookmarkChart({ data, selectedCategory = 'all' }: BookmarkChartP
 
           {/* 상세 데이터 */}
           <div>
-            <h4 className="text-sm font-medium mb-4">브랜드별 상세</h4>
+            <h4 className="text-sm font-medium mb-4">
+              {selectedCategory === 'all' ? '카테고리별 상세' : '브랜드별 상세'}
+            </h4>
             <div className="space-y-3">
-              {sortedData.map((category, index) => (
-                <div key={`bookmark-${category.categoryId}-${category.categoryName}-${index}`} className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium">{category.categoryName}</span>
-                    <span className="text-sm text-muted-foreground">
-                      {category.sumStatisticsBookmarksByCategory || 0}개
-                    </span>
-                  </div>
-                  {category.bookmarksByBrandList && category.bookmarksByBrandList.length > 0 && (
-                    <div className="ml-4 space-y-1">
-                      {category.bookmarksByBrandList.map((brand: BrandStatDetail, brandIndex) => (
-                        <div key={`bookmark-brand-${category.categoryId}-${brand.brandName}-${brandIndex}`} className="flex justify-between items-center text-sm">
-                          <span className="text-muted-foreground">• {brand.brandName}</span>
-                          <span className="text-muted-foreground">{brand.sumBookmarksByBrand}개</span>
+              {selectedCategory === 'all' ? (
+                // 전체 선택시: 모든 카테고리 표시
+                [...filteredData]
+                  .sort((a, b) => (b.sumStatisticsBookmarksByCategory || 0) - (a.sumStatisticsBookmarksByCategory || 0))
+                  .map((category, index) => (
+                    <div key={`bookmark-${category.categoryId}-${category.categoryName}-${index}`} className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="font-medium">{category.categoryName}</span>
+                        <span className="text-sm text-muted-foreground">
+                          {category.sumStatisticsBookmarksByCategory || 0}개
+                        </span>
+                      </div>
+                      {category.bookmarksByBrandList && category.bookmarksByBrandList.length > 0 && (
+                        <div className="ml-4 space-y-1">
+                          {category.bookmarksByBrandList.map((brand: BrandStatDetail, brandIndex) => (
+                            <div key={`bookmark-brand-${category.categoryId}-${brand.brandName}-${brandIndex}`} className="flex justify-between items-center text-sm">
+                              <span className="text-muted-foreground">• {brand.brandName}</span>
+                              <span className="text-muted-foreground">{brand.sumBookmarksByBrand}개</span>
+                            </div>
+                          ))}
                         </div>
-                      ))}
+                      )}
                     </div>
-                  )}
-                </div>
-              ))}
+                  ))
+              ) : (
+                // 특정 카테고리 선택시: 카테고리 이름을 크게 하고 브랜드들을 들여쓰기
+                filteredData.map((category, index) => (
+                  <div key={`bookmark-selected-${category.categoryId}-${index}`} className="space-y-3">
+                    {/* 카테고리 헤더 */}
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border-l-4" style={{ borderLeftColor: 'var(--admin-bookmark)' }}>
+                      <span className="font-semibold text-lg text-gray-800">{category.categoryName}</span>
+                      <span className="text-sm text-muted-foreground font-medium">
+                        총 {category.sumStatisticsBookmarksByCategory || 0}개
+                      </span>
+                    </div>
+                    
+                    {/* 브랜드 목록 */}
+                    {category.bookmarksByBrandList && category.bookmarksByBrandList.length > 0 && (
+                      <div className="ml-6 space-y-2">
+                        {category.bookmarksByBrandList
+                          .sort((a, b) => b.sumBookmarksByBrand - a.sumBookmarksByBrand)
+                          .map((brand: BrandStatDetail, brandIndex) => (
+                            <div key={`bookmark-brand-${category.categoryId}-${brand.brandName}-${brandIndex}`} className="flex justify-between items-center py-2 px-3 bg-white rounded-lg border border-gray-100 hover:border-gray-200 transition-colors">
+                              <span className="font-medium text-gray-700">• {brand.brandName}</span>
+                              <span className="text-sm text-gray-600 bg-gray-50 px-2 py-1 rounded-full">
+                                {brand.sumBookmarksByBrand}개
+                              </span>
+                            </div>
+                          ))}
+                      </div>
+                    )}
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>

@@ -336,6 +336,7 @@
   --chart-quaternary: #ff7300;   /* 기본 주황색 */
   
   /* 관리자 카테고리 색상 */
+  --category-app: #6366f1;             /* APP/기기 - 인디고색 */
   --category-movie: #ef4444;           /* 영화/미디어 - 빨간색 */
   --category-themepark: #22c55e;       /* 테마파크 - 초록색 */
   --category-waterpark: #f59e0b;       /* 워터파크/아쿠아리움 - 주황색 */

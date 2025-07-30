@@ -30,19 +30,18 @@ export function RecommendChart({ data, selectedCategory = 'all' }: RecommendChar
   // 카테고리 필터링 적용
   const filteredData = filterDataByCategory(data, selectedCategory);
 
-  // 차트 데이터 준비 - 큰 값부터 정렬
-  const sortedData = [...filteredData].sort((a, b) => 
-    (b.sumStatisticsRecommendationByCategory || 0) - (a.sumStatisticsRecommendationByCategory || 0)
-  );
-  
-  // 카테고리별 필터가 선택된 경우 브랜드별 데이터 준비
+  // 차트 데이터 준비
   const chartData = selectedCategory === 'all' 
-    ? sortedData.map((category, index) => ({
-        name: category.categoryName,
-        value: category.sumStatisticsRecommendationByCategory || 0,
-        fill: index % 2 === 0 ? 'var(--admin-recommendation)' : 'var(--admin-recommendation-light)',
-      }))
-    : sortedData.flatMap(category => 
+    ? // 전체 선택시: 카테고리별 데이터
+      [...filteredData]
+        .sort((a, b) => (b.sumStatisticsRecommendationByCategory || 0) - (a.sumStatisticsRecommendationByCategory || 0))
+        .map((category, index) => ({
+          name: category.categoryName,
+          value: category.sumStatisticsRecommendationByCategory || 0,
+          fill: index % 2 === 0 ? 'var(--admin-recommendation)' : 'var(--admin-recommendation-light)',
+        }))
+    : // 특정 카테고리 선택시: 해당 카테고리의 브랜드별 데이터만
+      filteredData.flatMap(category => 
         category.recommendationsByBrandList?.map((brand, index) => ({
           name: brand.brandName,
           value: brand.sumRecommendationsByBrand || 0,
@@ -110,28 +109,64 @@ export function RecommendChart({ data, selectedCategory = 'all' }: RecommendChar
 
           {/* 상세 데이터 */}
           <div>
-            <h4 className="text-sm font-medium mb-4">카테고리별 상세</h4>
+            <h4 className="text-sm font-medium mb-4">
+              {selectedCategory === 'all' ? '카테고리별 상세' : '브랜드별 상세'}
+            </h4>
             <div className="space-y-2">
-              {sortedData.map((category, index) => (
-                <div key={`recommend-${category.categoryId}-${category.categoryName}-${index}`} className="space-y-1">
-                  <div className="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
-                    <span className="font-medium text-sm">{category.categoryName}</span>
-                    <span className="text-xs text-muted-foreground">
-                      {category.sumStatisticsRecommendationByCategory || 0}회
-                    </span>
-                  </div>
-                  {category.recommendationsByBrandList && category.recommendationsByBrandList.length > 0 && (
-                    <div className="ml-3 space-y-0.5">
-                      {category.recommendationsByBrandList.map((brand, brandIndex) => (
-                        <div key={`recommend-brand-${category.categoryId}-${brand.brandName}-${brandIndex}`} className="flex justify-between items-center text-xs">
-                          <span className="text-muted-foreground">• {brand.brandName}</span>
-                          <span className="text-muted-foreground">{brand.sumRecommendationsByBrand}회</span>
+              {selectedCategory === 'all' ? (
+                // 전체 선택시: 모든 카테고리 표시
+                [...filteredData]
+                  .sort((a, b) => (b.sumStatisticsRecommendationByCategory || 0) - (a.sumStatisticsRecommendationByCategory || 0))
+                  .map((category, index) => (
+                    <div key={`recommend-${category.categoryId}-${category.categoryName}-${index}`} className="space-y-1">
+                      <div className="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                        <span className="font-medium text-sm">{category.categoryName}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {category.sumStatisticsRecommendationByCategory || 0}회
+                        </span>
+                      </div>
+                      {category.recommendationsByBrandList && category.recommendationsByBrandList.length > 0 && (
+                        <div className="ml-3 space-y-0.5">
+                          {category.recommendationsByBrandList.map((brand, brandIndex) => (
+                            <div key={`recommend-brand-${category.categoryId}-${brand.brandName}-${brandIndex}`} className="flex justify-between items-center text-xs">
+                              <span className="text-muted-foreground">• {brand.brandName}</span>
+                              <span className="text-muted-foreground">{brand.sumRecommendationsByBrand}회</span>
+                            </div>
+                          ))}
                         </div>
-                      ))}
+                      )}
                     </div>
-                  )}
-                </div>
-              ))}
+                  ))
+              ) : (
+                // 특정 카테고리 선택시: 카테고리 이름을 크게 하고 브랜드들을 들여쓰기
+                filteredData.map((category, index) => (
+                  <div key={`recommend-selected-${category.categoryId}-${index}`} className="space-y-3">
+                    {/* 카테고리 헤더 */}
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border-l-4" style={{ borderLeftColor: 'var(--admin-recommendation)' }}>
+                      <span className="font-semibold text-lg text-gray-800">{category.categoryName}</span>
+                      <span className="text-sm text-muted-foreground font-medium">
+                        총 {category.sumStatisticsRecommendationByCategory || 0}회
+                      </span>
+                    </div>
+                    
+                    {/* 브랜드 목록 */}
+                    {category.recommendationsByBrandList && category.recommendationsByBrandList.length > 0 && (
+                      <div className="ml-6 space-y-2">
+                        {category.recommendationsByBrandList
+                          .sort((a, b) => b.sumRecommendationsByBrand - a.sumRecommendationsByBrand)
+                          .map((brand, brandIndex) => (
+                            <div key={`recommend-brand-${category.categoryId}-${brand.brandName}-${brandIndex}`} className="flex justify-between items-center py-2 px-3 bg-white rounded-lg border border-gray-100 hover:border-gray-200 transition-colors">
+                              <span className="font-medium text-gray-700">• {brand.brandName}</span>
+                              <span className="text-sm text-gray-600 bg-gray-50 px-2 py-1 rounded-full">
+                                {brand.sumRecommendationsByBrand}회
+                              </span>
+                            </div>
+                          ))}
+                      </div>
+                    )}
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>

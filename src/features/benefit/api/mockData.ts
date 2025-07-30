@@ -95,6 +95,16 @@ export const MOCK_ALL_BRANDS: BrandMock[] = [
     storeTypes: 'OFFLINE',
     benefitTypes: 'GIFT',
   },
+  {
+    brandId: 16,
+    brandName: '아쿠아플라넷',
+    logoImage:
+      'https://uhyu-bucket.s3.ap-northeast-2.amazonaws.com/logo/%E1%84%8B%E1%85%A1%E1%84%8F%E1%85%AE%E1%84%8B%E1%85%A1%E1%84%91%E1%85%B3%E1%86%AF%E1%84%85%E1%85%A1%E1%84%82%E1%85%A6%E1%86%BA.png',
+    description: '2+1 행사 상품 제공',
+    category: '생활/편의',
+    storeTypes: 'OFFLINE',
+    benefitTypes: 'GIFT',
+  },
 ];
 
 /**
@@ -209,6 +219,29 @@ export const MOCK_BRAND_DETAILS: BrandDetailRes[] = [
       {
         grade: 'GOOD',
         description: '찜질스파 또는 워터파크 주중 30% 할인 (최대 2인)',
+      },
+    ],
+  },
+  {
+    brandId: 16,
+    brandName: '아쿠아플라넷',
+    logoImage:
+      'https://uhyu-bucket.s3.ap-northeast-2.amazonaws.com/logo/%E1%84%8B%E1%85%A1%E1%84%8F%E1%85%AE%E1%84%8B%E1%85%A1%E1%84%91%E1%85%B3%E1%86%AF%E1%84%85%E1%85%A1%E1%84%82%E1%85%A6%E1%86%BA.png',
+    usageMethod:
+      '결제 시 직원에게 멤버십 카드 제시  *꼭 확인하세요 - 중복 할인 불가(일산점, 여수점, 제주점, 광교점)</br>  대표문의 아쿠아플라넷 02-789-5663',
+    usageLimit: '일 1회 (대인기준 / 본인포함 최대 4인)',
+    benefitRes: [
+      {
+        grade: 'VVIP',
+        description: '①일산점, 광교점 20% 할인\\n②여수점, 제주점 15% 할인',
+      },
+      {
+        grade: 'VIP',
+        description: '①일산점, 광교점 20% 할인\\n②여수점, 제주점 15% 할인',
+      },
+      {
+        grade: 'GOOD',
+        description: '①일산점, 광교점 20% 할인\\n②여수점, 제주점 15% 할인',
       },
     ],
   },

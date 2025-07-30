@@ -2,6 +2,8 @@ import { useGetBrandDetailQuery } from '@benefit/hooks';
 import clsx from 'clsx';
 import he from 'he';
 
+import { formatNewlines } from '@/shared/utils/formatNewlines';
+
 const BrandDetailModal = ({ brandId }: { brandId: number }) => {
   const { data: brand, isLoading, error } = useGetBrandDetailQuery(brandId);
 
@@ -41,7 +43,7 @@ const BrandDetailModal = ({ brandId }: { brandId: number }) => {
                 <span className={clsx('font-bold', text)}>
                   {formatGrade(benefit.grade)}
                 </span>
-                <span>{benefit.description}</span>
+                <span>{formatNewlines(benefit.description)}</span>
               </div>
             );
           })}

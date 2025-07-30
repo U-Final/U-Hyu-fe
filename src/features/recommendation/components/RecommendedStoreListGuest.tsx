@@ -14,7 +14,7 @@ export const RecommendedStoreListGuest = () => {
 
   if (!brands || brands.length === 0) {
     return (
-      <p>
+      <p className="text-center font-semibold">
         오늘의 인기 제휴처가 없습니다 🔥 <br /> 내일 만나요 !
       </p>
     );

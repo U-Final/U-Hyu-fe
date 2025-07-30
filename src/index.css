@@ -320,6 +320,36 @@
   --text-warning: #feb93f;
   --text-brown: #b4630a;
   --text-purple: #7e22ce;
+
+  /* 관리자 페이지 통계 탭 색상 */
+  --admin-bookmark: #ef4444;      /* 즐겨찾기 - 빨간색 */
+  --admin-filtering: #22c55e;     /* 필터링 - 초록색 */
+  --admin-recommendation: #f59e0b; /* 추천 - 주황색 */
+  --admin-recommendation-light: #fbbf24; /* 추천 - 밝은 주황색 */
+  --admin-membership: #8b5cf6;    /* 멤버십 - 보라색 */
+  --admin-membership-light: #a855f7; /* 멤버십 - 밝은 보라색 */
+  
+  /* 차트 기본 색상 */
+  --chart-primary: #8884d8;      /* 기본 보라색 */
+  --chart-secondary: #82ca9d;    /* 기본 초록색 */
+  --chart-tertiary: #ffc658;     /* 기본 노란색 */
+  --chart-quaternary: #ff7300;   /* 기본 주황색 */
+  
+  /* 관리자 카테고리 색상 */
+  --category-app: #6366f1;             /* APP/기기 - 인디고색 */
+  --category-movie: #ef4444;           /* 영화/미디어 - 빨간색 */
+  --category-themepark: #22c55e;       /* 테마파크 - 초록색 */
+  --category-waterpark: #f59e0b;       /* 워터파크/아쿠아리움 - 주황색 */
+  --category-activity: #8b5cf6;        /* 액티비티 - 보라색 */
+  --category-beauty: #ec4899;          /* 뷰티 - 핑크색 */
+  --category-health: #06b6d4;          /* 건강 - 청록색 */
+  --category-shopping: #f97316;        /* 쇼핑 - 진한 주황색 */
+  --category-convenience: #10b981;     /* 생활/편의 - 에메랄드색 */
+  --category-bakery: #fbbf24;          /* 베이커리/디저트 - 노란색 */
+  --category-restaurant: #dc2626;      /* 음식점 - 진한 빨간색 */
+  --category-performance: #7c3aed;     /* 공연/전시 - 진한 보라색 */
+  --category-education: #059669;       /* 교육 - 진한 초록색 */
+  --category-travel: #0891b2;          /* 여행/교통 - 진한 청록색 */
 }
 
 @layer utilities {
@@ -365,6 +395,76 @@
   }
   .text-purple {
     color: var(--text-purple);
+  }
+
+  /* 관리자 페이지 통계 탭 색상 유틸리티 */
+  .admin-bookmark {
+    color: var(--admin-bookmark);
+  }
+  .admin-filtering {
+    color: var(--admin-filtering);
+  }
+  .admin-recommendation {
+    color: var(--admin-recommendation);
+  }
+  .admin-membership {
+    color: var(--admin-membership);
+  }
+
+  /* 관리자 페이지 통계 탭 배경색 유틸리티 */
+  .bg-admin-bookmark {
+    background-color: var(--admin-bookmark);
+  }
+  .bg-admin-filtering {
+    background-color: var(--admin-filtering);
+  }
+  .bg-admin-recommendation {
+    background-color: var(--admin-recommendation);
+  }
+  .bg-admin-membership {
+    background-color: var(--admin-membership);
+  }
+
+  /* 관리자 페이지 통계 탭 호버 배경색 유틸리티 */
+  .hover\:bg-admin-bookmark:hover {
+    background-color: var(--admin-bookmark);
+  }
+  .hover\:bg-admin-filtering:hover {
+    background-color: var(--admin-filtering);
+  }
+  .hover\:bg-admin-recommendation:hover {
+    background-color: var(--admin-recommendation);
+  }
+  .hover\:bg-admin-membership:hover {
+    background-color: var(--admin-membership);
+  }
+
+  /* 차트 색상 유틸리티 */
+  .chart-primary {
+    color: var(--chart-primary);
+  }
+  .chart-secondary {
+    color: var(--chart-secondary);
+  }
+  .chart-tertiary {
+    color: var(--chart-tertiary);
+  }
+  .chart-quaternary {
+    color: var(--chart-quaternary);
+  }
+
+  /* 차트 배경색 유틸리티 */
+  .bg-chart-primary {
+    background-color: var(--chart-primary);
+  }
+  .bg-chart-secondary {
+    background-color: var(--chart-secondary);
+  }
+  .bg-chart-tertiary {
+    background-color: var(--chart-tertiary);
+  }
+  .bg-chart-quaternary {
+    background-color: var(--chart-quaternary);
   }
 
   /* Background Color Utilities */

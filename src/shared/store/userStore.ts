@@ -60,9 +60,15 @@ export const userStore = create<UserState>(set => ({
 export const useIsLoggedIn = () => {
   const user = userStore(state => state.user);
   const isAuthChecked = userStore(state => state.isAuthChecked);
-  if (import.meta.env.DEV) {
-    console.log('user', user);
+  
+  // 관리자 페이지에서는 유저 정보 로깅하지 않음
+  if (import.meta.env.DEV && typeof window !== 'undefined') {
+    const isAdminPage = window.location.pathname === '/admin';
+    if (!isAdminPage) {
+      console.log('user', user);
+    }
   }
+  
   // 인증 확인이 완료되지 않았다면 false 반환 (초기 로딩 중)
   if (!isAuthChecked) {
     return false;

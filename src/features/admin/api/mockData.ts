@@ -753,7 +753,7 @@ export const mockAdminBrands = [
   },
   {
     brandId: 3,
-    brandName: '파리바게뜨',
+    brandName: '파리바게트',
     brandImg: '/images/brands/파리바게뜨.png',
     categoryId: 10, // 베이커리/디저트
     usageLimit: '월 5회',

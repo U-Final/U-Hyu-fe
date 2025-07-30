@@ -23,8 +23,8 @@ export const userStore = create<UserState>(set => ({
   logout: async () => {
     try {
       const res = await userApi.logout();
-      toast.info(res.message);
       userStore.getState().clearUser();
+      toast.info(res.message);
     } catch (error) {
       toast.error('❌ 로그아웃 실패했습니다. 다시 시도해주세요');
       throw error;

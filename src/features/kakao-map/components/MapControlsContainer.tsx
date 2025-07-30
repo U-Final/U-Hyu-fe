@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
+import { useParams } from 'react-router-dom';
+
 import { getKakaoApiKeyStatus } from '../api/keywordSearchApi';
 import type { NormalizedPlace } from '../api/types';
 import { useMapUIContext } from '../context/MapUIContext';
@@ -246,7 +248,10 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
     }
   };
 
-  return (
+  const { uuid } = useParams();
+  const isShared = !!uuid;
+
+  return isShared ? null : (
     <MapTopControls
       searchValue={searchValue}
       onSearchValueChange={handleSearchValueChange}

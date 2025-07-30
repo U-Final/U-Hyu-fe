@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: 22.12.0
           cache: yarn
-      - run: yarn install
+      - run: yarn install --frozen-lockfile
       - run: yarn build
       - name: deploy to s3
         uses: jakejarvis/s3-sync-action@master

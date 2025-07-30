@@ -11,7 +11,7 @@ export const mockUserInfoData: UserInfoData = {
   age: 27,
   gender: 'MALE',
   grade: 'VVIP',
-  role: 'USER',
+  role: 'ADMIN',
   brandIdList: [1, 2, 3],
   updatedAt: '2025-07-28T02:25:39.470165',
 };

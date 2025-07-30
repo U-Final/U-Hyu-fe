@@ -1,0 +1,1 @@
+export { SkeletonBrandCard } from './SkeletonBrandCard';

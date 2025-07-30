@@ -45,14 +45,14 @@ export const RecommendedStoreListLoggedIn = () => {
 
   if (!stores || stores.length === 0) {
     return (
-      <div className="flex flex-col items-center">
+      <div className="flex justify-around items-center gap-10 ">
         <p className="text-gray text-sm">
           현재 위치 근처에 추천 매장이 없어요.
         </p>
         <img
           src="/images/recommendation/empty-state-2.png"
           alt="추천 매장이 없습니다."
-          className="w-[300px]"
+          className="w-[80px]"
         />
       </div>
     );

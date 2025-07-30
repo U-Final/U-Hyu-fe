@@ -257,6 +257,11 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         const isRecommended = recommendedStores.some(
           s => s.storeId === store.storeId
         );
+        if (isRecommended) {
+          setRecommendedInfoWindowStore(store);
+        } else {
+          setInfoWindowStore(store);
+        }
 
         trackMarkerClick(store.storeId);
 
@@ -437,7 +442,6 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
               lat: recommendedInfoWindowStore.latitude,
               lng: recommendedInfoWindowStore.longitude,
             }}
-            onClose={handleInfoWindowClose}
           />
         )}
 

@@ -5,9 +5,10 @@ import {
   CheckBoxList,
   Pagination,
 } from '@benefit/components';
-import { useGetBrandListQuery, useBenefitQueryParams } from '@benefit/hooks';
+import { useBenefitQueryParams, useGetBrandListQuery } from '@benefit/hooks';
 
 import { BrandCard, FilterTabs, SearchInput } from '@/shared/components';
+import { SkeletonBrandCard } from '@/shared/components/Skeleton';
 import { BENEFIT_FILTER_TABS } from '@/shared/components/filter_tabs/FilterTabs.variants';
 import { useModalStore } from '@/shared/store';
 import { trackFilterUsed } from '@/shared/utils/actionlogTracker';
@@ -18,7 +19,7 @@ export const BenefitList = () => {
 
   const openModal = useModalStore(state => state.openModal);
 
-  const { data, isLoading } = useGetBrandListQuery(params);
+  const { data, isPending } = useGetBrandListQuery(params);
 
   const handlePageChange = (page: number) => {
     setParam('page', page.toString());
@@ -34,9 +35,8 @@ export const BenefitList = () => {
   };
 
   const handleFilterChange = (value: string) => {
-    setParam('category', value); // 기존 로직 유지
+    setParam('category', value);
 
-    // 🎯 행동 추적 추가
     if (value !== 'all' && value !== '전체') {
       trackFilterUsed(value);
     }
@@ -69,27 +69,27 @@ export const BenefitList = () => {
 
       {/* 리스트 */}
       <div className="divide-y divide-gray-200 mt-4">
-        {isLoading ? (
-          <p>로딩 중...</p>
-        ) : (
-          data?.brandList.map(brand => (
-            <div
-              key={brand.brandId}
-              onClick={() => handleBrandClick(brand.brandId)}
-            >
-              <BrandCard logoUrl={brand.logoImage}>
-                <div className="gap-2">
-                  <p className="text-body2 font-bold text-black">
-                    {brand.brandName}
-                  </p>
-                  <p className="text-caption text-black whitespace-pre-line">
-                    {brand.description || ''}
-                  </p>
-                </div>
-              </BrandCard>
-            </div>
-          ))
-        )}
+        {isPending
+          ? Array.from({ length: 5 }).map((_, idx) => (
+              <SkeletonBrandCard key={idx} />
+            ))
+          : data?.brandList.map(brand => (
+              <div
+                key={brand.brandId}
+                onClick={() => handleBrandClick(brand.brandId)}
+              >
+                <BrandCard logoUrl={brand.logoImage}>
+                  <div className="gap-2">
+                    <p className="text-body2 font-bold text-black">
+                      {brand.brandName}
+                    </p>
+                    <p className="text-caption text-black whitespace-pre-line">
+                      {brand.description || ''}
+                    </p>
+                  </div>
+                </BrandCard>
+              </div>
+            ))}
       </div>
 
       {/* 페이지네이션 */}

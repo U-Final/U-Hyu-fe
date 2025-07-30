@@ -16,8 +16,6 @@ export const getRecommendedStores = async (
   const res = await client.get<ApiResponse<Store[]>>(RECOMMEND_ENDPOINT, {
     params,
   });
-  if (!res.data.data) {
-    throw new Error('추천 매장 데이터를 불러올 수 없음!');
-  }
-  return res.data.data;
+
+  return res.data.data ?? [];
 };

@@ -1,6 +1,6 @@
 import type { Store } from '@kakao-map/types/store';
+import type { RecommendedRanking } from '@recommendation/Recommendation.types';
 import { RECOMMEND_ENDPOINT } from '@recommendation/api/endpoints';
-import type { RecommendedRanking } from '@recommendation/recommended.types';
 
 import { client } from '@/shared/client';
 import type { ApiResponse } from '@/shared/client/client.type';

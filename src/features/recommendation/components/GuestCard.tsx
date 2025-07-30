@@ -1,4 +1,4 @@
-import type { RecommendedRanking } from '@recommendation/recommended.types';
+import type { RecommendedRanking } from '@recommendation/Recommendation.types';
 
 interface RecommendedRankingProps {
   brand: RecommendedRanking;

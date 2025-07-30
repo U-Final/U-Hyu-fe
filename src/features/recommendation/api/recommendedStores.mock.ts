@@ -1,5 +1,5 @@
 import type { Store } from '@kakao-map/types/store';
-import type { RecommendedRanking } from '@recommendation/recommended.types';
+import type { RecommendedRanking } from '@recommendation/Recommendation.types';
 
 export const mockRecommendStores: Store[] = [
   {

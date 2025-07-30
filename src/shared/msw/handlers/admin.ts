@@ -60,7 +60,7 @@ export const adminHandlers = [
   http.post(ADMIN_ENDPOINTS.BRAND_CREATE, async ({ request }) => {
     const body = (await request.json()) as CreateBrandRequest;
     const newId = adminBrands.length ? Math.max(...adminBrands.map(b => b.brandId)) + 1 : 1;
-    const newBrand: AdminBrand = { ...body, brandId: newId, status: true };
+    const newBrand: AdminBrand = { ...body, brandId: newId };
     adminBrands.push(newBrand);
     return createResponse({ brandId: newId }, '브랜드 추가 성공');
   }),

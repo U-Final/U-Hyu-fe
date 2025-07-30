@@ -29,7 +29,7 @@ export function CategoryFilter({ selectedCategory, onCategoryChange }: CategoryF
           key={category.id}
           variant="outline"
           size="sm"
-          onClick={() => onCategoryChange(category.id)}
+          onClick={() => onCategoryChange(category.id as CategoryId)}
           className={`flex items-center gap-2 transition-all duration-200 hover:scale-105 flex-shrink-0 ${
             selectedCategory === category.id 
               ? 'bg-gray-100 border-gray-300 text-gray-700' 

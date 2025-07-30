@@ -76,13 +76,11 @@ export interface AdminBrand {
   categoryId: number;
   usageLimit: string;
   usageMethod: string;
-  storeType: 'ONLINE' | 'OFFLINE';
-  status: boolean; // 활성/비활성 여부
   data: BrandBenefit[];
 }
 
 export interface BrandBenefit {
-  grade: string;
+  grade: 'GOOD' | 'VIP' | 'VVIP';
   description: string;
   benefitType: 'DISCOUNT' | 'GIFT';
 }
@@ -96,14 +94,13 @@ export interface Tab {
 
 export type TabKey = 'bookmark' | 'filtering' | 'recommendation' | 'membership' | 'total' | 'brands';
 
-// 브랜드 생성/수정 요청 타입
+// 브랜드 생성/수정 요청 타입 (포스트맨 API에 맞게 수정)
 export interface CreateBrandRequest {
   brandName: string;
   brandImg: string;
   categoryId: number;
   usageLimit: string;
   usageMethod: string;
-  storeType: 'ONLINE' | 'OFFLINE';
   data: BrandBenefit[];
 }
 
@@ -113,7 +110,5 @@ export interface UpdateBrandRequest {
   categoryId?: number;
   usageLimit?: string;
   usageMethod?: string;
-  storeType?: 'ONLINE' | 'OFFLINE';
-  status?: boolean;
   data?: BrandBenefit[];
 } 

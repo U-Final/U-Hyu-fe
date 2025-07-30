@@ -12,7 +12,7 @@ import {
   RecommendChart, 
   MembershipChart 
 } from '@admin/components/stats';
-import { AdminBrandList } from '@admin/components/brand';
+import { NewAdminBrandList } from '@admin/components/brand/NewAdminBrandList';
 import { FilterTabs } from '@/shared/components';
 import { 
   useAdminBookmarkStatsQuery,
@@ -33,22 +33,28 @@ const STATS_TABS = [
   { label: '멤버십', value: 'membership', icon: UserGroupIcon, color: 'var(--admin-membership)' },
 ];
 
-
-
 export default function AdminPage() {
   const [mainTab, setMainTab] = useState<'stats' | 'brands'>('stats');
   const [selectedStatsTab, setSelectedStatsTab] = useState<TabKey>('bookmark');
   const [selectedCategory, setSelectedCategory] = useState<CategoryId>('all');
 
-  // 통계 데이터 쿼리 - 즐겨찾기와 전체만 초기 요청
-  const { data: bookmarkStats, isLoading: bookmarkLoading, refetch: refetchBookmark } = useAdminBookmarkStatsQuery();
-  const { data: filteringStats, isLoading: filteringLoading, refetch: refetchFiltering } = useAdminFilteringStatsQuery();
-  const { data: recommendStats, isLoading: recommendLoading, refetch: refetchRecommend } = useAdminRecommendStatsQuery();
-  const { data: membershipStats, isLoading: membershipLoading, refetch: refetchMembership } = useAdminMembershipStatsQuery();
-  const { data: totalStats, isLoading: totalLoading, refetch: refetchTotal } = useAdminTotalStatsQuery();
+  // 통계 데이터 쿼리 - 조건부 호출 및 refetch 함수 포함
+  const { data: bookmarkStats, isLoading: bookmarkLoading, refetch: refetchBookmark } = useAdminBookmarkStatsQuery(mainTab === 'stats');
+  const { data: totalStats, isLoading: totalLoading, refetch: refetchTotal } = useAdminTotalStatsQuery(mainTab === 'stats');
   
-  // 브랜드 데이터 쿼리
-  const { data: brandsData, isLoading: brandsLoading, refetch: refetchBrands } = useAdminBrandsQuery();
+  // 다른 통계들은 해당 탭이 선택될 때만 호출
+  const { data: filteringStats, isLoading: filteringLoading, refetch: refetchFiltering } = useAdminFilteringStatsQuery(
+    mainTab === 'stats' && selectedStatsTab === 'filtering'
+  );
+  const { data: recommendStats, isLoading: recommendLoading, refetch: refetchRecommend } = useAdminRecommendStatsQuery(
+    mainTab === 'stats' && selectedStatsTab === 'recommendation'
+  );
+  const { data: membershipStats, isLoading: membershipLoading, refetch: refetchMembership } = useAdminMembershipStatsQuery(
+    mainTab === 'stats' && selectedStatsTab === 'membership'
+  );
+  
+  // 브랜드 데이터 쿼리 - 브랜드 탭일 때만 호출
+  const { data: brandsData, isLoading: brandsLoading, refetch: refetchBrands } = useAdminBrandsQuery(mainTab === 'brands');
 
   // 개발 환경에서 데이터 로딩 상태 로깅
   if (import.meta.env.DEV) {
@@ -134,22 +140,22 @@ export default function AdminPage() {
   const renderStatsContent = () => {
     if (selectedStatsTab === 'bookmark') {
       if (bookmarkLoading) return <ChartSkeleton />;
-      return <BookmarkChart data={bookmarkStats || []} selectedCategory={selectedCategory} />;
+      return <BookmarkChart data={bookmarkStats || []} selectedCategory={selectedCategory.toString()} />;
     }
 
     if (selectedStatsTab === 'filtering') {
       if (filteringLoading) return <ChartSkeleton />;
-      return <FilteringChart data={filteringStats || []} selectedCategory={selectedCategory} />;
+      return <FilteringChart data={filteringStats || []} selectedCategory={selectedCategory.toString()} />;
     }
 
     if (selectedStatsTab === 'recommendation') {
       if (recommendLoading) return <ChartSkeleton />;
-      return <RecommendChart data={recommendStats || []} selectedCategory={selectedCategory} />;
+      return <RecommendChart data={recommendStats || []} selectedCategory={selectedCategory.toString()} />;
     }
 
     if (selectedStatsTab === 'membership') {
       if (membershipLoading) return <ChartSkeleton />;
-      return <MembershipChart data={membershipStats || []} selectedCategory={selectedCategory} />;
+      return <MembershipChart data={membershipStats || []} selectedCategory={selectedCategory.toString()} />;
     }
 
     return null;
@@ -160,7 +166,7 @@ export default function AdminPage() {
       if (brandsLoading) {
         return <StatsSkeleton />;
       }
-      return <AdminBrandList />;
+      return <NewAdminBrandList />;
     }
 
     return (

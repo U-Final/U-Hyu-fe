@@ -6,6 +6,7 @@ import {
   Pagination,
 } from '@benefit/components';
 import { useBenefitQueryParams, useGetBrandListQuery } from '@benefit/hooks';
+import { formatGradeDescriptions } from '@benefit/utils/formatGradeDescriptions';
 
 import { BrandCard, FilterTabs, SearchInput } from '@/shared/components';
 import { SkeletonBrandCard } from '@/shared/components/Skeleton';
@@ -83,9 +84,9 @@ export const BenefitList = () => {
                     <p className="text-body2 font-bold text-black">
                       {brand.brandName}
                     </p>
-                    <p className="text-caption text-black whitespace-pre-line">
-                      {brand.description || ''}
-                    </p>
+                    <span className="text-caption text-black whitespace-pre-line">
+                      {formatGradeDescriptions(brand.description)}
+                    </span>
                   </div>
                 </BrandCard>
               </div>

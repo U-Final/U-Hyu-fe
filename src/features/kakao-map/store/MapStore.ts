@@ -1,8 +1,10 @@
+import { getRecommendedStores } from '@recommendation/api/recommendedStoresApi';
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
-import type { Store } from '../types/store';
+
 import type { StoreDetail, StoreListResponse } from '../api/types';
-import type { Position, MapStoreState, MapStoreActions } from './types';
+import type { Store } from '../types/store';
+import type { MapStoreActions, MapStoreState, Position } from './types';
 
 /**
  * 환경변수에서 좌표값을 안전하게 파싱하는 유틸리티 함수
@@ -30,6 +32,10 @@ const initialState: MapStoreState = {
   stores: [],
   selectedStore: null,
   storeDetail: null,
+
+  // 추천 매장 초기 상태
+  recommendedStores: [],
+  showRecommendedStores: true, // 기본적으로 마커 표시
 
   // 로딩 상태
   loading: {
@@ -127,6 +133,58 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
        */
       setMapCenter: (center: Position) => {
         set({ mapCenter: center });
+      },
+
+      //추천 매장 관련 액션 추가
+      setRecommendedStores: (stores: Store[]) => {
+        set({ recommendedStores: stores });
+      },
+
+      setShowRecommendedStores: (show: boolean) => {
+        set({ showRecommendedStores: show });
+      },
+
+      toggleRecommendedStores: () => {
+        set(state => ({
+          showRecommendedStores: !state.showRecommendedStores,
+        }));
+      },
+
+      fetchRecommendedStores: async () => {
+        const { mapCenter, userLocation } = get();
+        const position = userLocation || mapCenter;
+
+        // 로딩 시작
+        set(state => ({
+          loading: { ...state.loading, recommendedStores: true },
+          errors: { ...state.errors, recommendedStores: null },
+        }));
+
+        try {
+          const params = {
+            lat: position.lat,
+            lon: position.lng,
+            radius: 5000, // 5km
+          };
+
+          // API 호출 (가정)
+          const recommendedStores = await getRecommendedStores(params);
+
+          set(state => ({
+            recommendedStores,
+            loading: { ...state.loading, recommendedStores: false },
+          }));
+        } catch (error) {
+          const errorMessage =
+            error instanceof Error
+              ? error.message
+              : '추천 매장을 가져오는데 실패했습니다.';
+
+          set(state => ({
+            loading: { ...state.loading, recommendedStores: false },
+            errors: { ...state.errors, recommendedStores: errorMessage },
+          }));
+        }
       },
 
       /**
@@ -246,6 +304,7 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
             stores: null,
             storeDetail: null,
             favorite: null,
+            recommendedStores: null,
           },
         }));
       },
@@ -269,3 +328,7 @@ export const useSelectedStore = () => useMapStore(state => state.selectedStore);
 export const useUserLocation = () => useMapStore(state => state.userLocation);
 export const useMapLoading = () => useMapStore(state => state.loading);
 export const useMapErrors = () => useMapStore(state => state.errors);
+export const useRecommendedStores = () =>
+  useMapStore(state => state.recommendedStores);
+export const useShowRecommendedStores = () =>
+  useMapStore(state => state.showRecommendedStores);

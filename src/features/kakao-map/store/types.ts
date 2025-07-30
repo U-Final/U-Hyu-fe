@@ -1,6 +1,9 @@
+import type {
+  GetNearbyStoresParams,
+  StoreDetail,
+  StoreListResponse,
+} from '../api/types';
 import type { Store } from '../types/store';
-import type { StoreDetail, StoreListResponse } from '../api/types';
-import type { GetNearbyStoresParams } from '../api/types';
 
 export interface Position {
   lat: number;
@@ -30,6 +33,9 @@ export interface MapStoreState {
   selectedStore: Store | null;
   storeDetail: StoreDetail | null;
 
+  recommendedStores: Store[];
+  showRecommendedStores: boolean; // 추천 매장 마커 표시 여부
+
   // 로딩 상태 (통합)
   loading: LoadingState;
 
@@ -57,6 +63,12 @@ export interface MapStoreActions {
   setStoresFromQuery: (queryData: StoreListResponse | undefined) => void; // React Query 결과를 Store에 반영
   selectStore: (store: Store | null) => void;
   setStoreDetail: (detail: StoreDetail | null) => void;
+
+  // 추천 매장 액션 추가
+  setRecommendedStores: (stores: Store[]) => void;
+  setShowRecommendedStores: (show: boolean) => void;
+  toggleRecommendedStores: () => void;
+  fetchRecommendedStores: () => Promise<void>;
 
   // 필터링
   applyFilters: (filters: {

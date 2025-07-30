@@ -1,5 +1,16 @@
-import { type FC, useCallback, useEffect, useRef, useState } from 'react';
+import {
+  type FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
+import {
+  useRecommendedStores,
+  useShowRecommendedStores,
+} from '@kakao-map/store/MapStore';
 import { useSharedMapStore } from '@mymap/store/SharedMapStore';
 import { CustomOverlayMap, Map as KakaoMap } from 'react-kakao-maps-sdk';
 
@@ -62,8 +73,39 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   const sharedStores = useSharedMapStore(state => state.stores);
   const isShared = useSharedMapStore(state => !!state.uuid);
 
+  // 추천 매장 상태 가져오기
+  const recommendedStores = useRecommendedStores();
+  const showRecommendedStores = useShowRecommendedStores();
+
   // 마커에 사용할 store 배열 결정(mymap)
-  const storesToRender = isShared ? sharedStores : stores;
+  // const storesToRender = isShared ? sharedStores : stores;
+  // 마커에 사용할 store 배열 결정 (일반 매장 + 추천 매장)
+  const storesToRender = useMemo(() => {
+    if (isShared) return sharedStores;
+
+    // 일반 매장과 추천 매장을 합치되, 중복 제거
+    const allStores = [...stores];
+
+    if (showRecommendedStores) {
+      recommendedStores.forEach(recommendedStore => {
+        // 중복 체크 (같은 storeId가 있는지 확인)
+        const exists = allStores.some(
+          store => store.storeId === recommendedStore.storeId
+        );
+        if (!exists) {
+          allStores.push(recommendedStore);
+        }
+      });
+    }
+
+    return allStores;
+  }, [
+    stores,
+    recommendedStores,
+    showRecommendedStores,
+    isShared,
+    sharedStores,
+  ]);
 
   // 거리 기반 재검색 상태 관리
   const {
@@ -157,6 +199,14 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
       onStoreClick?.(store);
     },
     [onStoreClick]
+  );
+
+  // 추천 매장인지 확인하는 함수
+  const isRecommendedStore = useCallback(
+    (storeId: number) => {
+      return recommendedStores.some(store => store.storeId === storeId);
+    },
+    [recommendedStores]
   );
 
   const handleInfoWindowClose = useCallback(() => {
@@ -268,6 +318,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
             <BrandMarker
               store={store}
               isSelected={selectedStoreId === store.storeId}
+              isRecommended={isRecommendedStore(store.storeId)}
               onClick={() => handleMarkerClick(store)}
             />
           </CustomOverlayMap>

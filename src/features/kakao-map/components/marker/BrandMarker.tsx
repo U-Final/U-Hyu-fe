@@ -6,12 +6,14 @@ import type { Store } from '../../types/store.ts';
 interface BrandMarkerProps {
   store: Store;
   isSelected?: boolean;
+  isRecommended?: boolean;
   onClick?: () => void;
 }
 
 const BrandMarker: FC<BrandMarkerProps> = ({
   store,
   isSelected = false,
+  isRecommended = false,
   onClick,
 }) => {
   const category = store.categoryName as keyof typeof CATEGORY_CONFIGS;
@@ -20,6 +22,12 @@ const BrandMarker: FC<BrandMarkerProps> = ({
 
   return (
     <div className="relative" onClick={onClick}>
+      {/* 추천 매장 배지 */}
+      {isRecommended && (
+        <div className="absolute -top-2 -left-2 w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center z-20 shadow-lg">
+          <span className="text-white text-xs font-bold">★</span>
+        </div>
+      )}
       {/* 메인 마커 */}
       <div
         className={`
@@ -34,7 +42,8 @@ const BrandMarker: FC<BrandMarkerProps> = ({
           transition-all 
           duration-200
           hover:scale-110
-          ${isSelected ? `ring-4 ${categoryConfig.ringColor}` : ''}
+          ${isSelected ? `ring-4 ${isRecommended ? 'ring-yellow-300' : categoryConfig.ringColor}` : ''}
+          ${isRecommended ? 'animate-pulse' : ''}
         `}
       >
         {/* 브랜드 로고 */}
@@ -62,7 +71,7 @@ const BrandMarker: FC<BrandMarkerProps> = ({
             border-r-[6px]
             border-t-[10px]
             border-transparent
-            ${categoryConfig.color}
+            ${isRecommended ? 'border-t-yellow-500' : categoryConfig.color}
             drop-shadow-md
           `}
         />

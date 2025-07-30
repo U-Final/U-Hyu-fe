@@ -1,126 +1,241 @@
-## 프론트엔드 개발 구조 및 전략
+# 🗺️ U-Hyu 프론트엔드
 
-### 1. 기능 단위 디렉토리 분리 (`features/` 중심 설계)
-
-프로젝트 구조는 **도메인 단위 책임 분리**를 기반으로 설계. <br/>
-이를 통해 각 기능이 독립적으로 유지보수되며, 변경 사항이 다른 영역에 영향을 주지 않음.
-
-```
-src/
-├── features/              # 비즈니스 로직 중심
-│   ├── user/             # 사용자 관련 기능
-│   ├── auth/             # 인증 및 보안
-│   ├── map/              # 지도 도메인
-│   └── store/            # 제휴 스토어 기능
-├── shared/               # 전역 공통 리소스
-├── pages/                # 라우팅 페이지
-
-```
-
-- **features/**: API 호출, 훅, 컴포넌트, 상태 관리를 한 도메인 안에 배치
-- **shared/**: 전역 공통 Button, Modal, Hook 등을 배치
-
-### 2. 재사용 가능한 컴포넌트 설계
-
-**역할 기반 컴포넌트 분리**로 확장성과 일관성을 확보.<br/>
-공통 인터페이스 정의 후 확장 가능한 타입 설계.<br/>
-
-```tsx
-// shared/components/ui/ButtonBase.tsx
-export const ButtonBase = ({ children, ...props }: ButtonBaseProps) => (
-  <button {...props}>{children}</button>
-);
-
-// shared/components/ui/PrimaryButton.tsx
-export const PrimaryButton = (props: ButtonBaseProps) => (
-  <ButtonBase className="bg-primary text-white" {...props} />
-);
-```
-
-### 3. 모듈화와 생산성 향상: Alias + Barrel Export
-
-### 3.1 Alias (@benefit, @mypage 등)
-
-tsconfig.json과 Vite 설정을 통해 상대경로 대신 의미 있는 경로 사용을 유도해 가독성 및 유지보수를 향상.
-
-```
-// tsconfig.json
-"paths": {
-  "@benefit/*": ["src/features/benefit/*"],
-  "@mypage/*": ["src/features/mypage/*"]
-}
-
-```
-
-### 3.2 Barrel Export (index.ts)
-
-각 디렉토리마다 index.ts를 통해 외부에서의 import 구문을 단순화.
-
-```
-// features/user/index.ts
-export * from './api';
-export * from './components';
-
-```
-
-### 4. Storybook 도입 및 UI 명세 자동화
-
-> 컴포넌트 단위 개발 → UI 명세 자동화
-> Variant/Size/State 등 각종 Prop 기반의 시각적 테스트 용이
-
-개발 효율성과 품질 관리를 동시에 확보하는 전략적 도구로 활용.
-
-### **5. API 개발 플로우 및 실제 연동 전략**
-
-> 프론트엔드와 백엔드 개발을 병렬적으로 진행하기 위해, **Mock 데이터 기반 > API 개발**과 **React Query 중심의 API 통합 전략**을 사용한다.
-
-실제 백엔드 준비 후에는 .env 설정값만으로 손쉽게 전환 가능하다.
-
-### **개발 흐름 요약**
-
-1. endpoints.ts: API 경로를 중앙에서 정의
-2. types.ts: 요청/응답 타입을 명확하게 정의
-3. userApi.ts: 실제 호출 로직 + mock 처리
-4. mockData.ts: 개발용 테스트 데이터
-5. useUserQueries.ts: React Query 훅으로 래핑
-6. components/: 컴포넌트에서 간편하게 사용
-
-### **디렉토리 구조 (요약)**
-
-```
-src/features/{feature-name}/
-├── api/
-│   ├── endpoints.ts      # API 경로 중앙 관리
-│   ├── types.ts          # 타입 정의 (요청, 응답)
-│   ├── {feature}Api.ts   # 실제 API 로직
-│   └── mockData.ts       # 개발용 목데이터
-├── hooks/               # React Query 훅
-├── components/          # 도메인별 UI
-```
-
-### **환경 전환 (.env 설정 기반)**
-
-- 개발용 목데이터 사용
-  VITE_USE_MOCK_DATA=true
-- 실제 API 연동
-  VITE_USE_MOCK_DATA=false
-- 지도 재검색 거리 설정 (미터 단위)
-  VITE_SEARCH_DISTANCE_THRESHOLD=5000  # 기본값: 5km
-
-### **핵심 전략 요약**
-
-- **중앙 집중형 endpoint 관리**로 URL 하드코딩 방지
-- **목데이터 우선 개발**로 백엔드와 병렬 개발
-- **React Query 기반** 캐시 최적화, 자동 재요청 처리
-- **Barrel export + Alias 사용**으로 import 가독성 유지
-- **JSDoc + 타입 기반 문서화**로 협업 시 명확한 규격 공유
+**주변 멤버십 혜택을 지도로 탐색하고, 다른 사람들과 매장을 공유하는 위치 기반 플랫폼**
 
 ---
 
-### **보안 및 품질 체크리스트**
+## 📌 기능 요약
 
-- 타입 안전성 확보 (as const, interface 활용)
-- try-catch 또는 에러 바운더리 처리
-- 쿼리 키 통일성 유지 (USER_QUERY_KEYS)
-- 캐시 무효화 전략 (invalidateQueries)
-- 실데이터 전환을 위한 .env 값 전환 구조
+| 기능 구분        | 주요 기능 소개 |
+|------------------|----------------|
+| 회원 관리        | 소셜 로그인, JWT 인증, 등급 및 권한 기반 유저 관리 |
+| 홈               | 주변 매장 및 추천 매장 탐색 |
+| 혜택 조회        | 멤버십 등급별 혜택 리스트 및 상세 보기 |
+| 추천 매장        | 선호 브랜드 기반 맞춤형 매장 추천 |
+| 지도 서비스      | 카카오 맵 기반 매장 검색, 필터링, 마커 시각화 |
+| 마이맵           | 나만의 폴더형 즐겨찾기 지도 구성 및 공유 |
+| 마이페이지       | 내 정보, 관심 브랜드 관리 및 통계 |
+| 바코드 발급      | 앱 내 혜택 사용을 위한 멤버십 바코드 제공 |
+| 추가 정보 입력   | 가입 이후 선호 브랜드 등 보완 정보 수집 |
+| 어드민(관리자)   | 제휴 매장/사용자 통계, 통계 분석 대시보드 (구현 중) |
+
+---
+
+## 🧑‍💼 회원 관리
+
+<table>
+  <tr>
+    <td style="border:1px solid #ccc; border-radius:8px; padding:8px; text-align:center;">
+      <img src="https://github.com/user-attachments/assets/a6bf8fe4-26c3-4b4d-9184-f41f90655e7a" width="360" />
+      <div style="margin-top:6px; font-size:14px;">카카오 로그인</div>
+    </td>
+  </tr>
+</table>
+
+- **소셜 로그인**: 카카오 OAuth
+- **인증 처리**: JWT 기반 액세스/리프레시 토큰
+- **최초 가입 설문**: 선호/이용 브랜드 입력
+- **역할 기반 권한 관리**: 사용자 / 관리자
+- **멤버십 등급 관리**: 우수, VIP, VVIP
+
+---
+
+## 🗺️ 지도 서비스 (Map)
+
+<table>
+  <tr>
+    <td style="border:1px solid #ccc; border-radius:8px; padding:8px; text-align:center;">
+      <img src="https://github.com/user-attachments/assets/7807acda-0561-430b-bd10-25b18021c513" width="400" />
+      <div style="margin-top:6px; font-size:14px;">지도 UI</div>
+    </td>
+  </tr>
+</table>
+
+### 지도 기반 매장 탐색
+- 현재 위치 기반 제휴 매장 마커 표시
+- 줌 레벨별 클러스터링 처리 (구현 중)
+- 마커 클릭 시 상세 인포윈도우 렌더링 제공
+- 혜택 별 카테고리 및 사용 조건 정보 제공
+- 지역 드롭다운 메뉴를 통한 지역 이동
+
+---
+
+### 카테고리 / 브랜드 필터
+<table>
+  <tr>
+    <td style="border:1px solid #ccc; border-radius:8px; padding:8px; text-align:center;">
+      <img src="https://github.com/user-attachments/assets/2ab3e522-2832-4854-8c05-f5daa2fa3052" width="360" />
+      <div style="margin-top:6px; font-size:14px;">브랜드 필터</div>
+    </td>
+    <td style="border:1px solid #ccc; border-radius:8px; padding:8px; text-align:center;">
+      <img src="https://github.com/user-attachments/assets/f1bb62db-19ad-42e4-9340-2658d5ba697a" width="360" />
+      <div style="margin-top:6px; font-size:14px;">카테고리 필터</div>
+    </td>
+  </tr>
+</table>
+
+- 브랜드별 키워드 검색
+- 카테고리 / 브랜드별 필터링 기능
+- 거리 기반 매장 검색
+
+---
+
+### 키워드 검색
+
+<table>
+  <tr>
+    <td style="border:1px solid #ccc; border-radius:8px; padding:8px; text-align:center;">
+      <img src="https://github.com/user-attachments/assets/da795d90-f8db-42d3-9ac3-1190db89210e" width="400" />
+      <div style="margin-top:6px; font-size:14px;">키워드 검색 결과</div>
+    </td>
+  </tr>
+</table>
+
+- 카카오 Place API 연동
+- 검색 결과 마커 시각화 및 간단 정보 노출
+- 카테고리별 마커 아이콘 및 색상 매핑
+
+---
+
+## 📌 마이맵 (MyMap)
+
+<table>
+  <tr>
+    <td style="border:1px solid #ccc; border-radius:8px; padding:8px; text-align:center;">
+      <img src="https://github.com/user-attachments/assets/e8520c5e-ca19-4d62-96a6-777aaa33e50f" width="400" />
+      <div style="margin-top:6px; font-size:14px;">마이맵 UI</div>
+    </td>
+  </tr>
+</table>
+
+### 폴더 기반 즐겨찾기
+- 폴더 생성 및 프리셋 색상 선택
+- 지도에서 매장 선택 후 폴더에 추가/삭제
+- 폴더명 최대 20자 제한
+
+### 시각화 (구현 중)
+- 폴더별 매장 마커 시각화
+- 카드 클릭 시 지도 위치 이동
+
+### 공유 시스템
+- UUID 기반 링크 생성
+- 짧은 URL (`u-hyu.app/map/abc123`) 제공
+
+---
+
+## 💎 혜택 조회 (Benefit)
+
+<table>
+  <tr>
+    <td style="border:1px solid #ccc; border-radius:8px; padding:8px; text-align:center;">
+      <img src="https://github.com/user-attachments/assets/a34c7261-ce33-4b96-9652-5bc17229d17e" width="400" />
+      <div style="margin-top:6px; font-size:14px;">혜택 조회</div>
+    </td>
+  </tr>
+</table>
+
+- 멤버십 등급별 혜택 리스트 및 상세 제공
+- 혜택 조건, 사용 방법 등 안내
+- 카테고리 필터 + 다중 조건 필터링 지원
+
+---
+
+## 🌟 추천 매장 (Recommendation)
+
+<table>
+  <tr>
+    <td style="border:1px solid #ccc; border-radius:8px; padding:8px; text-align:center;">
+      <img src="https://github.com/user-attachments/assets/4ee24595-60cc-449f-895f-6e96e86b9f5c" width="400" />
+      <div style="margin-top:6px; font-size:14px;">추천 매장 UI</div>
+    </td>
+  </tr>
+</table>
+
+- 사용자 선호 기반 맞춤 추천
+- 추천 매장 지도 시각화 (구현 중)
+
+---
+
+## 🙋‍♂️ 마이페이지 (MyPage)
+
+<table>
+  <tr>
+    <td style="border:1px solid #ccc; border-radius:8px; padding:8px; text-align:center;">
+      <img src="https://github.com/user-attachments/assets/97e38831-7a70-46b9-ba24-750ae729a89a" width="400" />
+      <div style="margin-top:6px; font-size:14px;">마이페이지 UI</div>
+    </td>
+  </tr>
+</table>
+
+- 사용자 정보 조회 및 수정
+- 관심 브랜드 및 카테고리 설정
+- 개인화된 통계 확인 (예정)
+
+---
+
+## 🎫 바코드 (Barcode)
+
+<table>
+  <tr>
+    <td style="border:1px solid #ccc; border-radius:8px; padding:8px; text-align:center;">
+      <img src="https://github.com/user-attachments/assets/0b02fb71-3ccc-469c-92c8-2bedd4cea760" width="400" />
+      <div style="margin-top:6px; font-size:14px;">바코드 기능</div>
+    </td>
+  </tr>
+</table>
+
+- 멤버십 혜택 사용 바코드 표시
+- 앱 내 플로팅 버튼으로 접근
+- 혜택 이용 시 자동 매장 기록
+
+---
+
+## ➕ 추가 정보 입력 (Extra Info)
+
+<table>
+  <tr>
+    <td style="border:1px solid #ccc; border-radius:8px; padding:8px; text-align:center;">
+      <img src="https://github.com/user-attachments/assets/de887acb-9594-47fd-84dd-309d32db00a3" width="400" />
+      <div style="margin-top:6px; font-size:14px;">온보딩 입력 화면</div>
+    </td>
+  </tr>
+</table>
+
+- 이메일, 관심 브랜드, 멤버십 등급 등 입력
+- 사용자 맞춤 추천을 위한 온보딩 설계
+
+---
+
+## 🛠️ 관리자(Admin) *(구현 중)*
+
+<table>
+  <tr>
+    <td style="border:1px solid #ccc; border-radius:8px; padding:8px; text-align:center;">
+      <img src="docs/gif/admin.gif" alt="Admin" width="400" />
+      <div style="margin-top:6px; font-size:14px;">관리자 대시보드</div>
+    </td>
+  </tr>
+</table>
+
+### 브랜드 제휴 관리
+- 제휴 브랜드 추가
+- 제휴 브랜드 정보 수정
+- 제휴 브랜드 삭제
+
+### 플랫폼 통계
+- DAU / MAU
+- 카테고리, 브랜드별 추천 횟수 통계
+- 카테고리, 브랜드별 멤버십 사용 횟수 통계
+- 카테고리별 필터링 수 통계
+- 카테고리, 브랜드별 즐겨찾기 수 통계
+
+### 즐겨찾기 분석
+- 전체 즐겨찾기 수
+- 매장별 즐겨찾기 순위
+- 카테고리 및 지역 분포
+
+### 브랜드 성과 비교
+- 방문률 / 할인 사용률 기반 비교
+
+### 사용자 맞춤 통계
+- 받은 혜택 금액, 관심 브랜드 분석 등

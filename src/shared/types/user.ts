@@ -9,7 +9,6 @@
         "age": null,
         "gender": "MALE",
         "grade": null,
-        "markerId": null,
         "updatedAt": "2025-07-20T05:17:08.734511"
  */
 
@@ -35,7 +34,6 @@ export interface UserInfo {
   age: number | null;
   gender: UserGender | null;
   grade: UserGrade | null;
-  markerId?: number | null;
   updatedAt: string;
   role?: UserRole;
 }
@@ -49,7 +47,6 @@ export interface UserInfoData {
   age: number | null;
   gender: UserGender | null;
   grade: UserGrade | null;
-  markerId?: number | null;
   brandIdList?: number[];
   updatedAt: string;
   role?: UserRole;
@@ -60,7 +57,6 @@ export interface SimpleUserInfo {
   userName: string;
   grade: UserGrade | null;
   profileImage: string;
-  markerId?: number | null;
   role?: UserRole;
 }
 

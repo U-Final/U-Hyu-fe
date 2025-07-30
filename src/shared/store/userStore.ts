@@ -1,7 +1,9 @@
 import { userApi } from '@user/index';
+import type { AxiosError } from 'axios';
 import { toast } from 'sonner';
 import { create } from 'zustand';
 
+import type { ApiError } from '@/shared/client/client.type';
 import type { SimpleUserInfo } from '@/shared/types';
 
 interface UserState {
@@ -20,13 +22,11 @@ export const userStore = create<UserState>(set => ({
   clearUser: () => set({ user: null, isAuthChecked: true }),
   logout: async () => {
     try {
-      userStore.getState().clearUser();
       const res = await userApi.logout();
-      if (import.meta.env.DEV) console.log('로그아웃 성공:', res.message);
+      toast.info(res.message);
+      userStore.getState().clearUser();
     } catch (error) {
-      console.error('❌ 로그아웃 실패:', error);
-      if (import.meta.env.DEV)
-        toast.error('로그아웃에 실패했습니다. 다시 시도해주세요.');
+      toast.error('❌ 로그아웃 실패했습니다. 다시 시도해주세요');
       throw error;
     }
   },
@@ -35,24 +35,24 @@ export const userStore = create<UserState>(set => ({
       if (import.meta.env.DEV) {
         console.log('🔄 유저 정보 조회 시작...');
       }
+
       const res = await userApi.getUserInfo();
-      if (import.meta.env.DEV) {
-        console.log('✅ 유저 정보 조회 성공:', res);
+
+      if (res.statusCode === 200 && res.data) {
+        const { userName, grade, profileImage, role } = res.data;
+        userStore.getState().setUser({ userName, grade, profileImage, role });
+      } else {
+        console.warn('⚠️ 유저 정보 조회 실패: 응답 데이터 없음', res);
+        userStore.getState().clearUser();
       }
-      const { userName, grade, profileImage, markerId, role } = res;
-      const userInfo = { userName, grade, profileImage, markerId, role };
-      if (import.meta.env.DEV) {
-        console.log('📝 유저 정보 저장:', userInfo);
+    } catch (error: unknown) {
+      const err = error as AxiosError<ApiError>;
+      // 401이면 clearUser(), 그 외 에러는 유지
+      if (err.response?.data?.statusCode === 401) {
+        userStore.getState().clearUser();
+      } else {
+        console.warn('⚠️ 유저 정보 조회 실패(비401): 상태 유지', err);
       }
-      userStore
-        .getState()
-        .setUser(userInfo); // 성공 시 저장
-    } catch (error) {
-      console.warn('⚠️ 유저 정보 불러오기 실패:', error);
-      if (import.meta.env.DEV) {
-        console.error('❌ Error details:', error);
-      }
-      userStore.getState().clearUser(); // 실패 시 초기화
     }
   },
 }));

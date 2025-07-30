@@ -1,9 +1,5 @@
 import type { BenefitType, Brand, BrandDetailRes, StoreType } from './types';
 
-
-
-
-
 /**
  * 브랜드 정보 목데이터 타입
  */

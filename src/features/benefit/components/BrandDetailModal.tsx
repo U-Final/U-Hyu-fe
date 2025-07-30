@@ -1,6 +1,9 @@
 import { useGetBrandDetailQuery } from '@benefit/hooks';
 import clsx from 'clsx';
 
+import { formatNewlines } from '@/shared/utils/formatNewlines';
+import { formatUsageText } from '@benefit/utils/formatUsageText';
+
 const BrandDetailModal = ({ brandId }: { brandId: number }) => {
   const { data: brand, isLoading, error } = useGetBrandDetailQuery(brandId);
 
@@ -37,10 +40,10 @@ const BrandDetailModal = ({ brandId }: { brandId: number }) => {
                   bg
                 )}
               >
-                <span className={clsx('font-bold', text)}>
+                <span className={clsx('font-bold shrink-0 w-10', text)}>
                   {formatGrade(benefit.grade)}
                 </span>
-                <span>{benefit.description}</span>
+                <span>{formatNewlines(benefit.description)}</span>
               </div>
             );
           })}
@@ -50,9 +53,16 @@ const BrandDetailModal = ({ brandId }: { brandId: number }) => {
         <h3 className="font-bold">제공 횟수</h3>
         <p className="text-black">{brand.usageLimit}</p>
       </div>
-      <div className="flex flex-col gap-1 ">
+      <div className="flex flex-col gap-1">
         <h3 className="font-bold">이용방법</h3>
-        <p className="text-black">{brand.usageMethod}</p>
+        <div
+          className="text-black overflow-y-auto"
+          style={{
+            maxHeight: '200px',
+          }}
+        >
+          <p className="whitespace-pre-wrap">{formatUsageText(brand.usageMethod)}</p>
+        </div>
       </div>
     </div>
   );

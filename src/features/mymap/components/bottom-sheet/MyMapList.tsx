@@ -15,7 +15,7 @@ import { PiTrashBold } from 'react-icons/pi';
 import { RiPencilFill } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 
-import { SkeletonMyMapItem } from '@/shared/components/Skeleton/SkeletonMyMapItem';
+import { SkeletonMyMapItem } from '@/shared/components/Skeleton';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -91,7 +91,7 @@ const MyMapList: FC = () => {
       {/* map 리스트 */}
       {isPending ? (
         <div className="flex flex-col gap-2 mt-4">
-          {[...Array(3)].map((_, i) => (
+          {[...Array(9)].map((_, i) => (
             <SkeletonMyMapItem key={i} />
           ))}
         </div>

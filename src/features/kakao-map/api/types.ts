@@ -3,19 +3,26 @@ import type { ApiResponse } from '@/shared/client/client.type';
 /**
  * 매장 혜택 정보 타입
  */
+
+export enum GRADE {
+  VIP = 'VIP',
+  VVIP = 'VVIP',
+  GOOD = '우수',
+}
+
 export interface StoreBenefit {
-  grade: string;
+  grade: GRADE;
   benefitText: string;
 }
 
 /**
- * 매장 상세 정보 타입
+ * 매장 상세 정보 타입 
  */
 export interface StoreDetail {
   storeName: string;
   isFavorite: boolean;
   favoriteCount: number;
-  benefits: string;
+  benefits: StoreBenefit; // API 응답에서는 단일 객체로 옴
   usageLimit: string;
   usageMethod: string;
 }

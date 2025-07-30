@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { useUserInfo } from '@user/hooks/useUserQuery';
 import type { AxiosError } from 'axios';
 
+import { PATH } from '@/routes/path';
 import type { ApiError } from '@/shared/client/client.type';
 import { userStore } from '@/shared/store/userStore';
 import {
@@ -15,9 +17,20 @@ import {
 } from '@/shared/utils/viewport';
 
 const AppInitializer = () => {
-  const { data, isSuccess, isError } = useUserInfo();
+  const location = useLocation();
   const setUser = userStore(state => state.setUser);
   const clearUser = userStore(state => state.clearUser);
+
+  // 관리자 페이지에서는 사용자 정보 요청을 하지 않음
+  const isAdminPage = location.pathname === PATH.ADMIN;
+  
+  // 관리자 페이지가 아닐 때만 사용자 정보 요청
+  const { data, isSuccess, isError } = useUserInfo(!isAdminPage);
+
+  // 개발 환경에서 로깅
+  if (import.meta.env.DEV) {
+    console.log('🔍 AppInitializer - 현재 경로:', location.pathname, '관리자 페이지 여부:', isAdminPage);
+  }
 
   // 사용자 정보 초기화
   useEffect(() => {

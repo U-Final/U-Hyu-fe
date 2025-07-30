@@ -76,11 +76,23 @@ export function MembershipChart({ data }: MembershipChartProps) {
             <h4 className="text-sm font-medium mb-4">카테고리별 상세</h4>
             <div className="space-y-3">
               {data.map((category) => (
-                <div key={category.categoryId} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                  <span className="font-medium">{category.categoryName}</span>
-                  <span className="text-sm text-muted-foreground">
-                    {category.sumStatisticsMembershipUsageByCategory || 0}회
-                  </span>
+                <div key={category.categoryId} className="space-y-2">
+                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                    <span className="font-medium">{category.categoryName}</span>
+                    <span className="text-sm text-muted-foreground">
+                      {category.sumStatisticsMembershipUsageByCategory || 0}회
+                    </span>
+                  </div>
+                  {category.membershipUsageByBrandList && category.membershipUsageByBrandList.length > 0 && (
+                    <div className="ml-4 space-y-1">
+                      {category.membershipUsageByBrandList.map((brand) => (
+                        <div key={brand.brandName} className="flex justify-between items-center text-sm">
+                          <span className="text-muted-foreground">• {brand.brandName}</span>
+                          <span className="text-muted-foreground">{brand.sumMembershipUsageByBrand}회</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

@@ -1,87 +1,466 @@
-// 통계별 mock 데이터 생성
+// 통계별 mock 데이터 생성 (포스트맨 기준) - 실제 데이터처럼 수십 개 생성
 export const mockBookmarkStats = [
   {
-    categoryId: 1,
-    categoryName: '영화관',
-    count: 1561,
-    details: [
-      { brandName: 'CGV', count: 15 },
-      { brandName: '롯데시네마', count: 20 },
-    ],
+    categoryId: 10,
+    categoryName: '베이커리/디저트',
+    sumStatisticsBookmarksByCategory: 3,
+    bookmarksByBrandList: [
+      {
+        brandName: '파리크라상',
+        sumBookmarksByBrand: 3
+      }
+    ]
   },
   {
     categoryId: 2,
-    categoryName: '편의점',
-    count: 1200,
-    details: [
-      { brandName: 'GS25', count: 10 },
-      { brandName: 'CU', count: 5 },
-    ],
+    categoryName: '영화/미디어',
+    sumStatisticsBookmarksByCategory: 4,
+    bookmarksByBrandList: [
+      {
+        brandName: 'CGV',
+        sumBookmarksByBrand: 4
+      }
+    ]
   },
+  {
+    categoryId: 3,
+    categoryName: '편의점',
+    sumStatisticsBookmarksByCategory: 5,
+    bookmarksByBrandList: [
+      {
+        brandName: 'GS25',
+        sumBookmarksByBrand: 3
+      },
+      {
+        brandName: 'CU',
+        sumBookmarksByBrand: 2
+      }
+    ]
+  },
+  {
+    categoryId: 4,
+    categoryName: '치킨/피자',
+    sumStatisticsBookmarksByCategory: 8,
+    bookmarksByBrandList: [
+      {
+        brandName: '굽네치킨',
+        sumBookmarksByBrand: 5
+      },
+      {
+        brandName: '교촌치킨',
+        sumBookmarksByBrand: 3
+      }
+    ]
+  },
+  {
+    categoryId: 5,
+    categoryName: '아이스크림/디저트',
+    sumStatisticsBookmarksByCategory: 6,
+    bookmarksByBrandList: [
+      {
+        brandName: '베스킨라빈스',
+        sumBookmarksByBrand: 4
+      },
+      {
+        brandName: '하겐다즈',
+        sumBookmarksByBrand: 2
+      }
+    ]
+  },
+  {
+    categoryId: 6,
+    categoryName: '테마파크/놀이공원',
+    sumStatisticsBookmarksByCategory: 2,
+    bookmarksByBrandList: [
+      {
+        brandName: '롯데월드',
+        sumBookmarksByBrand: 2
+      }
+    ]
+  },
+  {
+    categoryId: 7,
+    categoryName: '생활/편의',
+    sumStatisticsBookmarksByCategory: 7,
+    bookmarksByBrandList: [
+      {
+        brandName: '올리브영',
+        sumBookmarksByBrand: 4
+      },
+      {
+        brandName: '다이소',
+        sumBookmarksByBrand: 3
+      }
+    ]
+  },
+  {
+    categoryId: 8,
+    categoryName: '쇼핑',
+    sumStatisticsBookmarksByCategory: 9,
+    bookmarksByBrandList: [
+      {
+        brandName: '올리브클럽',
+        sumBookmarksByBrand: 6
+      },
+      {
+        brandName: '무신사',
+        sumBookmarksByBrand: 3
+      }
+    ]
+  },
+  {
+    categoryId: 9,
+    categoryName: '음식점',
+    sumStatisticsBookmarksByCategory: 12,
+    bookmarksByBrandList: [
+      {
+        brandName: '키사라',
+        sumBookmarksByBrand: 8
+      },
+      {
+        brandName: '스시로',
+        sumBookmarksByBrand: 4
+      }
+    ]
+  },
+  {
+    categoryId: 11,
+    categoryName: '카페/음료',
+    sumStatisticsBookmarksByCategory: 4,
+    bookmarksByBrandList: [
+      {
+        brandName: '스타벅스',
+        sumBookmarksByBrand: 3
+      },
+      {
+        brandName: '투썸플레이스',
+        sumBookmarksByBrand: 1
+      }
+    ]
+  }
 ];
 
 export const mockFilteringStats = [
   {
-    categoryId: 1,
-    categoryName: '영화관',
-    count: 1000,
-    details: [
-      { brandName: 'CGV', count: 8 },
-      { brandName: '롯데시네마', count: 12 },
-    ],
+    categoryId: 8,
+    categoryName: '쇼핑',
+    sumStatisticsFilterByCategory: 1
   },
   {
     categoryId: 2,
-    categoryName: '편의점',
-    count: 900,
-    details: [
-      { brandName: 'GS25', count: 7 },
-      { brandName: 'CU', count: 3 },
-    ],
+    categoryName: '영화/미디어',
+    sumStatisticsFilterByCategory: 3
   },
+  {
+    categoryId: 3,
+    categoryName: '편의점',
+    sumStatisticsFilterByCategory: 2
+  },
+  {
+    categoryId: 4,
+    categoryName: '치킨/피자',
+    sumStatisticsFilterByCategory: 4
+  },
+  {
+    categoryId: 5,
+    categoryName: '아이스크림/디저트',
+    sumStatisticsFilterByCategory: 2
+  },
+  {
+    categoryId: 6,
+    categoryName: '테마파크/놀이공원',
+    sumStatisticsFilterByCategory: 1
+  },
+  {
+    categoryId: 7,
+    categoryName: '생활/편의',
+    sumStatisticsFilterByCategory: 3
+  },
+  {
+    categoryId: 9,
+    categoryName: '음식점',
+    sumStatisticsFilterByCategory: 5
+  },
+  {
+    categoryId: 10,
+    categoryName: '베이커리/디저트',
+    sumStatisticsFilterByCategory: 2
+  },
+  {
+    categoryId: 11,
+    categoryName: '카페/음료',
+    sumStatisticsFilterByCategory: 3
+  }
 ];
 
 
 
 export const mockRecommendStats = [
   {
-    categoryId: 1,
-    categoryName: '영화관',
-    count: 1561,
+    categoryId: 9,
+    categoryName: '음식점',
+    sumStatisticsRecommendationByCategory: 1,
+    recommendationsByBrandList: [
+      {
+        brandName: '키사라',
+        sumRecommendationsByBrand: 1
+      }
+    ]
+  },
+  {
+    categoryId: 7,
+    categoryName: '생활/편의',
+    sumStatisticsRecommendationByCategory: 1,
+    recommendationsByBrandList: [
+      {
+        brandName: '가연결혼정보',
+        sumRecommendationsByBrand: 1
+      }
+    ]
+  },
+  {
+    categoryId: 3,
+    categoryName: '워터파크/아쿠아리움',
+    sumStatisticsRecommendationByCategory: 1,
+    recommendationsByBrandList: [
+      {
+        brandName: '아쿠아필드',
+        sumRecommendationsByBrand: 1
+      }
+    ]
   },
   {
     categoryId: 2,
-    categoryName: '편의점',
-    count: 1200,
+    categoryName: '영화/미디어',
+    sumStatisticsRecommendationByCategory: 2,
+    recommendationsByBrandList: [
+      {
+        brandName: 'CGV',
+        sumRecommendationsByBrand: 2
+      }
+    ]
   },
+  {
+    categoryId: 4,
+    categoryName: '치킨/피자',
+    sumStatisticsRecommendationByCategory: 3,
+    recommendationsByBrandList: [
+      {
+        brandName: '굽네치킨',
+        sumRecommendationsByBrand: 2
+      },
+      {
+        brandName: '교촌치킨',
+        sumRecommendationsByBrand: 1
+      }
+    ]
+  },
+  {
+    categoryId: 5,
+    categoryName: '아이스크림/디저트',
+    sumStatisticsRecommendationByCategory: 2,
+    recommendationsByBrandList: [
+      {
+        brandName: '베스킨라빈스',
+        sumRecommendationsByBrand: 2
+      }
+    ]
+  },
+  {
+    categoryId: 6,
+    categoryName: '테마파크/놀이공원',
+    sumStatisticsRecommendationByCategory: 1,
+    recommendationsByBrandList: [
+      {
+        brandName: '롯데월드',
+        sumRecommendationsByBrand: 1
+      }
+    ]
+  },
+  {
+    categoryId: 8,
+    categoryName: '쇼핑',
+    sumStatisticsRecommendationByCategory: 4,
+    recommendationsByBrandList: [
+      {
+        brandName: '올리브클럽',
+        sumRecommendationsByBrand: 3
+      },
+      {
+        brandName: '무신사',
+        sumRecommendationsByBrand: 1
+      }
+    ]
+  },
+  {
+    categoryId: 10,
+    categoryName: '베이커리/디저트',
+    sumStatisticsRecommendationByCategory: 2,
+    recommendationsByBrandList: [
+      {
+        brandName: '파리크라상',
+        sumRecommendationsByBrand: 2
+      }
+    ]
+  },
+  {
+    categoryId: 11,
+    categoryName: '카페/음료',
+    sumStatisticsRecommendationByCategory: 3,
+    recommendationsByBrandList: [
+      {
+        brandName: '스타벅스',
+        sumRecommendationsByBrand: 2
+      },
+      {
+        brandName: '투썸플레이스',
+        sumRecommendationsByBrand: 1
+      }
+    ]
+  }
 ];
 
 export const mockMembershipStats = [
   {
-    categoryId: 1,
-    categoryName: '영화관',
-    count: 300,
-    details: [
-      { brandName: 'CGV', count: 2 },
-      { brandName: '롯데시네마', count: 1 },
-    ],
+    categoryId: 2,
+    categoryName: '영화/미디어',
+    sumStatisticsMembershipUsageByCategory: 5,
+    membershipUsageByBrandList: [
+      {
+        brandName: 'CGV',
+        sumMembershipUsageByBrand: 5
+      }
+    ]
   },
   {
-    categoryId: 2,
+    categoryId: 3,
     categoryName: '편의점',
-    count: 200,
-    details: [
-      { brandName: 'GS25', count: 1 },
-      { brandName: 'CU', count: 1 },
-    ],
+    sumStatisticsMembershipUsageByCategory: 3,
+    membershipUsageByBrandList: [
+      {
+        brandName: 'GS25',
+        sumMembershipUsageByBrand: 2
+      },
+      {
+        brandName: 'CU',
+        sumMembershipUsageByBrand: 1
+      }
+    ]
   },
+  {
+    categoryId: 4,
+    categoryName: '치킨/피자',
+    sumStatisticsMembershipUsageByCategory: 4,
+    membershipUsageByBrandList: [
+      {
+        brandName: '굽네치킨',
+        sumMembershipUsageByBrand: 3
+      },
+      {
+        brandName: '교촌치킨',
+        sumMembershipUsageByBrand: 1
+      }
+    ]
+  },
+  {
+    categoryId: 5,
+    categoryName: '아이스크림/디저트',
+    sumStatisticsMembershipUsageByCategory: 2,
+    membershipUsageByBrandList: [
+      {
+        brandName: '베스킨라빈스',
+        sumMembershipUsageByBrand: 2
+      }
+    ]
+  },
+  {
+    categoryId: 6,
+    categoryName: '테마파크/놀이공원',
+    sumStatisticsMembershipUsageByCategory: 1,
+    membershipUsageByBrandList: [
+      {
+        brandName: '롯데월드',
+        sumMembershipUsageByBrand: 1
+      }
+    ]
+  },
+  {
+    categoryId: 7,
+    categoryName: '생활/편의',
+    sumStatisticsMembershipUsageByCategory: 3,
+    membershipUsageByBrandList: [
+      {
+        brandName: '올리브영',
+        sumMembershipUsageByBrand: 2
+      },
+      {
+        brandName: '다이소',
+        sumMembershipUsageByBrand: 1
+      }
+    ]
+  },
+  {
+    categoryId: 8,
+    categoryName: '쇼핑',
+    sumStatisticsMembershipUsageByCategory: 6,
+    membershipUsageByBrandList: [
+      {
+        brandName: '올리브클럽',
+        sumMembershipUsageByBrand: 4
+      },
+      {
+        brandName: '무신사',
+        sumMembershipUsageByBrand: 2
+      }
+    ]
+  },
+  {
+    categoryId: 9,
+    categoryName: '음식점',
+    sumStatisticsMembershipUsageByCategory: 4,
+    membershipUsageByBrandList: [
+      {
+        brandName: '키사라',
+        sumMembershipUsageByBrand: 3
+      },
+      {
+        brandName: '스시로',
+        sumMembershipUsageByBrand: 1
+      }
+    ]
+  },
+  {
+    categoryId: 10,
+    categoryName: '베이커리/디저트',
+    sumStatisticsMembershipUsageByCategory: 2,
+    membershipUsageByBrandList: [
+      {
+        brandName: '파리크라상',
+        sumMembershipUsageByBrand: 2
+      }
+    ]
+  },
+  {
+    categoryId: 11,
+    categoryName: '카페/음료',
+    sumStatisticsMembershipUsageByCategory: 3,
+    membershipUsageByBrandList: [
+      {
+        brandName: '스타벅스',
+        sumMembershipUsageByBrand: 2
+      },
+      {
+        brandName: '투썸플레이스',
+        sumMembershipUsageByBrand: 1
+      }
+    ]
+  }
 ];
 
 export const mockTotalStats = {
-  totalBookmark: 13123,
-  totalFiltering: 13123,
-
-  totalMembership: 13123,
+  totalBookmark: 60,
+  totalFiltering: 26,
+  totalMembershipUsage: 33
 };
 
 // 관리자 카테고리 목록 mock 데이터

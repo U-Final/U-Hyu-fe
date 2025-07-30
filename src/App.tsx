@@ -9,7 +9,6 @@ import AppInitializer from '@/shared/components/AppInitializer';
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AppInitializer />
       <AppRoutes />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

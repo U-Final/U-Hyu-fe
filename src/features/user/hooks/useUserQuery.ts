@@ -20,11 +20,12 @@ export const useCheckEmail = (email: string, enabled: boolean = false) => {
 };
 
 // 사용자 정보 조회 훅 (Query)
-export const useUserInfo = () => {
+export const useUserInfo = (enabled: boolean = true) => {
   return useQuery({
     queryKey: ['userMe'],
     queryFn: userApi.getUserInfo,
     retry: false,
     refetchOnWindowFocus: false,
+    enabled,
   });
 };

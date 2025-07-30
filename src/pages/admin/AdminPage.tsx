@@ -60,12 +60,56 @@ const TABS: Tab[] = [
 export default function AdminPage() {
   const [selectedTab, setSelectedTab] = useState<TabKey>('total');
 
-  // 통계 데이터 쿼리
-  const { data: bookmarkStats, isLoading: bookmarkLoading } = useAdminBookmarkStatsQuery();
-  const { data: filteringStats, isLoading: filteringLoading } = useAdminFilteringStatsQuery();
-  const { data: recommendStats, isLoading: recommendLoading } = useAdminRecommendStatsQuery();
-  const { data: membershipStats, isLoading: membershipLoading } = useAdminMembershipStatsQuery();
-  const { data: totalStats, isLoading: totalLoading } = useAdminTotalStatsQuery();
+  // 탭 변경 핸들러 - 탭 변경 시 해당 데이터 새로 가져오기
+  const handleTabChange = (tab: TabKey) => {
+    setSelectedTab(tab);
+    
+    // 탭 변경 시 해당 데이터 refetch
+    if (import.meta.env.DEV) {
+      console.log('🔄 관리자 페이지 탭 변경:', tab);
+    }
+    
+    switch (tab) {
+      case 'bookmark':
+        refetchBookmark();
+        break;
+      case 'filtering':
+        refetchFiltering();
+        break;
+      case 'recommendation':
+        refetchRecommend();
+        break;
+      case 'membership':
+        refetchMembership();
+        break;
+      case 'total':
+        refetchTotal();
+        break;
+    }
+  };
+
+  // 통계 데이터 쿼리 - 페이지 로드 시 모든 데이터 자동으로 가져오기
+  const { data: bookmarkStats, isLoading: bookmarkLoading, refetch: refetchBookmark } = useAdminBookmarkStatsQuery();
+  const { data: filteringStats, isLoading: filteringLoading, refetch: refetchFiltering } = useAdminFilteringStatsQuery();
+  const { data: recommendStats, isLoading: recommendLoading, refetch: refetchRecommend } = useAdminRecommendStatsQuery();
+  const { data: membershipStats, isLoading: membershipLoading, refetch: refetchMembership } = useAdminMembershipStatsQuery();
+  const { data: totalStats, isLoading: totalLoading, refetch: refetchTotal } = useAdminTotalStatsQuery();
+
+  // 개발 환경에서 데이터 로딩 상태 로깅
+  if (import.meta.env.DEV) {
+    console.log('🔍 관리자 페이지 데이터 로딩 상태:', {
+      bookmarkLoading,
+      filteringLoading,
+      recommendLoading,
+      membershipLoading,
+      totalLoading,
+      bookmarkStats: bookmarkStats?.length || 0,
+      filteringStats: filteringStats?.length || 0,
+      recommendStats: recommendStats?.length || 0,
+      membershipStats: membershipStats?.length || 0,
+      totalStats,
+    });
+  }
 
   const renderContent = () => {
     if (selectedTab === 'brands') {
@@ -101,6 +145,9 @@ export default function AdminPage() {
     return null;
   };
 
+  // 전체 로딩 상태 확인
+  const isAnyLoading = bookmarkLoading || filteringLoading || recommendLoading || membershipLoading || totalLoading;
+
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
@@ -110,11 +157,15 @@ export default function AdminPage() {
       <StatsTabButtons 
         tabs={TABS} 
         selectedTab={selectedTab} 
-        onTabChange={setSelectedTab} 
+        onTabChange={handleTabChange} 
       />
 
       <div className="mt-6">
-        {renderContent()}
+        {isAnyLoading && selectedTab === 'total' ? (
+          <StatsSkeleton />
+        ) : (
+          renderContent()
+        )}
       </div>
     </div>
   );

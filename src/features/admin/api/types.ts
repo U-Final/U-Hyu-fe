@@ -10,6 +10,10 @@ export interface CategoryStat {
   sumStatisticsFilterByCategory?: number;
   sumStatisticsMembershipUsageByCategory?: number;
   bookmarksByBrandList?: BrandStatDetail[];
+  membershipUsageByBrandList?: {
+    brandName: string;
+    sumMembershipUsageByBrand: number;
+  }[];
 }
 
 export interface TotalStat {
@@ -21,7 +25,11 @@ export interface TotalStat {
 export interface RecommendStat {
   categoryId: number;
   categoryName: string;
-  sumStatisticsRecommendByCategory: number;
+  sumStatisticsRecommendationByCategory: number;
+  recommendationsByBrandList: {
+    brandName: string;
+    sumRecommendationsByBrand: number;
+  }[];
 }
 
 export interface Category {
@@ -55,4 +63,26 @@ export interface Tab {
   icon: React.ComponentType<{ className?: string }>;
 }
 
-export type TabKey = 'bookmark' | 'filtering' | 'recommendation' | 'membership' | 'total' | 'brands'; 
+export type TabKey = 'bookmark' | 'filtering' | 'recommendation' | 'membership' | 'total' | 'brands';
+
+// 브랜드 생성/수정 요청 타입
+export interface CreateBrandRequest {
+  brandName: string;
+  brandImg: string;
+  categoryId: number;
+  usageLimit: string;
+  usageMethod: string;
+  storeType: 'ONLINE' | 'OFFLINE';
+  data: BrandBenefit[];
+}
+
+export interface UpdateBrandRequest {
+  brandName?: string;
+  brandImg?: string;
+  categoryId?: number;
+  usageLimit?: string;
+  usageMethod?: string;
+  storeType?: 'ONLINE' | 'OFFLINE';
+  status?: boolean;
+  data?: BrandBenefit[];
+} 

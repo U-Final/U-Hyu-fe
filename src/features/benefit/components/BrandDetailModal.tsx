@@ -1,8 +1,8 @@
 import { useGetBrandDetailQuery } from '@benefit/hooks';
 import clsx from 'clsx';
-import he from 'he';
 
 import { formatNewlines } from '@/shared/utils/formatNewlines';
+import { formatUsageText } from '@benefit/utils/formatUsageText';
 
 const BrandDetailModal = ({ brandId }: { brandId: number }) => {
   const { data: brand, isLoading, error } = useGetBrandDetailQuery(brandId);
@@ -61,7 +61,7 @@ const BrandDetailModal = ({ brandId }: { brandId: number }) => {
             maxHeight: '200px',
           }}
         >
-          <p className="whitespace-pre-wrap">{he.decode(brand.usageMethod)}</p>
+          <p className="whitespace-pre-wrap">{formatUsageText(brand.usageMethod)}</p>
         </div>
       </div>
     </div>

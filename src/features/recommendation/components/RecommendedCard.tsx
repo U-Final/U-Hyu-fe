@@ -2,7 +2,7 @@ import type { Store } from '@kakao-map/types/store';
 
 import { BrandCard } from '@/shared/components';
 
-interface RecommendedStoreCardProps {
+export interface RecommendedStoreCardProps {
   store: Store;
 }
 

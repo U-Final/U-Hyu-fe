@@ -200,9 +200,7 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
        * 중복 업데이트 방지 로직 포함
        */
       setStoresFromQuery: (queryData: StoreListResponse | undefined) => {
-        if (!queryData?.data) return;
-
-        const newStores = queryData.data.map(store => ({ ...store }));
+        const newStores = queryData?.data?.map(store => ({ ...store })) ?? [];
 
         // 현재 스토어와 비교해서 실제로 변경된 경우에만 업데이트
         const currentStores = get().stores;

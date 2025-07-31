@@ -68,7 +68,7 @@ export const MyMapFormModal = ({
         {
           onSuccess: () => {
             closeModal();
-            toast.success(`"${title}" 지도가 수정되었습니다.`);
+            toast.success(`"${trimmedTitle}" 지도가 수정되었습니다.`);
           },
           onError: () => {
             toast.error('My Map 수정 중 오류가 발생했습니다.');

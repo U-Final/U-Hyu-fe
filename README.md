@@ -148,17 +148,14 @@
 
 ## 🌟 추천 매장 (Recommendation)
 
-<table>
-  <tr>
-    <td style="border:1px solid #ccc; border-radius:8px; padding:8px; text-align:center;">
-      <img src="https://github.com/user-attachments/assets/4ee24595-60cc-449f-895f-6e96e86b9f5c" width="400" />
-      <div style="margin-top:6px; font-size:14px;">추천 매장 UI</div>
-    </td>
-  </tr>
-</table>
+|로그인 후 근처 추천 매장 없는 경우|로그인시 추천 매장<br/>(사용자 선호 기반 맞춤 추천)|카드 클릭시 지도 시각화|
+|:--:|:--:|:--:|
+|<img width="400" alt="image" src="https://github.com/user-attachments/assets/c31b001c-65cc-4854-ae19-ff4bddd731b6" />|![추천카드_로그인버전](https://github.com/user-attachments/assets/796cfe0c-8888-4ea2-9a72-2432f833b171)|![추천카드 클릭시 인포창](https://github.com/user-attachments/assets/f7dcd3a8-0322-4b0c-96c4-a2c5549cf00e)|
 
-- 사용자 선호 기반 맞춤 추천
-- 추천 매장 지도 시각화 (구현 중)
+
+|비로그인시 브랜드 없을 때|비로그인 브랜드 자동 스크롤|
+|:--:|:--:|
+|<img width="400" alt="image" src="https://github.com/user-attachments/assets/8e957e0e-9729-43cc-9e07-91547691ef56" />|![비로그인 추천카드](https://github.com/user-attachments/assets/f785d134-4327-44d7-ad3e-0e6eccf567bc)|
 
 ---
 
@@ -181,14 +178,9 @@
 
 ## 🎫 바코드 (Barcode)
 
-<table>
-  <tr>
-    <td style="border:1px solid #ccc; border-radius:8px; padding:8px; text-align:center;">
-      <img src="https://github.com/user-attachments/assets/0b02fb71-3ccc-469c-92c8-2bedd4cea760" width="400" />
-      <div style="margin-top:6px; font-size:14px;">바코드 기능</div>
-    </td>
-  </tr>
-</table>
+|바코드 기능|
+|:--:|
+|![바코드 업로드](https://github.com/user-attachments/assets/1af46a28-32a9-49a5-b16d-86d9380fe894)|
 
 - 멤버십 혜택 사용 바코드 표시
 - 앱 내 플로팅 버튼으로 접근

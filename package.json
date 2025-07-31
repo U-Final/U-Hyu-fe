@@ -87,7 +87,6 @@
     "sonner": "^2.0.6",
     "swiper": "^11.2.10",
     "tailwind-merge": "^3.3.1",
-    "use-gesture": "^1.0.0",
     "vaul": "^1.1.2",
     "zustand": "^5.0.6"
   },

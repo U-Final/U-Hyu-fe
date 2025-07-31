@@ -1,14 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/shadcn/ui/card';
 import { AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import type { FilteringStat } from '@admin/api/types';
+import type { FilteringChartProps } from '@admin/types';
 import { getCategoryDisplayName } from '@admin/utils/categoryUtils';
 import { filterDataByCategory } from '@admin/utils/categoryMapping';
-
-interface FilteringChartProps {
-  data: FilteringStat[];
-  selectedCategory?: string;
-}
 
 export function FilteringChart({ data, selectedCategory = 'all' }: FilteringChartProps) {
   if (!data || data.length === 0) {

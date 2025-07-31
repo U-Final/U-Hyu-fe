@@ -1,35 +1,69 @@
 import { useState } from 'react';
 import { PencilIcon, TrashIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
-import type { AdminBrand } from '@admin/api/types';
+import type { BrandListItem as BrandListItemType, AdminBrand } from '@admin/types';
 import { useModalStore } from '@/shared/store';
+import { useBrandDetailQuery } from '@admin/hooks';
 import { BrandForm } from './BrandForm';
+import { getBrandCategoryId } from '@admin/constants/brandCategoryMapping';
 
 interface BrandListItemProps {
-  brand: AdminBrand;
-  onEdit: (brand: AdminBrand) => void;
+  brand: BrandListItemType;
   onDelete: (brandId: number) => void;
 }
 
-export const BrandListItem = ({ brand, onEdit, onDelete }: BrandListItemProps) => {
+export const BrandListItem = ({ brand, onDelete }: BrandListItemProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const openModal = useModalStore(state => state.openModal);
   const closeModal = useModalStore(state => state.closeModal);
 
+  // 상세 정보는 확장 시에만 요청 (수정 시에도 필요)
+  const { data: brandDetail, isLoading: isLoadingDetail } = useBrandDetailQuery(
+    brand.brandId, 
+    isExpanded || isEditing
+  );
+
   const handleEdit = () => {
+    // 인라인 수정 모드로 전환
     setIsEditing(true);
-    setIsExpanded(true);
+    setIsExpanded(true); // 수정할 때는 항상 확장
   };
 
-  const handleEditSuccess = () => {
+  const handleEditSuccess = async () => {
+    console.log('🔧 브랜드 수정 성공, UI 업데이트');
     setIsEditing(false);
+    
+    // 상세 정보를 다시 로드하기 위해 잠시 접었다가 펼침
     setIsExpanded(false);
-    onEdit(brand);
+    setTimeout(() => setIsExpanded(true), 100);
   };
 
   const handleEditCancel = () => {
     setIsEditing(false);
-    setIsExpanded(false);
+  };
+
+  // BrandListItem과 BrandDetail을 조합해서 AdminBrand 생성
+  const getAdminBrand = (): AdminBrand | null => {
+    if (!brandDetail) return null;
+    
+    // 브랜드명으로 카테고리 ID 찾기
+    const categoryId = getBrandCategoryId(brand.brandName);
+    
+    return {
+      brandId: brand.brandId,
+      brandName: brand.brandName,
+      logoImage: brand.logoImage,
+      description: brand.description,
+      categoryId,
+      usageLimit: brandDetail.usageLimit,
+      usageMethod: brandDetail.usageMethod,
+      storeType: 'OFFLINE', // 기본값 (실제로는 API에서 가져와야 함)
+      data: brandDetail.benefitRes?.map(benefit => ({
+        grade: benefit.grade as 'GOOD' | 'VIP' | 'VVIP',
+        description: benefit.description,
+        benefitType: 'DISCOUNT' as const, // 기본값 (실제로는 API에서 가져와야 함)
+      })) || [],
+    };
   };
 
   const handleDelete = () => {
@@ -39,7 +73,7 @@ export const BrandListItem = ({ brand, onEdit, onDelete }: BrandListItemProps) =
         <div className="space-y-4">
           <div className="flex items-center gap-3">
             <img
-              src={brand.brandImg}
+              src={brand.logoImage}
               alt={brand.brandName}
               className="w-12 h-12 object-cover rounded-lg"
               onError={(e) => {
@@ -47,12 +81,12 @@ export const BrandListItem = ({ brand, onEdit, onDelete }: BrandListItemProps) =
                 target.src = '/images/brands/default-brand-logo.png';
               }}
             />
-                         <div>
-               <h3 className="font-bold text-gray-900">{brand.brandName}</h3>
-               <p className="text-sm text-gray-600">
-                 브랜드 ID: {brand.brandId}
-               </p>
-             </div>
+            <div>
+              <h3 className="font-bold text-gray-900">{brand.brandName}</h3>
+              <p className="text-sm text-gray-600">
+                브랜드 ID: {brand.brandId}
+              </p>
+            </div>
           </div>
           
           <div className="bg-red-50 border border-red-200 rounded-lg p-4">
@@ -85,9 +119,7 @@ export const BrandListItem = ({ brand, onEdit, onDelete }: BrandListItemProps) =
   };
 
   const toggleExpanded = () => {
-    if (!isEditing) {
-      setIsExpanded(!isExpanded);
-    }
+    setIsExpanded(!isExpanded);
   };
 
   return (
@@ -99,9 +131,9 @@ export const BrandListItem = ({ brand, onEdit, onDelete }: BrandListItemProps) =
             {/* 브랜드 로고 */}
             <div className="w-14 h-14 flex-shrink-0">
               <img
-                src={brand.brandImg}
+                src={brand.logoImage}
                 alt={brand.brandName}
-                className="w-full h-full object-cover rounded-lg border border-gray-200"
+                className="w-full h-full object-cover rounded-lg"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.src = '/images/brands/default-brand-logo.png';
@@ -111,45 +143,35 @@ export const BrandListItem = ({ brand, onEdit, onDelete }: BrandListItemProps) =
 
             {/* 브랜드 정보 */}
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <h3 className="text-lg font-bold text-gray-900 truncate">
-                  {brand.brandName}
-                </h3>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-600">
-                <p className="truncate">
-                  <span className="font-medium">사용 제한:</span> {brand.usageLimit}
-                </p>
-                <p className="truncate">
-                  <span className="font-medium">혜택:</span> {brand.data.length}개
-                </p>
-              </div>
+              <h3 className="text-lg font-semibold text-gray-900 truncate">
+                {brand.brandName}
+              </h3>
+              <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+                {brand.description}
+              </p>
             </div>
           </div>
 
-          {/* 액션 버튼 */}
-          <div className="flex items-center gap-2">
+          {/* 액션 버튼들 */}
+          <div className="flex items-center gap-2 ml-4">
             <button
               onClick={handleEdit}
-              className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
               title="수정"
             >
               <PencilIcon className="w-5 h-5" />
             </button>
-            
             <button
               onClick={handleDelete}
-              className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
               title="삭제"
             >
               <TrashIcon className="w-5 h-5" />
             </button>
-
             <button
               onClick={toggleExpanded}
-              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-              title={isExpanded ? '접기' : '자세히 보기'}
+              className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
+              title={isExpanded ? "접기" : "상세보기"}
             >
               {isExpanded ? (
                 <ChevronUpIcon className="w-5 h-5" />
@@ -161,7 +183,7 @@ export const BrandListItem = ({ brand, onEdit, onDelete }: BrandListItemProps) =
         </div>
       </div>
 
-      {/* 확장 영역 - 애니메이션 */}
+      {/* 확장된 상세 정보 또는 수정 폼 */}
       <div
         className={`overflow-hidden transition-all duration-300 ease-in-out ${
           isExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
@@ -169,61 +191,62 @@ export const BrandListItem = ({ brand, onEdit, onDelete }: BrandListItemProps) =
       >
         <div className="border-t border-gray-200">
           {isEditing ? (
-            /* 수정 폼 */
-            <div className="p-4">
-              <BrandForm
-                brand={brand}
-                onSuccess={handleEditSuccess}
-                onCancel={handleEditCancel}
-              />
+            // 수정 폼
+            <div className="p-4 bg-blue-50">
+              {isLoadingDetail ? (
+                <div className="text-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                  <p className="text-sm text-gray-500 mt-2">수정 정보를 불러오는 중...</p>
+                </div>
+              ) : (
+                <BrandForm
+                  brand={getAdminBrand()}
+                  onSuccess={handleEditSuccess}
+                  onCancel={handleEditCancel}
+                />
+              )}
             </div>
           ) : (
-            /* 상세 정보 */
-            <div className="p-4 space-y-4">
-              {/* 사용 방법 */}
-              <div>
-                <h4 className="text-sm font-medium text-gray-700 mb-2">사용 방법</h4>
-                <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
-                  {brand.usageMethod}
-                </p>
-              </div>
-
-              {/* 혜택 목록 */}
-              <div>
-                <h4 className="text-sm font-medium text-gray-700 mb-2">
-                  혜택 목록 ({brand.data.length}개)
-                </h4>
-                <div className="space-y-2">
-                  {brand.data.map((benefit, index) => (
-                    <div
-                      key={index}
-                      className="p-3 bg-gray-50 rounded-lg border border-gray-200"
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="font-medium text-gray-900">
-                              {benefit.grade}
-                            </span>
-                            <span
-                              className={`px-2 py-1 text-xs rounded-full font-medium ${
-                                benefit.benefitType === 'DISCOUNT'
-                                  ? 'bg-blue-100 text-blue-800'
-                                  : 'bg-purple-100 text-purple-800'
-                              }`}
-                            >
-                              {benefit.benefitType === 'DISCOUNT' ? '할인' : '기프트'}
-                            </span>
-                          </div>
-                          <p className="text-sm text-gray-600">
-                            {benefit.description}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+            // 상세 정보 보기
+            <div className="p-4 bg-gray-50">
+              {isLoadingDetail ? (
+                <div className="text-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                  <p className="text-sm text-gray-500 mt-2">상세 정보를 불러오는 중...</p>
                 </div>
-              </div>
+              ) : brandDetail ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">사용 제한</h4>
+                    <p className="text-sm text-gray-600 bg-white p-3 rounded-lg border">
+                      {brandDetail.usageLimit}
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">사용 방법</h4>
+                    <p className="text-sm text-gray-600 bg-white p-3 rounded-lg border">
+                      {brandDetail.usageMethod}
+                    </p>
+                  </div>
+                  <div className="md:col-span-2">
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">혜택 정보</h4>
+                    <div className="space-y-2">
+                      {brandDetail.benefitRes?.map((benefit, index) => (
+                        <div key={index} className="text-sm text-gray-600 bg-white p-3 rounded-lg border">
+                          <div className="flex justify-between items-center">
+                            <span className="font-medium text-blue-600">{benefit.grade}</span>
+                          </div>
+                          <p className="mt-1">{benefit.description}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-sm text-red-500">상세 정보를 불러올 수 없습니다.</p>
+                </div>
+              )}
             </div>
           )}
         </div>

@@ -1,14 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/shadcn/ui/card';
 import { BookmarkIcon } from '@heroicons/react/24/outline';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import type { BookmarkStat, BrandStatDetail } from '@admin/api/types';
+import type { BrandStatDetail, BookmarkChartProps } from '@admin/types';
 import { getCategoryDisplayName } from '@admin/utils/categoryUtils';
 import { filterDataByCategory } from '@admin/utils/categoryMapping';
-
-interface BookmarkChartProps {
-  data: BookmarkStat[];
-  selectedCategory?: string;
-}
 
 export function BookmarkChart({ data, selectedCategory = 'all' }: BookmarkChartProps) {
   if (!data || data.length === 0) {

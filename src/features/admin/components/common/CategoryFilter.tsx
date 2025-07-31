@@ -1,10 +1,6 @@
 import { Button } from '@/shared/components/shadcn/ui/button';
 import { ADMIN_CATEGORIES, type CategoryId } from '@admin/constants/categories';
-
-interface CategoryFilterProps {
-  selectedCategory: CategoryId;
-  onCategoryChange: (category: CategoryId) => void;
-}
+import type { CategoryFilterProps } from '@admin/types';
 
 export function CategoryFilter({ selectedCategory, onCategoryChange }: CategoryFilterProps) {
   return (

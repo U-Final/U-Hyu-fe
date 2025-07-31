@@ -3,7 +3,9 @@ import type {
   BookmarkStat,
   FilteringStat,
   MembershipStat,
-  AdminBrand, 
+  BrandListResponse,
+  BrandListItem,
+  BrandDetail,
   TotalStat, 
   RecommendStat,
   Category,
@@ -65,20 +67,71 @@ export const getAdminCategories = async (): Promise<Category[]> => {
 };
 
 // 브랜드 관련 API
-export const getAdminBrands = async (): Promise<AdminBrand[]> => {
-  const res = await client.get<ApiResponse<AdminBrand[]>>(ADMIN_ENDPOINTS.BRAND_LIST);
-  if (!res.data.data) {
-    throw new Error('Invalid API response: missing data');
+// 제휴처 목록 조회
+export const getBrandList = async (params?: {
+  category?: string;
+  sortType?: string;
+  benefitType?: string;
+  brand_name?: string;
+}): Promise<BrandListItem[]> => {
+  try {
+    const queryParams = new URLSearchParams();
+
+    if (params?.category) queryParams.append('category', params.category);
+    if (params?.sortType) queryParams.append('sortType', params.sortType);
+    if (params?.benefitType) queryParams.append('benefitType', params.benefitType);
+    if (params?.brand_name) queryParams.append('brand_name', params.brand_name);
+
+    const url = `${ADMIN_ENDPOINTS.BRAND_LIST}${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+    console.log('getBrandList 요청 URL:', url);
+    
+    const res = await client.get<ApiResponse<BrandListResponse>>(url);
+    console.log('getBrandList 응답:', res.data);
+
+    if (!res.data.data) {
+      throw new Error('Invalid API response: missing data');
+    }
+
+    return res.data.data.brandList;
+  } catch (error) {
+    console.error('getBrandList 에러:', error);
+    throw error;
   }
-  return res.data.data;
 };
 
-export const getAdminBrandDetail = async (brandId: number): Promise<AdminBrand> => {
-  const res = await client.get<ApiResponse<AdminBrand>>(ADMIN_ENDPOINTS.BRAND_UPDATE(brandId));
-  if (!res.data.data) {
-    throw new Error('Invalid API response: missing data');
+// 제휴처 상세 조회
+export const getBrandDetail = async (brandId: number): Promise<BrandDetail> => {
+  try {
+    const url = ADMIN_ENDPOINTS.BRAND_DETAIL(brandId);
+    console.log('getBrandDetail 요청 URL:', url);
+    
+    const res = await client.get<ApiResponse<BrandDetail>>(url);
+    console.log(`getBrandDetail (${brandId}) 응답:`, res.data);
+    
+    if (!res.data.data) {
+      throw new Error('Invalid API response: missing data');
+    }
+    return res.data.data;
+  } catch (error) {
+    console.error(`getBrandDetail (${brandId}) 에러:`, error);
+    throw error;
   }
-  return res.data.data;
+};
+
+// 브랜드 목록만 조회 (모든 브랜드)
+export const getAdminBrands = async (): Promise<BrandListItem[]> => {
+  try {
+    console.log('getAdminBrands 시작 - 모든 브랜드 조회');
+    
+    // 모든 브랜드 목록 조회 (필터링 없음)
+    const brandList = await getBrandList();
+    console.log('브랜드 목록 조회 성공:', brandList.length, '개');
+    
+    return brandList;
+  } catch (error) {
+    console.error('getAdminBrands 에러:', error);
+    throw error;
+  }
 };
 
 export const createAdminBrand = async (data: CreateBrandRequest): Promise<{ brandId: number }> => {

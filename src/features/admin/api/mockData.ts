@@ -731,10 +731,12 @@ export const mockAdminBrands = [
   {
     brandId: 1,
     brandName: 'CGV',
-    brandImg: '/images/brands/CGV.png',
+    logoImage: '/images/brands/CGV.png',
     categoryId: 2, // 영화/미디어
+    description: 'VVIP : 영화 티켓 100% 할인, VIP : 팝콘 무료',
     usageLimit: '1일 1회',
     usageMethod: '모바일 앱 쿠폰 제시',
+    storeType: 'OFFLINE',
     data: [
       { grade: 'VVIP', description: '영화 티켓 100% 할인', benefitType: 'DISCOUNT' },
       { grade: 'VIP', description: '팝콘 무료', benefitType: 'GIFT' },
@@ -743,10 +745,12 @@ export const mockAdminBrands = [
   {
     brandId: 2,
     brandName: 'GS25',
-    brandImg: '/images/brands/GS25.png',
+    logoImage: '/images/brands/GS25.png',
     categoryId: 9, // 생활/편의
+    description: 'VIP : 1000원 할인',
     usageLimit: '1일 2회',
     usageMethod: '바코드 제시',
+    storeType: 'OFFLINE',
     data: [
       { grade: 'VIP', description: '1000원 할인', benefitType: 'DISCOUNT' },
     ],
@@ -754,10 +758,12 @@ export const mockAdminBrands = [
   {
     brandId: 3,
     brandName: '파리바게트',
-    brandImg: '/images/brands/파리바게뜨.png',
+    logoImage: '/images/brands/파리바게뜨.png',
     categoryId: 10, // 베이커리/디저트
+    description: 'VVIP : 10% 할인',
     usageLimit: '월 5회',
     usageMethod: '모바일 쿠폰',
+    storeType: 'OFFLINE',
     data: [
       { grade: 'VVIP', description: '10% 할인', benefitType: 'DISCOUNT' },
     ],
@@ -765,10 +771,12 @@ export const mockAdminBrands = [
   {
     brandId: 4,
     brandName: '굽네치킨',
-    brandImg: '/images/brands/굽네치킨.png',
+    logoImage: '/images/brands/굽네치킨.png',
     categoryId: 11, // 음식점
+    description: 'VIP : 2000원 할인',
     usageLimit: '주 1회',
     usageMethod: '온라인 주문 시 적용',
+    storeType: 'ONLINE',
     data: [
       { grade: 'VIP', description: '2000원 할인', benefitType: 'DISCOUNT' },
     ],
@@ -776,12 +784,12 @@ export const mockAdminBrands = [
   {
     brandId: 5,
     brandName: '베스킨라빈스',
-    brandImg: '/images/brands/베스킨라빈스.png',
+    logoImage: '/images/brands/베스킨라빈스.png',
     categoryId: 10, // 베이커리/디저트
+    description: 'VVIP : 싱글레귤러 1+1',
     usageLimit: '월 3회',
     usageMethod: '모바일 쿠폰',
     storeType: 'OFFLINE',
-    status: true,
     data: [
       { grade: 'VVIP', description: '싱글레귤러 1+1', benefitType: 'GIFT' },
     ],
@@ -789,12 +797,69 @@ export const mockAdminBrands = [
   {
     brandId: 6,
     brandName: '원더파크',
-    brandImg: '/images/brands/원더파크.png',
+    logoImage: '/images/brands/원더파크.png',
     categoryId: 3, // 테마파크
+    description: 'VVIP : 입장권 50% 할인',
     usageLimit: '연 1회',
     usageMethod: '현장 매표소 쿠폰 제시',
+    storeType: 'OFFLINE',
     data: [
       { grade: 'VVIP', description: '입장권 50% 할인', benefitType: 'DISCOUNT' },
+    ],
+  },
+  {
+    brandId: 7,
+    brandName: '쿠팡',
+    logoImage: '/images/brands/default-brand-logo.png',
+    categoryId: 8, // 쇼핑
+    description: 'VVIP : 무료배송 쿠폰, VIP : 3% 적립',
+    usageLimit: '월 10회',
+    usageMethod: '온라인 주문 시 자동 적용',
+    storeType: 'ONLINE',
+    data: [
+      { grade: 'VVIP', description: '무료배송 쿠폰', benefitType: 'GIFT' },
+      { grade: 'VIP', description: '3% 적립', benefitType: 'DISCOUNT' },
+    ],
+  },
+  {
+    brandId: 8,
+    brandName: '스타벅스',
+    logoImage: '/images/brands/default-brand-logo.png',
+    categoryId: 10, // 베이커리/디저트
+    description: 'GOOD : 아메리카노 무료, VIP : 케이크 20% 할인',
+    usageLimit: '1일 1회',
+    usageMethod: '앱 쿠폰 제시',
+    storeType: 'OFFLINE',
+    data: [
+      { grade: 'GOOD', description: '아메리카노 무료', benefitType: 'GIFT' },
+      { grade: 'VIP', description: '케이크 20% 할인', benefitType: 'DISCOUNT' },
+    ],
+  },
+  {
+    brandId: 9,
+    brandName: '배달의민족',
+    logoImage: '/images/brands/default-brand-logo.png',
+    categoryId: 11, // 음식점
+    description: 'VVIP : 배달비 무료, VIP : 2000원 할인',
+    usageLimit: '주 3회',
+    usageMethod: '앱에서 쿠폰 선택',
+    storeType: 'ONLINE',
+    data: [
+      { grade: 'VVIP', description: '배달비 무료', benefitType: 'GIFT' },
+      { grade: 'VIP', description: '2000원 할인', benefitType: 'DISCOUNT' },
+    ],
+  },
+  {
+    brandId: 10,
+    brandName: '올리브영',
+    logoImage: '/images/brands/default-brand-logo.png',
+    categoryId: 6, // 뷰티
+    description: 'VIP : 15% 할인',
+    usageLimit: '월 2회',
+    usageMethod: '매장 또는 온라인',
+    storeType: 'OFFLINE',
+    data: [
+      { grade: 'VIP', description: '15% 할인', benefitType: 'DISCOUNT' },
     ],
   },
 ];

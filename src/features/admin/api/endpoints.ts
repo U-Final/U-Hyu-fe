@@ -8,7 +8,8 @@ export const ADMIN_ENDPOINTS = {
   STAT_TOTAL: '/admin/statistics/total',
   // 브랜드(제휴처) 관련
   CATEGORY_LIST: '/admin/categories',
-  BRAND_LIST: '/admin/brands',
+  BRAND_LIST: '/brand-list',
+  BRAND_DETAIL: (brandId: number) => `/brand-list/${brandId}`,
   BRAND_CREATE: '/admin/brand',
   BRAND_UPDATE: (brandId: number) => `/admin/brands/${brandId}`,
   BRAND_DELETE: (brandId: number) => `/admin/brands/${brandId}`,

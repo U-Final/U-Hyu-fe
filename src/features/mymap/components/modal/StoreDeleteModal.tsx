@@ -1,5 +1,6 @@
 import { useToggleMyMapStoreMutation } from '@mymap/hooks';
 import { useSharedMapStore } from '@mymap/store/SharedMapStore';
+import { toast } from 'sonner';
 
 import { BaseModal, PrimaryButton } from '@/shared/components';
 import { useModalStore } from '@/shared/store';
@@ -21,6 +22,10 @@ export const StoreDeleteModal = ({ store_id, uuid }: StoreDeleteModalProps) => {
       {
         onSuccess: () => {
           closeModal();
+          toast.success('매장이 My Map에서 삭제되었습니다.');
+        },
+        onError: () => {
+          toast.error('매장 추가/삭제 중 오류가 발생했습니다.');
         },
       }
     );

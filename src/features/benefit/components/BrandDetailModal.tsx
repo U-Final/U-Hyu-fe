@@ -2,7 +2,7 @@ import { useGetBrandDetailQuery } from '@benefit/hooks';
 import { formatUsageText } from '@benefit/utils/formatUsageText';
 import clsx from 'clsx';
 
-import { BrandDetailSkeleton } from '@/shared/components/Skeleton';
+import { BrandDetailSkeleton } from '@/shared/components/skeleton';
 import { formatNewlines } from '@/shared/utils/formatNewlines';
 
 const BrandDetailModal = ({ brandId }: { brandId: number }) => {

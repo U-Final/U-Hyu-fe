@@ -9,7 +9,7 @@ import { useBenefitQueryParams, useGetBrandListQuery } from '@benefit/hooks';
 import { formatGradeDescriptions } from '@benefit/utils/formatGradeDescriptions';
 
 import { BrandCard, FilterTabs, SearchInput } from '@/shared/components';
-import { SkeletonBrandCard } from '@/shared/components/Skeleton';
+import { SkeletonBrandCard } from '@/shared/components/skeleton';
 import { BENEFIT_FILTER_TABS } from '@/shared/components/filter_tabs/FilterTabs.variants';
 import { useModalStore } from '@/shared/store';
 import { trackFilterUsed } from '@/shared/utils/actionlogTracker';

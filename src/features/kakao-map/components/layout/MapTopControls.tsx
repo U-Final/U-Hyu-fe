@@ -93,7 +93,11 @@ const MapTopControls: FC<MapTopControlsProps> = ({
   // ESC 키 눌렀을 때 검색 결과 닫기
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isSearchResultsVisible && onCloseSearchResults) {
+      if (
+        event.key === 'Escape' &&
+        isSearchResultsVisible &&
+        onCloseSearchResults
+      ) {
         onCloseSearchResults();
       }
     };
@@ -106,7 +110,10 @@ const MapTopControls: FC<MapTopControlsProps> = ({
     }
   }, [isSearchResultsVisible, onCloseSearchResults]);
   return (
-    <div ref={containerRef} className="absolute top-4 left-4 right-4 z-10 space-y-2.5">
+    <div
+      ref={containerRef}
+      className="absolute top-4 left-4 right-4 z-10 space-y-2.5"
+    >
       {/* 바텀시트 토글 버튼 - 오른쪽 고정 위치 */}
       <div className="absolute top-0 right-0 z-20">
         <BottomSheetToggleButton
@@ -139,7 +146,7 @@ const MapTopControls: FC<MapTopControlsProps> = ({
       </div>
 
       {/* 하단 라인: 카테고리 필터탭 전체 너비 사용 */}
-      <div className="w-full">
+      <div className="-mx-4 overflow-x-auto">
         <FilterTabs variant="white" onChange={onCategoryFilterChange} />
       </div>
 

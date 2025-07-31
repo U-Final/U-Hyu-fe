@@ -1,6 +1,7 @@
 import type { FC } from 'react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
+import { useDrag } from '@use-gesture/react';
 import clsx from 'clsx';
 
 import type { FilterTabProps } from '@/shared/components/filter_tabs/FilterTabs.types';
@@ -16,8 +17,15 @@ const FilterTabs: FC<FilterTabProps> = ({
   variant = 'gray',
 }) => {
   const [active, setActive] = useState(tabs[0]?.value ?? '');
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
 
   const handleClick = (value: string) => {
+    // 드래그 중이었다면 클릭 무시
+    if (isDragging.current) {
+      return;
+    }
+
     setActive(value);
     onChange?.(value);
 
@@ -27,17 +35,54 @@ const FilterTabs: FC<FilterTabProps> = ({
     }
   };
 
+  // use-gesture 라이브러리를 사용한 드래그 핸들링
+  const bind = useDrag(
+    ({ active, delta: [dx], first, last }) => {
+      if (!scrollContainerRef.current) return;
+
+      if (first) {
+        isDragging.current = false;
+      }
+
+      if (active && Math.abs(dx) > 3) {
+        isDragging.current = true;
+        // 드래그 델타값을 직접 사용하여 1:1 비율로 스크롤
+        const currentScrollLeft = scrollContainerRef.current.scrollLeft;
+        scrollContainerRef.current.scrollLeft = currentScrollLeft - dx;
+      }
+
+      if (last) {
+        // 드래그 종료 후 짧은 지연으로 클릭 방지 해제
+        setTimeout(() => {
+          isDragging.current = false;
+        }, 50);
+      }
+    },
+    {
+      // 드래그 설정
+      threshold: 3, // 3px 이상 움직여야 드래그로 인식
+      axis: 'x', // 수평 드래그만 허용
+      preventScroll: false, // 기본 스크롤 허용
+      pointer: { touch: true }, // 터치 지원
+      from: () => [scrollContainerRef.current?.scrollLeft || 0, 0], // 현재 스크롤 위치에서 시작
+    }
+  );
+
   return (
     <div
-      className="filter-tabs-scroll flex whitespace-nowrap gap-2 py-3 px-1 w-full overflow-x-auto"
+      ref={scrollContainerRef}
+      {...bind()}
+      className="flex overflow-x-auto gap-2 py-3 whitespace-nowrap select-none touch-pan-x"
+      style={{
+        width: '100vw',
+        marginLeft: 'calc(-50vw + 50%)',
+        paddingLeft: 'calc(50vw - 50% + 1rem)',
+        paddingRight: 'calc(50vw - 50% + 1rem)',
+      }}
       onWheel={e => {
         // 마우스 휠로 좌우 스크롤 지원
         e.preventDefault();
         e.currentTarget.scrollLeft += e.deltaY;
-      }}
-      onTouchMove={e => {
-        // 터치 이벤트 전파 방지
-        e.stopPropagation();
       }}
     >
       {tabs.map(({ label, value, icon: IconComponent, color }) => (
@@ -63,11 +108,11 @@ const FilterTabs: FC<FilterTabProps> = ({
           }
         >
           {IconComponent && (
-            <IconComponent 
-              className="w-4 h-4 flex-shrink-0" 
-              style={{ 
-                color: active === value && color ? color : 'inherit' 
-              }} 
+            <IconComponent
+              className="w-4 h-4 flex-shrink-0"
+              style={{
+                color: active === value && color ? color : 'inherit',
+              }}
             />
           )}
           <span className="whitespace-nowrap">{label}</span>

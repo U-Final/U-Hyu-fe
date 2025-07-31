@@ -52,7 +52,12 @@ export const BenefitList = () => {
           onChange={setSearchTerm}
           onSearch={value => setParam('brand_name', value)}
         />
-        <FilterTabs tabs={BENEFIT_FILTER_TABS} onChange={handleFilterChange} />
+        <div className="overflow-x-auto px-0">
+          <FilterTabs
+            tabs={BENEFIT_FILTER_TABS}
+            onChange={handleFilterChange}
+          />
+        </div>
         <CheckBoxList
           selectedItems={{
             storeType: params.storeType ?? '',

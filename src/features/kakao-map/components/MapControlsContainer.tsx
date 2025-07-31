@@ -194,7 +194,7 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
     if (import.meta.env.MODE === 'development') {
       console.log('🔍 카테고리 필터 변경:', {
         category,
-        note: '마커만 필터링됨, 검색 결과 재요청 없음',
+        note: 'API 재요청 실행됨 - 새로운 매장 목록으로 마커 업데이트',
       });
     }
   };

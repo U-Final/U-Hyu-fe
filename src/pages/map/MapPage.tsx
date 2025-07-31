@@ -115,18 +115,11 @@ const MapContent = () => {
     }
   }, [selectedPlace]);
 
-  // 바텀시트 초기화
+  // 바텀시트 초기화 - 닫힌 상태로 시작
   useEffect(() => {
     if (bottomSheetRef.current) {
-      // 페이지 로드 시 바텀시트 초기화 및 중간 상태로 열기
-      bottomSheetRef.current.initialize();
-
-      // 약간의 지연 후 중간 상태로 열기
-      setTimeout(() => {
-        if (bottomSheetRef.current) {
-          bottomSheetRef.current.open();
-        }
-      }, 300);
+      // 페이지 로드 시 바텀시트를 닫힌 상태로 초기화
+      bottomSheetRef.current.close();
     }
   }, [bottomSheetRef]);
 

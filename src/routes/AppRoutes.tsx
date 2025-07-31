@@ -11,13 +11,7 @@ import {
 } from '@/pages';
 import SidebarSheet from '@kakao-map/components/SidebarSheet';
 import { PATH } from '@paths';
-import {
-  BrowserRouter,
-  Outlet,
-  Route,
-  Routes,
-  useLocation,
-} from 'react-router-dom';
+import { Outlet, Route, Routes, useLocation } from 'react-router-dom';
 
 import {
   AdminRoute,
@@ -84,7 +78,7 @@ const Layout = () => {
 
 export const AppRoutes = () => {
   return (
-    <BrowserRouter>
+    <>
       <AppInitializer />
       <Routes>
         <Route element={<Layout />}>
@@ -135,6 +129,6 @@ export const AppRoutes = () => {
         </Route>
       </Routes>
       <ModalRoot />
-    </BrowserRouter>
+    </>
   );
 };

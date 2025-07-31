@@ -65,17 +65,15 @@ export const MapDragBottomSheet = forwardRef<
   const animationFrame = useRef<number | null>(null);
   const lastDragEndTime = useRef(0); // 마지막 드래그 종료 시간
 
-  // 바텀시트 열림/닫힘 상태
+  // 바텀시트 열림/닫힘 상태 - 초기값을 닫힌 상태로 설정
   const [isOpen, setIsOpen] = useState(false);
 
   // 🔧 윈도우 크기 동기화 - 반응형 레이아웃 대응
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
     const handleResize = () => {
       setWindowHeight(window.innerHeight);
-      setWindowWidth(window.innerWidth);
     };
 
     window.addEventListener('resize', handleResize);
@@ -134,8 +132,9 @@ export const MapDragBottomSheet = forwardRef<
       initialize: () => {
         if (!isInitialized.current) {
           isInitialized.current = true;
-          setIsOpen(true);
-          animateToPosition(openY);
+          // 초기화 시 닫힌 상태로 유지
+          setIsOpen(false);
+          animateToPosition(closedY);
         }
       },
       setExplicitlyClosed: (closed: boolean) => {

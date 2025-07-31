@@ -1,4 +1,5 @@
 import { useDeleteMyMapMutation } from '@mymap/hooks';
+import { toast } from 'sonner';
 
 import { BaseModal, PrimaryButton } from '@/shared/components';
 import { useModalStore } from '@/shared/store';
@@ -19,6 +20,10 @@ export const MymapDeleteModal = ({
       onSuccess: () => {
         onConfirm?.();
         useModalStore.getState().closeModal();
+        toast.success('My Map이 성공적으로 삭제되었습니다.');
+      },
+      onError: () => {
+        toast.error('My Map 생성 중 오류가 발생했습니다.');
       },
     });
   };

@@ -1,7 +1,8 @@
 import { type FC } from 'react';
 
-import { CATEGORY_CONFIGS } from '../../types/category.ts';
+import { getFilterCategoryForStore } from '../../config/categoryMapping.ts';
 import type { Store } from '../../types/store.ts';
+import { CATEGORY_COLOR_MAP } from '../search/CategoryIcon.tsx';
 
 interface BrandMarkerProps {
   store: Store;
@@ -16,9 +17,34 @@ const BrandMarker: FC<BrandMarkerProps> = ({
   isRecommended = false,
   onClick,
 }) => {
-  const category = store.categoryName as keyof typeof CATEGORY_CONFIGS;
-  const categoryConfig = CATEGORY_CONFIGS[category] || CATEGORY_CONFIGS.default;
   const brandImageSrc = store.logoImage;
+
+  // 제휴 매장 카테고리를 필터 탭으로 변환 후 카카오 카테고리 색상 사용
+  const filterCategory = getFilterCategoryForStore(store.categoryName);
+
+  // 카테고리별 카카오 색상 매핑 (필터 탭 기반)
+  const getCategoryColorFromFilter = (filterCat: string): string => {
+    switch (filterCat) {
+      case 'shopping':
+        return CATEGORY_COLOR_MAP.MT1; // 대형마트 색상
+      case 'food':
+        return CATEGORY_COLOR_MAP.FD6; // 음식점 색상
+      case 'beauty':
+        return CATEGORY_COLOR_MAP.HP8; // 병원 색상
+      case 'life':
+        return CATEGORY_COLOR_MAP.BK9; // 은행 색상
+      case 'culture':
+        return CATEGORY_COLOR_MAP.CT1; // 문화시설 색상
+      case 'activity':
+        return CATEGORY_COLOR_MAP.PK6; // 주차장 색상
+      case 'travel':
+        return CATEGORY_COLOR_MAP.AD5; // 숙박 색상
+      default:
+        return CATEGORY_COLOR_MAP.DEFAULT; // 기본 색상
+    }
+  };
+
+  const categoryColor = getCategoryColorFromFilter(filterCategory);
 
   return (
     <div className="relative" onClick={onClick}>
@@ -33,7 +59,6 @@ const BrandMarker: FC<BrandMarkerProps> = ({
         className={`
           relative 
           w-14 h-14 
-          ${categoryConfig.color}
           rounded-full 
           shadow-lg 
           border-3 
@@ -42,9 +67,12 @@ const BrandMarker: FC<BrandMarkerProps> = ({
           transition-all 
           duration-200
           hover:scale-110
-          ${isSelected ? `ring-4 ${isRecommended ? 'ring-yellow-300' : categoryConfig.ringColor}` : ''}
+          ${isSelected ? `ring-4 ${isRecommended ? 'ring-yellow-300' : 'ring-blue-300'}` : ''}
           ${isRecommended ? 'animate-pulse' : ''}
         `}
+        style={{
+          backgroundColor: categoryColor,
+        }}
       >
         {/* 브랜드 로고 */}
         <div className="absolute inset-2 bg-white rounded-full overflow-hidden">
@@ -71,9 +99,12 @@ const BrandMarker: FC<BrandMarkerProps> = ({
             border-r-[6px]
             border-t-[10px]
             border-transparent
-            ${isRecommended ? 'border-t-yellow-500' : categoryConfig.color}
+            border-t-current
             drop-shadow-md
           `}
+          style={{
+            borderTopColor: isRecommended ? '#eab308' : categoryColor, // yellow-500 or category color
+          }}
         />
       </div>
 

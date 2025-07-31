@@ -142,6 +142,49 @@ export const useMapData = () => {
   }, [storeDetailQuery.data, storeDetailQuery.isLoading, setStoreDetail]);
 
   /**
+   * 앱 최초 실행시 현재 위치 가져오기
+   * 위치가 설정되면 React Query가 자동으로 추천 매장 로딩
+   */
+  useEffect(() => {
+    const initializeLocation = async () => {
+      const { userLocation, mapCenter } = useMapStore.getState();
+
+      // 이미 사용자 위치가 있으면 스킵
+      if (userLocation) {
+        return;
+      }
+
+      // 현재 지도 중심이 기본값(강남역)이면 현재 위치 시도
+      const defaultLat = parseFloat(
+        import.meta.env.VITE_MAP_INITIAL_LAT || '37.54699'
+      );
+      const defaultLng = parseFloat(
+        import.meta.env.VITE_MAP_INITIAL_LNG || '127.09598'
+      );
+
+      const isDefaultLocation =
+        Math.abs(mapCenter.lat - defaultLat) < 0.001 &&
+        Math.abs(mapCenter.lng - defaultLng) < 0.001;
+
+      if (isDefaultLocation) {
+        try {
+          await getCurrentLocation();
+          if (import.meta.env.MODE === 'development') {
+            console.log('✅ 앱 시작시 현재 위치 설정 완료');
+          }
+        } catch (error) {
+          if (import.meta.env.MODE === 'development') {
+            console.warn('⚠️ 현재 위치 가져오기 실패, 기본 위치 사용:', error);
+          }
+        }
+      }
+    };
+
+    // 컴포넌트 마운트시 한 번만 실행
+    initializeLocation();
+  }, []); // 빈 의존성 배열로 최초 1회만 실행
+
+  /**
    * 지도 중심점 변경 시 주변 매장 새로고침
    * React Query가 자동으로 새로운 파라미터로 쿼리 재실행
    */

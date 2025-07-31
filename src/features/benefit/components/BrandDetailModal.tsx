@@ -6,9 +6,7 @@ import { BrandDetailSkeleton } from '@/shared/components/Skeleton';
 import { formatNewlines } from '@/shared/utils/formatNewlines';
 
 const BrandDetailModal = ({ brandId }: { brandId: number }) => {
-  const { data: brand, isPending, error } = useGetBrandDetailQuery(brandId);
-
-  if (error || !brand) return <div>Error loading brand details.</div>;
+  const { data: brand, isPending, isError } = useGetBrandDetailQuery(brandId);
 
   const gradeStyles: Record<string, { bg: string; text: string }> = {
     GOOD: { bg: 'bg-yellow', text: 'text-brown' },
@@ -26,7 +24,9 @@ const BrandDetailModal = ({ brandId }: { brandId: number }) => {
 
   return isPending ? (
     <BrandDetailSkeleton />
-  ) : (
+  ) : isError || !brand ? (
+        <div className="text-sm text-red mt-4">에러 발생</div>
+      ) :  (
     <div className="flex flex-col gap-4 text-black text-caption">
       <h1 className="text-body1 font-bold">{brand.brandName}</h1>
 

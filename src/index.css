@@ -259,6 +259,16 @@
 }
 
 @layer utilities {
+  /* Global scrollbar hide */
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  *::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Desktop responsive padding utilities */
   .desktop-padding {
     @media (min-width: 1024px) {
@@ -505,7 +515,7 @@
     box-sizing: border-box;
   }
 
-  body {
+  html, body {
     font-family: 'Pretendard', system-ui, sans-serif;
     background-color: var(--color-background);
     color: var(--color-text-primary);
@@ -514,6 +524,13 @@
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    display: none;
   }
 
   /* 기본 요소 스타일링 */

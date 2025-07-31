@@ -4,6 +4,7 @@ import { useMapStore } from '@kakao-map/store/MapStore';
 import RecommendedStoreCard from '@recommendation/components/RecommendedCard';
 import { RecommendedStoresToggle } from '@recommendation/components/ToggleButton';
 import { useRecommendedStoresQuery } from '@recommendation/hooks/useRecommendQuery';
+import { BeatLoader } from 'react-spinners';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -40,7 +41,7 @@ export const RecommendedStoreListLoggedIn = () => {
     }
   }, [stores, setRecommendedStores]);
 
-  if (isPending) return <p>불러오는 중...</p>;
+  if (isPending) return <BeatLoader size={10} />;
   if (error) return <p>{error.message}</p>;
 
   if (!stores || stores.length === 0) {

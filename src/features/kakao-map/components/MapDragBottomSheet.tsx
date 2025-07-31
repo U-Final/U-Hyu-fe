@@ -27,10 +27,10 @@ export interface MapDragBottomSheetRef {
 // 🔢 상수 정의
 const CONSTANTS = {
   // 위치 상수
-  EXPANDED_BOTTOM_MARGIN: 60, // 완전 확장 시 바텀 여백
+  EXPANDED_BOTTOM_MARGIN: 0, // 완전 확장 시 바텀 여백
 
   // 드래그 제한 상수
-  MIN_HEIGHT_FROM_TOP: 80, // 화면 상단에서 최소 거리
+  MIN_HEIGHT_FROM_TOP: 0, // 화면 상단에서 최소 거리
   EXTRA_DRAG_BUFFER: 0, // 닫힌 위치에서 추가 드래그 허용 범위
 
   // 스냅 상수
@@ -71,7 +71,6 @@ export const MapDragBottomSheet = forwardRef<
   // 🔧 윈도우 크기 동기화 - 반응형 레이아웃 대응
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const bottomNavHeight = 48; // 고정 네비게이션 높이 사용
 
   useEffect(() => {
     const handleResize = () => {
@@ -84,36 +83,9 @@ export const MapDragBottomSheet = forwardRef<
   }, []);
 
   // 📐 위치 제한값 정의 - 패딩이 적용된 컨테이너 기준
-  const availableHeight = windowHeight - bottomNavHeight; // 패딩 제외된 사용 가능한 높이
+  const availableHeight = windowHeight; // 패딩 제외된 사용 가능한 높이
 
-  // 모바일/데스크톱별 반응형 핸들 높이 계산
-  const calculateHandleHeight = () => {
-    const isMobile = windowWidth <= 640;
-
-    if (isMobile) {
-      // 모바일: 더 작은 비율과 적절한 제한값
-      const mobileRatio = 0.08; // 사용 가능 높이의 8% (모바일 최적화)
-      const minHeight = 20; // 최소 60px (모바일에서 적절한 터치 영역)
-      const maxHeight = 80; // 최대 80px (모바일에서 과도하지 않게)
-
-      return Math.min(
-        Math.max(availableHeight * mobileRatio, minHeight),
-        maxHeight
-      );
-    } else {
-      // 데스크톱: 기존 로직 (더 큰 핸들 영역)
-      const desktopRatio = 0.12; // 사용 가능 높이의 12%
-      const minHeight = 70; // 최소 80px
-      const maxHeight = 120; // 최대 120px
-
-      return Math.min(
-        Math.max(availableHeight * desktopRatio, minHeight),
-        maxHeight
-      );
-    }
-  };
-
-  const dynamicHandleHeight = calculateHandleHeight();
+  const dynamicHandleHeight = 100;
 
   const minY = CONSTANTS.MIN_HEIGHT_FROM_TOP; // 최대로 올라갈 수 있는 위치
   const maxY =
@@ -397,7 +369,7 @@ export const MapDragBottomSheet = forwardRef<
   return (
     <div
       className="flex-1 pointer-events-none"
-      style={{ paddingBottom: `${bottomNavHeight}px` }}
+      style={{ paddingBottom: `0px` }}
     >
       {/* 📦 바텀시트 전체 컨테이너 */}
       <div

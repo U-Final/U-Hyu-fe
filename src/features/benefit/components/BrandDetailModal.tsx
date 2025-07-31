@@ -1,13 +1,13 @@
 import { useGetBrandDetailQuery } from '@benefit/hooks';
+import { formatUsageText } from '@benefit/utils/formatUsageText';
 import clsx from 'clsx';
 
+import { BrandDetailSkeleton } from '@/shared/components/Skeleton';
 import { formatNewlines } from '@/shared/utils/formatNewlines';
-import { formatUsageText } from '@benefit/utils/formatUsageText';
 
 const BrandDetailModal = ({ brandId }: { brandId: number }) => {
-  const { data: brand, isLoading, error } = useGetBrandDetailQuery(brandId);
+  const { data: brand, isPending, error } = useGetBrandDetailQuery(brandId);
 
-  if (isLoading) return <div>Loading...</div>;
   if (error || !brand) return <div>Error loading brand details.</div>;
 
   const gradeStyles: Record<string, { bg: string; text: string }> = {
@@ -24,9 +24,12 @@ const BrandDetailModal = ({ brandId }: { brandId: number }) => {
     return grade;
   };
 
-  return (
+  return isPending ? (
+    <BrandDetailSkeleton />
+  ) : (
     <div className="flex flex-col gap-4 text-black text-caption">
       <h1 className="text-body1 font-bold">{brand.brandName}</h1>
+
       <div className="flex flex-col gap-1">
         <h3 className="font-bold">등급별 혜택</h3>
         <div className="flex flex-col gap-1">
@@ -49,19 +52,21 @@ const BrandDetailModal = ({ brandId }: { brandId: number }) => {
           })}
         </div>
       </div>
+
       <div className="flex flex-col gap-1">
         <h3 className="font-bold">제공 횟수</h3>
         <p className="text-black">{brand.usageLimit}</p>
       </div>
+
       <div className="flex flex-col gap-1">
         <h3 className="font-bold">이용방법</h3>
         <div
           className="text-black overflow-y-auto"
-          style={{
-            maxHeight: '200px',
-          }}
+          style={{ maxHeight: '200px' }}
         >
-          <p className="whitespace-pre-wrap">{formatUsageText(brand.usageMethod)}</p>
+          <p className="whitespace-pre-wrap">
+            {formatUsageText(brand.usageMethod)}
+          </p>
         </div>
       </div>
     </div>

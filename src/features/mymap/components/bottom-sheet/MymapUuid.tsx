@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { BrandCard } from '@/shared/components';
 import { BackButton } from '@/shared/components';
-import { SkeletonMyMapUuidItem } from '@/shared/components/Skeleton';
+import { SkeletonMyMapUuidItem } from '@/shared/components/skeleton';
 import { useModalStore } from '@/shared/store';
 
 interface MyMapUuidProps {

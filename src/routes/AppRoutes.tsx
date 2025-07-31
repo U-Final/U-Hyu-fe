@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-
 import {
   AdminPage,
   BenefitPage,
@@ -24,18 +22,6 @@ import AppInitializer from '@/shared/components/AppInitializer';
 
 const Layout = () => {
   const { pathname } = useLocation();
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 640);
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   const showBottomNav =
     pathname === PATH.HOME ||
@@ -48,30 +34,17 @@ const Layout = () => {
 
   const isMap = pathname === '/' || pathname.startsWith(PATH.MAP);
 
-  // 모바일에서는 프레임 없이 직접 렌더링
-  const content = (
+  return (
     <div
       id="main-content"
-      className={`w-full h-full flex flex-col relative ${isMap ? 'items-stretch justify-start' : ''}`}
+      className={`w-full h-screen flex flex-col relative ${isMap ? 'items-stretch justify-start' : ''}`}
       style={isMap ? { minWidth: 0 } : undefined}
     >
       <BaseLayout isMap={isMap}>
         <SidebarSheet />
         <Outlet />
+        {showBottomNav && <BottomNavigation />}
       </BaseLayout>
-      {showBottomNav && <BottomNavigation />}
-    </div>
-  );
-
-  // 모바일에서는 모바일 프레임 없이 렌더링
-  if (isMobile) {
-    return content;
-  }
-
-  // 데스크톱에서는 모바일 프레임 적용
-  return (
-    <div className="mobile-frame">
-      <div className="mobile-content">{content}</div>
     </div>
   );
 };

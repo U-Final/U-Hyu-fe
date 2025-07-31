@@ -7,6 +7,7 @@ import {
   useToggleMyMapStoreMutation,
 } from '@mymap/hooks';
 import { MdStars } from 'react-icons/md';
+import { toast } from 'sonner';
 
 import { PrimaryButton, PrimaryCheckbox } from '@/shared/components';
 import { useModalStore } from '@/shared/store';
@@ -64,9 +65,19 @@ const AddStoreModal: FC<AddStoreProps> = ({ storeId }) => {
 
   // 저장 버튼 클릭 시 변경된 것만 요청
   const handleSave = () => {
+    let hasChanges = false;
+
     // 즐겨찾기 상태 변경 감지
     if (initialIsBookmarked !== isBookmarked) {
-      toggleFavoriteMutation.mutate({ storeId });
+      toggleFavoriteMutation.mutate(
+        { storeId },
+        {
+          onError: () => {
+            toast.error('매장 추가/삭제 중 오류가 발생했습니다.');
+          },
+        }
+      );
+      hasChanges = true;
     }
 
     // MyMap 항목 변경 감지
@@ -78,9 +89,23 @@ const AddStoreModal: FC<AddStoreProps> = ({ storeId }) => {
         (initial === false && isChecked === true) ||
         (initial === true && isChecked === false)
       ) {
-        toggleMutation.mutate({ myMapListId, store_id: storeId });
+        toggleMutation.mutate(
+          { myMapListId, store_id: storeId },
+          {
+            onError: () => {
+              toast.error('매장 추가/삭제 중 오류가 발생했습니다.');
+            },
+          }
+        );
+        hasChanges = true;
       }
     });
+
+    // 변경사항이 있을 때만 성공 토스트
+    if (hasChanges) {
+      toast.success('매장이 저장되었습니다.');
+    }
+
     closeModal();
   };
 

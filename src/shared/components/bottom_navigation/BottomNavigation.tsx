@@ -57,7 +57,7 @@ const BottomNavigation = () => {
   };
 
   return (
-    <div className="absolute bottom-0 left-0 right-0 z-1001">
+    <div className="fixed bottom-0 left-0 right-0 z-1001 desktop-padding">
       <nav className="h-12 text-[0.625rem] shadow-nav flex relative justify-around bg-white gap-5 px-[1.5rem] py-[0.5rem]">
         <NavLink to={PATH.MAP} className="flex gap-4">
           <NavItem
@@ -102,11 +102,16 @@ const BottomNavigation = () => {
           />
         </NavLink>
         {isLoggedIn ? (
-          <NavLink to={user?.role === 'ADMIN' ? PATH.ADMIN : PATH.MYPAGE} className="flex gap-4">
+          <NavLink
+            to={user?.role === 'ADMIN' ? PATH.ADMIN : PATH.MYPAGE}
+            className="flex gap-4"
+          >
             <NavItem
               label={user?.role === 'ADMIN' ? '관리자' : '마이페이지'}
               icon={<FaUser />}
-              isActive={activeTab === (user?.role === 'ADMIN' ? '관리자' : '마이페이지')}
+              isActive={
+                activeTab === (user?.role === 'ADMIN' ? '관리자' : '마이페이지')
+              }
               onClick={() => {}}
             />
           </NavLink>

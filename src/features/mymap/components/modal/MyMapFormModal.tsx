@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { MYMAP_COLOR, type MarkerColor } from '@mymap/constants/mymapColor';
 import { useAddMyMapMutation, useUpdateMyMapMutation } from '@mymap/hooks';
+import { toast } from 'sonner';
 
 import { PrimaryButton } from '@/shared/components';
 import { useModalStore } from '@/shared/store';
@@ -46,15 +47,33 @@ export const MyMapFormModal = ({
       return;
     }
 
+    const trimmedTitle = title.trim();
+
     if (mode === 'create') {
       addMyMap(
-        { title: title.trim(), markerColor: color, uuid: crypto.randomUUID() },
-        { onSuccess: closeModal }
+        { title: trimmedTitle, markerColor: color, uuid: crypto.randomUUID() },
+        {
+          onSuccess: () => {
+            closeModal();
+            toast.success(`"${trimmedTitle}" 지도가 생성되었습니다.`);
+          },
+          onError: () => {
+            toast.error('My Map 생성 중 오류가 발생했습니다.');
+          },
+        }
       );
     } else {
       updateMyMap(
-        { myMapListId: myMapListId!, title: title.trim(), markerColor: color },
-        { onSuccess: closeModal }
+        { myMapListId: myMapListId!, title: trimmedTitle, markerColor: color },
+        {
+          onSuccess: () => {
+            closeModal();
+            toast.success(`"${title}" 지도가 수정되었습니다.`);
+          },
+          onError: () => {
+            toast.error('My Map 수정 중 오류가 발생했습니다.');
+          },
+        }
       );
     }
   };

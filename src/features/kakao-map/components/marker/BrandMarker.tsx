@@ -1,8 +1,7 @@
 import { type FC } from 'react';
 
-import { getFilterCategoryForStore } from '../../config/categoryMapping.ts';
 import type { Store } from '../../types/store.ts';
-import { CATEGORY_COLOR_MAP } from '../search/CategoryIcon.tsx';
+import { FILTER_TABS } from '../../../../shared/components/filter_tabs/FilterTabs.variants.ts';
 
 interface BrandMarkerProps {
   store: Store;
@@ -19,32 +18,38 @@ const BrandMarker: FC<BrandMarkerProps> = ({
 }) => {
   const brandImageSrc = store.logoImage;
 
-  // 제휴 매장 카테고리를 필터 탭으로 변환 후 카카오 카테고리 색상 사용
-  const filterCategory = getFilterCategoryForStore(store.categoryName);
-
-  // 카테고리별 카카오 색상 매핑 (필터 탭 기반)
-  const getCategoryColorFromFilter = (filterCat: string): string => {
-    switch (filterCat) {
-      case 'shopping':
-        return CATEGORY_COLOR_MAP.MT1; // 대형마트 색상
-      case 'food':
-        return CATEGORY_COLOR_MAP.FD6; // 음식점 색상
-      case 'beauty':
-        return CATEGORY_COLOR_MAP.HP8; // 병원 색상
-      case 'life':
-        return CATEGORY_COLOR_MAP.BK9; // 은행 색상
-      case 'culture':
-        return CATEGORY_COLOR_MAP.CT1; // 문화시설 색상
-      case 'activity':
-        return CATEGORY_COLOR_MAP.PK6; // 주차장 색상
-      case 'travel':
-        return CATEGORY_COLOR_MAP.AD5; // 숙박 색상
-      default:
-        return CATEGORY_COLOR_MAP.DEFAULT; // 기본 색상
-    }
+  // FilterTabs 색상을 직접 사용하는 개선된 함수
+  const getCategoryColorFromFilter = (storeCategoryName: string): string => {
+    // 매장 카테고리명을 FilterTabs에서 찾기
+    const filterTab = FILTER_TABS.find(tab => {
+      // 정확한 매칭
+      if (tab.value === storeCategoryName) return true;
+      
+      // 유사한 카테고리 매칭
+      const categoryMappings: Record<string, string[]> = {
+        '테마파크': ['themepark'],
+        '워터파크/아쿠아리움': ['waterpark'],
+        '액티비티': ['activity'],
+        '뷰티': ['beauty'],
+        '건강': ['health', 'pharmacy'],
+        '쇼핑': ['shopping'],
+        '생활/편의': ['lifestyle', 'convenience'],
+        '베이커리/디저트': ['bakery', 'cafe'],
+        '음식점': ['food', 'restaurant', 'fastfood'],
+        '영화/미디어': ['media', 'culture'],
+        '공연/전시': ['performance'],
+        '교육': ['education'],
+        '여행/교통': ['travel'],
+      };
+      
+      const matchingCategories = categoryMappings[tab.value];
+      return matchingCategories?.includes(storeCategoryName);
+    });
+    
+    return filterTab?.color || '#6b7280'; // 기본 회색
   };
 
-  const categoryColor = getCategoryColorFromFilter(filterCategory);
+  const categoryColor = getCategoryColorFromFilter(store.categoryName);
 
   return (
     <div className="relative" onClick={onClick}>

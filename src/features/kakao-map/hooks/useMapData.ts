@@ -145,9 +145,16 @@ export const useMapData = () => {
    */
   useEffect(() => {
     if (storeListQuery.data) {
+      if (import.meta.env.MODE === 'development') {
+        console.log('🏪 Store data updated from API:', {
+          storesCount: storeListQuery.data.data?.length || 0,
+          queryParams: storeListParams,
+          data: storeListQuery.data.data
+        });
+      }
       setStoresFromQuery(storeListQuery.data);
     }
-  }, [storeListQuery.data, setStoresFromQuery]);
+  }, [storeListQuery.data, setStoresFromQuery, storeListParams]);
 
   /**
    * React Query 매장 상세 정보 결과를 MapStore에 동기화

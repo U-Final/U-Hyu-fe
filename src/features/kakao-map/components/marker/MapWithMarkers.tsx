@@ -110,6 +110,15 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
       });
     }
 
+    if (import.meta.env.MODE === 'development') {
+      console.log('🗺️ MapWithMarkers: Rendering stores', {
+        storesCount: stores.length,
+        recommendedCount: recommendedStores.length,
+        totalRenderCount: allStores.length,
+        stores: allStores
+      });
+    }
+
     return allStores;
   }, [
     stores,

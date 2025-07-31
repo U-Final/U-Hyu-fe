@@ -7,107 +7,13 @@
 @custom-variant dark (&:is(.dark *));
 
 #root {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
   width: 100vw;
-  height: calc(var(--vh, 1vh) * 100);
-  background: #f3f4f6;
-  padding: 1rem;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
-/* Mobile Frame Styles */
-@layer utilities {
-  /* Desktop: Mobile frame container */
-  .mobile-frame {
-    width: 375px;
-    height: 812px;
-    max-width: 375px;
-    max-height: 812px;
-    border-radius: 2rem;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
-    padding: 2px;
-    position: relative;
-    overflow: hidden;
-  }
 
-  /* Inner content area */
-  .mobile-content {
-    width: 100%;
-    height: 100%;
-    border-radius: calc(2rem - 2px);
-    overflow: hidden;
-    background: white;
-  }
-
-  /* Shadow utilities */
-  .shadow-mobile {
-    box-shadow: var(--frame-shadow);
-  }
-}
-
-/* Responsive: Mobile devices use full screen */
-@media (max-width: 640px) {
-  /* iOS Safari 전용 최적화 */
-  @supports (-webkit-touch-callout: none) {
-    html, body {
-      position: relative; /* fixed 대신 relative 사용 */
-      overflow-x: hidden;
-      overflow-y: auto;
-      overscroll-behavior: none;
-      -webkit-overflow-scrolling: touch;
-      touch-action: manipulation;
-    }
-    
-    #root {
-      min-height: calc(var(--vh, 1vh) * 100);
-      height: auto; /* 고정 높이 대신 자동 높이 */
-    }
-  }
-  
-  /* 기본 모바일 스타일 */
-  html, body {
-    overflow: hidden;
-    position: fixed;
-    width: 100%;
-    height: calc(var(--vh, 1vh) * 100); /* 동적 뷰포트 높이 사용 */
-    overscroll-behavior: none;
-    -webkit-overflow-scrolling: auto;
-    touch-action: manipulation;
-  }
-
-  #root {
-    justify-content: flex-start;
-    align-items: flex-start;
-    padding: 0;
-    background: white;
-    overflow: hidden;
-    position: fixed;
-    width: 100vw;
-    height: calc(var(--vh, 1vh) * 100); /* 동적 뷰포트 높이 사용 */
-  }
-
-  .mobile-frame {
-    width: 100vw;
-    height: calc(var(--vh, 1vh) * 100); /* 동적 뷰포트 높이 사용 */
-    max-width: none;
-    max-height: none;
-    border-radius: 0;
-    box-shadow: none;
-    background: transparent;
-    padding: 0;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .mobile-content {
-    border-radius: 0;
-    overflow: hidden;
-    height: calc(var(--vh, 1vh) * 100); /* 동적 뷰포트 높이 사용 */
-    position: relative;
-  }
-}
 
 .scrollbar-hidden::-webkit-scrollbar {
   display: none;
@@ -353,6 +259,59 @@
 }
 
 @layer utilities {
+  /* Global scrollbar hide */
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  *::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Desktop responsive padding utilities */
+  .desktop-padding {
+    @media (min-width: 1024px) {
+      padding-left: calc((100vw - 500px) / 2);
+      padding-right: calc((100vw - 500px) / 2);
+    }
+    @media (min-width: 1280px) {
+      padding-left: calc((100vw - 600px) / 2);
+      padding-right: calc((100vw - 600px) / 2);
+    }
+    @media (min-width: 1536px) {
+      padding-left: calc((100vw - 700px) / 2);
+      padding-right: calc((100vw - 700px) / 2);
+    }
+  }
+
+  .desktop-padding-sheet {
+    @media (min-width: 1024px) {
+      left: calc((100vw - 500px) / 2) !important;
+      width: 350px !important;
+    }
+    @media (min-width: 1280px) {
+      left: calc((100vw - 600px) / 2) !important;
+      width: 420px !important;
+    }
+    @media (min-width: 1536px) {
+      left: calc((100vw - 700px) / 2) !important;
+      width: 490px !important;
+    }
+  }
+
+  .desktop-content-position {
+    @media (min-width: 1024px) {
+      left: calc(((100vw - 500px) / 2) + 1rem) !important;
+    }
+    @media (min-width: 1280px) {
+      left: calc(((100vw - 600px) / 2) + 1rem) !important;
+    }
+    @media (min-width: 1536px) {
+      left: calc(((100vw - 700px) / 2) + 1rem) !important;
+    }
+  }
+
   /* Text Color Utilities */
   .text-primary {
     color: var(--text-primary);
@@ -556,7 +515,7 @@
     box-sizing: border-box;
   }
 
-  body {
+  html, body {
     font-family: 'Pretendard', system-ui, sans-serif;
     background-color: var(--color-background);
     color: var(--color-text-primary);
@@ -565,6 +524,13 @@
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    display: none;
   }
 
   /* 기본 요소 스타일링 */
@@ -785,20 +751,6 @@
   min-width: fit-content !important;
 }
 
-/* 모바일 프레임 내부에서 필터탭만 스크롤 허용 */
-.mobile-content .filter-tabs-scroll {
-  overflow-x: auto !important;
-  overflow-y: visible !important;
-  -webkit-overflow-scrolling: touch !important;
-  touch-action: pan-x !important;
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
-}
-
-/* 필터탭 컨테이너 강제 스크롤 */
-.mobile-content .filter-tabs-scroll * {
-  pointer-events: auto !important;
-}
 
 /* 모바일에서 지정된 스크롤 영역만 스크롤 허용 */
 @media (max-width: 640px) {

@@ -675,7 +675,7 @@ export const mockMembershipStats = [
     sumStatisticsMembershipUsageByCategory: 8,
     membershipUsageByBrandList: [
       {
-        brandName: '젝지',
+        brandName: '젠지',
         sumMembershipUsageByBrand: 5
       },
       {

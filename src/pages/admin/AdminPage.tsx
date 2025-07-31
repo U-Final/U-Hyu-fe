@@ -115,22 +115,11 @@ export default function AdminPage() {
     }
     
     if (newTab === 'stats') {
-      // 통계 탭: 현재 선택된 통계와 전체 통계 refetch
+      // 통계 탭: 즐겨찾기로 초기화하고 즐겨찾기와 전체 통계만 refetch
+      setSelectedStatsTab('bookmark');
+      setSelectedCategory('all');
       refetchTotal();
-      switch (selectedStatsTab) {
-        case 'bookmark':
-          refetchBookmark();
-          break;
-        case 'filtering':
-          refetchFiltering();
-          break;
-        case 'recommendation':
-          refetchRecommend();
-          break;
-        case 'membership':
-          refetchMembership();
-          break;
-      }
+      refetchBookmark();
     } else if (newTab === 'brands') {
       // 브랜드 관리 탭: 브랜드 데이터 refetch
       refetchBrands();

@@ -4,7 +4,7 @@ export const ADMIN_ENDPOINTS = {
   STAT_FILTERING: '/admin/statistics/filter',
 
   STAT_RECOMMEND: '/admin/statistics/recommendation',
-  STAT_MEMBERSHIP: '/admin/statistics/membership',
+  STAT_MEMBERSHIP: '/admin/statistics/membershipUsage',
   STAT_TOTAL: '/admin/statistics/total',
   // 브랜드(제휴처) 관련
   CATEGORY_LIST: '/admin/categories',

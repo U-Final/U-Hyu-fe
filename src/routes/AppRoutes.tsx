@@ -49,8 +49,8 @@ const Layout = () => {
       <BaseLayout isMap={isMap}>
         <SidebarSheet />
         <Outlet />
+        {showBottomNav && <BottomNavigation />}
       </BaseLayout>
-      {showBottomNav && <BottomNavigation />}
     </div>
   );
 };

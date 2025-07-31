@@ -259,6 +259,21 @@
 }
 
 @layer utilities {
+  /* Global scrollbar elimination - force hide all scrollbars */
+  html, body, * {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+  
+  html::-webkit-scrollbar, 
+  body::-webkit-scrollbar, 
+  *::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+  }
+
   /* Desktop responsive padding utilities */
   .desktop-padding {
     @media (min-width: 1024px) {
@@ -503,9 +518,17 @@
 @layer base {
   * {
     box-sizing: border-box;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
   }
 
-  body {
+  *::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  html, body {
     font-family: 'Pretendard', system-ui, sans-serif;
     background-color: var(--color-background);
     color: var(--color-text-primary);
@@ -514,6 +537,16 @@
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    overflow-x: hidden;
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
   }
 
   /* 기본 요소 스타일링 */

@@ -105,6 +105,10 @@
       <img src="https://github.com/user-attachments/assets/e8520c5e-ca19-4d62-96a6-777aaa33e50f" width="400" />
       <div style="margin-top:6px; font-size:14px;">마이맵 UI</div>
     </td>
+    <td style="border:1px solid #ccc; border-radius:8px; padding:8px; text-align:center;">
+      <img src="https://github.com/user-attachments/assets/3ffed044-14a4-4ec6-9f26-bdf812129a0b" width="360" />
+      <div style="margin-top:6px; font-size:14px;">카카오 공유하기</div>
+    </td>
   </tr>
 </table>
 

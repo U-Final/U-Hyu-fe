@@ -37,7 +37,7 @@ const FilterTabs: FC<FilterTabProps> = ({
 
   // use-gesture 라이브러리를 사용한 드래그 핸들링
   const bind = useDrag(
-    ({ active, delta: [dx], first, last }) => {
+    ({ active, delta: [dx], first, last, event }) => {
       if (!scrollContainerRef.current) return;
 
       if (first) {
@@ -46,6 +46,10 @@ const FilterTabs: FC<FilterTabProps> = ({
 
       if (active && Math.abs(dx) > 3) {
         isDragging.current = true;
+        // 페이지 스크롤 방지
+        event?.preventDefault();
+        event?.stopPropagation();
+        
         // 드래그 델타값을 직접 사용하여 1:1 비율로 스크롤
         const currentScrollLeft = scrollContainerRef.current.scrollLeft;
         scrollContainerRef.current.scrollLeft = currentScrollLeft - dx;
@@ -62,7 +66,7 @@ const FilterTabs: FC<FilterTabProps> = ({
       // 드래그 설정
       threshold: 3, // 3px 이상 움직여야 드래그로 인식
       axis: 'x', // 수평 드래그만 허용
-      preventScroll: false, // 기본 스크롤 허용
+      preventScroll: true, // 페이지 스크롤 방지
       pointer: { touch: true }, // 터치 지원
       from: () => [scrollContainerRef.current?.scrollLeft || 0, 0], // 현재 스크롤 위치에서 시작
     }
@@ -78,11 +82,24 @@ const FilterTabs: FC<FilterTabProps> = ({
         marginLeft: 'calc(-50vw + 50%)',
         paddingLeft: 'calc(50vw - 50% + 1rem)',
         paddingRight: 'calc(50vw - 50% + 1rem)',
+        overscrollBehavior: 'contain',
       }}
       onWheel={e => {
         // 마우스 휠로 좌우 스크롤 지원
         e.preventDefault();
+        e.stopPropagation();
         e.currentTarget.scrollLeft += e.deltaY;
+      }}
+      onTouchStart={e => {
+        // 터치 시작 시 페이지 스크롤 방지 준비
+        e.stopPropagation();
+      }}
+      onTouchMove={e => {
+        // 터치 이동 시 페이지 스크롤 방지
+        if (isDragging.current) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
       }}
     >
       {tabs.map(({ label, value, icon: IconComponent, color }) => (

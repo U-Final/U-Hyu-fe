@@ -76,14 +76,7 @@ export const AppRoutes = () => {
               </AuthRoute>
             }
           />
-          <Route
-            path={PATH.EXTRA_INFO}
-            element={
-              <AuthRoute>
-                <ExtraInfo />
-              </AuthRoute>
-            }
-          />
+          <Route path={PATH.EXTRA_INFO} element={<ExtraInfo />} />
           <Route path={PATH.MAP} element={<MapPage />} />
           <Route path="/map/:uuid" element={<MapPage />} />
           <Route

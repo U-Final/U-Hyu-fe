@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 
 import { CompletedSteps } from '@extra-info/components/CompletedSteps';
 import { CurrentStep } from '@extra-info/components/CurrentStep';
@@ -96,6 +96,12 @@ const ImprovedSignupFlow: React.FC = () => {
     }
   }, [currentStep, data, handleComplete, originalGoToNextStep]);
 
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [currentStep]);
+
   // 전체 플로우 리셋 함수
   const handleReset = useCallback(() => {
     resetFlow();
@@ -130,7 +136,7 @@ const ImprovedSignupFlow: React.FC = () => {
       </div>
 
       {/* 메인 콘텐츠 */}
-      <div ref={containerRef}>
+      <div ref={containerRef} className="h-[calc(100vh-64px)] overflow-y-auto">
         <LayoutGroup>
           <CurrentStep
             currentStep={currentStep}

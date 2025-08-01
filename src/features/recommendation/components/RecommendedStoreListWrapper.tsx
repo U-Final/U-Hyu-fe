@@ -4,10 +4,10 @@ import {
 } from '@recommendation/components';
 import { BeatLoader } from 'react-spinners';
 
-import { userStore } from '@/shared/store/userStore';
+import { useAuthState } from '@/shared/store/userStore';
 
 export const RecommendedStoreListWrapper = () => {
-  const { isAuthChecked, user } = userStore();
+  const { user, isAuthChecked } = useAuthState();
 
   if (!isAuthChecked) {
     return (

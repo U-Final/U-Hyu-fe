@@ -16,6 +16,22 @@ const responseInterceptor = (instance: AxiosInstance) => {
     response => response,
     error => {
       const res = error.response;
+      // ✅ 302 리다이렉트 처리 (OAuth 리다이렉트 방지)
+      if (res?.status === 302) {
+        if (import.meta.env.DEV) {
+          console.log('🔄 302 리다이렉트 감지 - 비로그인 상태로 처리');
+        }
+
+        // 사용자 상태 초기화
+        userStore.getState().clearUser();
+
+        // 리다이렉트하지 않고 에러로 처리
+        return Promise.reject({
+          statusCode: 302,
+          message: '로그인이 필요합니다.',
+          needLogin: true,
+        });
+      }
 
       // ✅ 1. 인증 관련 에러 처리 (401, 403)
       if (res?.status === 401 || res?.status === 403) {

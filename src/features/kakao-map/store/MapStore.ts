@@ -58,6 +58,9 @@ const initialState: MapStoreState = {
   currentFilters: {},
   lastFetchParams: null,
   lastFetchTime: null,
+
+  // 즐겨찾기 모드
+  bookmarkMode: false,
 };
 
 /**
@@ -127,6 +130,18 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
             errors: { ...state.errors, location: errorMessage },
           }));
         }
+      },
+
+      /**
+       * 즐겨찾기
+       * @param center
+       */
+      setBookmarkMode: (mode: boolean) => {
+        set({ bookmarkMode: mode });
+      },
+
+      toggleBookmarkMode: () => {
+        set(state => ({ bookmarkMode: !state.bookmarkMode }));
       },
 
       /**
@@ -331,3 +346,4 @@ export const useRecommendedStores = () =>
   useMapStore(state => state.recommendedStores);
 export const useShowRecommendedStores = () =>
   useMapStore(state => state.showRecommendedStores);
+export const useBookmarkMode = () => useMapStore(state => state.bookmarkMode);

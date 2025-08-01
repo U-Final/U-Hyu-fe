@@ -19,7 +19,7 @@ export const AdminBrandModal = ({ brandId }: AdminBrandModalProps) => {
   
   // 브랜드 상세 정보 별도 요청
   const { data: brandDetail, isLoading: isLoadingDetail, error: detailError } = useBrandDetailQuery(
-    brandId!, 
+    brandId ?? 0, 
     !!brandId
   );
 

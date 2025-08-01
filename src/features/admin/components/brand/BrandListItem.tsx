@@ -5,6 +5,7 @@ import { useModalStore } from '@/shared/store';
 import { useBrandDetailQuery } from '@admin/hooks';
 import { BrandForm } from './BrandForm';
 import { getBrandCategoryId } from '@admin/constants/brandCategoryMapping';
+import { getBrandConfig } from '@admin/constants/brandConfigs';
 
 interface BrandListItemProps {
   brand: BrandListItemType;
@@ -18,24 +19,36 @@ export const BrandListItem = ({ brand, onDelete }: BrandListItemProps) => {
   const closeModal = useModalStore(state => state.closeModal);
 
   // 상세 정보는 확장 시에만 요청 (수정 시에도 필요)
-  const { data: brandDetail, isLoading: isLoadingDetail } = useBrandDetailQuery(
+  const { data: brandDetail, isLoading: isLoadingDetail, refetch } = useBrandDetailQuery(
     brand.brandId, 
     isExpanded || isEditing
   );
 
   const handleEdit = () => {
-    // 인라인 수정 모드로 전환
-    setIsEditing(true);
-    setIsExpanded(true); // 수정할 때는 항상 확장
+    // API 데이터 불일치 문제 경고
+    const warningMessage = `⚠️ 주의: 현재 브랜드 수정 기능에 제한이 있습니다.
+
+• GET 상세 조회 API에서 storeType과 benefitType 정보를 제공하지 않음
+• 수정 시 brandConfigs의 기본 설정이 사용될 수 있음
+• 실제 브랜드 설정과 다를 수 있습니다
+
+계속 진행하시겠습니까?`;
+
+    if (confirm(warningMessage)) {
+      // 인라인 수정 모드로 전환
+      setIsEditing(true);
+      setIsExpanded(true); // 수정할 때는 항상 확장
+    }
   };
 
   const handleEditSuccess = async () => {
     console.log('🔧 브랜드 수정 성공, UI 업데이트');
     setIsEditing(false);
     
-    // 상세 정보를 다시 로드하기 위해 잠시 접었다가 펼침
-    setIsExpanded(false);
-    setTimeout(() => setIsExpanded(true), 100);
+    // 상세 정보 다시 로드
+    if (refetch) {
+      await refetch();
+    }
   };
 
   const handleEditCancel = () => {
@@ -48,6 +61,7 @@ export const BrandListItem = ({ brand, onDelete }: BrandListItemProps) => {
     
     // 브랜드명으로 카테고리 ID 찾기
     const categoryId = getBrandCategoryId(brand.brandName);
+    const brandConfig = getBrandConfig(brand.brandName);
     
     return {
       brandId: brand.brandId,
@@ -57,11 +71,11 @@ export const BrandListItem = ({ brand, onDelete }: BrandListItemProps) => {
       categoryId,
       usageLimit: brandDetail.usageLimit,
       usageMethod: brandDetail.usageMethod,
-      storeType: 'OFFLINE', // 기본값 (실제로는 API에서 가져와야 함)
+      storeType: brandConfig.storeType,
       data: brandDetail.benefitRes?.map(benefit => ({
         grade: benefit.grade as 'GOOD' | 'VIP' | 'VVIP',
         description: benefit.description,
-        benefitType: 'DISCOUNT' as const, // 기본값 (실제로는 API에서 가져와야 함)
+        benefitType: brandConfig.benefitTypes[0] || 'DISCOUNT',
       })) || [],
     };
   };

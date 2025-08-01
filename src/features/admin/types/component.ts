@@ -4,7 +4,8 @@ import type {
   FilteringStat, 
   RecommendStat, 
   MembershipStat,
-  TotalStat 
+  TotalStat,
+  BrandListItem
 } from '../api/types';
 
 // === Stats 관련 컴포넌트 Props ===
@@ -53,7 +54,7 @@ export interface BrandFormProps {
 }
 
 export interface BrandListItemProps {
-  brand: AdminBrand;
+  brand: BrandListItem;
   onEdit: (brand: AdminBrand) => void;
   onDelete: (brandId: number) => void;
 }

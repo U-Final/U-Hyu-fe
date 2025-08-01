@@ -1,7 +1,7 @@
-import { LoginButton } from '@user/components/LoginButton';
-import { LogoutButton } from '@user/components/LogoutButton';
+import { LogoutButton } from '@/features/user/components/LogoutButton';
 import { Menu } from 'lucide-react';
 
+import { KakaoLoginButton } from '@/shared/components/buttons/KakaoLoginButton';
 import {
   Sheet,
   SheetContent,
@@ -31,7 +31,7 @@ const SidebarSheet = () => {
         </SheetHeader>
 
         <div className="px-8 mt-4">
-          <div>{isLoggedIn ? <LogoutButton /> : <LoginButton />}</div>
+          <div>{isLoggedIn ? <LogoutButton /> : <KakaoLoginButton />}</div>
           {isLoggedIn ? (
             <div>
               <p>{user?.userName}님 반가워요!</p>

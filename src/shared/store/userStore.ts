@@ -33,16 +33,11 @@ export const userStore = create<UserState>(set => ({
   userInfo: async () => {
     try {
       const res = await userApi.getUserInfo();
-      console.log('📡 서버 응답:', {
-        statusCode: res.statusCode,
-        data: res.data,
-      });
 
       if ((res.statusCode === 200 || res.statusCode === 0) && res.data) {
         const { userName, grade, profileImage, role } = res.data;
         userStore.getState().setUser({ userName, grade, profileImage, role });
       } else {
-        console.warn('⚠️ 유저 정보 조회 실패: 응답 데이터 없음', res);
         userStore.getState().clearUser();
       }
     } catch (error: unknown) {
@@ -50,8 +45,6 @@ export const userStore = create<UserState>(set => ({
       // 401이면 clearUser(), 그 외 에러는 유지
       if (err.response?.data?.statusCode === 401) {
         userStore.getState().clearUser();
-      } else {
-        console.warn('⚠️ 유저 정보 조회 실패(비401): 상태 유지', err);
       }
     }
   },

@@ -2,24 +2,16 @@ import { useState, useMemo } from 'react';
 import { PlusIcon, MagnifyingGlassIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useAdminBrandsQuery } from '@admin/hooks';
 import { useAdminBrandMutation } from '@admin/hooks/useAdminBrandMutation';
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  MagnifyingGlassIcon,
-  PlusIcon,
-} from '@heroicons/react/24/outline';
-
 import { FilterTabs } from '@/shared/components';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { BrandForm } from './BrandForm';
 import { BrandListItem } from './BrandListItem';
 import { BrandListSkeleton } from '@admin/components/common';
-import { FilterTabs } from '@/shared/components';
 import { ADMIN_CATEGORIES } from '@admin/constants/categories';
 import type { CategoryId } from '@admin/constants/categories';
 import type { BrandListItem as BrandListItemType } from '@admin/types';
 import { getBrandCategoryId, getCategoryIds } from '@admin/constants/brandCategoryMapping';
-import { useQueryClient } from '@tanstack/react-query';
 
 
 const ITEMS_PER_PAGE = 5;

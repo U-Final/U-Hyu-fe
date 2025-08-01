@@ -15,7 +15,7 @@
 // 기본 사용자 타입들
 export type UserRole = 'USER' | 'ADMIN';
 export type UserGrade = 'GOOD' | 'VIP' | 'VVIP';
-export type UserGender = 'MALE' | 'FEMALE';
+export type UserGender = 'MALE' | 'FEMALE' | 'OTHER';
 
 // 마커 관련 타입
 export interface Marker {
@@ -69,6 +69,8 @@ export interface UpdateUserRequest {
 
 // 사용자 추가 정보 요청
 export interface UserExtraInfoRequest {
+  age: number;
+  gender: UserGender;
   grade: UserGrade;
   recentBrands: number[];
   interestedBrands: number[];

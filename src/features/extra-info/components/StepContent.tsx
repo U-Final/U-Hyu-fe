@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 
-import { useCheckEmailMutation } from '@user/hooks/useUserMutation';
-
-import {
-  BrandGrid,
-  ButtonBase,
-  SelectionBottomSheet,
-} from '@/shared/components';
-import { Input } from '@/shared/components/shadcn/ui/input';
+import { BrandGrid, SelectionBottomSheet } from '@/shared/components';
 import { Label } from '@/shared/components/shadcn/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/shared/components/shadcn/ui/select';
 
-import { EMAIL_REGEX, MEMBERSHIP_GRADES } from '../constants';
+import { MEMBERSHIP_GRADES } from '../constants';
 import { type StepContentProps } from '../types';
 
 export const StepContent: React.FC<StepContentProps> = ({
@@ -21,41 +21,33 @@ export const StepContent: React.FC<StepContentProps> = ({
   disabled = false,
 }) => {
   const [isMembershipSheetOpen, setIsMembershipSheetOpen] = useState(false);
-  const [emailError, setEmailError] = useState<string>('');
-  const checkEmailMutation = useCheckEmailMutation();
+  const [isGenderSheetOpen, setIsGenderSheetOpen] = useState(false);
 
-  const getButtonText = () => {
-    if (checkEmailMutation.isPending) return '확인중...';
-    if (data.emailVerified) return '✓ 확인완료';
-    return '중복확인';
-  };
+  // 나이 옵션 생성 (20세부터 80세까지)
+  const ageOptions = Array.from({ length: 61 }, (_, i) => ({
+    value: (10 + i).toString(),
+    label: `${10 + i}세`,
+  }));
 
-  const handleEmailVerification = async () => {
-    try {
-      setEmailError('');
+  const genderOptions = [
+    { value: 'MALE', label: '남성' },
+    { value: 'FEMALE', label: '여성' },
+    { value: 'OTHER', label: '기타' },
+  ];
 
-      const result = await checkEmailMutation.mutateAsync({
-        email: data.email,
-      });
-
-      if (result.statusCode === 4002) {
-        // 사용 가능한 이메일
-        onUpdateData({ emailVerified: true });
-      } else if (result.statusCode === 4003) {
-        // 이미 사용 중인 이메일
-        setEmailError(result.message || '이미 사용 중인 이메일입니다.');
-      } else {
-        setEmailError('알 수 없는 응답입니다.');
-      }
-    } catch (error) {
-      console.error('이메일 중복확인 오류:', error);
-      setEmailError('이메일 중복확인 중 오류가 발생했습니다.');
-    }
+  const getSelectedGenderLabel = () => {
+    const selected = genderOptions.find(option => option.value === data.gender);
+    return selected?.label || '성별을 선택해주세요';
   };
 
   const handleMembershipSelect = (value: string) => {
     onUpdateData({ membershipGrade: value });
     setIsMembershipSheetOpen(false);
+  };
+
+  const handleGenderSelect = (value: string) => {
+    onUpdateData({ gender: value });
+    setIsGenderSheetOpen(false);
   };
 
   const getSelectedMembershipLabel = () => {
@@ -72,74 +64,65 @@ export const StepContent: React.FC<StepContentProps> = ({
     isDisabled: false,
   }));
 
+  const genderItems = genderOptions.map(option => ({
+    id: option.value,
+    label: option.label,
+    description: '',
+    isDisabled: false,
+  }));
+
   switch (step) {
     case 1:
       return (
         <div className="space-y-4">
           <div>
-            <Label htmlFor="email" className="text-sm text-gray-600">
-              이메일
-            </Label>
-            <div className="flex gap-2 mt-2">
-              <Input
-                id="email"
-                type="email"
-                value={data.email}
-                onChange={
-                  disabled
-                    ? undefined
-                    : e => {
-                        setEmailError(''); // 이메일 변경 시 에러 메시지 초기화
-                        onUpdateData({
-                          email: e.target.value,
-                          emailVerified: false,
-                        });
-                      }
-                }
-                className="w-full h-12 bg-gray-50 border border-gray-300 rounded-md"
-                placeholder="이메일 주소를 입력해주세요"
-                disabled={disabled}
-              />
-              <ButtonBase
-                disabled={
-                  disabled ||
-                  !data.email ||
-                  !EMAIL_REGEX.test(data.email) ||
-                  checkEmailMutation.isPending
-                }
-                onClick={handleEmailVerification}
-                className={`px-4 h-12 font-medium transition-all duration-200 ${
-                  data.emailVerified
-                    ? 'bg-gray-300 text-gray-500 border-gray-300 hover:bg-gray-300 shadow-sm'
-                    : 'bg-blue-500 text-white border-blue-500 hover:bg-blue-600 shadow-sm hover:shadow-md'
-                } ${
-                  disabled ||
-                  !data.email ||
-                  !EMAIL_REGEX.test(data.email) ||
-                  checkEmailMutation.isPending
-                    ? 'bg-gray-300 text-gray-500 border-gray-300 cursor-not-allowed hover:bg-gray-300 hover:shadow-none'
-                    : ''
-                }`}
-              >
-                {getButtonText()}
-              </ButtonBase>
-            </div>
-            <div className="min-h-[20px] mt-1 text-xs text-red-500 transition-all">
-              {data.email !== '' &&
-              !EMAIL_REGEX.test(data.email) &&
-              !disabled ? (
-                <span>올바른 이메일 형식을 입력해주세요</span>
-              ) : emailError ? (
-                <span>{emailError}</span>
-              ) : (
-                ''
-              )}
-            </div>
-            {data.emailVerified && (
-              <div className="mt-1 text-xs text-green-600">
-                ✓ 이메일 중복확인이 완료되었습니다
-              </div>
-            )}
+            <Label className="text-sm text-gray-600">나이</Label>
+            <Select
+              value={data.age ? data.age.toString() : ''}
+              onValueChange={value => onUpdateData({ age: parseInt(value) })}
+              disabled={disabled}
+            >
+              <SelectTrigger className="w-full h-12 bg-gray-50 border border-gray-300 rounded-md mt-2">
+                <SelectValue placeholder="나이를 선택해주세요 (만 나이 기준)" />
+              </SelectTrigger>
+              <SelectContent className="bg-white">
+                {ageOptions.map(option => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label className="text-sm text-gray-600">성별</Label>
+            <button
+              onClick={() => !disabled && setIsGenderSheetOpen(true)}
+              disabled={disabled}
+              className={`w-full h-12 bg-gray-50 rounded-md border border-gray-300 px-4 text-left transition-all mt-2 ${
+                disabled
+                  ? 'opacity-50 cursor-not-allowed'
+                  : 'hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500'
+              }`}
+            >
+              <span className={data.gender ? 'text-gray-900' : 'text-gray-500'}>
+                {getSelectedGenderLabel()}
+              </span>
+            </button>
+
+            <SelectionBottomSheet
+              isOpen={isGenderSheetOpen}
+              onClose={() => setIsGenderSheetOpen(false)}
+              title="성별 선택"
+              subtitle="성별을 선택해주세요"
+              items={genderItems}
+              selectedItems={data.gender ? [data.gender] : []}
+              onItemSelect={handleGenderSelect}
+              multiSelect={false}
+              autoCloseOnSelect={true}
+              height="medium"
+            />
           </div>
         </div>
       );

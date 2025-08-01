@@ -161,4 +161,23 @@ export const mymapHandlers = [
 
     return createErrorResponse('해당 UUID의 마이맵이 존재하지 않습니다.', 404);
   }),
+
+  // My Map 지도 조회 (UUID 기반, 비회원)
+  http.get(MYMAP_ENDPOINTS.MYMAP.GUEST_VIEW_MSW(), async ({ params }) => {
+    const uuid = params.uuid;
+    console.log(params.uuid);
+
+    if (!uuid) {
+      return createErrorResponse('UUID가 없습니다.', 400);
+    }
+
+    if (uuid === MOCK_MYMAP_DATA_BY_UUID.uuid) {
+      return createResponse(
+        MOCK_MYMAP_DATA_BY_UUID,
+        '마이맵 상세 불러오기 성공'
+      );
+    }
+
+    return createErrorResponse('해당 UUID의 마이맵이 존재하지 않습니다.', 404);
+  }),
 ];

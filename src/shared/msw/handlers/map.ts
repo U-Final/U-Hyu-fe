@@ -27,7 +27,7 @@ export const mapHandlers = [
    * 주변 매장 목록 조회 API 핸들러
    * GET /map/stores - 필터 파라미터 처리 포함
    */
-  http.get(`*/${MAP_ENDPOINTS.GET_NEARBY_STORES}`, ({ request }) => {
+  http.get('*/map/stores', ({ request }) => {
     const url = new URL(request.url);
 
     // 필수 파라미터 추출
@@ -149,7 +149,7 @@ export const mapHandlers = [
    * 매장 상세 정보 조회 API 핸들러
    * GET /map/detail/stores/:storeId
    */
-  http.get(`*/${MAP_ENDPOINTS.GET_STORE_DETAIL}/:storeId`, ({ params }) => {
+  http.get('*/map/detail/stores/:storeId', ({ params }) => {
     const storeId = Number(params.storeId);
 
     // storeId 파라미터 유효성 검증
@@ -183,7 +183,7 @@ export const mapHandlers = [
    * 매장 즐겨찾기 토글 API 핸들러
    * POST /map/:storeId
    */
-  http.post(`*/${MAP_ENDPOINTS.TOGGLE_FAVORITE}/:storeId`, ({ params }) => {
+  http.post('*/map/:storeId', ({ params }) => {
     const storeId = Number(params.storeId);
 
     // storeId 파라미터 유효성 검증
@@ -207,36 +207,33 @@ export const mapHandlers = [
    * 카테고리별 브랜드 목록 조회 API 핸들러
    * GET /category/:categoryId
    */
-  http.get(
-    `*/${MAP_ENDPOINTS.GET_CATEGORY_BRANDS}/:categoryId`,
-    ({ params, request }) => {
-      console.log('🏷️ 카테고리 브랜드 MSW 핸들러 호출:', request.url);
-      const categoryId = Number(params.categoryId);
-      console.log('📂 카테고리 ID:', categoryId);
+  http.get('*/category/:categoryId', ({ params, request }) => {
+    console.log('🏷️ 카테고리 브랜드 MSW 핸들러 호출:', request.url);
+    const categoryId = Number(params.categoryId);
+    console.log('📂 카테고리 ID:', categoryId);
 
-      // categoryId 파라미터 유효성 검증
-      if (isNaN(categoryId) || categoryId <= 0) {
-        return HttpResponse.json(
-          {
-            message:
-              '잘못된 카테고리 ID입니다. categoryId는 유효한 양의 정수여야 합니다.',
-            statusCode: 400,
-          },
-          { status: 400 }
-        );
-      }
-
-      const response: CategoryBrandsResponse =
-        createMockCategoryBrandsResponse(categoryId);
-
-      // 404 처리 (해당 카테고리에 브랜드가 없는 경우)
-      if (response.statusCode === 404) {
-        return HttpResponse.json(response, { status: 404 });
-      }
-
-      return HttpResponse.json(response, { status: 200 });
+    // categoryId 파라미터 유효성 검증
+    if (isNaN(categoryId) || categoryId <= 0) {
+      return HttpResponse.json(
+        {
+          message:
+            '잘못된 카테고리 ID입니다. categoryId는 유효한 양의 정수여야 합니다.',
+          statusCode: 400,
+        },
+        { status: 400 }
+      );
     }
-  ),
+
+    const response: CategoryBrandsResponse =
+      createMockCategoryBrandsResponse(categoryId);
+
+    // 404 처리 (해당 카테고리에 브랜드가 없는 경우)
+    if (response.statusCode === 404) {
+      return HttpResponse.json(response, { status: 404 });
+    }
+
+    return HttpResponse.json(response, { status: 200 });
+  }),
 
   /**
    * 즐겨찾기 조회 API 핸들러

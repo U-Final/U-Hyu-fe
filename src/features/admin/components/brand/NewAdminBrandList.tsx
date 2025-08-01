@@ -2,6 +2,15 @@ import { useState, useMemo } from 'react';
 import { PlusIcon, MagnifyingGlassIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useAdminBrandsQuery } from '@admin/hooks';
 import { useAdminBrandMutation } from '@admin/hooks/useAdminBrandMutation';
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  MagnifyingGlassIcon,
+  PlusIcon,
+} from '@heroicons/react/24/outline';
+
+import { FilterTabs } from '@/shared/components';
+
 import { BrandForm } from './BrandForm';
 import { BrandListItem } from './BrandListItem';
 import { BrandListSkeleton } from '@admin/components/common';
@@ -20,7 +29,7 @@ export const NewAdminBrandList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<CategoryId>('all');
   const [currentPage, setCurrentPage] = useState(1);
-  
+
   const { data: brands, isLoading, error, refetch } = useAdminBrandsQuery(true);
   const { deleteMutation } = useAdminBrandMutation();
   const queryClient = useQueryClient();
@@ -61,11 +70,16 @@ export const NewAdminBrandList = () => {
   // 카테고리 탭 구성
   const categoryTabs = [
     { label: '전체', value: 'all' },
-    ...ADMIN_CATEGORIES.map(cat => ({ label: cat.name, value: cat.id.toString() }))
+    ...ADMIN_CATEGORIES.map(cat => ({
+      label: cat.name,
+      value: cat.id.toString(),
+    })),
   ];
 
   const handleCategoryChange = (value: string) => {
-    setSelectedCategory(value === 'all' ? 'all' : Number(value) as CategoryId);
+    setSelectedCategory(
+      value === 'all' ? 'all' : (Number(value) as CategoryId)
+    );
     setCurrentPage(1); // 카테고리 변경시 첫 페이지로
   };
 
@@ -142,7 +156,7 @@ export const NewAdminBrandList = () => {
             }
           </p>
         </div>
-        
+
         <button
           onClick={() => setShowAddForm(!showAddForm)}
           className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors"
@@ -158,7 +172,7 @@ export const NewAdminBrandList = () => {
         <input
           type="text"
           value={searchTerm}
-          onChange={(e) => handleSearchChange(e.target.value)}
+          onChange={e => handleSearchChange(e.target.value)}
           placeholder="브랜드명으로 검색..."
           className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
         />
@@ -166,12 +180,16 @@ export const NewAdminBrandList = () => {
 
       {/* 카테고리 필터 */}
       <div>
-        <h3 className="text-sm font-medium text-gray-700 mb-3">카테고리별 필터</h3>
-        <FilterTabs 
-          tabs={categoryTabs}
-          onChange={handleCategoryChange}
-          variant="gray"
-        />
+        <h3 className="text-sm font-medium text-gray-700 mb-3">
+          카테고리별 필터
+        </h3>
+        <div className="overflow-x-auto px-0">
+          <FilterTabs
+            tabs={categoryTabs}
+            onChange={handleCategoryChange}
+            variant="gray"
+          />
+        </div>
       </div>
 
       {/* 브랜드 추가 폼 */}
@@ -191,14 +209,14 @@ export const NewAdminBrandList = () => {
         <div className="space-y-4">
           {currentBrands.length > 0 ? (
             <>
-              {currentBrands.map((brand) => (
+              {currentBrands.map(brand => (
                 <BrandListItem
                   key={brand.brandId}
                   brand={brand}
                   onDelete={handleDelete}
                 />
               ))}
-              
+
               {/* 페이지네이션 */}
               {totalPages > 1 && (
                 <div className="flex items-center justify-center gap-4 pt-6 border-t border-gray-200">
@@ -210,23 +228,25 @@ export const NewAdminBrandList = () => {
                     <ChevronLeftIcon className="w-4 h-4" />
                     이전
                   </button>
-                  
+
                   <div className="flex items-center gap-2">
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                      <button
-                        key={page}
-                        onClick={() => handlePageChange(page)}
-                        className={`px-3 py-2 text-sm rounded-lg transition-colors ${
-                          currentPage === page
-                            ? 'bg-primary text-white'
-                            : 'text-gray-600 hover:bg-gray-100'
-                        }`}
-                      >
-                        {page}
-                      </button>
-                    ))}
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                      page => (
+                        <button
+                          key={page}
+                          onClick={() => handlePageChange(page)}
+                          className={`px-3 py-2 text-sm rounded-lg transition-colors ${
+                            currentPage === page
+                              ? 'bg-primary text-white'
+                              : 'text-gray-600 hover:bg-gray-100'
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      )
+                    )}
                   </div>
-                  
+
                   <button
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
@@ -293,4 +313,4 @@ export const NewAdminBrandList = () => {
       )}
     </div>
   );
-}; 
+};

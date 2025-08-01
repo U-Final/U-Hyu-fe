@@ -1,9 +1,18 @@
 import { useState } from 'react';
 
+
+
 import { useKakaoShare } from '@mymap/hooks';
+import { toast } from 'sonner';
+
+
 
 import { BaseModal } from '@/shared/components';
 import { useModalStore } from '@/shared/store';
+
+
+
+
 
 interface ShareModalProps {
   uuid: string;
@@ -23,14 +32,16 @@ export const ShareModal = ({ uuid }: ShareModalProps) => {
         .writeText(shareUrl)
         .then(() => {
           setCopyStatus('success');
-          console.log('클립보드 복사 성공:', shareUrl);
+          toast.success('클립보드에 링크가 복사되었습니다.');
         })
         .catch(err => {
           setCopyStatus('error');
+          toast.error('링크 복사 중 오류가 발생했습니다.');
           console.error('클립보드 복사 실패:', err);
         });
     } else {
       setCopyStatus('error');
+      toast.error('클립보드 API가 지원되지 않습니다.');
       console.error('클립보드 API가 지원되지 않습니다');
     }
   };

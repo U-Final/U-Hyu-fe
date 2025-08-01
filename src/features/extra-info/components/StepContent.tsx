@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { BrandGrid, SelectionBottomSheet } from '@/shared/components';
+import { ApiBrandGrid, SelectionBottomSheet } from '@/shared/components';
 import { Label } from '@/shared/components/shadcn/ui/label';
 import {
   Select,
@@ -165,7 +165,7 @@ export const StepContent: React.FC<StepContentProps> = ({
 
     case 3:
       return (
-        <BrandGrid
+        <ApiBrandGrid
           selectedBrands={data.recentBrands}
           onBrandToggle={
             disabled
@@ -179,7 +179,7 @@ export const StepContent: React.FC<StepContentProps> = ({
 
     case 4:
       return (
-        <BrandGrid
+        <ApiBrandGrid
           selectedBrands={data.selectedBrands}
           onBrandToggle={
             disabled

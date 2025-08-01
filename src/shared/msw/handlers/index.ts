@@ -1,6 +1,7 @@
 import { adminHandlers } from './admin';
 import { barcodeHandlers } from './barcode';
 import { benefitHandlers } from './benefit';
+import { brandHandlers } from './brand';
 import { homeHandlers } from './home';
 import { mapHandlers } from './map';
 import { mymapHandlers } from './mymap';
@@ -13,6 +14,7 @@ export const handlers = [
   ...mapHandlers,
   ...homeHandlers,
   ...benefitHandlers,
+  ...brandHandlers,
   ...mypageHandlers,
   ...adminHandlers,
   ...mymapHandlers,

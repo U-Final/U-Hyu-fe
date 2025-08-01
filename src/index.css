@@ -201,6 +201,11 @@
   --bg-secondary-hover: #d6e7ff;
   --bg-gray: #b0b8c1;
   --bg-gray-hover: #f0f0f0;
+  --bg-red-star: #ff3b30;
+  --bg-orange-star: #ff9500;
+  --bg-yellow-star: #ffcc00;
+  --bg-green-star: #34c759;
+  --bg-purple-star: #7e22ce;
 
   /* Border Colors */
   --border-ghost: #f2f4f6;
@@ -462,6 +467,21 @@
   }
   .hover\:bg-gray-hover:hover {
     background-color: var(--bg-gray-hover);
+  }
+  .bg-red-star {
+    background-color: var(--bg-red-star);
+  }
+  .bg-orange-star {
+    background-color: var(--bg-orange-star);
+  }
+  .bg-yellow-star {
+    background-color: var(--bg-yellow-star);
+  }
+  .bg-green-star {
+    background-color: var(--bg-green-star);
+  }
+  .bg-purple-star {
+    background-color: var(--bg-purple-star);
   }
 
   /* Border Color Utilities */

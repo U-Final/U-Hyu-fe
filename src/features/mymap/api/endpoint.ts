@@ -9,6 +9,8 @@ export const MYMAP_ENDPOINTS = {
       `/mymap/${myMapListId}`,
     VIEW: (uuid: string) => `/mymap/${uuid}`,
     VIEW_MSW: (uuid: string = ':uuid') => `/mymap/${uuid}`,
+    GUEST_VIEW: (uuid: string) => `/guest/mymap/${uuid}`,
+    GUEST_VIEW_MSW: (uuid: string = ':uuid') => `/guest/mymap/${uuid}`,
     STATE: (store_id: number) => `/mymap/list/${store_id}`,
     STATE_MSW: (store_id: number | string = ':store_id') =>
       `/mymap/list/${store_id}`,

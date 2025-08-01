@@ -110,7 +110,7 @@ const ImprovedSignupFlow: React.FC = () => {
     <div className="relative">
       <div className="fixed top-0 left-0 w-full z-50 bg-white">
         <div className="desktop-padding-sheet mx-auto py-6">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 mx-[2rem]">
             <div className="flex-1 bg-gray-200 rounded-full h-2">
               <div
                 className="bg-blue-600 h-2 rounded-full transition-all duration-500 ease-out"

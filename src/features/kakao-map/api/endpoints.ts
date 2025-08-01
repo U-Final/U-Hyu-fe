@@ -2,7 +2,7 @@ const MAP = '/map';
 
 export const MAP_ENDPOINTS = {
   /** 주변 매장 목록 조회 */
-  GET_NEARBY_STORES: `${MAP}/stores'`,
+  GET_NEARBY_STORES: `${MAP}/stores`,
   /** 매장 상세 정보 조회 */
   GET_STORE_DETAIL: `${MAP}/detail/stores`,
   /** 매장 즐겨찾기 토글 */

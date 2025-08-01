@@ -1,4 +1,4 @@
-import { getBookmark } from '@kakao-map/api/mapApi';
+import { mapApi } from '@kakao-map/api/mapApi';
 import { getRecommendedStores } from '@recommendation/api/recommendedStoresApi';
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
@@ -152,7 +152,7 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
 
       fetchBookmarkStores: async () => {
         try {
-          const stores = await getBookmark();
+          const stores = await mapApi.getBookmark();
           set({ bookmarkStores: stores });
         } catch (e) {
           console.error('즐겨찾기 매장 조회 실패:', e);

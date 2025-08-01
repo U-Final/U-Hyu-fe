@@ -12,8 +12,8 @@ const MyPageBrand = ({ user, editMode, pendingChanges, setPendingChanges }: Prop
   const handleBrandToggle = (brandId: number) => {
     if (!editMode) return;
 
-    // 현재 선택된 브랜드 ID 목록 (pendingChanges 우선, 없으면 user.brandIdList)
-    const currentBrandIds = pendingChanges.updatedBrandIdList || user.brandIdList || [];
+    // 현재 선택된 브랜드 ID 목록 (pendingChanges 우선, 없으면 user.interestedBrandList)
+    const currentBrandIds = pendingChanges.updatedBrandIdList || user.interestedBrandList || [];
     const newBrandIds = currentBrandIds.includes(brandId)
       ? currentBrandIds.filter(id => id !== brandId)
       : [...currentBrandIds, brandId];
@@ -25,8 +25,8 @@ const MyPageBrand = ({ user, editMode, pendingChanges, setPendingChanges }: Prop
     }));
   };
 
-  // 현재 선택된 브랜드 (pendingChanges 우선, 없으면 user.brandIdList)
-  const currentBrandIds = pendingChanges.updatedBrandIdList || user.brandIdList || [];
+  // 현재 선택된 브랜드 (pendingChanges 우선, 없으면 user.interestedBrandList)
+  const currentBrandIds = pendingChanges.updatedBrandIdList || user.interestedBrandList || [];
 
   return (
     <div className="space-y-[1rem]">

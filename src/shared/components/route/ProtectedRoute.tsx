@@ -9,14 +9,14 @@ import { useAuthState } from '@/shared/store/userStore';
 interface ProtectedRouteProps {
   children: ReactElement;
   requireAuth?: boolean;
-  requiredRole?: 'ADMIN' | 'USER';
+  requireAdminRole?: boolean;
   redirectTo?: string;
 }
 
 export const ProtectedRoute = ({
   children,
   requireAuth = true,
-  requiredRole,
+  requireAdminRole = false,
   redirectTo = PATH.HOME,
 }: ProtectedRouteProps) => {
   const { isLoggedIn, user, isLoading } = useAuthState();
@@ -45,11 +45,10 @@ export const ProtectedRoute = ({
       return;
     }
 
-    // 이미 로그인된 상태에서 권한만 확인
-    if (isLoggedIn && requiredRole) {
-      // 관리자는 모든 라우트에 접근 가능
-      if (user?.role !== requiredRole) {
-        // 권한이 없으면 홈으로 리다이렉트
+    // 어드민 권한이 필요한 경우에만 권한 확인
+    if (isLoggedIn && requireAdminRole) {
+      if (user?.role !== 'ADMIN') {
+        // 어드민 권한이 없으면 홈으로 리다이렉트
         navigate(redirectTo, { replace: true });
         return;
       }
@@ -63,7 +62,7 @@ export const ProtectedRoute = ({
     isLoading,
     hasTriggeredModal,
     requireAuth,
-    requiredRole,
+    requireAdminRole,
     user,
     navigate,
     redirectTo,
@@ -85,9 +84,9 @@ export const ProtectedRoute = ({
 };
 
 export const AdminRoute = ({ children }: { children: ReactElement }) => (
-  <ProtectedRoute requiredRole="ADMIN">{children}</ProtectedRoute>
+  <ProtectedRoute requireAdminRole={true}>{children}</ProtectedRoute>
 );
 
-export const UserRoute = ({ children }: { children: ReactElement }) => (
-  <ProtectedRoute>{children}</ProtectedRoute>
+export const AuthRoute = ({ children }: { children: ReactElement }) => (
+  <ProtectedRoute requireAuth={true}>{children}</ProtectedRoute>
 );

@@ -2,37 +2,29 @@ import { useCallback, useState } from 'react';
 
 import { useSubmitExtraInfo } from '@user/hooks/useUserMutation';
 
-import { EMAIL_REGEX } from '../constants';
+import type { UserGender } from '@/shared/types';
+
 import {
   type CompletedStep,
   type SignupData,
   type StepValidation,
 } from '../types';
+import { mapMembershipGrade } from '../utils/membershipGrade';
 
 const initialData: SignupData = {
   membershipGrade: '',
   recentBrands: [],
   selectedBrands: [],
-  email: '',
-  emailVerified: false,
+  age: 0,
+  gender: '',
+  grade: '',
 };
 
 const stepValidation: StepValidation = {
-  1: data =>
-    data.email !== '' && EMAIL_REGEX.test(data.email) && data.emailVerified,
+  1: data => data.age >= 10 && data.age <= 90 && data.gender !== '',
   2: data => data.membershipGrade !== '',
   3: data => data.recentBrands.length > 0,
   4: data => data.selectedBrands.length > 0,
-};
-
-// 멤버십 등급 매핑 함수
-const mapMembershipGrade = (grade: string): 'GOOD' | 'VIP' | 'VVIP' => {
-  const gradeMap: Record<string, 'GOOD' | 'VIP' | 'VVIP'> = {
-    Excellent: 'GOOD',
-    vip: 'VIP',
-    vvip: 'VVIP',
-  };
-  return gradeMap[grade] || 'GOOD';
 };
 
 export const useSignupFlow = (
@@ -110,8 +102,9 @@ export const useSignupFlow = (
     // 마지막 단계(4단계)에서 API 요청 수행
     if (currentStep === 4) {
       try {
-        // API 요청 데이터 준비
         const apiData = {
+          age: data.age,
+          gender: data.gender as UserGender,
           grade: mapMembershipGrade(data.membershipGrade),
           recentBrands: data.recentBrands,
           interestedBrands: data.selectedBrands,

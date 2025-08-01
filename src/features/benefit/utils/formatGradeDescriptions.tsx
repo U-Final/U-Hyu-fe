@@ -1,7 +1,7 @@
 export const formatGradeDescriptions = (text: string | null): string => {
   if (!text) return '';
 
-  const cleanedText = text.replace(/\\n|\n/g, ' ');
+  const cleanedText = text.replace(/\\n|\\\\n/g, '\n');
 
   const gradePattern = /,?\s*(VVIP|VIP|우수)\s*:\s*/g;
   const matches = [...cleanedText.matchAll(gradePattern)];
@@ -26,7 +26,10 @@ export const formatGradeDescriptions = (text: string | null): string => {
 
   for (let i = 0; i < parts.length; i += 2) {
     const grade = parts[i];
-    const description = parts[i + 1]?.trim() ?? '';
+    let description = parts[i + 1]?.trim() ?? '';
+
+    description = description.replace(/(?<!\n)([①-⑨])/g, '\n$1');
+
     result += `${grade}: ${description}\n`;
   }
 

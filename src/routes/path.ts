@@ -8,4 +8,5 @@ export const PATH = {
   ADMIN: '/admin',
   EXTRA_INFO: '/user/extra-info',
   LOGIN: '/login',
+  AUTH_SUCCESS: '/auth/success',
 } as const;

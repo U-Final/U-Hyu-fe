@@ -1,8 +1,11 @@
 export const formatGradeDescriptions = (text: string | null): string => {
   if (!text) return '';
 
-  // 줄바꿈 문자 정리
-  const cleanedText = text.replace(/\\n|\\\\n/g, '\n');
+  // 줄바꿈 문자 및 백슬래시 정리
+  const cleanedText = text
+    .replace(/\\n|\\\\n/g, '\n') // \n → 실제 줄바꿈으로
+
+    .replace(/\\(?!n)/g, '\n'); // 나머지 \ → 제거 (예: "\t", "\a" 등 불필요한 이스케이프)
 
   // 등급 패턴 (콤마 앞도 허용)
   const gradePattern = /,?\s*(VVIP|VIP|우수)\s*:\s*/g;
@@ -30,6 +33,7 @@ export const formatGradeDescriptions = (text: string | null): string => {
     const grade = parts[i];
     let description = parts[i + 1]?.trim() ?? '';
 
+    // '②'~'⑨' 앞에 줄바꿈 추가 (이미 \n 있으면 그대로)
     description = description.replace(/(?<!\n)([②-⑨])/g, '\n$1');
 
     gradeMap.set(grade, description);

@@ -7,6 +7,10 @@ import { BeatLoader } from 'react-spinners';
 import { userStore } from '@/shared/store/userStore';
 
 const AuthSuccess = () => {
+  useEffect(() => {
+    console.log('AuthSuccess mounted', window.location.pathname);
+  }, []);
+
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(true);
 

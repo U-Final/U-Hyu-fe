@@ -138,7 +138,7 @@ export const BrandForm = ({ brand, onSuccess, onCancel }: BrandFormProps) => {
               onChange={(e) => setFormData(prev => ({ ...prev, brandName: e.target.value }))}
               placeholder="브랜드명을 입력하세요"
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+              className="w-full px-3 py-2 text-base md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
             />
           </div>
 
@@ -151,7 +151,7 @@ export const BrandForm = ({ brand, onSuccess, onCancel }: BrandFormProps) => {
               value={formData.categoryId}
               onChange={(e) => setFormData(prev => ({ ...prev, categoryId: Number(e.target.value) }))}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+              className="w-full px-3 py-2 text-base md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
             >
               {ADMIN_CATEGORIES.map(category => (
                 <option key={category.id} value={category.id}>
@@ -210,7 +210,7 @@ export const BrandForm = ({ brand, onSuccess, onCancel }: BrandFormProps) => {
               onChange={(e) => setFormData(prev => ({ ...prev, usageLimit: e.target.value }))}
               placeholder="예: 월 2회"
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+              className="w-full px-3 py-2 text-base md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
             />
           </div>
 

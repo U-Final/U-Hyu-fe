@@ -142,7 +142,7 @@ export const NewAdminBrandList = () => {
           value={searchTerm}
           onChange={e => handleSearchChange(e.target.value)}
           placeholder="브랜드명으로 검색..."
-          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+          className="w-full pl-10 pr-4 py-3 text-base md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
         />
       </div>
 

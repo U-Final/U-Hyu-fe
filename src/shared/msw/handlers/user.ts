@@ -4,7 +4,7 @@ import { createErrorResponse } from '@/shared/utils/createErrorResponse';
 import { createResponse } from '@/shared/utils/createResponse';
 
 export const userHandlers = [
-  http.post('/users/check-email', async ({ request }) => {
+  http.post('/user/check-email', async ({ request }) => {
     const body = (await request.json()) as { email: string };
     const email = body.email;
 
@@ -27,7 +27,7 @@ export const userHandlers = [
     );
   }),
 
-  http.post('/users/extra-info', async ({ request }) => {
+  http.post('/user/extra-info', async ({ request }) => {
     try {
       const body = (await request.json()) as {
         age?: number;

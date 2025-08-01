@@ -17,13 +17,23 @@ const responseInterceptor = (instance: AxiosInstance) => {
     error => {
       const res = error.response;
 
-      // ✅ 1. 인증 만료 처리 (401 에러 발생 시)
-      if (res?.status === 401) {
-        userStore.getState().clearUser(); // Zustand 상태 초기화
-        toast.error('로그인이 만료되었습니다. 다시 로그인해주세요.');
+      // ✅ 1. 인증 관련 에러 처리 (401, 403)
+      if (res?.status === 401 || res?.status === 403) {
+        userStore.getState().clearUser();
+
+        if (res?.status === 401) {
+          toast.error('로그인이 만료되었습니다. 다시 로그인해주세요.');
+        } else if (res?.status === 403) {
+          // 403은 조용히 처리 (토스트 없음)
+          if (import.meta.env.DEV) {
+            console.log('🔐 권한 없음 - 비로그인 상태로 처리');
+          }
+        }
+
         return Promise.reject({
-          statusCode: 401,
-          message: '인증이 만료되었습니다.',
+          statusCode: res?.status,
+          message:
+            res?.status === 401 ? '인증이 만료되었습니다.' : '권한이 없습니다.',
         });
       }
 

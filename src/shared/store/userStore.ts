@@ -28,18 +28,6 @@ export const userStore = create<UserState>(set => ({
       console.log('초기 인증 상태 확인 완료 (에러 발생)');
       // userInfo에서 이미 에러 처리됨
     }
-    if (import.meta.env.DEV) {
-      set({
-        isAuthChecked: true,
-        user: {
-          userName: '개발 환경 유저',
-          grade: 'GOOD',
-          profileImage:
-            'https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800',
-          role: 'USER',
-        },
-      });
-    }
   },
   setUser: user => set({ user, isAuthChecked: true }),
   clearUser: () => set({ user: null, isAuthChecked: true }),
@@ -83,7 +71,6 @@ export const userStore = create<UserState>(set => ({
 export const useIsLoggedIn = () => {
   const user = userStore(state => state.user);
   const isAuthChecked = userStore(state => state.isAuthChecked);
-
 
   // 인증 확인이 완료되지 않았다면 false 반환 (초기 로딩 중)
   if (!isAuthChecked) {

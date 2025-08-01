@@ -1,12 +1,9 @@
 import { useEffect } from 'react';
 
-import { useUserInfo } from '@user/hooks/useUserQuery';
-import type { AxiosError } from 'axios';
 import { useLocation } from 'react-router-dom';
 
 import { PATH } from '@/routes/path';
 
-import type { ApiError } from '@/shared/client/client.type';
 import { userStore } from '@/shared/store/userStore';
 import {
   initKeyboardHandler,
@@ -19,14 +16,13 @@ import {
 
 const AppInitializer = () => {
   const location = useLocation();
-  const setUser = userStore(state => state.setUser);
-  const clearUser = userStore(state => state.clearUser);
+  const initAuthState = userStore(state => state.initAuthState);
 
   // 관리자 페이지에서는 사용자 정보 요청을 하지 않음
   const isAdminPage = location.pathname === PATH.ADMIN;
 
   // 관리자 페이지가 아닐 때만 사용자 정보 요청
-  const { data, isSuccess, isError } = useUserInfo(!isAdminPage);
+  // const { data, isSuccess, isError } = useUserInfo(!isAdminPage);
 
   // 개발 환경에서 로깅
   if (import.meta.env.DEV) {
@@ -38,34 +34,15 @@ const AppInitializer = () => {
     );
   }
 
-  // 사용자 정보 초기화
   useEffect(() => {
-    if (isSuccess && data.data) {
-      if ((data.statusCode === 200 || data.statusCode === 0) && data.data) {
-        setUser(data.data);
-      } else {
-        clearUser();
-      }
-    } else if (isError) {
-      const err = data as unknown as AxiosError<ApiError>;
-
-      // 401 Unauthorized일 때만 clearUser() 처리
-      if (
-        err?.response?.data?.statusCode === 401 ||
-        err?.response?.status === 403
-      ) {
-        if (import.meta.env.DEV) {
-          console.log(
-            `🔐 ${err?.response?.status} 에러 - 비로그인 상태로 처리`
-          );
-        }
-        clearUser();
-      } else {
-        console.warn('⚠️ 사용자 정보 로딩 실패(비401): 상태 유지');
-        clearUser();
-      }
+    if (!isAdminPage) {
+      // 쿠키 체크 → 필요시에만 서버 호출
+      initAuthState();
+    } else {
+      // 관리자 페이지에서는 인증 체크 건너뛰기
+      userStore.setState({ isAuthChecked: true, user: null });
     }
-  }, [isSuccess, isError, data, setUser, clearUser]);
+  }, [isAdminPage, initAuthState]);
 
   // 뷰포트 높이 및 스크롤 복원 초기화 (모바일 최적화)
   useEffect(() => {

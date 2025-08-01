@@ -5,10 +5,12 @@ import { create } from 'zustand';
 
 import type { ApiError } from '@/shared/client/client.type';
 import type { SimpleUserInfo } from '@/shared/types';
+import { hasValidAuthCookie } from '@/shared/utils/cookieAuthUtils';
 
 interface UserState {
   user: SimpleUserInfo | null;
   isAuthChecked: boolean; // 유저가 로그인 되어있는지 ㅊㅔ크
+  initAuthState: () => Promise<void>;
   setUser: (user: SimpleUserInfo) => void;
   clearUser: () => void;
   logout: () => Promise<void>;
@@ -18,6 +20,18 @@ interface UserState {
 export const userStore = create<UserState>(set => ({
   user: null,
   isAuthChecked: false,
+  // 쿠키 기반 초기 인증 상태 확인
+  initAuthState: async () => {
+    const hasCookie = hasValidAuthCookie();
+
+    if (hasCookie) {
+      // 쿠키가 있으면 서버에서 사용자 정보 조회
+      await userStore.getState().userInfo();
+    } else {
+      // 쿠키가 없으면 바로 미인증 상태로 설정
+      set({ isAuthChecked: true, user: null });
+    }
+  },
   setUser: user => set({ user, isAuthChecked: true }),
   clearUser: () => set({ user: null, isAuthChecked: true }),
   logout: async () => {
@@ -32,8 +46,10 @@ export const userStore = create<UserState>(set => ({
   },
   userInfo: async () => {
     try {
-      if (import.meta.env.DEV) {
-        console.log('🔄 유저 정보 조회 시작...');
+      // 쿠키가 없다면 서버 호출하지 않음
+      if (!hasValidAuthCookie()) {
+        userStore.getState().clearUser();
+        return;
       }
 
       const res = await userApi.getUserInfo();

@@ -2,6 +2,12 @@
 // APP/기기는 즐겨찾기 데이터가 없으므로 제외
 export const mockBookmarkStats = [
   {
+    categoryId: 1,
+    categoryName: 'APP/기기',
+    sumStatisticsBookmarksByCategory: 0,
+    bookmarksByBrandList: []
+  },
+  {
     categoryId: 2,
     categoryName: '영화 / 미디어',
     sumStatisticsBookmarksByCategory: 12,
@@ -18,21 +24,6 @@ export const mockBookmarkStats = [
   },
   {
     categoryId: 3,
-    categoryName: '테마파크',
-    sumStatisticsBookmarksByCategory: 8,
-    bookmarksByBrandList: [
-      {
-        brandName: '뽀로로파크',
-        sumBookmarksByBrand: 5
-      },
-      {
-        brandName: '서울랜드',
-        sumBookmarksByBrand: 3
-      }
-    ]
-  },
-  {
-    categoryId: 4,
     categoryName: '워터파크/아쿠아리움',
     sumStatisticsBookmarksByCategory: 10,
     bookmarksByBrandList: [
@@ -47,7 +38,7 @@ export const mockBookmarkStats = [
     ]
   },
   {
-    categoryId: 5,
+    categoryId: 4,
     categoryName: '액티비티',
     sumStatisticsBookmarksByCategory: 14,
     bookmarksByBrandList: [
@@ -62,7 +53,7 @@ export const mockBookmarkStats = [
     ]
   },
   {
-    categoryId: 6,
+    categoryId: 5,
     categoryName: '뷰티(피부과, 클리닉)',
     sumStatisticsBookmarksByCategory: 6,
     bookmarksByBrandList: [
@@ -77,7 +68,7 @@ export const mockBookmarkStats = [
     ]
   },
   {
-    categoryId: 7,
+    categoryId: 6,
     categoryName: '건강(제약, 영양제 등)',
     sumStatisticsBookmarksByCategory: 8,
     bookmarksByBrandList: [
@@ -88,6 +79,21 @@ export const mockBookmarkStats = [
       {
         brandName: 'LG생활건강샵 U+패밀리샵',
         sumBookmarksByBrand: 3
+      }
+    ]
+  },
+  {
+    categoryId: 7,
+    categoryName: '생활/편의',
+    sumStatisticsBookmarksByCategory: 18,
+    bookmarksByBrandList: [
+      {
+        brandName: 'GS25',
+        sumBookmarksByBrand: 10
+      },
+      {
+        brandName: '펫생각',
+        sumBookmarksByBrand: 8
       }
     ]
   },
@@ -112,16 +118,24 @@ export const mockBookmarkStats = [
   },
   {
     categoryId: 9,
-    categoryName: '생활/편의',
-    sumStatisticsBookmarksByCategory: 18,
+    categoryName: '음식점',
+    sumStatisticsBookmarksByCategory: 25,
     bookmarksByBrandList: [
       {
-        brandName: 'GS25',
-        sumBookmarksByBrand: 10
+        brandName: 'VIPS',
+        sumBookmarksByBrand: 8
       },
       {
-        brandName: '펫생각',
-        sumBookmarksByBrand: 8
+        brandName: '굽네치킨',
+        sumBookmarksByBrand: 7
+      },
+      {
+        brandName: '도미노피자',
+        sumBookmarksByBrand: 5
+      },
+      {
+        brandName: '미스터피자',
+        sumBookmarksByBrand: 5
       }
     ]
   },
@@ -142,24 +156,16 @@ export const mockBookmarkStats = [
   },
   {
     categoryId: 11,
-    categoryName: '음식점',
-    sumStatisticsBookmarksByCategory: 25,
+    categoryName: '테마파크',
+    sumStatisticsBookmarksByCategory: 8,
     bookmarksByBrandList: [
       {
-        brandName: 'VIPS',
-        sumBookmarksByBrand: 8
-      },
-      {
-        brandName: '굽네치킨',
-        sumBookmarksByBrand: 7
-      },
-      {
-        brandName: '도미노피자',
+        brandName: '뽀로로파크',
         sumBookmarksByBrand: 5
       },
       {
-        brandName: '미스터피자',
-        sumBookmarksByBrand: 5
+        brandName: '서울랜드',
+        sumBookmarksByBrand: 3
       }
     ]
   },
@@ -224,28 +230,28 @@ export const mockFilteringStats = [
   },
   {
     categoryId: 3,
-    categoryName: '테마파크',
-    sumStatisticsFilterByCategory: 18
-  },
-  {
-    categoryId: 4,
     categoryName: '워터파크/아쿠아리움',
     sumStatisticsFilterByCategory: 12
   },
   {
-    categoryId: 5,
+    categoryId: 4,
     categoryName: '액티비티',
     sumStatisticsFilterByCategory: 15
   },
   {
-    categoryId: 6,
+    categoryId: 5,
     categoryName: '뷰티(피부과, 클리닉)',
     sumStatisticsFilterByCategory: 22
   },
   {
-    categoryId: 7,
+    categoryId: 6,
     categoryName: '건강(제약, 영양제 등)',
     sumStatisticsFilterByCategory: 14
+  },
+  {
+    categoryId: 7,
+    categoryName: '생활/편의',
+    sumStatisticsFilterByCategory: 32
   },
   {
     categoryId: 8,
@@ -254,8 +260,8 @@ export const mockFilteringStats = [
   },
   {
     categoryId: 9,
-    categoryName: '생활/편의',
-    sumStatisticsFilterByCategory: 32
+    categoryName: '음식점',
+    sumStatisticsFilterByCategory: 35
   },
   {
     categoryId: 10,
@@ -264,8 +270,8 @@ export const mockFilteringStats = [
   },
   {
     categoryId: 11,
-    categoryName: '음식점',
-    sumStatisticsFilterByCategory: 35
+    categoryName: '테마파크',
+    sumStatisticsFilterByCategory: 18
   },
   {
     categoryId: 12,
@@ -318,21 +324,6 @@ export const mockRecommendStats = [
   },
   {
     categoryId: 3,
-    categoryName: '테마파크',
-    sumStatisticsRecommendationByCategory: 4,
-    recommendationsByBrandList: [
-      {
-        brandName: '뽀로로파크',
-        sumRecommendationsByBrand: 2
-      },
-      {
-        brandName: '서울랜드',
-        sumRecommendationsByBrand: 2
-      }
-    ]
-  },
-  {
-    categoryId: 4,
     categoryName: '워터파크/아쿠아리움',
     sumStatisticsRecommendationByCategory: 3,
     recommendationsByBrandList: [
@@ -347,7 +338,7 @@ export const mockRecommendStats = [
     ]
   },
   {
-    categoryId: 5,
+    categoryId: 4,
     categoryName: '액티비티',
     sumStatisticsRecommendationByCategory: 7,
     recommendationsByBrandList: [
@@ -362,7 +353,7 @@ export const mockRecommendStats = [
     ]
   },
   {
-    categoryId: 6,
+    categoryId: 5,
     categoryName: '뷰티(피부과, 클리닉)',
     sumStatisticsRecommendationByCategory: 5,
     recommendationsByBrandList: [
@@ -377,7 +368,7 @@ export const mockRecommendStats = [
     ]
   },
   {
-    categoryId: 7,
+    categoryId: 6,
     categoryName: '건강(제약, 영양제 등)',
     sumStatisticsRecommendationByCategory: 9,
     recommendationsByBrandList: [
@@ -388,6 +379,21 @@ export const mockRecommendStats = [
       {
         brandName: 'LG생활건강샵 U+패밀리샵',
         sumRecommendationsByBrand: 4
+      }
+    ]
+  },
+  {
+    categoryId: 7,
+    categoryName: '생활/편의',
+    sumStatisticsRecommendationByCategory: 4,
+    recommendationsByBrandList: [
+      {
+        brandName: 'GS25',
+        sumRecommendationsByBrand: 3
+      },
+      {
+        brandName: '펫생각',
+        sumRecommendationsByBrand: 1
       }
     ]
   },
@@ -408,15 +414,15 @@ export const mockRecommendStats = [
   },
   {
     categoryId: 9,
-    categoryName: '생활/편의',
-    sumStatisticsRecommendationByCategory: 4,
+    categoryName: '음식점',
+    sumStatisticsRecommendationByCategory: 3,
     recommendationsByBrandList: [
       {
-        brandName: 'GS25',
-        sumRecommendationsByBrand: 3
+        brandName: 'VIPS',
+        sumRecommendationsByBrand: 2
       },
       {
-        brandName: '펫생각',
+        brandName: '굽네치킨',
         sumRecommendationsByBrand: 1
       }
     ]
@@ -438,16 +444,16 @@ export const mockRecommendStats = [
   },
   {
     categoryId: 11,
-    categoryName: '음식점',
-    sumStatisticsRecommendationByCategory: 3,
+    categoryName: '테마파크',
+    sumStatisticsRecommendationByCategory: 4,
     recommendationsByBrandList: [
       {
-        brandName: 'VIPS',
+        brandName: '뽀로로파크',
         sumRecommendationsByBrand: 2
       },
       {
-        brandName: '굽네치킨',
-        sumRecommendationsByBrand: 1
+        brandName: '서울랜드',
+        sumRecommendationsByBrand: 2
       }
     ]
   },
@@ -501,6 +507,12 @@ export const mockRecommendStats = [
 // 14개 카테고리에 정확히 맞춘 멤버십 통계 mock 데이터 (APP/기기 제외)
 export const mockMembershipStats = [
   {
+    categoryId: 1,
+    categoryName: 'APP/기기',
+    sumStatisticsMembershipUsageByCategory: 0,
+    membershipUsageByBrandList: []
+  },
+  {
     categoryId: 2,
     categoryName: '영화 / 미디어',
     sumStatisticsMembershipUsageByCategory: 12,
@@ -517,21 +529,6 @@ export const mockMembershipStats = [
   },
   {
     categoryId: 3,
-    categoryName: '테마파크',
-    sumStatisticsMembershipUsageByCategory: 8,
-    membershipUsageByBrandList: [
-      {
-        brandName: '뽀로로파크',
-        sumMembershipUsageByBrand: 5
-      },
-      {
-        brandName: '서울랜드',
-        sumMembershipUsageByBrand: 3
-      }
-    ]
-  },
-  {
-    categoryId: 4,
     categoryName: '워터파크/아쿠아리움',
     sumStatisticsMembershipUsageByCategory: 5,
     membershipUsageByBrandList: [
@@ -546,7 +543,7 @@ export const mockMembershipStats = [
     ]
   },
   {
-    categoryId: 5,
+    categoryId: 4,
     categoryName: '액티비티',
     sumStatisticsMembershipUsageByCategory: 6,
     membershipUsageByBrandList: [
@@ -561,7 +558,7 @@ export const mockMembershipStats = [
     ]
   },
   {
-    categoryId: 6,
+    categoryId: 5,
     categoryName: '뷰티(피부과, 클리닉)',
     sumStatisticsMembershipUsageByCategory: 15,
     membershipUsageByBrandList: [
@@ -576,7 +573,7 @@ export const mockMembershipStats = [
     ]
   },
   {
-    categoryId: 7,
+    categoryId: 6,
     categoryName: '건강(제약, 영양제 등)',
     sumStatisticsMembershipUsageByCategory: 11,
     membershipUsageByBrandList: [
@@ -587,6 +584,21 @@ export const mockMembershipStats = [
       {
         brandName: 'LG생활건강샵 U+패밀리샵',
         sumMembershipUsageByBrand: 4
+      }
+    ]
+  },
+  {
+    categoryId: 7,
+    categoryName: '생활/편의',
+    sumStatisticsMembershipUsageByCategory: 14,
+    membershipUsageByBrandList: [
+      {
+        brandName: 'GS25',
+        sumMembershipUsageByBrand: 8
+      },
+      {
+        brandName: '펫생각',
+        sumMembershipUsageByBrand: 6
       }
     ]
   },
@@ -607,16 +619,20 @@ export const mockMembershipStats = [
   },
   {
     categoryId: 9,
-    categoryName: '생활/편의',
-    sumStatisticsMembershipUsageByCategory: 14,
+    categoryName: '음식점',
+    sumStatisticsMembershipUsageByCategory: 22,
     membershipUsageByBrandList: [
       {
-        brandName: 'GS25',
-        sumMembershipUsageByBrand: 8
+        brandName: 'VIPS',
+        sumMembershipUsageByBrand: 10
       },
       {
-        brandName: '펫생각',
-        sumMembershipUsageByBrand: 6
+        brandName: '굽네치킨',
+        sumMembershipUsageByBrand: 7
+      },
+      {
+        brandName: '도미노피자',
+        sumMembershipUsageByBrand: 5
       }
     ]
   },
@@ -637,20 +653,16 @@ export const mockMembershipStats = [
   },
   {
     categoryId: 11,
-    categoryName: '음식점',
-    sumStatisticsMembershipUsageByCategory: 22,
+    categoryName: '테마파크',
+    sumStatisticsMembershipUsageByCategory: 8,
     membershipUsageByBrandList: [
       {
-        brandName: 'VIPS',
-        sumMembershipUsageByBrand: 10
-      },
-      {
-        brandName: '굽네치킨',
-        sumMembershipUsageByBrand: 7
-      },
-      {
-        brandName: '도미노피자',
+        brandName: '뽀로로파크',
         sumMembershipUsageByBrand: 5
+      },
+      {
+        brandName: '서울랜드',
+        sumMembershipUsageByBrand: 3
       }
     ]
   },

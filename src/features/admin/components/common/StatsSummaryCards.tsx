@@ -34,7 +34,7 @@ export function StatsSummaryCards({ totalStats }: StatsSummaryCardsProps) {
   return (
     <div className="flex gap-3 overflow-x-auto pb-2 pt-4 px-4">
       {cards.map((card) => (
-        <Card key={card.title} className="min-w-[8.75rem] flex-shrink-0 border-2 border-[var(--color-brand-blue)] transition-transform duration-200 hover:scale-105">
+        <Card key={card.title} className="min-w-[10rem] sm:min-w-[12rem] lg:min-w-[14rem] flex-1 max-w-[18rem] flex-shrink-0 border-2 border-[var(--color-brand-blue)] transition-transform duration-200 hover:scale-105">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
             <card.icon className="h-4 w-4" style={{ color: card.color }} />

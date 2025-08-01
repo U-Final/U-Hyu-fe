@@ -9,6 +9,7 @@ export const CATEGORY_ID_MAPPING: Record<StoreCategory, number> = {
   all: 0, // 전체 카테고리 (모든 브랜드)
 
   // 새로운 카테고리들
+  app: 1, // APP/기기
   themepark: 11, // 테마파크
   waterpark: 3, // 워터파크/아쿠아리움
   activity: 4, // 액티비티 (스카이라인 루지, 클룩, 부산 엑스 더 스카이 등)
@@ -48,6 +49,7 @@ export const getCategoryId = (categoryKey: StoreCategory): number => {
  */
 const REVERSE_CATEGORY_MAPPING: Record<number, StoreCategory> = {
   0: 'all',
+  1: 'app', // APP/기기
   2: 'media', // 영화/미디어 (culture 별칭보다 media를 기본값으로)
   3: 'waterpark', // 워터파크/아쿠아리움
   4: 'activity', // 액티비티

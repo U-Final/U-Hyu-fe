@@ -23,7 +23,7 @@ export const GRADE_OPTIONS = [
 
 export type CategoryId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 'all';
 
-// 실제 브랜드 리스트 (사용자 제공 정보 기반)
+// 실제 브랜드 리스트
 export const CATEGORY_BRANDS = {
   1: ['V컬러링 멤버십 프로모션', '원스토어', '지니뮤직'],
   2: ['CGV', '롯데시네마', '메가박스', '씨네폭스'],

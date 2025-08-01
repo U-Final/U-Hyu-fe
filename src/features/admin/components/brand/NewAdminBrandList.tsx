@@ -1,21 +1,18 @@
-import { useState } from 'react';
-
-import { BrandListSkeleton } from '@admin/components/common';
-import { ADMIN_CATEGORIES } from '@admin/constants/categories';
-import type { CategoryId } from '@admin/constants/categories';
+import { useState, useMemo } from 'react';
+import { PlusIcon, MagnifyingGlassIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useAdminBrandsQuery } from '@admin/hooks';
 import { useAdminBrandMutation } from '@admin/hooks/useAdminBrandMutation';
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  MagnifyingGlassIcon,
-  PlusIcon,
-} from '@heroicons/react/24/outline';
-
 import { FilterTabs } from '@/shared/components';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { BrandForm } from './BrandForm';
 import { BrandListItem } from './BrandListItem';
+import { BrandListSkeleton } from '@admin/components/common';
+import { ADMIN_CATEGORIES } from '@admin/constants/categories';
+import type { CategoryId } from '@admin/constants/categories';
+import type { BrandListItem as BrandListItemType } from '@admin/types';
+import { getBrandCategoryId, getCategoryIds } from '@admin/constants/brandCategoryMapping';
+
 
 const ITEMS_PER_PAGE = 5;
 
@@ -27,24 +24,40 @@ export const NewAdminBrandList = () => {
 
   const { data: brands, isLoading, error, refetch } = useAdminBrandsQuery(true);
   const { deleteMutation } = useAdminBrandMutation();
+  const queryClient = useQueryClient();
 
-  const brandList = brands || [];
+  const filteredBrandList = useMemo(() => {
+    if (!brands) return [];
+    
+    let filtered = [...brands];
+    
+    // 카테고리 필터링
+    if (selectedCategory !== 'all') {
+      const targetCategoryIds = getCategoryIds(selectedCategory.toString());
+      filtered = filtered.filter(brand => {
+        const brandCategory = getBrandCategoryId(brand.brandName);
+        return targetCategoryIds.includes(brandCategory);
+      });
+    }
+    
+    // 검색 필터링
+    if (searchTerm) {
+      filtered = filtered.filter(brand => 
+        brand.brandName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        brand.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    
+    return filtered;
+  }, [brands, selectedCategory, searchTerm]);
 
-  // 검색 및 카테고리 필터링
-  const filteredBrands = brandList.filter(brand => {
-    const matchesSearch = brand.brandName
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      selectedCategory === 'all' || brand.categoryId === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  const brandList: BrandListItemType[] = filteredBrandList;
 
-  // 페이지네이션 계산
-  const totalPages = Math.ceil(filteredBrands.length / ITEMS_PER_PAGE);
+  // 페이지네이션 계산 (API에서 이미 필터링된 데이터)
+  const totalPages = Math.ceil(brandList.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentBrands = filteredBrands.slice(startIndex, endIndex);
+  const currentBrands = brandList.slice(startIndex, endIndex);
 
   // 카테고리 탭 구성
   const categoryTabs = [
@@ -71,26 +84,39 @@ export const NewAdminBrandList = () => {
     setCurrentPage(page);
   };
 
-  const handleAddSuccess = () => {
+  const handleAddSuccess = async () => {
     setShowAddForm(false);
-    refetch();
+    console.log('🔧 브랜드 추가 성공, 캐시 무효화 시작');
+    
+    // 강력한 캐시 무효화
+    await queryClient.invalidateQueries({ queryKey: ['admin', 'brands'] });
+    await queryClient.refetchQueries({ queryKey: ['admin', 'brands'] });
+    
+    console.log('✅ 캐시 무효화 완료');
   };
 
-  const handleEdit = () => {
-    refetch();
-  };
+
+
+
 
   const handleDelete = async (brandId: number) => {
     try {
+      console.log('🔧 브랜드 삭제 시작:', brandId);
       await deleteMutation.mutateAsync(brandId);
-      refetch();
-
+      
+      console.log('🔧 브랜드 삭제 성공, 캐시 무효화 시작');
+      // 강력한 캐시 무효화
+      await queryClient.invalidateQueries({ queryKey: ['admin', 'brands'] });
+      await queryClient.refetchQueries({ queryKey: ['admin', 'brands'] });
+      
+      console.log('✅ 캐시 무효화 완료');
+      
       // 현재 페이지에 브랜드가 없으면 이전 페이지로
       if (currentBrands.length === 1 && currentPage > 1) {
         setCurrentPage(currentPage - 1);
       }
     } catch (error) {
-      console.error('브랜드 삭제 실패:', error);
+      console.error('❌ 브랜드 삭제 실패:', error);
       alert('브랜드 삭제에 실패했습니다.');
     }
   };
@@ -116,12 +142,10 @@ export const NewAdminBrandList = () => {
         <div>
           <h2 className="text-2xl font-bold text-gray-900">브랜드 관리</h2>
           <p className="text-sm text-gray-600 mt-1">
-            총 {brandList.length}개의 브랜드가 등록되어 있습니다.
-            {filteredBrands.length !== brandList.length && (
-              <span className="text-primary ml-1">
-                (필터링된 결과: {filteredBrands.length}개)
-              </span>
-            )}
+            {searchTerm || selectedCategory !== 'all' 
+              ? `검색/필터 결과: ${brandList.length}개의 브랜드`
+              : `총 ${brandList.length}개의 브랜드가 등록되어 있습니다.`
+            }
           </p>
         </div>
 
@@ -181,7 +205,6 @@ export const NewAdminBrandList = () => {
                 <BrandListItem
                   key={brand.brandId}
                   brand={brand}
-                  onEdit={handleEdit}
                   onDelete={handleDelete}
                 />
               ))}

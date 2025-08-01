@@ -55,7 +55,7 @@ export const mypageHandlers = [
       console.log('✅ 등급 업데이트:', body.updatedGrade);
     }
     if (body.updatedBrandIdList) {
-      updatedData.brandIdList = body.updatedBrandIdList;
+      updatedData.interestedBrandList = body.updatedBrandIdList;
       console.log('✅ 브랜드 업데이트:', body.updatedBrandIdList);
     }
     updatedData.updatedAt = new Date().toISOString();

@@ -16,14 +16,40 @@ const responseInterceptor = (instance: AxiosInstance) => {
     response => response,
     error => {
       const res = error.response;
+      // ✅ 302 리다이렉트 처리 (OAuth 리다이렉트 방지)
+      if (res?.status === 302) {
+        if (import.meta.env.DEV) {
+          console.log('🔄 302 리다이렉트 감지 - 비로그인 상태로 처리');
+        }
 
-      // ✅ 1. 인증 만료 처리 (401 에러 발생 시)
-      if (res?.status === 401) {
-        userStore.getState().clearUser(); // Zustand 상태 초기화
-        toast.error('로그인이 만료되었습니다. 다시 로그인해주세요.');
+        // 사용자 상태 초기화
+        userStore.getState().clearUser();
+
+        // 리다이렉트하지 않고 에러로 처리
         return Promise.reject({
-          statusCode: 401,
-          message: '인증이 만료되었습니다.',
+          statusCode: 302,
+          message: '로그인이 필요합니다.',
+          needLogin: true,
+        });
+      }
+
+      // ✅ 1. 인증 관련 에러 처리 (401, 403)
+      if (res?.status === 401 || res?.status === 403) {
+        userStore.getState().clearUser();
+
+        if (res?.status === 401) {
+          toast.error('로그인이 만료되었습니다. 다시 로그인해주세요.');
+        } else if (res?.status === 403) {
+          // 403은 조용히 처리 (토스트 없음)
+          if (import.meta.env.DEV) {
+            console.log('🔐 권한 없음 - 비로그인 상태로 처리');
+          }
+        }
+
+        return Promise.reject({
+          statusCode: res?.status,
+          message:
+            res?.status === 401 ? '인증이 만료되었습니다.' : '권한이 없습니다.',
         });
       }
 

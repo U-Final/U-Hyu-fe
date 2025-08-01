@@ -8,28 +8,28 @@ export const CATEGORY_ID_MAPPING: Record<StoreCategory, number> = {
   // 메인 카테고리
   all: 0, // 전체 카테고리 (모든 브랜드)
 
-  // 실제 서비스 카테고리와 매핑 (매장이 있는 카테고리만)
-  culture: 2, // 영화/미디어 (CGV, 롯데시네마, 메가박스 등)
+  // 새로운 카테고리들
+  themepark: 11, // 테마파크
+  waterpark: 3, // 워터파크/아쿠아리움
   activity: 4, // 액티비티 (스카이라인 루지, 클룩, 부산 엑스 더 스카이 등)
   beauty: 5, // 뷰티(피부과, 클리닉) (오가나셀 피부과, 데이원클리닉 등)
-  pharmacy: 6, // 건강(제약, 영양제 등) (동아제약 디몰, LG생활건강샵 등)
-  lifestyle: 7, // 생활/편의 (GS25, 펫생각, 셸로 등)
-  convenience: 7, // 생활/편의 (동일 카테고리)
+  health: 6, // 건강(제약, 영양제 등) (동아제약 디몰, LG생활건강샵 등)
   shopping: 8, // 쇼핑 (GS THE FRESH, VYVY, 롯데백화점몰 등)
-  restaurant: 9, // 음식점 (VIPS, 더플레이스, 제일제면소 등)
-  fastfood: 9, // 음식점 (동일 카테고리)
-  food: 9, // 음식점 (동일 카테고리)
+  lifestyle: 7, // 생활/편의 (GS25, 펫생각, 셸로 등)
   bakery: 10, // 베이커리/디저트 (파리바게트, 뚜레쥬르, 베스킨라빈스 등)
-  cafe: 10, // 베이커리/디저트 (동일 카테고리)
+  food: 9, // 음식점 (VIPS, 더플레이스, 제일제면소 등)
+  media: 2, // 영화/미디어 (CGV, 롯데시네마, 메가박스 등)
+  performance: 12, // 공연/전시
+  education: 13, // 교육
+  travel: 14, // 여행/교통
 
-  // 추가 카테고리들 (필요시 확장)
-  // 워터파크/아쿠아리움 (id: 3)
-  // 테마파크 (id: 11)
-  // 공연/전시 (id: 12)
-  // 교육 (id: 13)
-  // 여행/교통 (id: 14)
-
-  // 추가 매핑
+  // 호환성을 위한 별칭 카테고리들
+  culture: 2, // 영화/미디어 (media와 동일)
+  pharmacy: 6, // 건강(health와 동일)
+  convenience: 7, // 생활/편의 (lifestyle과 동일)
+  cafe: 10, // 베이커리/디저트 (bakery와 동일)
+  restaurant: 9, // 음식점 (food와 동일)
+  fastfood: 9, // 음식점 (food와 동일)
   default: 0, // 기타 -> 전체 카테고리로 처리
 };
 
@@ -48,14 +48,19 @@ export const getCategoryId = (categoryKey: StoreCategory): number => {
  */
 const REVERSE_CATEGORY_MAPPING: Record<number, StoreCategory> = {
   0: 'all',
-  2: 'culture',
-  4: 'activity',
-  5: 'beauty',
-  6: 'pharmacy',
-  7: 'lifestyle', // convenience와 공유하지만 lifestyle을 기본값으로 선택
-  8: 'shopping',
-  9: 'restaurant', // fastfood, food와 공유하지만 restaurant을 기본값으로 선택
-  10: 'bakery', // cafe와 공유하지만 bakery를 기본값으로 선택
+  2: 'media', // 영화/미디어 (culture 별칭보다 media를 기본값으로)
+  3: 'waterpark', // 워터파크/아쿠아리움
+  4: 'activity', // 액티비티
+  5: 'beauty', // 뷰티
+  6: 'health', // 건강 (pharmacy 별칭보다 health를 기본값으로)
+  7: 'lifestyle', // 생활/편의 (convenience 별칭보다 lifestyle을 기본값으로)
+  8: 'shopping', // 쇼핑
+  9: 'food', // 음식점 (restaurant, fastfood 별칭보다 food를 기본값으로)
+  10: 'bakery', // 베이커리/디저트 (cafe 별칭보다 bakery를 기본값으로)
+  11: 'themepark', // 테마파크
+  12: 'performance', // 공연/전시
+  13: 'education', // 교육
+  14: 'travel', // 여행/교통
 };
 
 /**

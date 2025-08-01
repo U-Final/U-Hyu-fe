@@ -2,26 +2,25 @@ import React from 'react';
 
 // Lucide React icons (더 나은 카테고리별 아이콘)
 import {
-  ShoppingCart,
+  Baby,
+  Banknote,
+  Bed,
+  Building2,
+  Camera,
+  Car,
   Coffee,
   GraduationCap,
-  Building2,
-  Car,
-  Train,
-  Banknote,
-  Palette,
+  Heart,
   Home,
   MapPin,
-  Camera,
-  Bed,
-  UtensilsCrossed,
-  Heart,
+  Palette,
   Pill,
-  Baby,
+  ShoppingCart,
+  Train,
+  UtensilsCrossed,
 } from 'lucide-react';
-
 // React Icons (특정 카테고리용 추가 아이콘)
-import { 
+import {
   MdLocalConvenienceStore,
   MdLocalGasStation,
   MdSchool,
@@ -98,7 +97,7 @@ export const CATEGORY_COLOR_MAP = {
 
 /**
  * 카테고리 그룹 코드 추출 함수
- * @param category 카테고리 문자열
+ * @param category 카테고리 문자열 ("음식점 > 한식 > 고기구이")
  * @param categoryGroupCode 카테고리 그룹 코드 (우선 사용)
  * @returns 카테고리 그룹 코드
  */
@@ -150,7 +149,7 @@ export const getCategoryGroupCode = (
       병원: 'HP8',
       약국: 'PM9',
       부동산: 'AG2',
-      여행: 'AT4', // 여행 카테고리 추가
+      여행: 'AT4',
       '가정,생활': 'CS2',
       '서비스,산업': 'PO3',
       '교통,수송': 'SW8',
@@ -170,7 +169,7 @@ export const getCategoryGroupCode = (
       도로시설: 'SW8',
       미용: 'PO3',
       식품판매: 'CS2',
-      '관광,명소': 'AT4', // 관광,명소 카테고리 추가
+      '관광,명소': 'AT4',
     };
 
     // 첫 번째 카테고리로 매칭 시도
@@ -226,11 +225,16 @@ export const CategoryIcon: React.FC<CategoryIconProps> = ({
 
   // 아이콘 컴포넌트 가져오기
   const IconComponent =
-    CATEGORY_ICON_MAP[code as keyof typeof CATEGORY_ICON_MAP] || CATEGORY_ICON_MAP.DEFAULT;
+    CATEGORY_ICON_MAP[code as keyof typeof CATEGORY_ICON_MAP] ||
+    CATEGORY_ICON_MAP.DEFAULT;
 
   // 색상 가져오기 - color prop이 있으면 우선 사용
-  const iconColor = color || 
-    (isSelected ? '#3b82f6' : CATEGORY_COLOR_MAP[code as keyof typeof CATEGORY_COLOR_MAP] || '#6b7280');
+  const iconColor =
+    color ||
+    (isSelected
+      ? '#3b82f6'
+      : CATEGORY_COLOR_MAP[code as keyof typeof CATEGORY_COLOR_MAP] ||
+        '#6b7280');
 
   return (
     <IconComponent

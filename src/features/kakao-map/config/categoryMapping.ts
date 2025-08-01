@@ -106,29 +106,43 @@ export const getPrimaryKakaoCategoryForFilter = (filterCategory: string): string
 export const STORE_CATEGORY_TO_FILTER_TAB: Record<string, string> = {
   // LG U+ 제휴 매장의 실제 카테고리 키값들
   'all': 'all',
-  'culture': 'culture',           // 영화/미디어 → 문화/여가
-  'activity': 'activity',         // 액티비티 → 액티비티
-  'beauty': 'beauty',             // 뷰티/클리닉 → 뷰티/건강
-  'pharmacy': 'beauty',           // 건강/영양제 → 뷰티/건강 (건강 관련)
-  'lifestyle': 'life',            // 생활/편의 → 생활/편의
-  'convenience': 'life',          // 생활/편의 → 생활/편의
-  'shopping': 'shopping',         // 쇼핑 → 쇼핑
-  'food': 'food',                 // 음식점 → 푸드
-  'restaurant': 'food',           // 음식점 → 푸드
-  'fastfood': 'food',             // 음식점 → 푸드
-  'bakery': 'food',               // 베이커리/디저트 → 푸드
-  'cafe': 'food',                 // 베이커리/디저트 → 푸드
-  'default': 'all',               // 기타 → 전체
+  'themepark': '테마파크',
+  'waterpark': '워터파크/아쿠아리움',
+  'activity': '액티비티',
+  'beauty': '뷰티',
+  'health': '건강',
+  'pharmacy': '건강',           // 건강/영양제 → 건강
+  'shopping': '쇼핑',
+  'lifestyle': '생활/편의',
+  'convenience': '생활/편의',
+  'bakery': '베이커리/디저트',
+  'cafe': '베이커리/디저트',
+  'food': '음식점',
+  'restaurant': '음식점',
+  'fastfood': '음식점',
+  'media': '영화/미디어',
+  'culture': '영화/미디어',   // 호환성을 위한 별칭
+  'performance': '공연/전시',
+  'education': '교육',
+  'travel': '여행/교통',
+  'default': 'all',
   
   // 추가로 가능한 문자열 형태의 카테고리명들 (호환성)
-  '영화/미디어': 'culture',
-  '액티비티': 'activity', 
-  '뷰티/클리닉': 'beauty',
-  '건강/영양제': 'beauty',
-  '생활/편의': 'life',
-  '쇼핑': 'shopping',
-  '음식점': 'food',
-  '베이커리/디저트': 'food',
+  '테마파크': '테마파크',
+  '워터파크/아쿠아리움': '워터파크/아쿠아리움',
+  '액티비티': '액티비티',
+  '뷰티': '뷰티',
+  '뷰티/클리닉': '뷰티',
+  '건강': '건강',
+  '건강/영양제': '건강',
+  '쇼핑': '쇼핑',
+  '생활/편의': '생활/편의',
+  '베이커리/디저트': '베이커리/디저트',
+  '음식점': '음식점',
+  '영화/미디어': '영화/미디어',
+  '공연/전시': '공연/전시',
+  '교육': '교육',
+  '여행/교통': '여행/교통',
   '기타': 'all',
 };
 

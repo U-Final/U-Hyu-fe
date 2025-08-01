@@ -21,7 +21,12 @@ export function RecommendChart({ data, selectedCategory = 'all' }: RecommendChar
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-muted-foreground">데이터가 없습니다.</p>
+          <div className="text-center py-8">
+            <p className="text-muted-foreground">데이터가 없습니다.</p>
+            <p className="text-sm text-muted-foreground mt-2">
+              APP/기기 카테고리에 대한 추천 데이터가 없습니다.
+            </p>
+          </div>
         </CardContent>
       </Card>
     );
@@ -29,6 +34,30 @@ export function RecommendChart({ data, selectedCategory = 'all' }: RecommendChar
 
   // 카테고리 필터링 적용
   const filteredData = filterDataByCategory(data, selectedCategory);
+
+  // 필터링된 데이터가 없는 경우
+  if (filteredData.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <HeartIcon className="h-5 w-5" />
+            추천 통계
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8">
+            <p className="text-muted-foreground">데이터가 없습니다.</p>
+            {selectedCategory !== 'all' && (
+              <p className="text-sm text-muted-foreground mt-2">
+                {getCategoryDisplayName(selectedCategory)} 카테고리에 대한 추천 데이터가 없습니다.
+              </p>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   // 차트 데이터 준비
   const chartData = selectedCategory === 'all' 
@@ -48,6 +77,30 @@ export function RecommendChart({ data, selectedCategory = 'all' }: RecommendChar
           fill: index % 2 === 0 ? 'var(--admin-recommendation)' : 'var(--admin-recommendation-light)',
         })) || []
       ).sort((a, b) => b.value - a.value);
+
+  // 차트에 표시할 데이터가 없거나 모든 값이 0인 경우
+  if (chartData.length === 0 || chartData.every(item => item.value === 0)) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <HeartIcon className="h-5 w-5" />
+            추천 통계
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8">
+            <p className="text-muted-foreground">데이터가 없습니다.</p>
+            {selectedCategory !== 'all' && (
+              <p className="text-sm text-muted-foreground mt-2">
+                {getCategoryDisplayName(selectedCategory)} 카테고리에 대한 추천 데이터가 없습니다.
+              </p>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>

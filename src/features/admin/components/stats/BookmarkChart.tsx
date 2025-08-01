@@ -1,14 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/shadcn/ui/card';
 import { BookmarkIcon } from '@heroicons/react/24/outline';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import type { CategoryStat, BrandStatDetail } from '@admin/api/types';
+import type { BrandStatDetail, BookmarkChartProps } from '@admin/types';
 import { getCategoryDisplayName } from '@admin/utils/categoryUtils';
 import { filterDataByCategory } from '@admin/utils/categoryMapping';
-
-interface BookmarkChartProps {
-  data: CategoryStat[];
-  selectedCategory?: string;
-}
 
 export function BookmarkChart({ data, selectedCategory = 'all' }: BookmarkChartProps) {
   if (!data || data.length === 0) {
@@ -110,23 +105,23 @@ export function BookmarkChart({ data, selectedCategory = 'all' }: BookmarkChartP
             <h4 className="text-sm font-medium mb-4">
               {selectedCategory === 'all' ? '카테고리별 상세' : '브랜드별 상세'}
             </h4>
-            <div className="space-y-3">
+            <div className="space-y-2">
               {selectedCategory === 'all' ? (
                 // 전체 선택시: 모든 카테고리 표시
                 [...filteredData]
                   .sort((a, b) => (b.sumStatisticsBookmarksByCategory || 0) - (a.sumStatisticsBookmarksByCategory || 0))
                   .map((category, index) => (
-                    <div key={`bookmark-${category.categoryId}-${category.categoryName}-${index}`} className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <span className="font-medium">{category.categoryName}</span>
-                        <span className="text-sm text-muted-foreground">
+                    <div key={`bookmark-${category.categoryId}-${category.categoryName}-${index}`} className="space-y-1">
+                      <div className="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                        <span className="font-medium text-sm">{category.categoryName}</span>
+                        <span className="text-xs text-muted-foreground">
                           {category.sumStatisticsBookmarksByCategory || 0}개
                         </span>
                       </div>
                       {category.bookmarksByBrandList && category.bookmarksByBrandList.length > 0 && (
-                        <div className="ml-4 space-y-1">
+                        <div className="ml-3 space-y-0.5">
                           {category.bookmarksByBrandList.map((brand: BrandStatDetail, brandIndex) => (
-                            <div key={`bookmark-brand-${category.categoryId}-${brand.brandName}-${brandIndex}`} className="flex justify-between items-center text-sm">
+                            <div key={`bookmark-brand-${category.categoryId}-${brand.brandName}-${brandIndex}`} className="flex justify-between items-center text-xs">
                               <span className="text-muted-foreground">• {brand.brandName}</span>
                               <span className="text-muted-foreground">{brand.sumBookmarksByBrand}개</span>
                             </div>

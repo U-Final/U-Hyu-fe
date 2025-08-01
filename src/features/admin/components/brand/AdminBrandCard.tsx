@@ -1,7 +1,7 @@
-import type { AdminBrand } from '@admin/api/types';
+import type { BrandListItem } from '@admin/api/types';
 
 interface AdminBrandCardProps {
-  brand: AdminBrand;
+  brand: BrandListItem;
   onClick: () => void;
 }
 
@@ -14,7 +14,7 @@ export const AdminBrandCard = ({ brand, onClick }: AdminBrandCardProps) => {
       {/* 브랜드 로고 */}
       <div className="w-12 h-12 mr-4">
         <img
-          src={brand.brandImg}
+          src={brand.logoImage}
           alt={brand.brandName}
           className="w-full h-full object-cover rounded-lg"
           onError={(e) => {
@@ -30,14 +30,14 @@ export const AdminBrandCard = ({ brand, onClick }: AdminBrandCardProps) => {
           <h3 className="text-base font-bold text-black">{brand.brandName}</h3>
         </div>
         <p className="text-sm text-gray-600 mb-1">
-          사용 제한: {brand.usageLimit} | 사용 방법: {brand.usageMethod}
+          {brand.description}
         </p>
       </div>
 
-      {/* 혜택 개수 */}
+      {/* 상세보기 아이콘 */}
       <div className="text-right">
-        <div className="text-sm text-gray-500">혜택</div>
-        <div className="text-lg font-bold text-primary">{brand.data.length}개</div>
+        <div className="text-sm text-gray-500">상세보기</div>
+        <div className="text-lg font-bold text-primary">→</div>
       </div>
     </div>
   );

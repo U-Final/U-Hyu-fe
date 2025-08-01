@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 
 import { useUserInfo } from '@user/hooks/useUserQuery';
 import type { AxiosError } from 'axios';
+import { useLocation } from 'react-router-dom';
 
 import { PATH } from '@/routes/path';
+
 import type { ApiError } from '@/shared/client/client.type';
 import { userStore } from '@/shared/store/userStore';
 import {
@@ -23,27 +24,45 @@ const AppInitializer = () => {
 
   // 관리자 페이지에서는 사용자 정보 요청을 하지 않음
   const isAdminPage = location.pathname === PATH.ADMIN;
-  
+
   // 관리자 페이지가 아닐 때만 사용자 정보 요청
   const { data, isSuccess, isError } = useUserInfo(!isAdminPage);
 
   // 개발 환경에서 로깅
   if (import.meta.env.DEV) {
-    console.log('🔍 AppInitializer - 현재 경로:', location.pathname, '관리자 페이지 여부:', isAdminPage);
+    console.log(
+      '🔍 AppInitializer - 현재 경로:',
+      location.pathname,
+      '관리자 페이지 여부:',
+      isAdminPage
+    );
   }
 
   // 사용자 정보 초기화
   useEffect(() => {
     if (isSuccess && data.data) {
-      setUser(data.data);
+      if ((data.statusCode === 200 || data.statusCode === 0) && data.data) {
+        setUser(data.data);
+      } else {
+        clearUser();
+      }
     } else if (isError) {
       const err = data as unknown as AxiosError<ApiError>;
 
       // 401 Unauthorized일 때만 clearUser() 처리
-      if (err?.response?.data?.statusCode === 401) {
+      if (
+        err?.response?.data?.statusCode === 401 ||
+        err?.response?.status === 403
+      ) {
+        if (import.meta.env.DEV) {
+          console.log(
+            `🔐 ${err?.response?.status} 에러 - 비로그인 상태로 처리`
+          );
+        }
         clearUser();
       } else {
         console.warn('⚠️ 사용자 정보 로딩 실패(비401): 상태 유지');
+        clearUser();
       }
     }
   }, [isSuccess, isError, data, setUser, clearUser]);

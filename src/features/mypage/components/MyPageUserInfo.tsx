@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import type { UserInfoData, UpdateUserRequest } from '@mypage/api/types';
-import { BadgeCheck, Calendar, Mail, Pencil, User } from 'lucide-react';
+import { BadgeCheck, Pencil } from 'lucide-react';
 
 interface Props {
   user: UserInfoData;
@@ -73,34 +73,10 @@ const MyPageUserInfo = ({
     editable: boolean;
   }[] = [
     {
-      key: 'userName',
-      label: '이름',
-      icon: <User className="w-4 h-4 text-gray" />,
-      editable: false,
-    },
-    {
       key: 'nickName',
       label: '닉네임',
       icon: <BadgeCheck className="w-4 h-4 text-gray" />,
       editable: true,
-    },
-    {
-      key: 'gender',
-      label: '성별',
-      icon: <User className="w-4 h-4 text-gray" />,
-      editable: false,
-    },
-    {
-      key: 'age',
-      label: '나이',
-      icon: <Calendar className="w-4 h-4 text-gray" />,
-      editable: false,
-    },
-    {
-      key: 'email',
-      label: '이메일',
-      icon: <Mail className="w-4 h-4 text-gray" />,
-      editable: false,
     },
   ];
 

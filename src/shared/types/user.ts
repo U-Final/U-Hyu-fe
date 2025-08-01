@@ -25,7 +25,7 @@ export interface Marker {
   markerImage: string;
 }
 
-// 기본 사용자 정보 인터페이스 (가장 완전한 형태)
+// 기본 사용자 정보 인터페이스
 export interface UserInfo {
   profileImage: string;
   userName: string;
@@ -38,7 +38,7 @@ export interface UserInfo {
   role?: UserRole;
 }
 
-// API 응답용 사용자 정보 (Postman API 응답과 일치)
+// API 응답용 사용자 정보
 export interface UserInfoData {
   profileImage: string;
   userName: string;
@@ -47,7 +47,7 @@ export interface UserInfoData {
   age: number | null;
   gender: UserGender | null;
   grade: UserGrade | null;
-  brandIdList?: number[];
+  interestedBrandList?: number[];
   updatedAt: string;
   role?: UserRole;
 }

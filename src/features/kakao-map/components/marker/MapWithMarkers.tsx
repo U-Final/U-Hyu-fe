@@ -26,6 +26,7 @@ import { useToggleFavoriteMutation } from '../../hooks/useMapQueries';
 import type { Store } from '../../types/store';
 import ResponsiveManualSearchButton from '../ManualSearchButton';
 import BrandMarker from './BrandMarker';
+import FavoriteMarker from './FavoriteMarker';
 import { KeywordInfoWindow } from './KeywordInfoWindow';
 import { KeywordMarker } from './KeywordMarker';
 import MyMapMarker from './MyMapMarker';
@@ -90,6 +91,8 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   );
   const setSelectedStore = useMapStore(state => state.selectStore);
 
+  const { bookmarkMode, bookmarkStores } = useMapStore();
+
   // 마커에 사용할 store 배열 결정(mymap)
   // const storesToRender = isShared ? sharedStores : stores;
   // 마커에 사용할 store 배열 결정 (일반 매장 + 추천 매장)
@@ -115,7 +118,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         storesCount: stores.length,
         recommendedCount: recommendedStores.length,
         totalRenderCount: allStores.length,
-        stores: allStores
+        stores: allStores,
       });
     }
 
@@ -440,6 +443,22 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
             )}
           </CustomOverlayMap>
         ))}
+
+        {/* 즐겨찾기 마커 */}
+        {bookmarkMode &&
+          bookmarkStores.map(store => (
+            <CustomOverlayMap
+              key={`bookmark-${store.storeId}`}
+              position={{ lat: store.latitude, lng: store.longitude }}
+              yAnchor={1}
+              xAnchor={0.5}
+            >
+              <FavoriteMarker
+                isSelected={selectedStoreId === store.storeId}
+                onClick={() => handleMarkerClick(store)}
+              />
+            </CustomOverlayMap>
+          ))}
 
         {/* 스토어 상세 정보 인포윈도우 */}
         {infoWindowStore && (

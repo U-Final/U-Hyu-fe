@@ -2,6 +2,7 @@ import type {
   GetNearbyStoresParams,
   StoreDetail,
   StoreListResponse,
+  StoreSummary,
 } from '../api/types';
 import type { Store } from '../types/store';
 
@@ -55,6 +56,7 @@ export interface MapStoreState {
 
   // 즐겨찾기 상태
   bookmarkMode: boolean;
+  bookmarkStores: StoreSummary[];
 }
 
 export interface MapStoreActions {
@@ -97,4 +99,7 @@ export interface MapStoreActions {
 
   // 유틸리티
   reset: () => void;
+
+  //
+  fetchBookmarkStores: () => Promise<void>;
 }

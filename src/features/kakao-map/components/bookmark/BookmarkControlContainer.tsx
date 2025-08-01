@@ -21,8 +21,6 @@ export const BookmarkControlContainer: FC = () => {
   };
 
   return (
-    <div className="absolute bottom-48 right-4 z-10">
-      <BookmarkButton isActive={isBookmarkMode} onClick={handleClick} />
-    </div>
+    <BookmarkButton isActive={isBookmarkMode} onClick={handleClick} />
   );
 };

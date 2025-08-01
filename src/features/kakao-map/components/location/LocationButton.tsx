@@ -15,8 +15,7 @@ const LocationButton: FC<LocationButtonProps> = ({
   className = '',
 }) => {
   return (
-    <div className="fixed right-4 bottom-[7rem] z-40 md:right-6 desktop-padding-sheet">
-      <button
+    <button
         onClick={onClick}
         disabled={isLoading}
         className={`
@@ -39,7 +38,6 @@ const LocationButton: FC<LocationButtonProps> = ({
         ) : (
           <FaLocationArrow className="w-5 h-5 text-primary" />
         )}
-      </button>
 
       {/* 툴팁 */}
       <div
@@ -84,7 +82,7 @@ const LocationButton: FC<LocationButtonProps> = ({
         "
         />
       </div>
-    </div>
+    </button>
   );
 };
 

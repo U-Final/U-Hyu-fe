@@ -4,22 +4,13 @@ import { CompletedSteps } from '@extra-info/components/CompletedSteps';
 import { CurrentStep } from '@extra-info/components/CurrentStep';
 import { useSignupFlow } from '@extra-info/hooks/useSignupFlow';
 import type { SignupData } from '@extra-info/types';
+import { mapMembershipGrade } from '@extra-info/utils/membershipGrade';
 import { useSubmitExtraInfo } from '@user/hooks/useUserMutation';
 import { LayoutGroup } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import type { UserGender, UserGrade } from '@/shared/types';
-
-// 멤버십 등급 매핑 함수
-const mapMembershipGrade = (grade: string): UserGrade => {
-  const gradeMap: Record<string, UserGrade> = {
-    Excellent: 'GOOD',
-    vip: 'VIP',
-    vvip: 'VVIP',
-  };
-  return gradeMap[grade] || 'GOOD';
-};
+import type { UserGender } from '@/shared/types';
 
 const ImprovedSignupFlow: React.FC = () => {
   const navigate = useNavigate();

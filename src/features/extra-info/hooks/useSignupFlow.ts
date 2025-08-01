@@ -2,23 +2,14 @@ import { useCallback, useState } from 'react';
 
 import { useSubmitExtraInfo } from '@user/hooks/useUserMutation';
 
-import type { UserGender, UserGrade } from '@/shared/types';
+import type { UserGender } from '@/shared/types';
 
 import {
   type CompletedStep,
   type SignupData,
   type StepValidation,
 } from '../types';
-
-// 멤버십 등급 매핑 함수
-const mapMembershipGrade = (grade: string): UserGrade => {
-  const gradeMap: Record<string, UserGrade> = {
-    Excellent: 'GOOD',
-    vip: 'VIP',
-    vvip: 'VVIP',
-  };
-  return gradeMap[grade] || 'GOOD';
-};
+import { mapMembershipGrade } from '../utils/membershipGrade';
 
 const initialData: SignupData = {
   membershipGrade: '',

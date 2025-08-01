@@ -110,3 +110,17 @@ export const getMyMapUuid = async (uuid: string): Promise<MymapUuidRes> => {
   }
   return res.data.data;
 };
+
+// My Map 상세 조회 API (UUID 기반, 비회원)
+export const getMyMapUuidGuest = async (
+  uuid: string
+): Promise<MymapUuidRes> => {
+  const res = await client.get<ApiResponse<MymapUuidRes>>(
+    MYMAP_ENDPOINTS.MYMAP.GUEST_VIEW(uuid)
+  );
+
+  if (!res.data.data) {
+    throw new Error('My Map 상세 데이터를 불러올 수 없습니다');
+  }
+  return res.data.data;
+};

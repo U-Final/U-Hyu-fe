@@ -42,7 +42,7 @@ const AppInitializer = () => {
       // 관리자 페이지에서는 인증 체크 건너뛰기
       userStore.setState({ isAuthChecked: true, user: null });
     }
-  }, [isAdminPage, initAuthState]);
+  }, [isAdminPage]);
 
   // 뷰포트 높이 및 스크롤 복원 초기화 (모바일 최적화)
   useEffect(() => {

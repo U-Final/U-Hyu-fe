@@ -4,6 +4,7 @@ import type { GetNearbyStoresParams } from '../api/types';
 import { getRegionInfo } from '../constants/regions';
 import { useMapUIContext } from '../context/MapUIContext';
 import {
+  useBookmarkMode,
   useMapStore,
   useRecommendedStores,
   useShowRecommendedStores,
@@ -44,6 +45,8 @@ export const useMapData = () => {
   const setStoreDetail = useMapStore(state => state.setStoreDetail);
   const selectStore = useMapStore(state => state.selectStore);
   const getCurrentLocation = useMapStore(state => state.getCurrentLocation);
+  const isBookmarkMode = useBookmarkMode();
+  const toggleBookmarkMode = useMapStore(state => state.toggleBookmarkMode);
   const setMapCenter = useMapStore(state => state.setMapCenter);
   // 추천 매장 액션들 추가
   const fetchRecommendedStores = useMapStore(
@@ -72,18 +75,18 @@ export const useMapData = () => {
       // FilterTabs의 value를 백엔드 API의 category 값으로 매핑 (필터탭 label과 동일하게)
       // 새로운 14개 비즈니스 카테고리에 맞춤 (APP/기기는 지도에서 제외)
       const categoryMapping: Record<string, string> = {
-        '테마파크': '테마파크',
-        '워터파크/아쿠아리움': '워터파크/아쿠아리움', 
-        '액티비티': '액티비티',
-        '뷰티': '뷰티',
-        '건강': '건강',
-        '쇼핑': '쇼핑',
+        테마파크: '테마파크',
+        '워터파크/아쿠아리움': '워터파크/아쿠아리움',
+        액티비티: '액티비티',
+        뷰티: '뷰티',
+        건강: '건강',
+        쇼핑: '쇼핑',
         '생활/편의': '생활/편의',
         '베이커리/디저트': '베이커리/디저트',
-        '음식점': '음식점',
+        음식점: '음식점',
         '영화/미디어': '영화/미디어',
         '공연/전시': '공연/전시',
-        '교육': '교육',
+        교육: '교육',
         '여행/교통': '여행/교통',
         // 기존 호환성을 위한 매핑 (구 카테고리가 있을 수 있음)
         activity: '액티비티',
@@ -149,7 +152,7 @@ export const useMapData = () => {
         console.log('🏪 Store data updated from API:', {
           storesCount: storeListQuery.data.data?.length || 0,
           queryParams: storeListParams,
-          data: storeListQuery.data.data
+          data: storeListQuery.data.data,
         });
       }
       setStoresFromQuery(storeListQuery.data);
@@ -309,6 +312,8 @@ export const useMapData = () => {
     fetchNearbyStores,
     selectStore,
     getCurrentLocation,
+    isBookmarkMode,
+    toggleBookmarkMode,
     setMapCenter,
     toggleFavorite,
     // 추천 매장 액션들 추가

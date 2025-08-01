@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 
 import { PATH } from '@/routes/path';
 
+import { userStore } from '@/shared/store/userStore';
 import {
   initKeyboardHandler,
   initScrollRestore,
@@ -15,6 +16,9 @@ import {
 
 const AppInitializer = () => {
   const location = useLocation();
+  useEffect(() => {
+    userStore.getState().userInfo(); // 새로고침 시 서버 검증
+  }, []);
 
   // 관리자 페이지에서는 사용자 정보 요청을 하지 않음
   const isAdminPage = location.pathname === PATH.ADMIN;

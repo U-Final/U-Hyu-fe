@@ -9,7 +9,6 @@ import type { SimpleUserInfo } from '@/shared/types';
 interface UserState {
   user: SimpleUserInfo | null;
   isAuthChecked: boolean; // 유저가 로그인 되어있는지 ㅊㅔ크
-  initAuthState: () => Promise<void>;
   setUser: (user: SimpleUserInfo) => void;
   clearUser: () => void;
   logout: () => Promise<void>;
@@ -19,16 +18,6 @@ interface UserState {
 export const userStore = create<UserState>(set => ({
   user: null,
   isAuthChecked: false,
-  // 쿠키 기반 초기 인증 상태 확인
-  initAuthState: async () => {
-    try {
-      // HttpOnly 쿠키는 체크할 수 없으므로 바로 서버에 요청
-      await userStore.getState().userInfo();
-    } catch {
-      console.log('초기 인증 상태 확인 완료 (에러 발생)');
-      // userInfo에서 이미 에러 처리됨
-    }
-  },
   setUser: user => set({ user, isAuthChecked: true }),
   clearUser: () => set({ user: null, isAuthChecked: true }),
   logout: async () => {
@@ -44,16 +33,11 @@ export const userStore = create<UserState>(set => ({
   userInfo: async () => {
     try {
       const res = await userApi.getUserInfo();
-      console.log('📡 서버 응답:', {
-        statusCode: res.statusCode,
-        data: res.data,
-      });
 
       if ((res.statusCode === 200 || res.statusCode === 0) && res.data) {
         const { userName, grade, profileImage, role } = res.data;
         userStore.getState().setUser({ userName, grade, profileImage, role });
       } else {
-        console.warn('⚠️ 유저 정보 조회 실패: 응답 데이터 없음', res);
         userStore.getState().clearUser();
       }
     } catch (error: unknown) {
@@ -62,7 +46,7 @@ export const userStore = create<UserState>(set => ({
       if (err.response?.data?.statusCode === 401) {
         userStore.getState().clearUser();
       } else {
-        console.warn('⚠️ 유저 정보 조회 실패(비401): 상태 유지', err);
+        set({ isAuthChecked: true });
       }
     }
   },

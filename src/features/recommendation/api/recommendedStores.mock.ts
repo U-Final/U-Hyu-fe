@@ -41,16 +41,16 @@ export const mockRecommendedRanking: RecommendedRanking[] = [
   {
     brandId: 1,
     brandName: '스타벅스',
-    logoImage: '/images/brands/뚜레쥬르.png',
+    logoImg: '/images/brands/뚜레쥬르.png',
   },
   {
     brandId: 2,
     brandName: '투썸플레이스',
-    logoImage: '/images/brands/뚜레쥬르.png',
+    logoImg: '/images/brands/뚜레쥬르.png',
   },
   {
     brandId: 3,
     brandName: '이마트',
-    logoImage: '/images/brands/뚜레쥬르.png',
+    logoImg: '/images/brands/뚜레쥬르.png',
   },
 ];

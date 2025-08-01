@@ -9,7 +9,7 @@ export const GuestCard = ({ brand }: RecommendedRankingProps) => {
     <div className="grid grid-cols-2 items-center w-full">
       <div className="flex justify-end mr-8">
         <img
-          src={brand.logoImage}
+          src={brand.logoImg}
           alt={brand.brandName}
           className="w-24 object-contain rounded-full"
         />

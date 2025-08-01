@@ -4,7 +4,6 @@ import type { Store } from '@kakao-map/types/store';
 import { RecommendedStoreListWrapper } from '@recommendation/components/RecommendedStoreListWrapper';
 
 import { BrandCard } from '@/shared/components';
-import { useIsLoggedIn } from '@/shared/store/userStore';
 import { trackMarkerClick } from '@/shared/utils/actionlogTracker';
 
 interface StoreListContentProps {
@@ -17,8 +16,6 @@ const StoreListContent: FC<StoreListContentProps> = ({
   stores,
   onStoreClick,
 }) => {
-  const isLoggedIn = useIsLoggedIn();
-
   const handleStoreClick = (store: Store) => {
     onStoreClick?.(store);
     trackMarkerClick(store.storeId);
@@ -27,11 +24,9 @@ const StoreListContent: FC<StoreListContentProps> = ({
   return (
     <div className="flex flex-col h-full">
       {/* 필터 헤더 - 고정 */}
-      {isLoggedIn && (
-        <div className="flex-shrink-0 py-3 rounded-[1px] bg-[#f4f8ff]">
-          <RecommendedStoreListWrapper />
-        </div>
-      )}
+      <div className="flex-shrink-0 py-3 rounded-[1px] bg-[#f4f8ff]">
+        <RecommendedStoreListWrapper />
+      </div>
 
       {/* 스토어 리스트 - 스크롤 가능 */}
       <div className="flex-1 overflow-y-auto">

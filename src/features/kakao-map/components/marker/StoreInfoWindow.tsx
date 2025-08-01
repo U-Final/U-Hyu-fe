@@ -265,7 +265,28 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
       xAnchor={0.5}
       zIndex={1000}
     >
-      <div className="relative perspective-1000" style={{ padding: '20px' }}>
+      <div 
+        className="relative perspective-1000" 
+        style={{ padding: '20px' }}
+        onTouchStart={e => {
+          e.stopPropagation();
+        }}
+        onTouchEnd={e => {
+          e.stopPropagation();
+        }}
+        onTouchMove={e => {
+          e.stopPropagation();
+        }}
+        onClick={e => {
+          e.stopPropagation();
+        }}
+        onMouseDown={e => {
+          e.stopPropagation();
+        }}
+        onMouseUp={e => {
+          e.stopPropagation();
+        }}
+      >
         {/* 베이스 그림자 (가장 넓고 흐린 그림자) */}
         <motion.div
           className="absolute inset-0 rounded-2xl"
@@ -318,28 +339,14 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
           initial="hidden"
           animate="visible"
           exit="exit"
-          onClick={e => {
-            e.stopPropagation();
-          }}
-          onMouseDown={e => {
-            e.stopPropagation();
-          }}
-          onMouseUp={e => {
-            e.stopPropagation();
-          }}
-          onTouchStart={e => {
-            e.stopPropagation();
-          }}
-          onTouchEnd={e => {
-            e.stopPropagation();
+          style={{
+            filter:
+              'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1)) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.08))',
+            pointerEvents: 'auto', // 터치 이벤트 허용
           }}
           whileHover={{
             y: -2,
             transition: { duration: 0.2, ease: 'easeOut' },
-          }}
-          style={{
-            filter:
-              'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1)) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.08))',
           }}
         >
           {/* 내용 컨테이너 */}

@@ -45,6 +45,8 @@ export const userStore = create<UserState>(set => ({
       // 401이면 clearUser(), 그 외 에러는 유지
       if (err.response?.data?.statusCode === 401) {
         userStore.getState().clearUser();
+      } else {
+        set({ isAuthChecked: true });
       }
     }
   },

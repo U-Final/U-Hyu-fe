@@ -1,4 +1,5 @@
 import { client } from '@/shared/client';
+import type { ApiResponse } from '@/shared/client/client.type';
 
 import { MAP_ENDPOINTS } from './endpoints';
 import type {
@@ -8,6 +9,7 @@ import type {
   GetStoreDetailParams,
   StoreDetailResponse,
   StoreListResponse,
+  StoreSummary,
   ToggleFavoriteParams,
   ToggleFavoriteResponseType,
 } from './types';
@@ -68,6 +70,19 @@ export const mapApi = {
     const response = await client.get<CategoryBrandsResponse>(url);
     return response.data;
   },
+};
+
+/**
+ * 즐겨찾기 조회
+ * GET map/stores/bookmark
+ * @returns
+ */
+export const getBookmark = async (): Promise<StoreSummary[]> => {
+  const res = await client.get<ApiResponse<StoreSummary[]>>(
+    MAP_ENDPOINTS.GET_BOOKMARK
+  );
+
+  return res.data.data ?? [];
 };
 
 // 타입 가드 함수들 (런타임 안전성을 위한 추가 보안)

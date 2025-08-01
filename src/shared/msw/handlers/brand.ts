@@ -1,7 +1,9 @@
 import { HttpResponse, http } from 'msw';
 
+import { BRAND_ENDPOINTS } from '@/shared/components/brand_grid/api/endpoints';
+
 export const brandHandlers = [
-  http.get('/brand-list/interest', () => {
+  http.get(BRAND_ENDPOINTS.BRAND, () => {
     return HttpResponse.json({
       statusCode: 0,
       message: '정상 처리 되었습니다.',

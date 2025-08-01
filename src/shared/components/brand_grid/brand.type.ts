@@ -1,3 +1,5 @@
+import type { ApiBrand } from './api/types';
+
 export interface Brand {
   id: number;
   name: string;
@@ -7,18 +9,6 @@ export interface Brand {
   logo?: string;
   logoAlt?: string;
   imagePath: string;
-}
-
-export interface ApiBrand {
-  brandId: number;
-  brandName: string;
-  logoImage: string;
-}
-
-export interface ApiBrandResponse {
-  statusCode: number;
-  message: string;
-  data: ApiBrand[];
 }
 
 export interface BrandGridProps {
@@ -36,7 +26,9 @@ export interface BrandLogoProps {
   disabled?: boolean;
 }
 
-// API 브랜드를 기존 Brand 타입으로 변환하는 함수
+/**
+ * API 브랜드를 기존 Brand 타입으로 변환하는 함수
+ */
 export const convertApiBrandToBrand = (apiBrand: ApiBrand): Brand => ({
   id: apiBrand.brandId,
   name: apiBrand.brandName,

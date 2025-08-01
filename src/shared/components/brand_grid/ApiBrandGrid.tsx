@@ -55,7 +55,7 @@ export const ApiBrandGrid: React.FC<BrandGridProps> = ({
     );
   }
 
-  const brands = apiResponse?.data.map(convertApiBrandToBrand) || [];
+  const brands = apiResponse?.data?.map(convertApiBrandToBrand) || [];
 
   return (
     <div className="space-y-6">

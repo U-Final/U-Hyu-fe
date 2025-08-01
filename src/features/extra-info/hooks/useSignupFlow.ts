@@ -21,7 +21,7 @@ const initialData: SignupData = {
 };
 
 const stepValidation: StepValidation = {
-  1: data => data.age > 0 && data.gender !== '',
+  1: data => data.age >= 10 && data.age <= 90 && data.gender !== '',
   2: data => data.membershipGrade !== '',
   3: data => data.recentBrands.length > 0,
   4: data => data.selectedBrands.length > 0,

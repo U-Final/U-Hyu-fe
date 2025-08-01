@@ -3,7 +3,7 @@ export const formatGradeDescriptions = (text: string | null): string => {
 
   const cleanedText = text.replace(/\\n|\n/g, ' ');
 
-  const gradePattern = /(VVIP|VIP|우수)\s*:\s*/g;
+  const gradePattern = /,?\s*(VVIP|VIP|우수)\s*:\s*/g;
   const matches = [...cleanedText.matchAll(gradePattern)];
   const parts: string[] = [];
 

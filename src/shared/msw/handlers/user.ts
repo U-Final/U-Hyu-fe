@@ -37,15 +37,15 @@ export const userHandlers = [
         interestedBrands?: number[];
       };
 
-      console.log('🔄 MSW: 온보딩 추가정보 요청 받음:', body);
-
       // 에러 시나리오: 필수 필드 누락 검증
       const missingFields = [];
       if (!body.age || body.age <= 0) missingFields.push('age');
       if (!body.gender) missingFields.push('gender');
       if (!body.grade) missingFields.push('grade');
-      if (!body.recentBrands || body.recentBrands.length === 0) missingFields.push('recentBrands');
-      if (!body.interestedBrands || body.interestedBrands.length === 0) missingFields.push('interestedBrands');
+      if (!body.recentBrands || body.recentBrands.length === 0)
+        missingFields.push('recentBrands');
+      if (!body.interestedBrands || body.interestedBrands.length === 0)
+        missingFields.push('interestedBrands');
 
       if (missingFields.length > 0) {
         return createErrorResponse(
@@ -56,7 +56,10 @@ export const userHandlers = [
 
       // 유효성 검사: 나이 범위
       if (body.age! < 10 || body.age! > 100) {
-        return createErrorResponse('나이는 10세 이상 100세 이하여야 합니다', 400);
+        return createErrorResponse(
+          '나이는 10세 이상 100세 이하여야 합니다',
+          400
+        );
       }
 
       // 유효성 검사: 성별 값
@@ -70,12 +73,14 @@ export const userHandlers = [
       }
 
       // 유효성 검사: 브랜드 ID 배열
-      if (!Array.isArray(body.recentBrands) || !Array.isArray(body.interestedBrands)) {
+      if (
+        !Array.isArray(body.recentBrands) ||
+        !Array.isArray(body.interestedBrands)
+      ) {
         return createErrorResponse('브랜드 정보는 배열 형태여야 합니다', 400);
       }
 
       // 성공 응답
-      console.log('✅ MSW: 온보딩 추가정보 저장 성공');
       return createResponse(
         {
           userId: 1, // MSW에서는 인증된 사용자 ID로 고정

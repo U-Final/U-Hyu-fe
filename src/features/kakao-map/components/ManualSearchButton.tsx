@@ -72,8 +72,8 @@ export const ManualSearchButton: React.FC<ManualSearchButtonProps> = ({
           {loading ? '검색 중...' : '이 지역에서 재검색'}
         </span>
 
-        {/* 이동 거리 표시 (개발 모드에서만) */}
-        {import.meta.env.MODE === 'development' && distance && (
+        {/* 이동 거리 표시 */}
+        {distance && (
           <span className="text-xs text-gray-500 ml-1">
             ({Math.round(distance)}m)
           </span>

@@ -23,7 +23,6 @@ export const mapHandlers = [
    * GET /map/stores - 필터 파라미터 처리 포함
    */
   http.get('*/map/stores', ({ request }) => {
-    console.log('🔍 MSW 핸들러 호출됨:', request.url);
     const url = new URL(request.url);
 
     // 필수 파라미터 추출
@@ -35,8 +34,6 @@ export const mapHandlers = [
     const category = url.searchParams.get('category');
     const brand = url.searchParams.get('brand');
     const search = url.searchParams.get('search');
-
-    console.log('📊 파라미터:', { lat, lon, radius, category, brand, search });
 
     // 기본 파라미터 유효성 검증
     if (isNaN(lat) || isNaN(lon) || isNaN(radius) || radius <= 0) {
@@ -147,10 +144,8 @@ export const mapHandlers = [
    * 매장 상세 정보 조회 API 핸들러
    * GET /map/detail/stores/:storeId
    */
-  http.get('*/map/detail/stores/:storeId', ({ params, request }) => {
-    console.log('🏪 매장 상세 정보 MSW 핸들러 호출:', request.url);
+  http.get('*/map/detail/stores/:storeId', ({ params }) => {
     const storeId = Number(params.storeId);
-    console.log('📋 매장 ID:', storeId);
 
     // storeId 파라미터 유효성 검증
     if (isNaN(storeId) || storeId <= 0) {

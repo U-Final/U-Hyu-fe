@@ -56,9 +56,7 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
     // 바텀시트 내 매장 클릭 시 바텀시트 닫고 인포윈도우 표시
     const handleStoreClick = useCallback(
       (store: Store) => {
-        if (import.meta.env.MODE === 'development') {
-          console.log('매장 리스트에서 매장 클릭:', store.storeName);
-        }
+
 
         // 바텀시트 명시적 닫힘 플래그 설정 후 닫기
         if (bottomSheetRef && bottomSheetRef.current) {
@@ -88,9 +86,7 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
 
     // 필터 버튼 클릭 핸들러 - 바텀시트 높이 유지
     const handleFilterClick = (e?: React.MouseEvent) => {
-      if (import.meta.env.MODE === 'development') {
-        console.log('🔥 브랜드 필터 버튼 클릭됨!');
-      }
+
       if (e) {
         e.stopPropagation();
       }
@@ -140,9 +136,6 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
 
     // 현재 바텀시트 단계에 따른 콘텐츠 렌더링
     const getCurrentStepContent = () => {
-      if (import.meta.env.MODE === 'development') {
-        console.log('🎯 현재 바텀시트 step:', currentBottomSheetStep);
-      }
 
       switch (currentBottomSheetStep) {
         case 'list':

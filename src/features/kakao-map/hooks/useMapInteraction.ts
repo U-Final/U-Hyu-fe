@@ -30,9 +30,6 @@ export const useMapInteraction = () => {
   // 바텀시트 제어는 ref를 통해 외부에서 수행
   const handleMapMarkerClick = useCallback(
     (store: Store) => {
-      if (import.meta.env.MODE === 'development') {
-        console.log('지도 마커 클릭:', store.storeName);
-      }
 
       // 매장 선택만 수행 (바텀시트 제어는 외부에서 ref로 처리)
       handleStoreSelect(store);
@@ -43,9 +40,6 @@ export const useMapInteraction = () => {
   // 바텀시트 내 매장 리스트 클릭 시 처리
   const handleMarkerClick = useCallback(
     (store: Store) => {
-      if (import.meta.env.MODE === 'development') {
-        console.log('바텀시트 매장 클릭:', store.storeName);
-      }
 
       // setBottomSheetExpanded(false);
       handleStoreSelect(store);

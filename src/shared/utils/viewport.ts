@@ -12,13 +12,6 @@ export function setViewportHeight(): void {
   const vh = window.innerHeight * 0.01;
   document.documentElement.style.setProperty('--vh', `${vh}px`);
   
-  if (import.meta.env.MODE === 'development') {
-    console.log('📏 Viewport height updated:', {
-      innerHeight: window.innerHeight,
-      vh: `${vh}px`,
-      calculatedHeight: `${vh * 100}px`
-    });
-  }
 }
 
 /**
@@ -56,9 +49,6 @@ export function initViewportHeight(): void {
   
   isInitialized = true;
   
-  if (import.meta.env.MODE === 'development') {
-    console.log('🚀 Viewport height monitoring initialized');
-  }
 }
 
 /**
@@ -71,9 +61,6 @@ export function cleanupViewportHeight(): void {
   window.removeEventListener('orientationchange', setViewportHeight);
   isInitialized = false;
   
-  if (import.meta.env.MODE === 'development') {
-    console.log('🧹 Viewport height monitoring cleaned up');
-  }
 }
 
 /**

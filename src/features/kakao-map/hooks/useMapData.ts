@@ -72,18 +72,18 @@ export const useMapData = () => {
       // FilterTabs의 value를 백엔드 API의 category 값으로 매핑 (필터탭 label과 동일하게)
       // 새로운 14개 비즈니스 카테고리에 맞춤 (APP/기기는 지도에서 제외)
       const categoryMapping: Record<string, string> = {
-        '테마파크': '테마파크',
-        '워터파크/아쿠아리움': '워터파크/아쿠아리움', 
-        '액티비티': '액티비티',
-        '뷰티': '뷰티',
-        '건강': '건강',
-        '쇼핑': '쇼핑',
+        테마파크: '테마파크',
+        '워터파크/아쿠아리움': '워터파크/아쿠아리움',
+        액티비티: '액티비티',
+        뷰티: '뷰티',
+        건강: '건강',
+        쇼핑: '쇼핑',
         '생활/편의': '생활/편의',
         '베이커리/디저트': '베이커리/디저트',
-        '음식점': '음식점',
+        음식점: '음식점',
         '영화/미디어': '영화/미디어',
         '공연/전시': '공연/전시',
-        '교육': '교육',
+        교육: '교육',
         '여행/교통': '여행/교통',
         // 기존 호환성을 위한 매핑 (구 카테고리가 있을 수 있음)
         activity: '액티비티',
@@ -145,13 +145,6 @@ export const useMapData = () => {
    */
   useEffect(() => {
     if (storeListQuery.data) {
-      if (import.meta.env.MODE === 'development') {
-        console.log('🏪 Store data updated from API:', {
-          storesCount: storeListQuery.data.data?.length || 0,
-          queryParams: storeListParams,
-          data: storeListQuery.data.data
-        });
-      }
       setStoresFromQuery(storeListQuery.data);
     }
   }, [storeListQuery.data, setStoresFromQuery, storeListParams]);
@@ -168,8 +161,14 @@ export const useMapData = () => {
   /**
    * 앱 최초 실행시 현재 위치 가져오기
    * 위치가 설정되면 React Query가 자동으로 추천 매장 로딩
+   * HTTP 개발 환경에서는 위치 정보 요청 비활성화
    */
   useEffect(() => {
+    // HTTP 개발 환경에서는 위치 정보 요청 비활성화
+    if (!window.isSecureContext && import.meta.env.MODE === 'development') {
+      return;
+    }
+
     const initializeLocation = async () => {
       const { userLocation, mapCenter } = useMapStore.getState();
 
@@ -193,20 +192,15 @@ export const useMapData = () => {
       if (isDefaultLocation) {
         try {
           await getCurrentLocation();
-          if (import.meta.env.MODE === 'development') {
-            console.log('✅ 앱 시작시 현재 위치 설정 완료');
-          }
-        } catch (error) {
-          if (import.meta.env.MODE === 'development') {
-            console.warn('⚠️ 현재 위치 가져오기 실패, 기본 위치 사용:', error);
-          }
+        } catch {
+          // 위치 권한 실패시에도 지도는 기본 위치로 정상 동작
         }
       }
     };
 
     // 컴포넌트 마운트시 한 번만 실행
     initializeLocation();
-  }, []); // 빈 의존성 배열로 최초 1회만 실행
+  }, [getCurrentLocation]); // getCurrentLocation 의존성 추가
 
   /**
    * 지도 중심점 변경 시 주변 매장 새로고침
@@ -247,10 +241,6 @@ export const useMapData = () => {
     if (regionInfo && regionInfo.key !== 'all') {
       // '전체'가 아닌 특정 지역 선택 시 해당 지역 중심으로 이동
       setMapCenter(regionInfo.center);
-
-      if (import.meta.env.MODE === 'development') {
-        console.log(`🗺️ 지역 변경: ${regionInfo.label}`, regionInfo.center);
-      }
     }
   }, [uiState.activeRegionFilter, setMapCenter]);
 
@@ -258,17 +248,7 @@ export const useMapData = () => {
    * 개발 모드에서 디버깅 정보 출력
    * 쿼리 파라미터와 결과 확인용
    */
-  useEffect(() => {
-    if (import.meta.env.MODE === 'development') {
-      console.log('🔍 Store List Query Params:', storeListParams);
-      console.log('📊 Stores Count:', stores.length);
-      console.log('🎯 Active Filters:', {
-        category: uiState.activeCategoryFilter,
-        search: uiState.searchValue,
-        brand: uiState.selectedBrand,
-      });
-    }
-  }, [
+  useEffect(() => {}, [
     storeListParams,
     stores.length,
     uiState.activeCategoryFilter,

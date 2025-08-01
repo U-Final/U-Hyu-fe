@@ -50,11 +50,6 @@ export const MapDragBottomSheet = forwardRef<
   MapDragBottomSheetRef,
   MapDragBottomSheetProps
 >(({ children, title, snapToPositions = false }, ref) => {
-  // 개발 중 리렌더링 확인용 로그
-  if (import.meta.env.MODE === 'development') {
-    console.log('🔄 MapDragBottomSheet 리렌더링 발생');
-  }
-
   // 📌 내부 상태 관리용 ref
   const sheetRef = useRef<HTMLDivElement>(null);
   const isInitialized = useRef(false); // initialize()가 한 번만 실행되도록 제어
@@ -175,28 +170,12 @@ export const MapDragBottomSheet = forwardRef<
       // 임계값을 넘었으면 드래그로 인정
       if (!hasMovedEnough.current) {
         hasMovedEnough.current = true;
-        if (import.meta.env.MODE === 'development') {
-          console.log(
-            '🎯 드래그 임계값 초과, 드래그 시작:',
-            Math.abs(deltaY).toFixed(1) + 'px'
-          );
-        }
       }
 
       const newY = startTranslateY.current + deltaY;
 
-      // 🔸 최소/최대값으로 제한 (취소하지 않고 클램핑)
+      // 최소/최대값으로 제한 (취소하지 않고 클램핑)
       const clampedY = Math.max(minY, Math.min(maxY, newY));
-
-      if (import.meta.env.MODE === 'development' && Math.abs(deltaY) % 10 < 1) {
-        // 10px마다 한 번씩만 로그 출력 (성능 최적화)
-        console.log('📊 드래그 위치 계산:', {
-          델타Y: deltaY.toFixed(1),
-          시작위치: startTranslateY.current.toFixed(1),
-          계산된위치: newY.toFixed(1),
-          최종위치: clampedY.toFixed(1),
-        });
-      }
 
       // 즉시 위치 업데이트
       setTranslateY(clampedY);
@@ -219,10 +198,6 @@ export const MapDragBottomSheet = forwardRef<
 
     const finalY = translateY;
 
-    if (import.meta.env.MODE === 'development') {
-      console.log('📍 드래그 종료, 최종 Y:', finalY.toFixed(1));
-    }
-
     // 스냅 기능이 활성화된 경우에만 스냅 적용
     if (snapToPositions) {
       const midPoint = (openY + closedY) / 2;
@@ -230,19 +205,6 @@ export const MapDragBottomSheet = forwardRef<
 
       animateToPosition(shouldOpen ? openY : closedY);
       setIsOpen(shouldOpen);
-
-      if (import.meta.env.MODE === 'development') {
-        console.log(
-          '✅ 스냅 적용 → 위치:',
-          shouldOpen ? 'open' : 'closed',
-          shouldOpen ? openY : closedY
-        );
-      }
-    } else {
-      // 스냅 없이 현재 위치 유지 (별도 처리 불필요)
-      if (import.meta.env.MODE === 'development') {
-        console.log('✅ 드래그 위치 유지:', finalY.toFixed(1));
-      }
     }
   }, [translateY, openY, closedY, snapToPositions, animateToPosition]);
 
@@ -259,14 +221,7 @@ export const MapDragBottomSheet = forwardRef<
 
   const handleGlobalEnd = useCallback(() => {
     if (!isDragging.current) {
-      if (import.meta.env.MODE === 'development') {
-        console.log('🚫 드래그가 이미 종료되어 handleGlobalEnd 스킵');
-      }
       return;
-    }
-
-    if (import.meta.env.MODE === 'development') {
-      console.log('🏁 전역 드래그 종료 이벤트 처리');
     }
 
     handleTouchEnd();
@@ -281,10 +236,6 @@ export const MapDragBottomSheet = forwardRef<
 
   // 드래그 시작 시 전역 이벤트 리스너 등록
   const startDragging = useCallback(() => {
-    if (import.meta.env.MODE === 'development') {
-      console.log('🚀 전역 드래그 이벤트 리스너 등록');
-    }
-
     // 전역 이벤트 리스너 등록
     document.addEventListener('touchmove', handleGlobalMove, {
       passive: false,
@@ -308,9 +259,6 @@ export const MapDragBottomSheet = forwardRef<
     (e: React.TouchEvent | React.MouseEvent) => {
       // 이미 드래그 중이면 무시
       if (isDragging.current) {
-        if (import.meta.env.MODE === 'development') {
-          console.log('🚫 이미 드래그 중이므로 무시');
-        }
         return;
       }
 
@@ -321,18 +269,6 @@ export const MapDragBottomSheet = forwardRef<
       hasMovedEnough.current = false; // 드래그 시작 시 초기화
       startY.current = event.clientY;
       startTranslateY.current = translateY;
-
-      if (import.meta.env.MODE === 'development') {
-        console.log('🎯 드래그 시작:', {
-          현재위치: translateY.toFixed(1),
-          최소위치: minY,
-          최대위치: maxY,
-          시작Y좌표: event.clientY,
-          이벤트타입: e.type,
-          타겟: (e.target as HTMLElement).className,
-          '드래그 가능 범위': `${minY} ~ ${maxY}`,
-        });
-      }
 
       // 애니메이션 비활성화
       setIsAnimating(false);
@@ -393,13 +329,6 @@ export const MapDragBottomSheet = forwardRef<
             // 최근 실제 드래그 종료 후 150ms 이내면 클릭 무시 (드래그 vs 클릭 구분)
             const timeSinceLastDrag = Date.now() - lastDragEndTime.current;
             if (timeSinceLastDrag < 150) {
-              if (import.meta.env.MODE === 'development') {
-                console.log(
-                  '🚫 최근 드래그 종료로 인한 클릭 무시 (',
-                  timeSinceLastDrag,
-                  'ms)'
-                );
-              }
               return;
             }
 
@@ -410,10 +339,6 @@ export const MapDragBottomSheet = forwardRef<
             } else {
               setIsOpen(true);
               animateToPosition(openY);
-            }
-
-            if (import.meta.env.MODE === 'development') {
-              console.log('👆 핸들 클릭으로 토글:', isOpen ? 'close' : 'open');
             }
           }}
         >

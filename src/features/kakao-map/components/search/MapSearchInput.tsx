@@ -135,9 +135,6 @@ export const MapSearchInput: React.FC<{
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      if (import.meta.env.MODE === 'development') {
-        console.log('MapSearchInput - 엔터키 눌림, 검색어:', value);
-      }
       onSearch?.(value);
     }
   };

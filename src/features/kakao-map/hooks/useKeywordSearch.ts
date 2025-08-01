@@ -140,13 +140,6 @@ export const useKeywordSearch = () => {
             loading: false,
             selectedPlace: null,
           }));
-          if (import.meta.env.MODE === 'development') {
-            console.log('🔍 검색 완료:', {
-              keyword,
-              resultCount: result.places.length,
-              totalCount: result.meta.total_count,
-            });
-          }
         }
       } catch (error) {
         if (!abortControllerRef.current?.signal.aborted) {
@@ -160,9 +153,6 @@ export const useKeywordSearch = () => {
             error: errorMessage,
             hasSearched: true,
           }));
-          if (import.meta.env.MODE === 'development') {
-            console.error('🔍 검색 실패:', error);
-          }
         }
       } finally {
         abortControllerRef.current = null;

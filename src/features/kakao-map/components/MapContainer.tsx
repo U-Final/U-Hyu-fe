@@ -82,13 +82,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({
 
   // 키워드 검색 결과 디버깅
   useEffect(() => {
-    if (import.meta.env.MODE === 'development') {
-      console.log('🗺️ MapContainer - 검색 결과 수신:', {
-        keywordResultsLength: keywordResults.length,
-        keywordResults,
-        selectedPlace
-      });
-    }
+    
   }, [keywordResults, selectedPlace]);
 
   // 지도 마커 클릭시 ref를 통해 바텀시트 제어

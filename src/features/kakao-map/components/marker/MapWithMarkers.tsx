@@ -110,15 +110,6 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
       });
     }
 
-    if (import.meta.env.MODE === 'development') {
-      console.log('🗺️ MapWithMarkers: Rendering stores', {
-        storesCount: stores.length,
-        recommendedCount: recommendedStores.length,
-        totalRenderCount: allStores.length,
-        stores: allStores
-      });
-    }
-
     return allStores;
   }, [
     stores,
@@ -196,10 +187,6 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
           setIsPanto(false);
           pantoTimeoutRef.current = null;
         }, 500);
-
-        if (import.meta.env.MODE === 'development') {
-          console.log('🎯 카드 클릭으로 매장 포커스:', targetStore.storeName);
-        }
       }
     }
   }, [globalSelectedStoreId, storesToRender, recommendedStores]);
@@ -359,12 +346,6 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
 
       // 거리 기반 재검색 상태 업데이트만 실행 (자동 검색 로직 제거)
       handleMapMove(currentPosition);
-
-      if (import.meta.env.MODE === 'development') {
-        console.log(
-          `지도 이동: ${currentPosition.lat}, ${currentPosition.lng}`
-        );
-      }
     },
     [handleMapMove]
   );
@@ -389,10 +370,6 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
 
     // API 요청 실행
     onCenterChange(currentPosition);
-
-    if (import.meta.env.MODE === 'development') {
-      console.log('재검색 실행:', currentPosition);
-    }
   }, [onCenterChange, handleSearch, updateSearchPosition]);
 
   return (

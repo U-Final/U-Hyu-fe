@@ -110,12 +110,7 @@ const createKakaoAuthHeaders = (): HeadersInit => {
     );
   }
 
-  if (import.meta.env.MODE === 'development') {
-    console.log('🔐 카카오 API 키 검증 완료:', {
-      keyLength: KAKAO_REST_API_KEY.length,
-      keyPattern: '****' + KAKAO_REST_API_KEY.slice(-4), // 마지막 4자리만 표시
-    });
-  }
+
 
   return {
     Authorization: `KakaoAK ${KAKAO_REST_API_KEY}`,
@@ -215,14 +210,7 @@ export const getKeywordSearch = async (
           }
         : null;
 
-    if (import.meta.env.MODE === 'development') {
-      console.log('🔍 카카오 키워드 검색 API 호출 성공:', {
-        keyword: keyword.trim(),
-        resultCount: data.documents.length,
-        totalCount: data.meta.total_count,
-        url: url.split('?')[0], // 쿼리 파라미터 제외한 기본 URL만 로깅
-      });
-    }
+
 
     return {
       places: normalizedPlaces,
@@ -230,13 +218,7 @@ export const getKeywordSearch = async (
       pagination,
     };
   } catch (error) {
-    if (import.meta.env.MODE === 'development') {
-      console.error('🔍 카카오 키워드 검색 API 호출 실패:', {
-        keyword: keyword.trim(),
-        error: error instanceof Error ? error.message : String(error),
-        url: url.split('?')[0],
-      });
-    }
+
 
     if (error instanceof Error) {
       throw error;

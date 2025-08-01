@@ -33,20 +33,11 @@ const MapContent = () => {
 
   // 키워드 검색 결과 장소 클릭 핸들러
   const handlePlaceClick = useCallback((place: NormalizedPlace) => {
-    if (import.meta.env.MODE === 'development') {
-      console.log('🎯 MapPage - handlePlaceClick 호출됨:', {
-        placeName: place.name,
-        placeId: place.id,
-      });
-    }
     setSelectedPlace(place);
   }, []);
 
   // 키워드 검색 결과 인포윈도우 닫기 핸들러
   const handlePlaceInfoClose = useCallback(() => {
-    if (import.meta.env.MODE === 'development') {
-      console.log('🎯 MapPage - handlePlaceInfoClose 호출됨');
-    }
     setSelectedPlace(null);
   }, []);
 
@@ -66,15 +57,6 @@ const MapContent = () => {
             lng: firstResult.longitude,
           });
 
-          if (import.meta.env.MODE === 'development') {
-            console.log('🎯 지도 이동 - 첫 번째 검색 결과:', {
-              place: firstResult.name,
-              coordinates: {
-                lat: firstResult.latitude,
-                lng: firstResult.longitude,
-              },
-            });
-          }
         }
       }
       setSelectedPlace(null); // 새 검색 시 선택 초기화
@@ -103,16 +85,6 @@ const MapContent = () => {
 
   // selectedPlace 상태 변화 디버깅
   useEffect(() => {
-    if (import.meta.env.MODE === 'development') {
-      console.log('🎯 MapPage - selectedPlace 상태 변화:', {
-        selectedPlace: selectedPlace
-          ? {
-              name: selectedPlace.name,
-              id: selectedPlace.id,
-            }
-          : null,
-      });
-    }
   }, [selectedPlace]);
 
   // 바텀시트 초기화 - 닫힌 상태로 시작

@@ -35,9 +35,6 @@ export const getCategoryIdFromFilterValue = (filterValue: string): number => {
   const categoryId = categoryMapping[filterValue];
 
   if (categoryId === undefined) {
-    if (import.meta.env.MODE === 'development') {
-      console.log(`알 수 없는 값 : ${filterValue}`);
-    }
     return 0;
   }
   return categoryId;

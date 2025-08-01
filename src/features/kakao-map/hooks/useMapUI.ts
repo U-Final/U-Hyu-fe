@@ -25,9 +25,6 @@ export const useMapUI = () => {
    * 바텀시트 높이 유지하면서 step만 변경
    */
   const showFilter = useCallback(() => {
-    if (import.meta.env.MODE === 'development') {
-      console.log('✅ showFilter 호출됨 - category step으로 변경');
-    }
     actions.setBottomSheetStep('category');
   }, [actions]);
 

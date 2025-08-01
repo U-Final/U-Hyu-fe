@@ -27,6 +27,7 @@ export const userStore = create<UserState>()(
         try {
           const res = await userApi.logout();
           userStore.getState().clearUser();
+          localStorage.removeItem('user-storage');
           toast.info(res.message);
         } catch (error) {
           toast.error('❌ 로그아웃 실패했습니다. 다시 시도해주세요');
@@ -46,6 +47,7 @@ export const userStore = create<UserState>()(
             userStore.getState().clearUser();
           }
         } catch (error: unknown) {
+          console.error('❌ [userInfo] 요청 실패:', error);
           const err = error as AxiosError<ApiError>;
           if (err.response?.data?.statusCode === 401) {
             userStore.getState().clearUser();
@@ -65,6 +67,8 @@ export const userStore = create<UserState>()(
       onRehydrateStorage: () => state => {
         if (state) {
           userStore.setState({ isAuthChecked: true });
+        } else {
+          userStore.setState({ isAuthChecked: true, user: null });
         }
       },
     }

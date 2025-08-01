@@ -123,7 +123,7 @@ export const CurrentStep: React.FC<EnhancedCurrentStepProps> = ({
   };
 
   return (
-    <div className="sticky top-0 bg-white z-10 px-6 py-8">
+    <div className="bg-white z-10 px-6 py-8">
       <AnimatePresence mode="wait">
         {currentStep <= 4 ? (
           <motion.div
@@ -151,14 +151,16 @@ export const CurrentStep: React.FC<EnhancedCurrentStepProps> = ({
               transition={{ duration: 0.3, delay: 0.2 }}
               className="pt-4"
             >
-              <ActionButtons
-                currentStep={currentStep}
-                isStepValid={isStepValid}
-                onNext={onNext}
-                onPrev={onPrev}
-                isSubmitting={isSubmitting}
-                submitError={submitError}
-              />
+              <div className="bottom-0 left-0 w-full bg-white px-6 py-4 z-50">
+                <ActionButtons
+                  currentStep={currentStep}
+                  isStepValid={isStepValid}
+                  onNext={onNext}
+                  onPrev={onPrev}
+                  isSubmitting={isSubmitting}
+                  submitError={submitError}
+                />
+              </div>
             </motion.div>
           </motion.div>
         ) : (

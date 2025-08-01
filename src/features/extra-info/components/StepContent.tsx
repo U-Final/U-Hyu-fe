@@ -179,16 +179,18 @@ export const StepContent: React.FC<StepContentProps> = ({
 
     case 4:
       return (
-        <ApiBrandGrid
-          selectedBrands={data.selectedBrands}
-          onBrandToggle={
-            disabled
-              ? undefined
-              : brandId => onToggleBrand(brandId, 'selectedBrands')
-          }
-          title="관심있는 브랜드"
-          disabled={disabled}
-        />
+        <div>
+          <ApiBrandGrid
+            selectedBrands={data.selectedBrands}
+            onBrandToggle={
+              disabled
+                ? undefined
+                : brandId => onToggleBrand(brandId, 'selectedBrands')
+            }
+            title="관심있는 브랜드"
+            disabled={disabled}
+          />
+        </div>
       );
 
     default:

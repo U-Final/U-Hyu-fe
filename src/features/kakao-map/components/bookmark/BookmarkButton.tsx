@@ -33,7 +33,7 @@ const BookmarkButton: FC<BookmarkButtonProps> = ({
         aria-label="즐겨찾기 필터"
       >
         {isActive ? (
-          <MdStar className="w-6 h-6 text-yellow" />
+          <MdStar className="w-6 h-6 text-primary" />
         ) : (
           <MdStar className="w-6 h-6 text-gray" />
         )}

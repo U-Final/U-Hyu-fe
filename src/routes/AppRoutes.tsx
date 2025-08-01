@@ -33,6 +33,7 @@ const Layout = () => {
     pathname === PATH.ADMIN;
 
   const isMap = pathname === '/' || pathname.startsWith(PATH.MAP);
+  const isOnboarding = pathname === PATH.EXTRA_INFO;
 
   return (
     <div
@@ -41,7 +42,7 @@ const Layout = () => {
       style={isMap ? { minWidth: 0 } : undefined}
     >
       <BaseLayout isMap={isMap}>
-        <SidebarSheet />
+        {!isOnboarding && <SidebarSheet />}
         <Outlet />
         {showBottomNav && <BottomNavigation />}
       </BaseLayout>

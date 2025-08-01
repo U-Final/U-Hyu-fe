@@ -1,6 +1,7 @@
 import { type FC } from 'react';
 
 import { FaLocationArrow } from 'react-icons/fa';
+import { BeatLoader } from 'react-spinners';
 
 interface LocationButtonProps {
   onClick: () => void;
@@ -14,14 +15,14 @@ const LocationButton: FC<LocationButtonProps> = ({
   className = '',
 }) => {
   return (
-    <div className="relative inline-block group">
+    <div className="fixed right-4 bottom-[7rem] z-40 md:right-6 desktop-padding-sheet">
       <button
         onClick={onClick}
         disabled={isLoading}
         className={`
+          px-4 py-2 rounded-full
           w-12 h-12 
           bg-white 
-          rounded-full 
           shadow-lg 
           flex items-center justify-center 
           hover:bg-gray-50 
@@ -34,7 +35,7 @@ const LocationButton: FC<LocationButtonProps> = ({
         aria-label="내 위치로 이동"
       >
         {isLoading ? (
-          <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          <BeatLoader color="primary" />
         ) : (
           <FaLocationArrow className="w-5 h-5 text-primary" />
         )}
@@ -45,9 +46,7 @@ const LocationButton: FC<LocationButtonProps> = ({
         className="
         absolute 
         bottom-full 
-        left-1/2 
-        transform 
-        -translate-x-1/2 
+        right-0
         mb-2 
         px-3 
         py-1.5 
@@ -74,9 +73,7 @@ const LocationButton: FC<LocationButtonProps> = ({
           className="
           absolute 
           top-full 
-          left-1/2 
-          transform 
-          -translate-x-1/2 
+          right-4
           w-0 
           h-0 
           border-l-4 

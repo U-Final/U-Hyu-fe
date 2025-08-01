@@ -398,6 +398,15 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
     }
   }, [onCenterChange, handleSearch, updateSearchPosition]);
 
+  // 중복 제거: 즐겨찾기 모드일 때 일반 마커에서 즐겨찾기 매장은 제외
+const filteredStoresToRender = useMemo(() => {
+  if (bookmarkMode) {
+    const bookmarkIds = new Set(bookmarkStores.map(s => s.storeId));
+    return storesToRender.filter(store => !bookmarkIds.has(store.storeId));
+  }
+  return storesToRender;
+}, [storesToRender, bookmarkMode, bookmarkStores]);
+
   return (
     <>
       {/* 거리 기반 재검색 버튼 */}
@@ -421,7 +430,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         }}
       >
         {/* 매장 마커들 */}
-        {storesToRender.map(store => (
+        {filteredStoresToRender.map(store => (
           <CustomOverlayMap
             key={store.storeId}
             position={{ lat: store.latitude, lng: store.longitude }}

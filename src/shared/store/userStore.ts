@@ -9,7 +9,7 @@ import { hasValidAuthCookie } from '@/shared/utils/cookieAuthUtils';
 
 interface UserState {
   user: SimpleUserInfo | null;
-  isAuthChecked: boolean; // 유저가 로그인 되어있는지 ㅊㅔ크
+  isAuthChecked: boolean;
   initAuthState: () => Promise<void>;
   setUser: (user: SimpleUserInfo) => void;
   clearUser: () => void;
@@ -30,6 +30,18 @@ export const userStore = create<UserState>(set => ({
     } else {
       // 쿠키가 없으면 바로 미인증 상태로 설정
       set({ isAuthChecked: true, user: null });
+    }
+    if (import.meta.env.DEV) {
+      set({
+        isAuthChecked: true,
+        user: {
+          userName: '개발 환경 유저',
+          grade: 'GOOD',
+          profileImage:
+            'https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800',
+          role: 'USER',
+        },
+      });
     }
   },
   setUser: user => set({ user, isAuthChecked: true }),

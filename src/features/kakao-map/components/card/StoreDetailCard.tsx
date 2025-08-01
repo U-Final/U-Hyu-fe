@@ -40,6 +40,13 @@ const ExpandButton: React.FC<{
       e.stopPropagation();
       onClick();
     }}
+    onTouchStart={e => {
+      e.stopPropagation();
+    }}
+    onTouchEnd={e => {
+      e.stopPropagation();
+      onClick();
+    }}
     className="inline text-blue-500 hover:text-blue-700 font-medium text-xs ml-1 transition-colors duration-200"
     aria-label={isExpanded ? '접기' : '더보기'}
   >
@@ -88,6 +95,13 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
           <div className="flex items-center gap-1">
             <div
               onClick={e => {
+                e.stopPropagation();
+                handleToggleFavorite?.();
+              }}
+              onTouchStart={e => {
+                e.stopPropagation();
+              }}
+              onTouchEnd={e => {
                 e.stopPropagation();
                 handleToggleFavorite?.();
               }}

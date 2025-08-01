@@ -327,6 +327,12 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
           onMouseUp={e => {
             e.stopPropagation();
           }}
+          onTouchStart={e => {
+            e.stopPropagation();
+          }}
+          onTouchEnd={e => {
+            e.stopPropagation();
+          }}
           whileHover={{
             y: -2,
             transition: { duration: 0.2, ease: 'easeOut' },

@@ -1,4 +1,5 @@
 import { type FC } from 'react';
+
 import { FaLocationArrow } from 'react-icons/fa';
 
 interface LocationButtonProps {
@@ -33,9 +34,9 @@ const LocationButton: FC<LocationButtonProps> = ({
         aria-label="내 위치로 이동"
       >
         {isLoading ? (
-          <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+          <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
         ) : (
-          <FaLocationArrow className="w-5 h-5 text-blue-500" />
+          <FaLocationArrow className="w-5 h-5 text-primary" />
         )}
       </button>
 

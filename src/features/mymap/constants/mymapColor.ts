@@ -7,3 +7,11 @@ export const MYMAP_COLOR: Record<MarkerColor, string> = {
   GREEN: 'text-green',
   PURPLE: 'text-purple',
 };
+
+export const MYMAP_COLOR_BG: Record<MarkerColor, string> = {
+  RED: 'bg-red-star',
+  ORANGE: 'bg-orange-star',
+  YELLOW: 'bg-yellow-star',
+  GREEN: 'bg-green-star',
+  PURPLE: 'bg-purple-star',
+};

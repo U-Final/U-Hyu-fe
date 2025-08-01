@@ -1,3 +1,4 @@
+import { mapApi } from '@kakao-map/api/mapApi';
 import { getRecommendedStores } from '@recommendation/api/recommendedStoresApi';
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
@@ -58,6 +59,10 @@ const initialState: MapStoreState = {
   currentFilters: {},
   lastFetchParams: null,
   lastFetchTime: null,
+
+  // 즐겨찾기 모드
+  bookmarkMode: false,
+  bookmarkStores: [],
 };
 
 /**
@@ -129,6 +134,30 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
         }
       },
 
+      /**
+       * 즐겨찾기
+       * @param center
+       */
+      setBookmarkMode: (mode: boolean) => {
+        set({ bookmarkMode: mode });
+      },
+
+      toggleBookmarkMode: () => {
+        const next = !get().bookmarkMode;
+        if (next) {
+          get().fetchBookmarkStores();
+        }
+        set({ bookmarkMode: next });
+      },
+
+      fetchBookmarkStores: async () => {
+        try {
+          const stores = await mapApi.getBookmark();
+          set({ bookmarkStores: stores });
+        } catch (e) {
+          console.error('즐겨찾기 매장 조회 실패:', e);
+        }
+      },
       /**
        * 지도 중심점 설정
        */
@@ -331,3 +360,8 @@ export const useRecommendedStores = () =>
   useMapStore(state => state.recommendedStores);
 export const useShowRecommendedStores = () =>
   useMapStore(state => state.showRecommendedStores);
+export const useBookmarkMode = () => useMapStore(state => state.bookmarkMode);
+export const useBookmarkStores = () =>
+  useMapStore(state => state.bookmarkStores);
+export const useFetchBookmarkStores = () =>
+  useMapStore(state => state.fetchBookmarkStores);

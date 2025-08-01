@@ -27,7 +27,7 @@ export const userHandlers = [
     );
   }),
 
-  http.post('/user/extra-info', async ({ request }) => {
+  http.post('/user/onboarding', async ({ request }) => {
     try {
       const body = (await request.json()) as {
         age?: number;

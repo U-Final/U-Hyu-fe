@@ -1,5 +1,6 @@
 import {
   AdminPage,
+  AuthSuccess,
   BenefitPage,
   ExtraInfo,
   MapPage,
@@ -55,6 +56,7 @@ export const AppRoutes = () => {
     <>
       <AppInitializer />
       <Routes>
+        <Route path={PATH.AUTH_SUCCESS} element={<AuthSuccess />} />
         <Route element={<Layout />}>
           <Route path={PATH.HOME} element={<MapPage />} />
           <Route path={PATH.BENEFIT} element={<BenefitPage />} />

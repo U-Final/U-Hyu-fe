@@ -2,6 +2,7 @@ import type {
   GetNearbyStoresParams,
   StoreDetail,
   StoreListResponse,
+  StoreSummary,
 } from '../api/types';
 import type { Store } from '../types/store';
 
@@ -52,12 +53,20 @@ export interface MapStoreState {
     region?: string;
     searchQuery?: string;
   };
+
+  // 즐겨찾기 상태
+  bookmarkMode: boolean;
+  bookmarkStores: StoreSummary[];
 }
 
 export interface MapStoreActions {
   // 위치 관련
   getCurrentLocation: () => Promise<void>;
   setMapCenter: (center: Position) => void;
+
+  // 즐겨찾기 관련
+  setBookmarkMode: (mode: boolean) => void;
+  toggleBookmarkMode: () => void;
 
   // 매장 데이터 관리 (React Query 연동)
   setStores: (stores: Store[]) => void;
@@ -90,4 +99,7 @@ export interface MapStoreActions {
 
   // 유틸리티
   reset: () => void;
+
+  //
+  fetchBookmarkStores: () => Promise<void>;
 }

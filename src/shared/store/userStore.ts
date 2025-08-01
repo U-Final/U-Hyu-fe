@@ -5,7 +5,6 @@ import { create } from 'zustand';
 
 import type { ApiError } from '@/shared/client/client.type';
 import type { SimpleUserInfo } from '@/shared/types';
-import { hasValidAuthCookie } from '@/shared/utils/cookieAuthUtils';
 
 interface UserState {
   user: SimpleUserInfo | null;
@@ -22,14 +21,12 @@ export const userStore = create<UserState>(set => ({
   isAuthChecked: false,
   // 쿠키 기반 초기 인증 상태 확인
   initAuthState: async () => {
-    const hasCookie = hasValidAuthCookie();
-
-    if (hasCookie) {
-      // 쿠키가 있으면 서버에서 사용자 정보 조회
+    try {
+      // HttpOnly 쿠키는 체크할 수 없으므로 바로 서버에 요청
       await userStore.getState().userInfo();
-    } else {
-      // 쿠키가 없으면 바로 미인증 상태로 설정
-      set({ isAuthChecked: true, user: null });
+    } catch {
+      console.log('초기 인증 상태 확인 완료 (에러 발생)');
+      // userInfo에서 이미 에러 처리됨
     }
     if (import.meta.env.DEV) {
       set({
@@ -58,13 +55,11 @@ export const userStore = create<UserState>(set => ({
   },
   userInfo: async () => {
     try {
-      // 쿠키가 없다면 서버 호출하지 않음
-      if (!hasValidAuthCookie()) {
-        userStore.getState().clearUser();
-        return;
-      }
-
       const res = await userApi.getUserInfo();
+      console.log('📡 서버 응답:', {
+        statusCode: res.statusCode,
+        data: res.data,
+      });
 
       if ((res.statusCode === 200 || res.statusCode === 0) && res.data) {
         const { userName, grade, profileImage, role } = res.data;

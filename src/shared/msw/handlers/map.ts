@@ -1,9 +1,11 @@
+import { MAP_ENDPOINTS } from '@kakao-map/api/endpoints';
 import {
+  MOCK_FAVORITES,
   MOCK_STORES,
+  createMockCategoryBrandsResponse,
   createMockStoreDetailResponse,
   createMockStoreListResponse,
   createMockToggleFavoriteResponse,
-  createMockCategoryBrandsResponse,
 } from '@kakao-map/api/mockData';
 import type {
   CategoryBrandsResponse,
@@ -12,6 +14,9 @@ import type {
   ToggleFavoriteResponseType,
 } from '@kakao-map/api/types';
 import { HttpResponse, http } from 'msw';
+
+import { createErrorResponse } from '@/shared/utils/createErrorResponse';
+import { createResponse } from '@/shared/utils/createResponse';
 
 /**
  * 지도 관련 API의 MSW 핸들러들
@@ -221,12 +226,35 @@ export const mapHandlers = [
 
     const response: CategoryBrandsResponse =
       createMockCategoryBrandsResponse(categoryId);
-    
+
     // 404 처리 (해당 카테고리에 브랜드가 없는 경우)
     if (response.statusCode === 404) {
       return HttpResponse.json(response, { status: 404 });
     }
 
     return HttpResponse.json(response, { status: 200 });
+  }),
+
+  /**
+   * 즐겨찾기 조회 API 핸들러
+   * GET map/stores/bookmark
+   */
+  http.get(MAP_ENDPOINTS.GET_BOOKMARK, () => {
+    const shouldFail = false;
+    if (shouldFail) {
+      //실패시
+      return createErrorResponse('로그인된 유저가 아닙니다.', 404);
+    }
+    // 즐겨찾기 storeId만 추출
+    const favoriteStoreIds = Object.keys(MOCK_FAVORITES)
+      .map(Number)
+      .filter(id => MOCK_FAVORITES[id]);
+
+    // MOCK_STORES 중 즐겨찾기된 store만 필터링
+    const result = MOCK_STORES.filter(store =>
+      favoriteStoreIds.includes(store.storeId)
+    );
+
+    return createResponse(result, '제휴처 리스트 목록 api 성공');
   }),
 ];

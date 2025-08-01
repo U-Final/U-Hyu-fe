@@ -4,6 +4,7 @@ import type { GetNearbyStoresParams } from '../api/types';
 import { getRegionInfo } from '../constants/regions';
 import { useMapUIContext } from '../context/MapUIContext';
 import {
+  useBookmarkMode,
   useMapStore,
   useRecommendedStores,
   useShowRecommendedStores,
@@ -44,6 +45,8 @@ export const useMapData = () => {
   const setStoreDetail = useMapStore(state => state.setStoreDetail);
   const selectStore = useMapStore(state => state.selectStore);
   const getCurrentLocation = useMapStore(state => state.getCurrentLocation);
+  const isBookmarkMode = useBookmarkMode();
+  const toggleBookmarkMode = useMapStore(state => state.toggleBookmarkMode);
   const setMapCenter = useMapStore(state => state.setMapCenter);
   // 추천 매장 액션들 추가
   const fetchRecommendedStores = useMapStore(
@@ -145,6 +148,13 @@ export const useMapData = () => {
    */
   useEffect(() => {
     if (storeListQuery.data) {
+      if (import.meta.env.MODE === 'development') {
+        console.log('🏪 Store data updated from API:', {
+          storesCount: storeListQuery.data.data?.length || 0,
+          queryParams: storeListParams,
+          data: storeListQuery.data.data,
+        });
+      }
       setStoresFromQuery(storeListQuery.data);
     }
   }, [storeListQuery.data, setStoresFromQuery, storeListParams]);
@@ -289,6 +299,8 @@ export const useMapData = () => {
     fetchNearbyStores,
     selectStore,
     getCurrentLocation,
+    isBookmarkMode,
+    toggleBookmarkMode,
     setMapCenter,
     toggleFavorite,
     // 추천 매장 액션들 추가

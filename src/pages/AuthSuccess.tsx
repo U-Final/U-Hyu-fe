@@ -17,8 +17,8 @@ const AuthSuccess = () => {
   useEffect(() => {
     const processAuth = async () => {
       try {
-        // 서버에서 이미 쿠키 설정 완료된 상태
         await userStore.getState().userInfo();
+        navigate(PATH.HOME, { replace: true });
       } catch (error) {
         console.error('로그인 처리 실패:', error);
         navigate(PATH.HOME, { replace: true });

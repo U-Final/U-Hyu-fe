@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 
+import type { NormalizedPlace } from '../api/types';
+import { getFilterCategoryForKakao } from '../config/categoryMapping';
+import { useMapUIContext } from '../context/MapUIContext';
 import { useMapData } from '../hooks/useMapData';
 import { useMapInteraction } from '../hooks/useMapInteraction';
-import { useMapUIContext } from '../context/MapUIContext';
 import { useMapUI } from '../hooks/useMapUI';
-import { getFilterCategoryForKakao } from '../config/categoryMapping';
-import type { NormalizedPlace } from '../api/types';
 import type { Store } from '../types/store';
 import MapWithMarkers from './marker/MapWithMarkers';
 
@@ -14,7 +14,9 @@ interface MapContainerProps {
   selectedPlace?: NormalizedPlace | null;
   onPlaceClick?: (place: NormalizedPlace) => void;
   onPlaceInfoClose?: () => void;
-  onMapCenterUpdate?: (setMapCenter: (center: { lat: number; lng: number }) => void) => void;
+  onMapCenterUpdate?: (
+    setMapCenter: (center: { lat: number; lng: number }) => void
+  ) => void;
 }
 
 export const MapContainer: React.FC<MapContainerProps> = ({
@@ -24,7 +26,8 @@ export const MapContainer: React.FC<MapContainerProps> = ({
   onPlaceInfoClose,
   onMapCenterUpdate,
 }) => {
-  const { stores, mapCenter, userLocation, loading, setMapCenter } = useMapData();
+  const { stores, mapCenter, userLocation, loading, setMapCenter } =
+    useMapData();
   const { handleMapCenterChange, handleMapMarkerClick, selectedMarkerId } =
     useMapInteraction();
   const { bottomSheetRef } = useMapUIContext();
@@ -38,34 +41,64 @@ export const MapContainer: React.FC<MapContainerProps> = ({
     if (activeCategoryFilter === 'all') {
       return keywordResults;
     }
-    
+
     return keywordResults.filter(place => {
       // 카카오 카테고리 그룹 코드가 있는 경우
       if (place.categoryGroupCode) {
-        const filterCategory = getFilterCategoryForKakao(place.categoryGroupCode);
+        const filterCategory = getFilterCategoryForKakao(
+          place.categoryGroupCode
+        );
         return filterCategory === activeCategoryFilter;
       }
-      
+
       // 카테고리 그룹 코드가 없는 경우 category 문자열로 판단
       // 간단한 키워드 매칭으로 필터링
       const category = place.category.toLowerCase();
       switch (activeCategoryFilter) {
         case 'shopping':
-          return category.includes('마트') || category.includes('편의점') || category.includes('쇼핑');
+          return (
+            category.includes('마트') ||
+            category.includes('편의점') ||
+            category.includes('쇼핑')
+          );
         case 'food':
-          return category.includes('음식점') || category.includes('카페') || category.includes('레스토랑');
+          return (
+            category.includes('음식점') ||
+            category.includes('카페') ||
+            category.includes('레스토랑')
+          );
         case 'life':
-          return category.includes('은행') || category.includes('편의') || category.includes('공공기관');
+          return (
+            category.includes('은행') ||
+            category.includes('편의') ||
+            category.includes('공공기관')
+          );
         case 'culture':
-          return category.includes('문화') || category.includes('관광') || category.includes('공연');
+          return (
+            category.includes('문화') ||
+            category.includes('관광') ||
+            category.includes('공연')
+          );
         case 'beauty':
-          return category.includes('병원') || category.includes('약국') || category.includes('의료');
+          return (
+            category.includes('병원') ||
+            category.includes('약국') ||
+            category.includes('의료')
+          );
         case 'activity':
           return category.includes('주차') || category.includes('스포츠');
         case 'education':
-          return category.includes('학교') || category.includes('학원') || category.includes('교육');
+          return (
+            category.includes('학교') ||
+            category.includes('학원') ||
+            category.includes('교육')
+          );
         case 'travel':
-          return category.includes('숙박') || category.includes('호텔') || category.includes('교통');
+          return (
+            category.includes('숙박') ||
+            category.includes('호텔') ||
+            category.includes('교통')
+          );
         default:
           return true;
       }
@@ -79,24 +112,20 @@ export const MapContainer: React.FC<MapContainerProps> = ({
     }
   }, [onMapCenterUpdate, setMapCenter]);
 
-
-  // 키워드 검색 결과 디버깅
-  useEffect(() => {
-    
-  }, [keywordResults, selectedPlace]);
-
   // 지도 마커 클릭시 ref를 통해 바텀시트 제어
-  const handleMarkerClickWithBottomSheet = useCallback((store: Store) => {
-    // 바텀시트 명시적 닫힘 플래그 설정 후 닫기
-    if (bottomSheetRef && bottomSheetRef.current) {
-      bottomSheetRef.current.setExplicitlyClosed(true);
-      bottomSheetRef.current.close();
-    }
+  const handleMarkerClickWithBottomSheet = useCallback(
+    (store: Store) => {
+      // 바텀시트 명시적 닫힘 플래그 설정 후 닫기
+      if (bottomSheetRef && bottomSheetRef.current) {
+        bottomSheetRef.current.setExplicitlyClosed(true);
+        bottomSheetRef.current.close();
+      }
 
-    // 매장 선택 처리
-    handleMapMarkerClick(store);
-  }, [bottomSheetRef, handleMapMarkerClick]);
-
+      // 매장 선택 처리
+      handleMapMarkerClick(store);
+    },
+    [bottomSheetRef, handleMapMarkerClick]
+  );
 
   return (
     <MapWithMarkers

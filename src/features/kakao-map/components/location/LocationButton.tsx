@@ -16,9 +16,9 @@ const LocationButton: FC<LocationButtonProps> = ({
 }) => {
   return (
     <button
-        onClick={onClick}
-        disabled={isLoading}
-        className={`
+      onClick={onClick}
+      disabled={isLoading}
+      className={`
           px-4 py-2 rounded-full
           w-12 h-12 
           bg-white 
@@ -31,13 +31,13 @@ const LocationButton: FC<LocationButtonProps> = ({
           transition-all duration-200
           ${className}
         `}
-        aria-label="내 위치로 이동"
-      >
-        {isLoading ? (
-          <BeatLoader color="primary" />
-        ) : (
-          <FaLocationArrow className="w-5 h-5 text-primary" />
-        )}
+      aria-label="내 위치로 이동"
+    >
+      {isLoading ? (
+        <BeatLoader />
+      ) : (
+        <FaLocationArrow className="w-5 h-5 text-primary" />
+      )}
 
       {/* 툴팁 */}
       <div

@@ -7,8 +7,9 @@ export interface SignupData {
   membershipGrade: string;
   recentBrands: number[];
   selectedBrands: number[];
-  email: string;
-  emailVerified: boolean;
+  age: number;
+  gender: string;
+  grade: string;
 }
 
 export interface CompletedStep {

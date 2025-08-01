@@ -130,7 +130,7 @@ export const AdminBrandForm = ({ brand, onSuccess }: AdminBrandFormProps) => {
           type="text"
           value={formData.brandName}
           onChange={(e) => handleInputChange('brandName', e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+          className="w-full px-3 py-2 text-base md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
           placeholder="브랜드명을 입력하세요"
           required
         />
@@ -145,7 +145,7 @@ export const AdminBrandForm = ({ brand, onSuccess }: AdminBrandFormProps) => {
           type="url"
           value={formData.brandImg}
           onChange={(e) => handleInputChange('brandImg', e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+          className="w-full px-3 py-2 text-base md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
           placeholder="https://example.com/logo.png"
           required
         />
@@ -159,7 +159,7 @@ export const AdminBrandForm = ({ brand, onSuccess }: AdminBrandFormProps) => {
         <select
           value={formData.categoryId}
           onChange={(e) => handleInputChange('categoryId', Number(e.target.value))}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+          className="w-full px-3 py-2 text-base md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
           required
         >
           {categoryList.map((category: { categoryId: number; categoryName: string }) => (
@@ -179,7 +179,7 @@ export const AdminBrandForm = ({ brand, onSuccess }: AdminBrandFormProps) => {
           type="text"
           value={formData.usageLimit}
           onChange={(e) => handleInputChange('usageLimit', e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+          className="w-full px-3 py-2 text-base md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
           placeholder="예: 월 2회, 일 1회"
           required
         />
@@ -194,7 +194,7 @@ export const AdminBrandForm = ({ brand, onSuccess }: AdminBrandFormProps) => {
           type="text"
           value={formData.usageMethod}
           onChange={(e) => handleInputChange('usageMethod', e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+          className="w-full px-3 py-2 text-base md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
           placeholder="예: 카드 제시, 앱 바코드"
           required
         />
@@ -250,7 +250,7 @@ export const AdminBrandForm = ({ brand, onSuccess }: AdminBrandFormProps) => {
                   type="text"
                   value={benefit.grade}
                   onChange={(e) => handleBenefitChange(index, 'grade', e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="px-3 py-2 text-base md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="등급 (예: GOOD, VIP, VVIP)"
                   required
                 />
@@ -258,14 +258,14 @@ export const AdminBrandForm = ({ brand, onSuccess }: AdminBrandFormProps) => {
                   type="text"
                   value={benefit.description}
                   onChange={(e) => handleBenefitChange(index, 'description', e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="px-3 py-2 text-base md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="혜택 설명 (예: 10% 할인)"
                   required
                 />
                 <select
                   value={benefit.benefitType}
                   onChange={(e) => handleBenefitChange(index, 'benefitType', e.target.value as 'DISCOUNT' | 'GIFT')}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="px-3 py-2 text-base md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   required
                 >
                   <option value="DISCOUNT">할인</option>

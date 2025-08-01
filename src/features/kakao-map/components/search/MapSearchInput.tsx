@@ -74,7 +74,7 @@ export const KeywordSearchInput: React.FC<KeywordSearchInputProps> = ({
           className={`
             flex-1 px-2 h-full
             bg-transparent border-none outline-none
-            text-sm font-semibold text-black placeholder-text-teritary
+            text-base md:text-sm font-semibold text-black placeholder-text-teritary
             disabled:cursor-wait disabled:text-gray-400
           `}
           aria-label="장소 검색"
@@ -158,7 +158,7 @@ export const MapSearchInput: React.FC<{
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         className={`
-          w-full h-[44px] px-[25px] text-sm font-semibold text-black placeholder-text-teritary rounded-md pr-10 transition-all duration-200
+          w-full h-[44px] px-[25px] text-base md:text-sm font-semibold text-black placeholder-text-teritary rounded-md pr-10 transition-all duration-200
           ${variant === 'white' ? 'bg-white border border-gray-200 shadow-lg hover:shadow-xl focus:shadow-xl' : 'bg-light-gray shadow-lg hover:shadow-xl focus:shadow-xl'}
         `}
         aria-label="장소 검색"

@@ -15,13 +15,13 @@ import { PiTrashBold } from 'react-icons/pi';
 import { RiPencilFill } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 
-import { SkeletonMyMapItem } from '@/shared/components/skeleton';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/shared/components/shadcn/ui/dropdown-menu';
+import { SkeletonMyMapItem } from '@/shared/components/skeleton';
 import { useModalStore } from '@/shared/store';
 
 const MyMapBody: FC = () => {
@@ -73,7 +73,7 @@ const MyMapBody: FC = () => {
   };
 
   return (
-    <div className="flex flex-col w-full max-w-md mx-auto divide-y divide-gray-200">
+    <div className="flex flex-col w-full mx-auto divide-y divide-gray-200">
       {/* 새 지도 만들기 */}
       <AddMyMapButton onCreateNewMap={handleCreate} />
 

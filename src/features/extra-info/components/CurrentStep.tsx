@@ -151,7 +151,7 @@ export const CurrentStep: React.FC<EnhancedCurrentStepProps> = ({
               transition={{ duration: 0.3, delay: 0.2 }}
               className="pt-4"
             >
-              <div className="bottom-0 left-0 w-full bg-white px-6 py-4 z-50">
+              <div className="bw-full bg-white px-6 py-4">
                 <ActionButtons
                   currentStep={currentStep}
                   isStepValid={isStepValid}

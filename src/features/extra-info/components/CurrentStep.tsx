@@ -15,7 +15,6 @@ import { type CurrentStepProps } from '../types';
 interface EnhancedCurrentStepProps extends CurrentStepProps {
   isSubmitting?: boolean;
   submitError?: Error | null;
-  submitSuccess?: boolean;
 }
 
 export const CurrentStep: React.FC<EnhancedCurrentStepProps> = ({

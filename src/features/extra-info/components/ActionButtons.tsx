@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { ChevronLeft, Loader2 } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
+import { BeatLoader } from 'react-spinners';
 
 import { GhostButton } from '@/shared/components';
 
@@ -51,8 +52,8 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
           className="flex-1 relative"
         >
           {isSubmitting && isLastStep ? (
-            <div className="flex items-center justify-center gap-2">
-              <Loader2 className="w-4 h-4 animate-spin" />
+            <div className="flex items-center justify-center gap-3">
+              <BeatLoader color="#ffffff" size={8} speedMultiplier={0.8} />
               <span>회원가입 중...</span>
             </div>
           ) : (

@@ -61,13 +61,6 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
           )}
         </PrimaryButton>
       </div>
-
-      {/* 마지막 단계에서 제출 중일 때 추가 안내 */}
-      {isSubmitting && isLastStep && (
-        <p className="text-xs text-gray-500 text-center mt-2">
-          잠시만 기다려 주세요. 회원가입을 처리하고 있습니다.
-        </p>
-      )}
     </div>
   );
 };

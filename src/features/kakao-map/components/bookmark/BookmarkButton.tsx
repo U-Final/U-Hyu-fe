@@ -5,7 +5,6 @@ import { MdStar } from 'react-icons/md';
 interface BookmarkButtonProps {
   isActive: boolean;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
-  disabled?: boolean;
   className?: string;
 }
 

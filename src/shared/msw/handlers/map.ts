@@ -15,6 +15,7 @@ import type {
 } from '@kakao-map/api/types';
 import { HttpResponse, http } from 'msw';
 
+import { createErrorResponse } from '@/shared/utils/createErrorResponse';
 import { createResponse } from '@/shared/utils/createResponse';
 
 /**
@@ -244,6 +245,11 @@ export const mapHandlers = [
    * GET map/stores/bookmark
    */
   http.get(MAP_ENDPOINTS.GET_BOOKMARK, () => {
+    const shouldFail = false;
+    if (shouldFail) {
+      //실패시
+      return createErrorResponse('로그인된 유저가 아닙니다.', 404);
+    }
     // 즐겨찾기 storeId만 추출
     const favoriteStoreIds = Object.keys(MOCK_FAVORITES)
       .map(Number)

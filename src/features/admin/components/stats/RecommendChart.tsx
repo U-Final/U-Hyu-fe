@@ -151,7 +151,7 @@ export function RecommendChart({ data, selectedCategory = 'all' }: RecommendChar
                       {category.recommendationsByBrandList && category.recommendationsByBrandList.length > 0 && (
                         <div className="ml-6 space-y-2">
                           {category.recommendationsByBrandList
-                            .sort((a, b) => b.sumRecommendationsByBrand - a.sumRecommendationsByBrand)
+                            .sort((a, b) => (b.sumRecommendationsByBrand || 0) - (a.sumRecommendationsByBrand || 0))
                             .map((brand, brandIndex) => (
                               <div key={`recommend-brand-${category.categoryId}-${brand.brandName}-${brandIndex}`} className="flex justify-between items-center py-2 px-3 bg-white rounded-lg border border-gray-100 hover:border-gray-200 transition-colors">
                                 <span className="font-medium text-gray-700">• {brand.brandName}</span>

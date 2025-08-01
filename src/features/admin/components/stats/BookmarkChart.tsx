@@ -1,7 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/shadcn/ui/card';
 import { BookmarkIcon } from '@heroicons/react/24/outline';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import type { BrandStatDetail, BookmarkChartProps } from '@admin/types';
+import type { BrandStatDetail } from '@admin/api/types';
+import type { BookmarkChartProps } from '@admin/types';
 import { getCategoryDisplayName } from '@admin/utils/categoryUtils';
 import { filterDataByCategory } from '@admin/utils/categoryMapping';
 import { ChartEmptyState } from '@admin/components/common';
@@ -120,7 +121,7 @@ export function BookmarkChart({ data, selectedCategory = 'all' }: BookmarkChartP
                       {category.bookmarksByBrandList && category.bookmarksByBrandList.length > 0 && (
                         <div className="ml-6 space-y-2">
                           {category.bookmarksByBrandList
-                            .sort((a, b) => b.sumBookmarksByBrand - a.sumBookmarksByBrand)
+                            .sort((a, b) => (b.sumBookmarksByBrand || 0) - (a.sumBookmarksByBrand || 0))
                             .map((brand: BrandStatDetail, brandIndex) => (
                               <div key={`bookmark-brand-${category.categoryId}-${brand.brandName}-${brandIndex}`} className="flex justify-between items-center py-2 px-3 bg-white rounded-lg border border-gray-100 hover:border-gray-200 transition-colors">
                                 <span className="font-medium text-gray-700">• {brand.brandName}</span>

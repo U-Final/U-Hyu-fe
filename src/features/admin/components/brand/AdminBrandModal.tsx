@@ -1,169 +1,307 @@
-import { useState } from 'react';
-
-import { useAdminBrandsQuery, useBrandDetailQuery } from '@admin/hooks';
-import { useModalStore } from '@/shared/store';
-
-import { AdminBrandForm } from './AdminBrandForm';
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/shadcn/ui/card';
+import { Button } from '@/shared/components/shadcn/ui/button';
+import { Input } from '@/shared/components/shadcn/ui/input';
+import { Label } from '@/shared/components/shadcn/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/shadcn/ui/select';
+import { Textarea } from '@/shared/components/shadcn/ui/textarea';
+import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { adminApi } from '@admin/api/adminApi';
+import type { AdminBrand, AdminBrandBenefit, AdminBrandUpdateRequest } from '@admin/api/types';
+import { ADMIN_CATEGORIES } from '@admin/constants/categories';
 
 interface AdminBrandModalProps {
-  brandId?: number;
+  isOpen: boolean;
+  onClose: () => void;
+  editingBrand: AdminBrand | null;
 }
 
-export const AdminBrandModal = ({ brandId }: AdminBrandModalProps) => {
-  const closeModal = useModalStore(state => state.closeModal);
-  const [isEditing, setIsEditing] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
+const INITIAL_BENEFIT: AdminBrandBenefit = {
+  grade: 'GOOD',
+  description: '',
+  benefitType: 'DISCOUNT',
+};
 
-  const { data: brands, isLoading: isLoadingBrands, error: brandsError } = useAdminBrandsQuery(true);
-  const brandListItem = brands?.find(b => b.brandId === brandId);
-  
-  // 브랜드 상세 정보 별도 요청
-  const { data: brandDetail, isLoading: isLoadingDetail, error: detailError } = useBrandDetailQuery(
-    brandId ?? 0, 
-    !!brandId
-  );
+export function AdminBrandModal({ isOpen, onClose, editingBrand }: AdminBrandModalProps) {
+  const [formData, setFormData] = useState({
+    brandName: '',
+    brandImg: '',
+    categoryId: 1,
+    usageLimit: '',
+    usageMethod: '',
+    storeType: 'OFFLINE' as 'ONLINE' | 'OFFLINE',
+    data: [INITIAL_BENEFIT],
+  });
 
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
+  const queryClient = useQueryClient();
 
-  const handleDelete = () => {
-    if (confirm('정말로 이 브랜드를 삭제하시겠습니까?')) {
-      setIsDeleting(true);
+  // 브랜드 생성/수정 mutation
+  const createMutation = useMutation({
+    mutationFn: adminApi.createAdminBrand,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['adminBrandList'] });
+      onClose();
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ brandId, data }: { brandId: number; data: AdminBrandUpdateRequest }) => adminApi.updateAdminBrand(brandId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['adminBrandList'] });
+      onClose();
+    },
+  });
+
+  // 편집 모드일 때 폼 데이터 초기화
+  useEffect(() => {
+    if (editingBrand) {
+      setFormData({
+        brandName: editingBrand.brandName,
+        brandImg: editingBrand.brandImg,
+        categoryId: editingBrand.categoryId,
+        usageLimit: editingBrand.usageLimit,
+        usageMethod: editingBrand.usageMethod,
+        storeType: editingBrand.storeType,
+        data: editingBrand.data,
+      });
+    } else {
+      setFormData({
+        brandName: '',
+        brandImg: '',
+        categoryId: 1,
+        usageLimit: '',
+        usageMethod: '',
+        storeType: 'OFFLINE',
+        data: [INITIAL_BENEFIT],
+      });
+    }
+  }, [editingBrand]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      if (editingBrand) {
+        await updateMutation.mutateAsync({ brandId: editingBrand.brandId, data: formData });
+      } else {
+        // 생성 모드
+        await createMutation.mutateAsync(formData);
+      }
+    } catch (error) {
+      console.error('브랜드 저장 실패:', error);
+      alert('브랜드 저장에 실패했습니다.');
     }
   };
 
-  const handleClose = () => {
-    closeModal();
+  const addBenefit = () => {
+    setFormData(prev => ({
+      ...prev,
+      data: [...prev.data, { ...INITIAL_BENEFIT }],
+    }));
   };
 
-  // 브랜드 추가 모드
-  if (!brandId) {
-    return (
-      <div className="space-y-4">
-        <AdminBrandForm brand={null} onSuccess={handleClose} />
-      </div>
-    );
-  }
+  const removeBenefit = (index: number) => {
+    if (formData.data.length > 1) {
+      setFormData(prev => ({
+        ...prev,
+        data: prev.data.filter((_, i) => i !== index),
+      }));
+    }
+  };
 
-  // 로딩 중
-  if (isLoadingBrands || isLoadingDetail) {
-    return (
-      <div className="flex justify-center items-center h-32">
-        <p className="text-gray-500">로딩 중...</p>
-      </div>
-    );
-  }
+  const updateBenefit = (index: number, field: keyof AdminBrandBenefit, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      data: prev.data.map((benefit, i) => 
+        i === index ? { ...benefit, [field]: value } : benefit
+      ),
+    }));
+  };
 
-  // 에러
-  if (brandsError || detailError || !brandListItem || !brandDetail) {
-    return (
-      <div className="flex flex-col items-center justify-center h-32 text-red-500">
-        <p>브랜드 정보를 불러오는데 실패했습니다.</p>
-        <button
-          onClick={handleClose}
-          className="mt-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg"
-        >
-          닫기
-        </button>
-      </div>
-    );
-  }
+  if (!isOpen) return null;
 
-  // 편집 모드 - AdminBrandForm은 별도로 처리 필요
-  if (isEditing) {
-    return (
-      <div className="space-y-4">
-        <p className="text-gray-500">수정 기능은 별도 모달에서 처리됩니다.</p>
-        <button
-          onClick={() => setIsEditing(false)}
-          className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg"
-        >
-          돌아가기
-        </button>
-      </div>
-    );
-  }
-
-  // 상세보기 모드
   return (
-    <div className="space-y-4">
-      {/* 브랜드 기본 정보 */}
-      <div className="flex items-center gap-4">
-        <img
-          src={brandListItem.logoImage}
-          alt={brandListItem.brandName}
-          className="w-16 h-16 object-cover rounded-lg"
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.src = '/images/brands/default-brand-logo.png';
-          }}
-        />
-        <div>
-          <h3 className="text-lg font-bold text-black">{brandListItem.brandName}</h3>
-        </div>
-      </div>
-
-      {/* 브랜드 상세 정보 */}
-      <div className="space-y-3">
-        <div>
-          <label className="text-sm font-medium text-gray-700">브랜드 이미지 URL</label>
-          <p className="text-sm text-gray-600 break-all">{brandListItem.logoImage}</p>
-        </div>
-        <div>
-          <label className="text-sm font-medium text-gray-700">사용 제한</label>
-          <p className="text-sm text-gray-600">{brandDetail.usageLimit}</p>
-        </div>
-        <div>
-          <label className="text-sm font-medium text-gray-700">사용 방법</label>
-          <p className="text-sm text-gray-600">{brandDetail.usageMethod}</p>
-        </div>
-      </div>
-
-      {/* 혜택 목록 */}
-      <div>
-        <label className="text-sm font-medium text-gray-700">혜택 목록</label>
-        <div className="mt-2 space-y-2">
-          {brandDetail.benefitRes.map((benefit, index: number) => (
-            <div
-              key={index}
-              className="p-3 bg-gray-50 rounded-lg border border-gray-200"
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <span className="text-sm font-medium text-gray-700">
-                    {benefit.grade}
-                  </span>
-                  <p className="text-sm text-gray-600 mt-1">{benefit.description}</p>
-                </div>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <CardHeader>
+          <CardTitle>{editingBrand ? '브랜드 수정' : '브랜드 추가'}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* 기본 정보 */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="brandName">브랜드명</Label>
+                <Input
+                  id="brandName"
+                  value={formData.brandName}
+                  onChange={(e) => setFormData(prev => ({ ...prev, brandName: e.target.value }))}
+                  required
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="categoryId">카테고리</Label>
+                <Select
+                  value={formData.categoryId.toString()}
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, categoryId: parseInt(value) }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ADMIN_CATEGORIES.map(category => (
+                      <SelectItem key={category.id} value={category.id.toString()}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
-          ))}
-        </div>
-      </div>
 
-      {/* 액션 버튼 */}
-      <div className="flex gap-2 pt-4 border-t border-gray-200">
-        <button
-          onClick={handleEdit}
-          className="flex-1 px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
-        >
-          수정
-        </button>
-        <button
-          onClick={handleDelete}
-          disabled={isDeleting}
-          className="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg text-sm font-medium hover:bg-red-600 transition-colors disabled:opacity-50"
-        >
-          {isDeleting ? '삭제 중...' : '삭제'}
-        </button>
-        <button
-          onClick={handleClose}
-          className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors"
-        >
-          닫기
-        </button>
-      </div>
+            <div>
+              <Label htmlFor="brandImg">브랜드 이미지 URL</Label>
+              <Input
+                id="brandImg"
+                value={formData.brandImg}
+                onChange={(e) => setFormData(prev => ({ ...prev, brandImg: e.target.value }))}
+                placeholder="https://example.com/image.png"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="usageLimit">사용 제한</Label>
+                <Input
+                  id="usageLimit"
+                  value={formData.usageLimit}
+                  onChange={(e) => setFormData(prev => ({ ...prev, usageLimit: e.target.value }))}
+                  placeholder="예: 일 1회"
+                  required
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="storeType">매장 타입</Label>
+                <Select
+                  value={formData.storeType}
+                  onValueChange={(value: 'ONLINE' | 'OFFLINE') => setFormData(prev => ({ ...prev, storeType: value }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ONLINE">온라인</SelectItem>
+                    <SelectItem value="OFFLINE">오프라인</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="usageMethod">사용 방법</Label>
+              <Textarea
+                id="usageMethod"
+                value={formData.usageMethod}
+                onChange={(e) => setFormData(prev => ({ ...prev, usageMethod: e.target.value }))}
+                placeholder="사용 방법을 입력하세요"
+                required
+              />
+            </div>
+
+            {/* 혜택 정보 */}
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <Label>혜택 정보</Label>
+                <Button type="button" onClick={addBenefit} variant="outline" size="sm">
+                  <PlusIcon className="h-4 w-4 mr-1" />
+                  혜택 추가
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                {formData.data.map((benefit, index) => (
+                  <div key={index} className="border rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="font-medium">혜택 {index + 1}</h4>
+                      {formData.data.length > 1 && (
+                        <Button
+                          type="button"
+                          onClick={() => removeBenefit(index)}
+                          variant="outline"
+                          size="sm"
+                          className="text-red-600"
+                        >
+                          <TrashIcon className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <Label>등급</Label>
+                        <Select
+                          value={benefit.grade}
+                          onValueChange={(value: 'VVIP' | 'VIP' | 'GOOD') => updateBenefit(index, 'grade', value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="VVIP">VVIP</SelectItem>
+                            <SelectItem value="VIP">VIP</SelectItem>
+                            <SelectItem value="GOOD">GOOD</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div>
+                        <Label>혜택 타입</Label>
+                        <Select
+                          value={benefit.benefitType}
+                          onValueChange={(value: 'DISCOUNT' | 'POINT' | 'GIFT') => updateBenefit(index, 'benefitType', value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="DISCOUNT">할인</SelectItem>
+                            <SelectItem value="POINT">포인트</SelectItem>
+                            <SelectItem value="GIFT">증정품</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div>
+                        <Label>설명</Label>
+                        <Input
+                          value={benefit.description}
+                          onChange={(e) => updateBenefit(index, 'description', e.target.value)}
+                          placeholder="혜택 설명"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 버튼 */}
+            <div className="flex justify-end gap-2">
+              <Button type="button" variant="outline" onClick={onClose}>
+                취소
+              </Button>
+              <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
+                {createMutation.isPending || updateMutation.isPending ? '저장 중...' : '저장'}
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
-}; 
+} 

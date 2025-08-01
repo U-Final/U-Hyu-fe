@@ -1,69 +1,56 @@
 import { useQuery } from '@tanstack/react-query';
-import {
-  getAdminBookmarkStats,
-  getAdminFilteringStats,
-  getAdminRecommendStats,
-  getAdminMembershipStats,
-  getAdminTotalStats,
-  getAdminCategories,
-} from '@admin/api';
+import { adminApi } from '@admin/api/adminApi';
 
-export function useAdminBookmarkStatsQuery() {
+// 전체 통계 조회
+export const useAdminTotalStatsQuery = () => {
   return useQuery({
-    queryKey: ['admin', 'stats', 'bookmark'],
-    queryFn: getAdminBookmarkStats,
-    staleTime: 0, // 항상 stale 상태로 유지하여 매번 새로운 데이터 요청
-    gcTime: 0, // 캐시 즉시 삭제
-    refetchOnMount: true, // 컴포넌트 마운트 시 항상 refetch
+    queryKey: ['adminTotalStats'],
+    queryFn: adminApi.getTotalStats,
+    refetchOnMount: 'always',
+    gcTime: 0,
   });
-}
+};
 
-export function useAdminFilteringStatsQuery() {
+// 즐겨찾기 통계 조회
+export const useAdminBookmarkStatsQuery = (options?: { enabled?: boolean }) => {
   return useQuery({
-    queryKey: ['admin', 'stats', 'filtering'],
-    queryFn: getAdminFilteringStats,
-    staleTime: 0, // 항상 stale 상태로 유지하여 매번 새로운 데이터 요청
-    gcTime: 0, // 캐시 즉시 삭제
-    refetchOnMount: false, // 초기 로드 시 요청하지 않음
-    enabled: false, // 수동으로만 요청
+    queryKey: ['adminBookmarkStats'],
+    queryFn: adminApi.getBookmarkStats,
+    enabled: options?.enabled ?? true,
+    refetchOnMount: 'always',
+    gcTime: 0,
   });
-}
+};
 
-export function useAdminRecommendStatsQuery() {
+// 필터링 통계 조회
+export const useAdminFilteringStatsQuery = (options?: { enabled?: boolean }) => {
   return useQuery({
-    queryKey: ['admin', 'stats', 'recommend'],
-    queryFn: getAdminRecommendStats,
-    staleTime: 0, // 항상 stale 상태로 유지하여 매번 새로운 데이터 요청
-    gcTime: 0, // 캐시 즉시 삭제
-    refetchOnMount: false, // 초기 로드 시 요청하지 않음
-    enabled: false, // 수동으로만 요청
+    queryKey: ['adminFilteringStats'],
+    queryFn: adminApi.getFilteringStats,
+    enabled: options?.enabled ?? true,
+    refetchOnMount: 'always',
+    gcTime: 0,
   });
-}
+};
 
-export function useAdminMembershipStatsQuery() {
+// 추천 통계 조회
+export const useAdminRecommendStatsQuery = (options?: { enabled?: boolean }) => {
   return useQuery({
-    queryKey: ['admin', 'stats', 'membership'],
-    queryFn: getAdminMembershipStats,
-    staleTime: 0, // 항상 stale 상태로 유지하여 매번 새로운 데이터 요청
-    gcTime: 0, // 캐시 즉시 삭제
-    refetchOnMount: false, // 초기 로드 시 요청하지 않음
-    enabled: false, // 수동으로만 요청
+    queryKey: ['adminRecommendStats'],
+    queryFn: adminApi.getRecommendStats,
+    enabled: options?.enabled ?? true,
+    refetchOnMount: 'always',
+    gcTime: 0,
   });
-}
+};
 
-export function useAdminTotalStatsQuery() {
+// 멤버십 통계 조회
+export const useAdminMembershipStatsQuery = (options?: { enabled?: boolean }) => {
   return useQuery({
-    queryKey: ['admin', 'stats', 'total'],
-    queryFn: getAdminTotalStats,
-    staleTime: 0, // 항상 stale 상태로 유지하여 매번 새로운 데이터 요청
-    gcTime: 0, // 캐시 즉시 삭제
-    refetchOnMount: true, // 컴포넌트 마운트 시 항상 refetch
+    queryKey: ['adminMembershipStats'],
+    queryFn: adminApi.getMembershipStats,
+    enabled: options?.enabled ?? true,
+    refetchOnMount: 'always',
+    gcTime: 0,
   });
-}
-
-export function useAdminCategoriesQuery() {
-  return useQuery({
-    queryKey: ['admin', 'categories'],
-    queryFn: getAdminCategories,
-  });
-} 
+}; 

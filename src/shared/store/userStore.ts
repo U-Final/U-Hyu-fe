@@ -2,6 +2,7 @@ import { userApi } from '@user/index';
 import type { AxiosError } from 'axios';
 import { toast } from 'sonner';
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 import type { ApiError } from '@/shared/client/client.type';
 import type { SimpleUserInfo } from '@/shared/types';
@@ -15,42 +16,52 @@ interface UserState {
   userInfo: () => Promise<void>;
 }
 
-export const userStore = create<UserState>(set => ({
-  user: null,
-  isAuthChecked: false,
-  setUser: user => set({ user, isAuthChecked: true }),
-  clearUser: () => set({ user: null, isAuthChecked: true }),
-  logout: async () => {
-    try {
-      const res = await userApi.logout();
-      userStore.getState().clearUser();
-      toast.info(res.message);
-    } catch (error) {
-      toast.error('❌ 로그아웃 실패했습니다. 다시 시도해주세요');
-      throw error;
-    }
-  },
-  userInfo: async () => {
-    try {
-      const res = await userApi.getUserInfo();
+export const userStore = create<UserState>()(
+  persist(
+    set => ({
+      user: null,
+      isAuthChecked: false,
+      setUser: user => set({ user, isAuthChecked: true }),
+      clearUser: () => set({ user: null, isAuthChecked: true }),
+      logout: async () => {
+        try {
+          const res = await userApi.logout();
+          userStore.getState().clearUser();
+          toast.info(res.message);
+        } catch (error) {
+          toast.error('❌ 로그아웃 실패했습니다. 다시 시도해주세요');
+          throw error;
+        }
+      },
+      userInfo: async () => {
+        try {
+          const res = await userApi.getUserInfo();
 
-      if ((res.statusCode === 200 || res.statusCode === 0) && res.data) {
-        const { userName, grade, profileImage, role } = res.data;
-        userStore.getState().setUser({ userName, grade, profileImage, role });
-      } else {
-        userStore.getState().clearUser();
-      }
-    } catch (error: unknown) {
-      const err = error as AxiosError<ApiError>;
-      // 401이면 clearUser(), 그 외 에러는 유지
-      if (err.response?.data?.statusCode === 401) {
-        userStore.getState().clearUser();
-      } else {
-        set({ isAuthChecked: true });
-      }
+          if ((res.statusCode === 200 || res.statusCode === 0) && res.data) {
+            const { userName, grade, profileImage, role } = res.data;
+            userStore
+              .getState()
+              .setUser({ userName, grade, profileImage, role });
+          } else {
+            userStore.getState().clearUser();
+          }
+        } catch (error: unknown) {
+          const err = error as AxiosError<ApiError>;
+          if (err.response?.data?.statusCode === 401) {
+            userStore.getState().clearUser();
+          } else {
+            set({ isAuthChecked: true });
+          }
+        }
+      },
+    }),
+    {
+      name: 'user-storage',
+      // 저장할 state만 선택
+      partialize: state => ({ user: state.user }),
     }
-  },
-}));
+  )
+);
 
 export const useIsLoggedIn = () => {
   const user = userStore(state => state.user);

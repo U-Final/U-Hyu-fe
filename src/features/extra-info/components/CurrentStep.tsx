@@ -160,34 +160,6 @@ export const CurrentStep: React.FC<EnhancedCurrentStepProps> = ({
                 submitError={submitError}
               />
             </motion.div>
-
-            {/* 제출 중 추가 안내 메시지 */}
-            {isSubmitting && currentStep === 4 && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center"
-              >
-                <div className="flex items-center justify-center gap-2 text-blue-700">
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 1,
-                      repeat: Infinity,
-                      ease: 'linear',
-                    }}
-                  >
-                    <RefreshCw className="w-4 h-4" />
-                  </motion.div>
-                  <span className="text-sm font-medium">
-                    회원가입 정보를 처리하고 있습니다...
-                  </span>
-                </div>
-                <p className="text-xs text-blue-600 mt-2">
-                  잠시만 기다려 주세요. 페이지를 닫지 마세요.
-                </p>
-              </motion.div>
-            )}
           </motion.div>
         ) : (
           renderCompletionState()

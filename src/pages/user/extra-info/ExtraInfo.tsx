@@ -112,7 +112,7 @@ const ImprovedSignupFlow: React.FC = () => {
   return (
     <div>
       <div className="sticky top-0 z-10 bg-white">
-        <div className="max-w-md mx-auto px-4 py-2">
+        <div className="mx-auto px-4 py-2">
           <div className="flex items-center gap-3">
             <div className="flex-1 bg-gray-200 rounded-full h-2">
               <div
@@ -130,10 +130,7 @@ const ImprovedSignupFlow: React.FC = () => {
       </div>
 
       {/* 메인 콘텐츠 */}
-      <div
-        className="max-w-md mx-auto bg-white min-h-[calc(100vh-73px)] relative"
-        ref={containerRef}
-      >
+      <div ref={containerRef}>
         <LayoutGroup>
           <CurrentStep
             currentStep={currentStep}

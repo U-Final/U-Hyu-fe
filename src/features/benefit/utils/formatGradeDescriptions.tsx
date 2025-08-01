@@ -22,15 +22,26 @@ export const formatGradeDescriptions = (text: string | null): string => {
     lastIndex = endIndex;
   });
 
-  let result = '';
+  const gradeMap = new Map<string, string>();
 
   for (let i = 0; i < parts.length; i += 2) {
     const grade = parts[i];
-    let description = parts[i + 1]?.trim() ?? '';
+    let desc = parts[i + 1]?.trim() ?? '';
+    desc = desc.replace(/(?<!\n)([①-⑨])/g, '\n$1'); // 줄바꿈
+    gradeMap.set(grade, desc);
+  }
 
-    description = description.replace(/(?<!\n)([①-⑨])/g, '\n$1');
+  const allDescriptions = Array.from(gradeMap.values());
 
-    result += `${grade}: ${description}\n`;
+  const allSame = allDescriptions.every(desc => desc === allDescriptions[0]);
+
+  if (allSame && allDescriptions.length > 0) {
+    return allDescriptions[0].trim();
+  }
+
+  let result = '';
+  for (const [grade, desc] of gradeMap.entries()) {
+    result += `${grade}\n${desc.trim()}\n`;
   }
 
   return result.trim();

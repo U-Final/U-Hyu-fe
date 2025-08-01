@@ -8,6 +8,6 @@ export { BRANDS } from './constants';
 
 // API exports
 export { getInterestBrands, BRAND_ENDPOINTS } from './api';
-export type { ApiBrand, ApiBrandResponse } from './api';
+export type { ApiBrand } from './api';
 
 export { BrandGrid as default } from './BrandGrid';

@@ -1,10 +1,9 @@
 import { useState } from 'react';
 
-import { useAdminBrandsQuery } from '@admin/hooks';
+import { useAdminBrandsQuery, useBrandDetailQuery } from '@admin/hooks';
 import { useModalStore } from '@/shared/store';
 
 import { AdminBrandForm } from './AdminBrandForm';
-import type { BrandBenefit } from '@admin/api/types';
 
 interface AdminBrandModalProps {
   brandId?: number;
@@ -15,8 +14,14 @@ export const AdminBrandModal = ({ brandId }: AdminBrandModalProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const { data: brands, isLoading, error } = useAdminBrandsQuery(true);
-  const brand = brands?.find(b => b.brandId === brandId);
+  const { data: brands, isLoading: isLoadingBrands, error: brandsError } = useAdminBrandsQuery(true);
+  const brandListItem = brands?.find(b => b.brandId === brandId);
+  
+  // 브랜드 상세 정보 별도 요청
+  const { data: brandDetail, isLoading: isLoadingDetail, error: detailError } = useBrandDetailQuery(
+    brandId ?? 0, 
+    !!brandId
+  );
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -36,13 +41,13 @@ export const AdminBrandModal = ({ brandId }: AdminBrandModalProps) => {
   if (!brandId) {
     return (
       <div className="space-y-4">
-        <AdminBrandForm onSuccess={handleClose} />
+        <AdminBrandForm brand={null} onSuccess={handleClose} />
       </div>
     );
   }
 
   // 로딩 중
-  if (isLoading) {
+  if (isLoadingBrands || isLoadingDetail) {
     return (
       <div className="flex justify-center items-center h-32">
         <p className="text-gray-500">로딩 중...</p>
@@ -51,7 +56,7 @@ export const AdminBrandModal = ({ brandId }: AdminBrandModalProps) => {
   }
 
   // 에러
-  if (error || !brand) {
+  if (brandsError || detailError || !brandListItem || !brandDetail) {
     return (
       <div className="flex flex-col items-center justify-center h-32 text-red-500">
         <p>브랜드 정보를 불러오는데 실패했습니다.</p>
@@ -65,11 +70,17 @@ export const AdminBrandModal = ({ brandId }: AdminBrandModalProps) => {
     );
   }
 
-  // 편집 모드
+  // 편집 모드 - AdminBrandForm은 별도로 처리 필요
   if (isEditing) {
     return (
       <div className="space-y-4">
-        <AdminBrandForm brand={brand} onSuccess={handleClose} />
+        <p className="text-gray-500">수정 기능은 별도 모달에서 처리됩니다.</p>
+        <button
+          onClick={() => setIsEditing(false)}
+          className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg"
+        >
+          돌아가기
+        </button>
       </div>
     );
   }
@@ -80,8 +91,8 @@ export const AdminBrandModal = ({ brandId }: AdminBrandModalProps) => {
       {/* 브랜드 기본 정보 */}
       <div className="flex items-center gap-4">
         <img
-          src={brand.brandImg}
-          alt={brand.brandName}
+          src={brandListItem.logoImage}
+          alt={brandListItem.brandName}
           className="w-16 h-16 object-cover rounded-lg"
           onError={(e) => {
             const target = e.target as HTMLImageElement;
@@ -89,7 +100,7 @@ export const AdminBrandModal = ({ brandId }: AdminBrandModalProps) => {
           }}
         />
         <div>
-          <h3 className="text-lg font-bold text-black">{brand.brandName}</h3>
+          <h3 className="text-lg font-bold text-black">{brandListItem.brandName}</h3>
         </div>
       </div>
 
@@ -97,24 +108,23 @@ export const AdminBrandModal = ({ brandId }: AdminBrandModalProps) => {
       <div className="space-y-3">
         <div>
           <label className="text-sm font-medium text-gray-700">브랜드 이미지 URL</label>
-          <p className="text-sm text-gray-600 break-all">{brand.brandImg}</p>
+          <p className="text-sm text-gray-600 break-all">{brandListItem.logoImage}</p>
         </div>
         <div>
           <label className="text-sm font-medium text-gray-700">사용 제한</label>
-          <p className="text-sm text-gray-600">{brand.usageLimit}</p>
+          <p className="text-sm text-gray-600">{brandDetail.usageLimit}</p>
         </div>
         <div>
           <label className="text-sm font-medium text-gray-700">사용 방법</label>
-          <p className="text-sm text-gray-600">{brand.usageMethod}</p>
+          <p className="text-sm text-gray-600">{brandDetail.usageMethod}</p>
         </div>
-
       </div>
 
       {/* 혜택 목록 */}
       <div>
         <label className="text-sm font-medium text-gray-700">혜택 목록</label>
         <div className="mt-2 space-y-2">
-          {brand.data.map((benefit: BrandBenefit, index: number) => (
+          {brandDetail.benefitRes.map((benefit, index: number) => (
             <div
               key={index}
               className="p-3 bg-gray-50 rounded-lg border border-gray-200"
@@ -126,15 +136,6 @@ export const AdminBrandModal = ({ brandId }: AdminBrandModalProps) => {
                   </span>
                   <p className="text-sm text-gray-600 mt-1">{benefit.description}</p>
                 </div>
-                <span
-                  className={`px-2 py-1 text-xs rounded-full ${
-                    benefit.benefitType === 'DISCOUNT'
-                      ? 'bg-blue-100 text-blue-800'
-                      : 'bg-purple-100 text-purple-800'
-                  }`}
-                >
-                  {benefit.benefitType === 'DISCOUNT' ? '할인' : '기프트'}
-                </span>
               </div>
             </div>
           ))}

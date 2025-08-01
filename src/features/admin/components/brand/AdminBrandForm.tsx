@@ -1,14 +1,8 @@
 import { useState, useEffect } from 'react';
 
 import { useAdminBrandMutation } from '@admin/hooks';
-import type { AdminBrand, BrandBenefit } from '@admin/api/types';
-import type { CreateBrandRequest, UpdateBrandRequest } from '@admin/api/types';
+import type { BrandBenefit, CreateBrandRequest, UpdateBrandRequest, AdminBrandFormProps } from '@admin/types';
 import { ADMIN_CATEGORIES } from '@admin/constants/categories';
-
-interface AdminBrandFormProps {
-  brand?: AdminBrand;
-  onSuccess: () => void;
-}
 
 export const AdminBrandForm = ({ brand, onSuccess }: AdminBrandFormProps) => {
   const [formData, setFormData] = useState<CreateBrandRequest>({
@@ -18,6 +12,7 @@ export const AdminBrandForm = ({ brand, onSuccess }: AdminBrandFormProps) => {
     categoryId: 1,
     usageLimit: '',
     usageMethod: '',
+    storeType: 'OFFLINE',
   });
 
   const { createMutation, updateMutation, deleteMutation } = useAdminBrandMutation();
@@ -33,11 +28,12 @@ export const AdminBrandForm = ({ brand, onSuccess }: AdminBrandFormProps) => {
     if (brand) {
       setFormData({
         brandName: brand.brandName,
-        brandImg: brand.brandImg,
+        brandImg: brand.logoImage,
         data: brand.data,
         categoryId: brand.categoryId,
         usageLimit: brand.usageLimit,
         usageMethod: brand.usageMethod,
+        storeType: brand.storeType,
       });
     }
   }, [brand]);
@@ -202,6 +198,22 @@ export const AdminBrandForm = ({ brand, onSuccess }: AdminBrandFormProps) => {
           placeholder="예: 카드 제시, 앱 바코드"
           required
         />
+      </div>
+
+      {/* 매장 유형 */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          매장 유형 *
+        </label>
+        <select
+          value={formData.storeType}
+          onChange={(e) => handleInputChange('storeType', e.target.value)}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+          required
+        >
+          <option value="OFFLINE">오프라인</option>
+          <option value="ONLINE">온라인</option>
+        </select>
       </div>
 
 

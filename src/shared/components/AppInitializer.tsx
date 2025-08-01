@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 
 import { PATH } from '@/routes/path';
 
+import { useTabFocusAuth } from '@/shared/hooks/useTabFocusAuth';
 import { userStore } from '@/shared/store/userStore';
 import {
   initKeyboardHandler,
@@ -43,6 +44,8 @@ const AppInitializer = () => {
       userStore.setState({ isAuthChecked: true, user: null });
     }
   }, [isAdminPage]);
+
+  useTabFocusAuth();
 
   // 뷰포트 높이 및 스크롤 복원 초기화 (모바일 최적화)
   useEffect(() => {

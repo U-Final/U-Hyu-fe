@@ -1,4 +1,3 @@
-export { AdminBrandModal } from './AdminBrandModal';
 export { AdminBrandList } from './AdminBrandList';
 export { AdminBrandCard } from './AdminBrandCard';
 export { AdminBrandPagination } from './AdminBrandPagination';

@@ -14,7 +14,7 @@ interface EmptyStateProps {
   variant?: 'full' | 'chart-only';
 }
 
-const getIconAndTitle = (type: string) => {
+const getIconAndTitle = (type: EmptyStateProps['type']) => {
   switch (type) {
     case 'bookmark':
       return {

@@ -7,9 +7,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/shared/components/shadcn/ui/textarea';
 import { PlusIcon, TrashIcon, XMarkIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { adminApi } from '@admin/api/adminApi';
 import type { AdminBrand, AdminBrandBenefit, AdminBrandUpdateRequest } from '@admin/api/types';
 import { ADMIN_CATEGORIES } from '@admin/constants/categories';
+import { getErrorMessage } from '@/shared/utils/getErrorMessage';
 
 interface AdminBrandFormProps {
   editingBrand: AdminBrand | null;
@@ -104,6 +106,13 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // 혜택 정보 검증
+    const invalidBenefits = formData.data.filter(benefit => !benefit.description.trim());
+    if (invalidBenefits.length > 0) {
+      alert('모든 혜택의 설명을 입력해주세요.');
+      return;
+    }
+    
     try {
       if (editingBrand) {
         await updateMutation.mutateAsync({ brandId: editingBrand.brandId, data: formData });
@@ -111,8 +120,8 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
         await createMutation.mutateAsync(formData);
       }
     } catch (error) {
-      console.error('브랜드 저장 실패:', error);
-      alert('브랜드 저장에 실패했습니다.');
+      const errorMessage = getErrorMessage(error);
+      toast.error(`브랜드 저장 실패: ${errorMessage}`);
     }
   };
 

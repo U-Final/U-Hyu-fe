@@ -4,6 +4,7 @@ import { Button } from '@/shared/components/shadcn/ui/button';
 import { Input } from '@/shared/components/shadcn/ui/input';
 import { PlusIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { adminApi } from '@admin/api/adminApi';
 import type { AdminBrand } from '@admin/api/types';
 import { AdminBrandForm } from './AdminBrandForm';
@@ -12,6 +13,7 @@ import { AdminBrandPagination } from './AdminBrandPagination';
 import { AdminBrandDeleteModal } from './AdminBrandDeleteModal';
 import { ADMIN_CATEGORIES } from '@admin/constants/categories';
 import FilterTabs from '@/shared/components/filter_tabs/FilterTabs';
+import { getErrorMessage } from '@/shared/utils/getErrorMessage';
 
 const ITEMS_PER_PAGE = 5;
 
@@ -103,8 +105,8 @@ export function AdminBrandList() {
       try {
         await deleteMutation.mutateAsync(brandToDelete.brandId);
       } catch (error) {
-        console.error('브랜드 삭제 실패:', error);
-        alert('브랜드 삭제에 실패했습니다.');
+        const errorMessage = getErrorMessage(error);
+        toast.error(`브랜드 삭제 실패: ${errorMessage}`);
       }
     }
   };

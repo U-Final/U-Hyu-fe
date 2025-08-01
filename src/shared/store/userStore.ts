@@ -58,7 +58,15 @@ export const userStore = create<UserState>()(
     {
       name: 'user-storage',
       // 저장할 state만 선택
-      partialize: state => ({ user: state.user }),
+      partialize: state => ({
+        user: state.user,
+        isAuthChecked: state.isAuthChecked,
+      }),
+      onRehydrateStorage: () => state => {
+        if (state) {
+          userStore.setState({ isAuthChecked: true });
+        }
+      },
     }
   )
 );

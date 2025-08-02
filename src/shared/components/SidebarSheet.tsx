@@ -20,18 +20,24 @@ const SidebarSheet = () => {
       <SheetTrigger asChild>
         <button
           aria-label="사이드바 열기"
-          className="fixed top-4 left-4 z-50 flex items-center justify-center w-[44px] h-[44px] bg-white border border-gray-200 rounded-md shadow-lg hover:shadow-xl hover:bg-gray-50 transition-all duration-200 desktop-content-position"
+          className="fixed top-4 left-4 z-50 flex items-center justify-center w-[44px] h-[44px] bg-white border border-gray-200 rounded-md shadow-lg hover:shadow-xl hover:bg-gray-50 transition-all duration-200 desktop-content-position cursor-pointer"
         >
           <Menu className="w-5 h-5 text-gray-600" />
         </button>
       </SheetTrigger>
       <SheetContent side="left" className="w-[70%]" containerId="main-content">
         <SheetHeader>
-          <SheetTitle>U-HYU</SheetTitle>
+          <SheetTitle className="text-h3">U-HYU</SheetTitle>
         </SheetHeader>
 
         <div className="px-8 mt-4">
-          <div>{isLoggedIn ? <LogoutButton /> : <KakaoLoginButton />}</div>
+          <div>
+            {isLoggedIn ? (
+              <LogoutButton />
+            ) : (
+              <KakaoLoginButton className="w-full" />
+            )}
+          </div>
           {isLoggedIn ? (
             <div>
               <p>{user?.userName}님 반가워요!</p>

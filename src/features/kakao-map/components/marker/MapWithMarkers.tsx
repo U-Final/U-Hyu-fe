@@ -26,6 +26,7 @@ import { useToggleFavoriteMutation } from '../../hooks/useMapQueries';
 import type { Store } from '../../types/store';
 import ResponsiveManualSearchButton from '../ManualSearchButton';
 import BrandMarker from './BrandMarker';
+import FavoriteMarker from './FavoriteMarker';
 import { KeywordInfoWindow } from './KeywordInfoWindow';
 import { KeywordMarker } from './KeywordMarker';
 import MyMapMarker from './MyMapMarker';
@@ -90,6 +91,8 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   );
   const setSelectedStore = useMapStore(state => state.selectStore);
 
+  const { bookmarkMode, bookmarkStores } = useMapStore();
+
   // 마커에 사용할 store 배열 결정(mymap)
   // const storesToRender = isShared ? sharedStores : stores;
   // 마커에 사용할 store 배열 결정 (일반 매장 + 추천 매장)
@@ -107,6 +110,15 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         if (!exists) {
           allStores.push(recommendedStore);
         }
+      });
+    }
+
+    if (import.meta.env.MODE === 'development') {
+      console.log('🗺️ MapWithMarkers: Rendering stores', {
+        storesCount: stores.length,
+        recommendedCount: recommendedStores.length,
+        totalRenderCount: allStores.length,
+        stores: allStores,
       });
     }
 
@@ -386,6 +398,15 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
     }
   }, [onCenterChange, handleSearch, updateSearchPosition]);
 
+  // 중복 제거: 즐겨찾기 모드일 때 일반 마커에서 즐겨찾기 매장은 제외
+const filteredStoresToRender = useMemo(() => {
+  if (bookmarkMode) {
+    const bookmarkIds = new Set(bookmarkStores.map(s => s.storeId));
+    return storesToRender.filter(store => !bookmarkIds.has(store.storeId));
+  }
+  return storesToRender;
+}, [storesToRender, bookmarkMode, bookmarkStores]);
+
   return (
     <>
       {/* 거리 기반 재검색 버튼 */}
@@ -409,7 +430,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         }}
       >
         {/* 매장 마커들 */}
-        {storesToRender.map(store => (
+        {filteredStoresToRender.map(store => (
           <CustomOverlayMap
             key={store.storeId}
             position={{ lat: store.latitude, lng: store.longitude }}
@@ -431,6 +452,22 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
             )}
           </CustomOverlayMap>
         ))}
+
+        {/* 즐겨찾기 마커 */}
+        {bookmarkMode &&
+          bookmarkStores.map(store => (
+            <CustomOverlayMap
+              key={`bookmark-${store.storeId}`}
+              position={{ lat: store.latitude, lng: store.longitude }}
+              yAnchor={1}
+              xAnchor={0.5}
+            >
+              <FavoriteMarker
+                isSelected={selectedStoreId === store.storeId}
+                onClick={() => handleMarkerClick(store)}
+              />
+            </CustomOverlayMap>
+          ))}
 
         {/* 스토어 상세 정보 인포윈도우 */}
         {infoWindowStore && (

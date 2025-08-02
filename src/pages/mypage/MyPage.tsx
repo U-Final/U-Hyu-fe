@@ -49,7 +49,7 @@ const MyPage = () => {
   if (error || !localUser) return <div>에러 발생</div>;
 
   return (
-    <div className="min-h-screen max-w-[22.5rem] mx-auto">
+    <div className="min-h-screen">
       <div className="space-y-[1.5rem] pb-[6rem]">
         <MyPageHeader user={localUser} />
         <MyPageUserInfo 

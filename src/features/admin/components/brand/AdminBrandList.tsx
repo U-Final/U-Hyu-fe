@@ -8,7 +8,7 @@ import { AdminBrandCard } from './AdminBrandCard';
 import { AdminBrandModal } from './AdminBrandModal';
 
 export const AdminBrandList = () => {
-  const { data: brands, isLoading, error } = useAdminBrandsQuery();
+  const { data: brands, isLoading, error } = useAdminBrandsQuery(true);
   const openModal = useModalStore(state => state.openModal);
   const brandList = brands || [];
 

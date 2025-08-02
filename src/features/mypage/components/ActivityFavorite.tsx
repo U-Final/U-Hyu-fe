@@ -1,14 +1,17 @@
 import { useRef, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useBookmarkListInfiniteQuery } from '@mypage/hooks/useActivityQuery';
 import { BrandWithFavoriteCard } from '@/shared/components/cards/BrandWithFavoriteCard';
 import { deleteBookmark } from '@mypage/api/mypageApi';
 import type { Bookmark } from '@mypage/api/types';
+import { Heart, MapPin, Star } from 'lucide-react';
 
 interface Props {
   enabled: boolean;
 }
 
 const ActivityFavorite = ({ enabled }: Props) => {
+  const navigate = useNavigate();
   const {
     data,
     fetchNextPage,
@@ -89,8 +92,36 @@ const ActivityFavorite = ({ enabled }: Props) => {
         </div>
       ))}
       {bookmarks.length === 0 && !isLoading && (
-        <div className="text-center py-[1rem] text-sm text-gray">
-          즐겨찾기 매장이 없습니다.
+        <div className="flex flex-col items-center justify-center py-12 px-4">
+          {/* 빈 상태 아이콘 */}
+          <div className="relative mb-6">
+            <div className="w-20 h-20 bg-gradient-to-br from-pink-100 to-red-100 rounded-full flex items-center justify-center">
+              <Heart className="w-10 h-10 text-pink-400" />
+            </div>
+            <div className="absolute -top-1 -right-1 w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+              <Star className="w-4 h-4 text-yellow-500" />
+            </div>
+          </div>
+          
+          {/* 메인 메시지 */}
+          <h3 className="text-lg font-semibold text-gray-800 mb-2">
+            아직 즐겨찾기한 매장이 없어요
+          </h3>
+          
+          {/* 설명 메시지 */}
+          <p className="text-sm text-gray-500 text-center mb-6 max-w-xs">
+            지도에서 마음에 드는 매장을 찾아서<br />
+            즐겨찾기에 추가해보세요!
+          </p>
+          
+          {/* 액션 버튼 */}
+          <button
+            onClick={() => navigate('/map')}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full text-blue-600 hover:bg-blue-100 transition-colors duration-200"
+          >
+            <MapPin className="w-4 h-4" />
+            <span className="text-sm font-medium">지도로 가기</span>
+          </button>
         </div>
       )}
       <div ref={loaderRef} style={{ height: '4rem' }} />

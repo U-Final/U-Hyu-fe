@@ -1,13 +1,18 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { PlusIcon, MagnifyingGlassIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useAdminBrandsQuery } from '@admin/hooks';
 import { useAdminBrandMutation } from '@admin/hooks/useAdminBrandMutation';
+import { FilterTabs } from '@/shared/components';
+import { useQueryClient } from '@tanstack/react-query';
+
 import { BrandForm } from './BrandForm';
 import { BrandListItem } from './BrandListItem';
 import { BrandListSkeleton } from '@admin/components/common';
-import { FilterTabs } from '@/shared/components';
 import { ADMIN_CATEGORIES } from '@admin/constants/categories';
 import type { CategoryId } from '@admin/constants/categories';
+import type { BrandListItem as BrandListItemType } from '@admin/types';
+import { getBrandCategoryId, getCategoryIds } from '@admin/constants/brandCategoryMapping';
+
 
 const ITEMS_PER_PAGE = 5;
 
@@ -16,33 +21,57 @@ export const NewAdminBrandList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<CategoryId>('all');
   const [currentPage, setCurrentPage] = useState(1);
-  
+
   const { data: brands, isLoading, error, refetch } = useAdminBrandsQuery(true);
   const { deleteMutation } = useAdminBrandMutation();
+  const queryClient = useQueryClient();
 
-  const brandList = brands || [];
+  const filteredBrandList = useMemo(() => {
+    if (!brands) return [];
+    
+    let filtered = [...brands];
+    
+    // 카테고리 필터링
+    if (selectedCategory !== 'all') {
+      const targetCategoryIds = getCategoryIds(selectedCategory.toString());
+      filtered = filtered.filter(brand => {
+        const brandCategory = getBrandCategoryId(brand.brandName);
+        return targetCategoryIds.includes(brandCategory);
+      });
+    }
+    
+    // 검색 필터링
+    if (searchTerm) {
+      filtered = filtered.filter(brand => 
+        brand.brandName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        brand.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    
+    return filtered;
+  }, [brands, selectedCategory, searchTerm]);
 
-  // 검색 및 카테고리 필터링
-  const filteredBrands = brandList.filter(brand => {
-    const matchesSearch = brand.brandName.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || brand.categoryId === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  const brandList: BrandListItemType[] = filteredBrandList;
 
-  // 페이지네이션 계산
-  const totalPages = Math.ceil(filteredBrands.length / ITEMS_PER_PAGE);
+  // 페이지네이션 계산 (API에서 이미 필터링된 데이터)
+  const totalPages = Math.ceil(brandList.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentBrands = filteredBrands.slice(startIndex, endIndex);
+  const currentBrands = brandList.slice(startIndex, endIndex);
 
   // 카테고리 탭 구성
   const categoryTabs = [
     { label: '전체', value: 'all' },
-    ...ADMIN_CATEGORIES.map(cat => ({ label: cat.name, value: cat.id.toString() }))
+    ...ADMIN_CATEGORIES.map(cat => ({
+      label: cat.name,
+      value: cat.id.toString(),
+    })),
   ];
 
   const handleCategoryChange = (value: string) => {
-    setSelectedCategory(value === 'all' ? 'all' : Number(value) as CategoryId);
+    setSelectedCategory(
+      value === 'all' ? 'all' : (Number(value) as CategoryId)
+    );
     setCurrentPage(1); // 카테고리 변경시 첫 페이지로
   };
 
@@ -55,26 +84,39 @@ export const NewAdminBrandList = () => {
     setCurrentPage(page);
   };
 
-  const handleAddSuccess = () => {
+  const handleAddSuccess = async () => {
     setShowAddForm(false);
-    refetch();
+    console.log('🔧 브랜드 추가 성공, 캐시 무효화 시작');
+    
+    // 강력한 캐시 무효화
+    await queryClient.invalidateQueries({ queryKey: ['admin', 'brands'] });
+    await queryClient.refetchQueries({ queryKey: ['admin', 'brands'] });
+    
+    console.log('✅ 캐시 무효화 완료');
   };
 
-  const handleEdit = () => {
-    refetch();
-  };
+
+
+
 
   const handleDelete = async (brandId: number) => {
     try {
+      console.log('🔧 브랜드 삭제 시작:', brandId);
       await deleteMutation.mutateAsync(brandId);
-      refetch();
+      
+      console.log('🔧 브랜드 삭제 성공, 캐시 무효화 시작');
+      // 강력한 캐시 무효화
+      await queryClient.invalidateQueries({ queryKey: ['admin', 'brands'] });
+      await queryClient.refetchQueries({ queryKey: ['admin', 'brands'] });
+      
+      console.log('✅ 캐시 무효화 완료');
       
       // 현재 페이지에 브랜드가 없으면 이전 페이지로
       if (currentBrands.length === 1 && currentPage > 1) {
         setCurrentPage(currentPage - 1);
       }
     } catch (error) {
-      console.error('브랜드 삭제 실패:', error);
+      console.error('❌ 브랜드 삭제 실패:', error);
       alert('브랜드 삭제에 실패했습니다.');
     }
   };
@@ -100,15 +142,13 @@ export const NewAdminBrandList = () => {
         <div>
           <h2 className="text-2xl font-bold text-gray-900">브랜드 관리</h2>
           <p className="text-sm text-gray-600 mt-1">
-            총 {brandList.length}개의 브랜드가 등록되어 있습니다.
-            {filteredBrands.length !== brandList.length && (
-              <span className="text-primary ml-1">
-                (필터링된 결과: {filteredBrands.length}개)
-              </span>
-            )}
+            {searchTerm || selectedCategory !== 'all' 
+              ? `검색/필터 결과: ${brandList.length}개의 브랜드`
+              : `총 ${brandList.length}개의 브랜드가 등록되어 있습니다.`
+            }
           </p>
         </div>
-        
+
         <button
           onClick={() => setShowAddForm(!showAddForm)}
           className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors"
@@ -124,20 +164,24 @@ export const NewAdminBrandList = () => {
         <input
           type="text"
           value={searchTerm}
-          onChange={(e) => handleSearchChange(e.target.value)}
+          onChange={e => handleSearchChange(e.target.value)}
           placeholder="브랜드명으로 검색..."
-          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+          className="w-full pl-10 pr-4 py-3 text-base md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
         />
       </div>
 
       {/* 카테고리 필터 */}
       <div>
-        <h3 className="text-sm font-medium text-gray-700 mb-3">카테고리별 필터</h3>
-        <FilterTabs 
-          tabs={categoryTabs}
-          onChange={handleCategoryChange}
-          variant="gray"
-        />
+        <h3 className="text-sm font-medium text-gray-700 mb-3">
+          카테고리별 필터
+        </h3>
+        <div className="overflow-x-auto px-0">
+          <FilterTabs
+            tabs={categoryTabs}
+            onChange={handleCategoryChange}
+            variant="gray"
+          />
+        </div>
       </div>
 
       {/* 브랜드 추가 폼 */}
@@ -157,15 +201,14 @@ export const NewAdminBrandList = () => {
         <div className="space-y-4">
           {currentBrands.length > 0 ? (
             <>
-              {currentBrands.map((brand) => (
+              {currentBrands.map(brand => (
                 <BrandListItem
                   key={brand.brandId}
                   brand={brand}
-                  onEdit={handleEdit}
                   onDelete={handleDelete}
                 />
               ))}
-              
+
               {/* 페이지네이션 */}
               {totalPages > 1 && (
                 <div className="flex items-center justify-center gap-4 pt-6 border-t border-gray-200">
@@ -177,23 +220,25 @@ export const NewAdminBrandList = () => {
                     <ChevronLeftIcon className="w-4 h-4" />
                     이전
                   </button>
-                  
+
                   <div className="flex items-center gap-2">
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                      <button
-                        key={page}
-                        onClick={() => handlePageChange(page)}
-                        className={`px-3 py-2 text-sm rounded-lg transition-colors ${
-                          currentPage === page
-                            ? 'bg-primary text-white'
-                            : 'text-gray-600 hover:bg-gray-100'
-                        }`}
-                      >
-                        {page}
-                      </button>
-                    ))}
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                      page => (
+                        <button
+                          key={page}
+                          onClick={() => handlePageChange(page)}
+                          className={`px-3 py-2 text-sm rounded-lg transition-colors ${
+                            currentPage === page
+                              ? 'bg-primary text-white'
+                              : 'text-gray-600 hover:bg-gray-100'
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      )
+                    )}
                   </div>
-                  
+
                   <button
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
@@ -260,4 +305,4 @@ export const NewAdminBrandList = () => {
       )}
     </div>
   );
-}; 
+};

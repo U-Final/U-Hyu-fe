@@ -66,13 +66,14 @@ export const BaseBottomSheet: React.FC<BaseBottomSheetProps> = ({
           <div
             role="button"
             tabIndex={0}
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm z-40"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[9998]"
+            style={{ backdropFilter: 'blur(4px)' }}
             onClick={closeOnBackdrop ? onClose : undefined}
             onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && onClose?.()}
           />
 
           <motion.div
-            className={`absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-sm z-50 flex flex-col border border-light-gray ${getHeightClass()} ${className}`}
+            className={`fixed bottom-0 left-0 right-0 lg:left-[calc((100vw-500px)/2)] lg:right-auto lg:w-[500px] xl:left-[calc((100vw-600px)/2)] xl:w-[600px] 2xl:left-[calc((100vw-700px)/2)] 2xl:w-[700px] bg-white rounded-t-2xl shadow-sm z-[9999] flex flex-col border border-light-gray ${getHeightClass()} ${className}`}
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}

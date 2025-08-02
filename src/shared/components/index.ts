@@ -7,8 +7,8 @@ export { DragBottomSheet } from './bottom_sheet/DragBottomSheet';
 export { NavigationBottomSheet } from './bottom_sheet/NavigationBottomSheet';
 export { SelectionBottomSheet } from './bottom_sheet/SelectionBottomSheet';
 
+export { ApiBrandGrid } from './brand_grid/ApiBrandGrid';
 export { BrandGrid } from './brand_grid/BrandGrid';
-
 export { BrandLogo } from './brand_grid/BrandLogo';
 
 export { ButtonBase } from './buttons/ButtonBase';

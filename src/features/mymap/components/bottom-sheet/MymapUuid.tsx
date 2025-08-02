@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import type { Store } from '@mymap/api/types';
 import { ShareModal, StoreDeleteModal } from '@mymap/components';
 import { MYMAP_COLOR, type MarkerColor } from '@mymap/constants/mymapColor';
-import { useMyMapUuidQuery } from '@mymap/hooks';
+import { useMyMapUuidGuestQuery, useMyMapUuidQuery } from '@mymap/hooks';
 import { useSharedMapStore } from '@mymap/store/SharedMapStore';
 import { MdIosShare, MdStars } from 'react-icons/md';
 import { PiTrashBold } from 'react-icons/pi';
@@ -11,8 +11,9 @@ import { useNavigate } from 'react-router-dom';
 
 import { BrandCard } from '@/shared/components';
 import { BackButton } from '@/shared/components';
-import { SkeletonMyMapUuidItem } from '@/shared/components/Skeleton';
+import { SkeletonMyMapUuidItem } from '@/shared/components/skeleton';
 import { useModalStore } from '@/shared/store';
+import { useIsLoggedIn } from '@/shared/store/userStore';
 
 interface MyMapUuidProps {
   uuid: string;
@@ -21,7 +22,15 @@ interface MyMapUuidProps {
 
 const MyMapUuid = ({ uuid, onStoreClick }: MyMapUuidProps) => {
   const navigate = useNavigate();
-  const { data, isPending, isError } = useMyMapUuidQuery(uuid);
+  const isLoggedIn = useIsLoggedIn();
+  const resultAuth = useMyMapUuidQuery(uuid, isLoggedIn);
+  const resultGuest = useMyMapUuidGuestQuery(uuid, !isLoggedIn);
+  console.log(`로그인상태: ${isLoggedIn}`);
+
+  const data = isLoggedIn ? resultAuth.data : resultGuest.data;
+  const isPending = isLoggedIn ? resultAuth.isPending : resultGuest.isPending;
+  const isError = isLoggedIn ? resultAuth.isError : resultGuest.isError;
+
   const openModal = useModalStore(state => state.openModal);
   const { stores, title, markerColor, isMine, setSharedMap } =
     useSharedMapStore();

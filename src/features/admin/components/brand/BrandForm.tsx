@@ -5,27 +5,29 @@ import { useAdminBrandMutation } from '@admin/hooks';
 import { ADMIN_CATEGORIES, GRADE_OPTIONS } from '@admin/constants/categories';
 
 interface BrandFormProps {
-  brand?: AdminBrand;
+  brand?: AdminBrand | null;
   onSuccess?: () => void;
   onCancel?: () => void;
 }
 
 interface FormData {
   brandName: string;
-  brandImg: string;
+  logoImage: string;
   categoryId: number;
   usageLimit: string;
   usageMethod: string;
+  storeType: 'ONLINE' | 'OFFLINE';
   data: BrandBenefit[];
 }
 
 export const BrandForm = ({ brand, onSuccess, onCancel }: BrandFormProps) => {
   const [formData, setFormData] = useState<FormData>({
     brandName: brand?.brandName || '',
-    brandImg: brand?.brandImg || '',
+    logoImage: brand?.logoImage || '',
     categoryId: brand?.categoryId || 1,
     usageLimit: brand?.usageLimit || '',
     usageMethod: brand?.usageMethod || '',
+    storeType: brand?.storeType || 'OFFLINE',
     data: brand?.data || [],
   });
 
@@ -36,7 +38,7 @@ export const BrandForm = ({ brand, onSuccess, onCancel }: BrandFormProps) => {
   });
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>(brand?.brandImg || '');
+  const [previewUrl, setPreviewUrl] = useState<string>(brand?.logoImage || '');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { createMutation, updateMutation } = useAdminBrandMutation();
@@ -50,7 +52,7 @@ export const BrandForm = ({ brand, onSuccess, onCancel }: BrandFormProps) => {
       reader.onload = (e) => {
         const result = e.target?.result as string;
         setPreviewUrl(result);
-        setFormData(prev => ({ ...prev, brandImg: result }));
+        setFormData(prev => ({ ...prev, logoImage: result }));
       };
       reader.readAsDataURL(file);
     }
@@ -65,13 +67,22 @@ export const BrandForm = ({ brand, onSuccess, onCancel }: BrandFormProps) => {
     }
 
     try {
+      // FormData에서 logoImage 추출하고 나머지 데이터 분리
+      const { logoImage, ...otherData } = formData;
+      
       if (brand) {
-        // 수정
-        const updateData: UpdateBrandRequest = formData;
+        // 수정 - logoImage를 brandImg로 매핑
+        const updateData: UpdateBrandRequest = {
+          ...otherData,
+          brandImg: logoImage,
+        };
         await updateMutation.mutateAsync({ brandId: brand.brandId, data: updateData });
       } else {
-        // 생성
-        const createData: CreateBrandRequest = formData;
+        // 생성 - logoImage를 brandImg로 매핑
+        const createData: CreateBrandRequest = {
+          ...otherData,
+          brandImg: logoImage,
+        };
         await createMutation.mutateAsync(createData);
       }
       onSuccess?.();
@@ -138,7 +149,7 @@ export const BrandForm = ({ brand, onSuccess, onCancel }: BrandFormProps) => {
               onChange={(e) => setFormData(prev => ({ ...prev, brandName: e.target.value }))}
               placeholder="브랜드명을 입력하세요"
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+              className="w-full px-3 py-2 text-base md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
             />
           </div>
 
@@ -151,7 +162,7 @@ export const BrandForm = ({ brand, onSuccess, onCancel }: BrandFormProps) => {
               value={formData.categoryId}
               onChange={(e) => setFormData(prev => ({ ...prev, categoryId: Number(e.target.value) }))}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+              className="w-full px-3 py-2 text-base md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
             >
               {ADMIN_CATEGORIES.map(category => (
                 <option key={category.id} value={category.id}>
@@ -210,11 +221,28 @@ export const BrandForm = ({ brand, onSuccess, onCancel }: BrandFormProps) => {
               onChange={(e) => setFormData(prev => ({ ...prev, usageLimit: e.target.value }))}
               placeholder="예: 월 2회"
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+              className="w-full px-3 py-2 text-base md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
             />
           </div>
 
+          {/* 매장 유형 */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              매장 유형 *
+            </label>
+            <select
+              value={formData.storeType}
+              onChange={(e) => setFormData(prev => ({ ...prev, storeType: e.target.value as 'ONLINE' | 'OFFLINE' }))}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+            >
+              <option value="OFFLINE">오프라인</option>
+              <option value="ONLINE">온라인</option>
+            </select>
+          </div>
         </div>
+
+
 
         {/* 사용 방법 */}
         <div>

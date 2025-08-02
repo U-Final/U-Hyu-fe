@@ -5,7 +5,9 @@ import {
   getAdminRecommendStats, 
   getAdminMembershipStats, 
   getAdminTotalStats,
-  getAdminBrands 
+  getAdminBrands,
+  getBrandList,
+  getBrandDetail
 } from '@admin/api/adminApi';
 
 // Brand management hooks
@@ -56,11 +58,44 @@ export const useAdminTotalStatsQuery = (enabled: boolean = true) => {
   });
 };
 
+// 관리자 브랜드 목록 조회
 export const useAdminBrandsQuery = (enabled: boolean = false) => {
   return useQuery({
     queryKey: ['admin', 'brands'],
-    queryFn: getAdminBrands,
-    staleTime: 0,
+    queryFn: () => getAdminBrands(),
+    staleTime: 30 * 1000, // 30초로 변경하여 불필요한 재요청 방지
+    enabled,
+    retry: (failureCount, error) => {
+      console.error(`useAdminBrandsQuery 재시도 ${failureCount}:`, error);
+      return failureCount < 2; // 최대 2번 재시도
+    },
+    retryDelay: 1000, // 1초 대기 후 재시도
+  });
+};
+
+// 브랜드 목록 조회
+export const useBrandListQuery = (enabled: boolean = false, params?: {
+  category?: string;
+  sortType?: string;
+  benefitType?: string;
+  brand_name?: string;
+}) => {
+  return useQuery({
+    queryKey: ['brands', 'list', params],
+    queryFn: () => getBrandList(params),
+    staleTime: 30 * 1000, // 30초로 변경
     enabled,
   });
-}; 
+};
+
+// 브랜드 상세 조회
+export const useBrandDetailQuery = (brandId: number, enabled: boolean = true) => {
+  return useQuery({
+    queryKey: ['brands', 'detail', brandId],
+    queryFn: () => getBrandDetail(brandId),
+    staleTime: 5 * 60 * 1000, // 5분으로 설정 (상세 정보는 더 오래 캐시)
+    enabled: enabled && !!brandId,
+  });
+};
+
+ 

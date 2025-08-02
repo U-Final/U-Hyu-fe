@@ -1,7 +1,7 @@
 import { type FC } from 'react';
 
-import { CATEGORY_CONFIGS } from '../../types/category.ts';
 import type { Store } from '../../types/store.ts';
+import { FILTER_TABS } from '../../../../shared/components/filter_tabs/FilterTabs.variants.ts';
 
 interface BrandMarkerProps {
   store: Store;
@@ -16,9 +16,40 @@ const BrandMarker: FC<BrandMarkerProps> = ({
   isRecommended = false,
   onClick,
 }) => {
-  const category = store.categoryName as keyof typeof CATEGORY_CONFIGS;
-  const categoryConfig = CATEGORY_CONFIGS[category] || CATEGORY_CONFIGS.default;
   const brandImageSrc = store.logoImage;
+
+  // FilterTabs 색상을 직접 사용하는 개선된 함수
+  const getCategoryColorFromFilter = (storeCategoryName: string): string => {
+    // 매장 카테고리명을 FilterTabs에서 찾기
+    const filterTab = FILTER_TABS.find(tab => {
+      // 정확한 매칭
+      if (tab.value === storeCategoryName) return true;
+      
+      // 유사한 카테고리 매칭
+      const categoryMappings: Record<string, string[]> = {
+        '테마파크': ['themepark'],
+        '워터파크/아쿠아리움': ['waterpark'],
+        '액티비티': ['activity'],
+        '뷰티': ['beauty'],
+        '건강': ['health', 'pharmacy'],
+        '쇼핑': ['shopping'],
+        '생활/편의': ['lifestyle', 'convenience'],
+        '베이커리/디저트': ['bakery', 'cafe'],
+        '음식점': ['food', 'restaurant', 'fastfood'],
+        '영화/미디어': ['media', 'culture'],
+        '공연/전시': ['performance'],
+        '교육': ['education'],
+        '여행/교통': ['travel'],
+      };
+      
+      const matchingCategories = categoryMappings[tab.value];
+      return matchingCategories?.includes(storeCategoryName);
+    });
+    
+    return filterTab?.color || '#6b7280'; // 기본 회색
+  };
+
+  const categoryColor = getCategoryColorFromFilter(store.categoryName);
 
   return (
     <div className="relative" onClick={onClick}>
@@ -33,7 +64,6 @@ const BrandMarker: FC<BrandMarkerProps> = ({
         className={`
           relative 
           w-14 h-14 
-          ${categoryConfig.color}
           rounded-full 
           shadow-lg 
           border-3 
@@ -42,9 +72,12 @@ const BrandMarker: FC<BrandMarkerProps> = ({
           transition-all 
           duration-200
           hover:scale-110
-          ${isSelected ? `ring-4 ${isRecommended ? 'ring-yellow-300' : categoryConfig.ringColor}` : ''}
+          ${isSelected ? `ring-4 ${isRecommended ? 'ring-yellow-300' : 'ring-blue-300'}` : ''}
           ${isRecommended ? 'animate-pulse' : ''}
         `}
+        style={{
+          backgroundColor: categoryColor,
+        }}
       >
         {/* 브랜드 로고 */}
         <div className="absolute inset-2 bg-white rounded-full overflow-hidden">
@@ -71,9 +104,12 @@ const BrandMarker: FC<BrandMarkerProps> = ({
             border-r-[6px]
             border-t-[10px]
             border-transparent
-            ${isRecommended ? 'border-t-yellow-500' : categoryConfig.color}
+            border-t-current
             drop-shadow-md
           `}
+          style={{
+            borderTopColor: isRecommended ? '#eab308' : categoryColor, // yellow-500 or category color
+          }}
         />
       </div>
 

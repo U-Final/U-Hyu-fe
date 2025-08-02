@@ -1,12 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/shadcn/ui/card';
 import { CreditCardIcon } from '@heroicons/react/24/outline';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
-import type { CategoryStat, MembershipBrandDetail } from '@admin/api/types';
+import type { MembershipStat, MembershipBrandDetail } from '@admin/api/types';
 import { getCategoryDisplayName } from '@admin/utils/categoryUtils';
 import { filterDataByCategory } from '@admin/utils/categoryMapping';
 
 interface MembershipChartProps {
-  data: CategoryStat[];
+  data: MembershipStat[];
   selectedCategory?: string;
 }
 
@@ -23,6 +23,9 @@ export function MembershipChart({ data, selectedCategory = 'all' }: MembershipCh
         <CardContent>
           <div className="text-center py-8">
             <p className="text-muted-foreground">데이터가 없습니다.</p>
+            <p className="text-sm text-muted-foreground mt-2">
+              APP/기기 카테고리에 대한 멤버십 사용 데이터가 없습니다.
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -74,6 +77,30 @@ export function MembershipChart({ data, selectedCategory = 'all' }: MembershipCh
           fill: index % 2 === 0 ? 'var(--admin-membership)' : 'var(--admin-membership-light)',
         })) || []
       ).sort((a, b) => b.value - a.value);
+
+  // 차트에 표시할 데이터가 없거나 모든 값이 0인 경우
+  if (chartData.length === 0 || chartData.every(item => item.value === 0)) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <CreditCardIcon className="h-5 w-5" />
+            멤버십 사용 통계
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8">
+            <p className="text-muted-foreground">데이터가 없습니다.</p>
+            {selectedCategory !== 'all' && (
+              <p className="text-sm text-muted-foreground mt-2">
+                {getCategoryDisplayName(selectedCategory)} 카테고리에 대한 멤버십 사용 데이터가 없습니다.
+              </p>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>

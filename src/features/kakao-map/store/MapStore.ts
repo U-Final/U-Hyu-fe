@@ -1,3 +1,4 @@
+import { mapApi } from '@kakao-map/api/mapApi';
 import { getRecommendedStores } from '@recommendation/api/recommendedStoresApi';
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
@@ -58,6 +59,10 @@ const initialState: MapStoreState = {
   currentFilters: {},
   lastFetchParams: null,
   lastFetchTime: null,
+
+  // 즐겨찾기 모드
+  bookmarkMode: false,
+  bookmarkStores: [],
 };
 
 /**
@@ -130,6 +135,30 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
       },
 
       /**
+       * 즐겨찾기
+       * @param center
+       */
+      setBookmarkMode: (mode: boolean) => {
+        set({ bookmarkMode: mode });
+      },
+
+      toggleBookmarkMode: () => {
+        const next = !get().bookmarkMode;
+        if (next) {
+          get().fetchBookmarkStores();
+        }
+        set({ bookmarkMode: next });
+      },
+
+      fetchBookmarkStores: async () => {
+        try {
+          const stores = await mapApi.getBookmark();
+          set({ bookmarkStores: stores });
+        } catch (e) {
+          console.error('즐겨찾기 매장 조회 실패:', e);
+        }
+      },
+      /**
        * 지도 중심점 설정
        */
       setMapCenter: (center: Position) => {
@@ -200,9 +229,7 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
        * 중복 업데이트 방지 로직 포함
        */
       setStoresFromQuery: (queryData: StoreListResponse | undefined) => {
-        if (!queryData?.data) return;
-
-        const newStores = queryData.data.map(store => ({ ...store }));
+        const newStores = queryData?.data?.map(store => ({ ...store })) ?? [];
 
         // 현재 스토어와 비교해서 실제로 변경된 경우에만 업데이트
         const currentStores = get().stores;
@@ -333,3 +360,8 @@ export const useRecommendedStores = () =>
   useMapStore(state => state.recommendedStores);
 export const useShowRecommendedStores = () =>
   useMapStore(state => state.showRecommendedStores);
+export const useBookmarkMode = () => useMapStore(state => state.bookmarkMode);
+export const useBookmarkStores = () =>
+  useMapStore(state => state.bookmarkStores);
+export const useFetchBookmarkStores = () =>
+  useMapStore(state => state.fetchBookmarkStores);

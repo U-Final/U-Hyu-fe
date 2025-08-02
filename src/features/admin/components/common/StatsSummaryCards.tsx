@@ -4,11 +4,7 @@ import {
   FunnelIcon, 
   UserGroupIcon 
 } from '@heroicons/react/24/outline';
-import type { TotalStat } from '@admin/api/types';
-
-interface StatsSummaryCardsProps {
-  totalStats: TotalStat;
-}
+import type { StatsSummaryCardsProps } from '@admin/types';
 
 export function StatsSummaryCards({ totalStats }: StatsSummaryCardsProps) {
   const cards = [

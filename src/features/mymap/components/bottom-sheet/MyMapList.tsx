@@ -15,7 +15,7 @@ import { PiTrashBold } from 'react-icons/pi';
 import { RiPencilFill } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 
-import { SkeletonMyMapItem } from '@/shared/components/Skeleton';
+import { SkeletonMyMapItem } from '@/shared/components/skeleton';
 import {
   DropdownMenu,
   DropdownMenuContent,

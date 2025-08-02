@@ -8,6 +8,7 @@ import { LocationControlContainer } from '@kakao-map/components/location/Locatio
 import { MapUIProvider } from '@kakao-map/context/MapUIContext';
 import { useMapUIContext } from '@kakao-map/context/MapUIContext';
 import useKakaoLoader from '@kakao-map/hooks/useKakaoLoader';
+import { BookmarkControlContainer } from '@kakao-map/components/bookmark/BookmarkControlContainer';
 
 /**
  * 카카오 맵과 관련된 리소스를 로드하고, 지도 및 UI 컨트롤, 위치 제어, 하단 시트가 포함된 전체 지도 페이지를 렌더링합니다.
@@ -115,18 +116,11 @@ const MapContent = () => {
     }
   }, [selectedPlace]);
 
-  // 바텀시트 초기화
+  // 바텀시트 초기화 - 닫힌 상태로 시작
   useEffect(() => {
     if (bottomSheetRef.current) {
-      // 페이지 로드 시 바텀시트 초기화 및 중간 상태로 열기
-      bottomSheetRef.current.initialize();
-
-      // 약간의 지연 후 중간 상태로 열기
-      setTimeout(() => {
-        if (bottomSheetRef.current) {
-          bottomSheetRef.current.open();
-        }
-      }, 300);
+      // 페이지 로드 시 바텀시트를 닫힌 상태로 초기화
+      bottomSheetRef.current.close();
     }
   }, [bottomSheetRef]);
 
@@ -148,6 +142,7 @@ const MapContent = () => {
           mapCenterSetter={mapCenterSetterRef.current}
           onPlaceClick={handlePlaceClick}
         />
+        <BookmarkControlContainer/>
         <LocationControlContainer />
       </div>
 

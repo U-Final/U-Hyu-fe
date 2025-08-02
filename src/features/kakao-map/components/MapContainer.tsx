@@ -17,6 +17,7 @@ interface MapContainerProps {
   onMapCenterUpdate?: (
     setMapCenter: (center: { lat: number; lng: number }) => void
   ) => void;
+  onMapCenterChange?: (center: { lat: number; lng: number }) => void;
 }
 
 export const MapContainer: React.FC<MapContainerProps> = ({
@@ -25,6 +26,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({
   onPlaceClick,
   onPlaceInfoClose,
   onMapCenterUpdate,
+  onMapCenterChange,
 }) => {
   const { stores, mapCenter, userLocation, loading, setMapCenter } =
     useMapData();
@@ -111,6 +113,13 @@ export const MapContainer: React.FC<MapContainerProps> = ({
       onMapCenterUpdate(setMapCenter);
     }
   }, [onMapCenterUpdate, setMapCenter]);
+
+  // 지도 중심 변경을 상위 컴포넌트에 알림
+  useEffect(() => {
+    if (onMapCenterChange) {
+      onMapCenterChange(mapCenter);
+    }
+  }, [mapCenter, onMapCenterChange]);
 
   // 지도 마커 클릭시 ref를 통해 바텀시트 제어
   const handleMarkerClickWithBottomSheet = useCallback(

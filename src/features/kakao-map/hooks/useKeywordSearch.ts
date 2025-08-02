@@ -1,4 +1,5 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState, useEffect } from 'react';
+import { debounce } from 'lodash';
 
 import {
   getKeywordSearch,
@@ -59,6 +60,8 @@ export interface KeywordSearchActions {
   clearError: () => void;
   /** 전체 상태 초기화 */
   reset: () => void;
+  /** 자동 검색 활성화/비활성화 */
+  setAutoSearch: (enabled: boolean) => void;
 }
 
 const initialState: KeywordSearchState = {
@@ -74,13 +77,31 @@ const initialState: KeywordSearchState = {
 /**
  * 카카오 키워드 검색을 위한 커스텀 훅
  */
-export const useKeywordSearch = () => {
+export const useKeywordSearch = (options?: { 
+  autoSearchEnabled?: boolean; 
+  debounceDelay?: number;
+  mapCenter?: { lat: number; lng: number };
+  searchRadius?: number;
+}) => {
+  const { 
+    autoSearchEnabled = false, 
+    debounceDelay = 500,
+    mapCenter,
+    searchRadius = 5000
+  } = options || {};
   const [state, setState] = useState<KeywordSearchState>(initialState);
+  const [autoSearch, setAutoSearchState] = useState(autoSearchEnabled);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const debouncedSearchRef = useRef<ReturnType<typeof debounce> | null>(null);
 
   const setKeyword = useCallback((keyword: string) => {
     setState(prev => ({ ...prev, keyword }));
-  }, []);
+    
+    // 자동 검색이 활성화되어 있고 디바운스 함수가 있으면 자동 검색 실행
+    if (autoSearch && debouncedSearchRef.current) {
+      debouncedSearchRef.current(keyword);
+    }
+  }, [autoSearch]);
 
   const selectPlace = useCallback((place: NormalizedPlace | null) => {
     setState(prev => ({ ...prev, selectedPlace: place }));
@@ -106,7 +127,12 @@ export const useKeywordSearch = () => {
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
     }
+    debouncedSearchRef.current?.cancel();
     setState(initialState);
+  }, []);
+
+  const setAutoSearch = useCallback((enabled: boolean) => {
+    setAutoSearchState(enabled);
   }, []);
 
   const executeSearch = useCallback(
@@ -228,6 +254,36 @@ export const useKeywordSearch = () => {
     [executeSearch]
   );
 
+  // 디바운스된 검색 함수 생성 (모든 함수 정의 후)
+  useEffect(() => {
+    if (autoSearch) {
+      debouncedSearchRef.current = debounce(async (keyword: string) => {
+        if (keyword.trim()) {
+          // 지도 중심 좌표가 있으면 위치 기반 검색, 없으면 일반 검색
+          if (mapCenter) {
+            await executeSearch(async () => {
+              const result = await getKeywordSearchByLocation(keyword.trim(), mapCenter, searchRadius);
+              return result;
+            }, keyword);
+          } else {
+            await executeSearch(
+              () => getKeywordSearch(keyword.trim()),
+              keyword
+            );
+          }
+        } else {
+          clearResults();
+        }
+      }, debounceDelay);
+    } else {
+      debouncedSearchRef.current = null;
+    }
+
+    return () => {
+      debouncedSearchRef.current?.cancel();
+    };
+  }, [autoSearch, debounceDelay, executeSearch, clearResults, mapCenter, searchRadius]);
+
   const actions: KeywordSearchActions = {
     setKeyword,
     search,
@@ -237,6 +293,7 @@ export const useKeywordSearch = () => {
     clearResults,
     clearError,
     reset,
+    setAutoSearch,
   };
 
   return {

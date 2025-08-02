@@ -15,6 +15,12 @@ interface MapControlsContainerProps {
   onCloseSearchResults?: () => void;
   mapCenterSetter?: ((center: { lat: number; lng: number }) => void) | null;
   onPlaceClick?: (place: NormalizedPlace) => void;
+  /** 자동 실시간 검색 활성화 여부 */
+  enableAutoSearch?: boolean;
+  /** 디바운스 지연 시간 (밀리초) */
+  debounceDelay?: number;
+  /** 현재 지도 중심 좌표 */
+  mapCenter?: { lat: number; lng: number };
 }
 
 /**
@@ -28,6 +34,9 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
   onCloseSearchResults,
   mapCenterSetter,
   onPlaceClick,
+  enableAutoSearch = true,
+  debounceDelay = 500,
+  mapCenter,
 }) => {
   // UI 상태와 액션들 가져오기
   const {
@@ -51,7 +60,12 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
     selectPlace,
     clearResults,
     clearError,
-  } = useKeywordSearch();
+  } = useKeywordSearch({
+    autoSearchEnabled: enableAutoSearch,
+    debounceDelay,
+    mapCenter,
+    searchRadius: 5000,
+  });
 
   // 바텀시트 REF 가져오기
   const { bottomSheetRef } = useMapUIContext();

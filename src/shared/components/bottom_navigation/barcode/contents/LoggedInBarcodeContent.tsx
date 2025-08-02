@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import VisitConfirmSection from '@barcode/components/VisitConfirmSection';
 import { useBarcodeImageQuery } from '@barcode/hooks/useBarcodeImageQuery';
 import { useNearbyStoreQuery } from '@barcode/hooks/useNearbyStoreQuery';
+import { ImageUp } from 'lucide-react';
+import { BeatLoader } from 'react-spinners';
 
 import { PrimaryButton } from '@/shared/components';
 import { BarcodeCropModal } from '@/shared/components/bottom_navigation/barcode/BarcodeCropModal';
@@ -63,7 +65,7 @@ export const LoggedInBarcodeContent = () => {
     !!coords
   );
 
-  if (isLoading) return <p>바코드 불러오는 중...</p>;
+  if (isLoading) return <BeatLoader className="text-center" size={10} />;
 
   if (error && isApiError(error)) {
     if (error.statusCode !== 4103) {
@@ -72,7 +74,7 @@ export const LoggedInBarcodeContent = () => {
   }
 
   return (
-    <div className="flex flex-col w-full gap-4">
+    <div className="flex flex-col w-full gap-4 relative">
       {store && !isConfirmed && !isRejected && (
         <VisitConfirmSection
           store={store}
@@ -84,6 +86,13 @@ export const LoggedInBarcodeContent = () => {
       {imageUrl ? (
         <div className="w-full flex">
           <CroppedImg imageUrl={imageUrl} onClick={triggerFileSelect} />
+          <button
+            onClick={triggerFileSelect}
+            className="absolute top-2 right-0 bg-white rounded-full hover:bg-white cursor-pointer mr-3"
+            aria-label="이미지 재업로드"
+          >
+            <ImageUp size={17} />
+          </button>
         </div>
       ) : (
         <PrimaryButton className="w-full" onClick={triggerFileSelect}>

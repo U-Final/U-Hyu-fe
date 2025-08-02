@@ -6,6 +6,7 @@ interface BaseLayoutProps {
 const BaseLayout = ({ children, isMap = false }: BaseLayoutProps) => {
   return (
     <div
+      id="main-content"
       className={
         isMap
           ? 'flex-1 bg-white w-full h-full min-w-0 desktop-padding'

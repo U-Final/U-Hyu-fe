@@ -1,9 +1,6 @@
 // API
 export * from './api';
 
-// Types
-export * from './types';
-
 // Components
 export * from './components/common';
 export * from './components/stats';

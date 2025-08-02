@@ -1,16 +1,15 @@
+// 관리자 API 엔드포인트
 export const ADMIN_ENDPOINTS = {
-  // 통계
-  STAT_BOOKMARK: '/admin/statistics/bookmark',
-  STAT_FILTERING: '/admin/statistics/filter',
-
-  STAT_RECOMMEND: '/admin/statistics/recommendation',
-  STAT_MEMBERSHIP: '/admin/statistics/membershipUsage',
-  STAT_TOTAL: '/admin/statistics/total',
-  // 브랜드(제휴처) 관련
-  CATEGORY_LIST: '/admin/categories',
-  BRAND_LIST: '/brand-list',
-  BRAND_DETAIL: (brandId: number) => `/brand-list/${brandId}`,
+  // 통계 관련
+  TOTAL_STATS: '/admin/statistics/total',
+  BOOKMARK_STATS: '/admin/statistics/bookmark',
+  FILTERING_STATS: '/admin/statistics/filter',
+  RECOMMEND_STATS: '/admin/statistics/recommendation',
+  MEMBERSHIP_STATS: '/admin/statistics/membershipUsage',
+  
+  // 브랜드 관리 관련
+  BRAND_LIST: '/admin/brand',
   BRAND_CREATE: '/admin/brand',
   BRAND_UPDATE: (brandId: number) => `/admin/brands/${brandId}`,
   BRAND_DELETE: (brandId: number) => `/admin/brands/${brandId}`,
-};
+} as const;

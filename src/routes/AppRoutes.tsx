@@ -8,7 +8,6 @@ import {
   MyPageActivity,
   MymapPage,
 } from '@/pages';
-import SidebarSheet from '@kakao-map/components/SidebarSheet';
 import { PATH } from '@paths';
 import { Outlet, Route, Routes, useLocation } from 'react-router-dom';
 
@@ -20,6 +19,7 @@ import {
   ModalRoot,
 } from '@/shared/components';
 import AppInitializer from '@/shared/components/AppInitializer';
+import SidebarSheet from '@/shared/components/SidebarSheet';
 
 const Layout = () => {
   const { pathname } = useLocation();

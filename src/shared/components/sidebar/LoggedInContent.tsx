@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { PATH } from '@paths';
 import { LogoutButton } from '@user/components/LogoutButton';
 import { ChevronRight } from 'lucide-react';
@@ -8,16 +6,25 @@ import { HiGift } from 'react-icons/hi';
 import { LiaBarcodeSolid } from 'react-icons/lia';
 import { useNavigate } from 'react-router-dom';
 
-import { BarcodeBottomSheet } from '@/shared/components/bottom_navigation/barcode/BarcodeBottomSheet';
 import { SheetClose } from '@/shared/components/shadcn/ui/sheet';
+import { useBarcodeStore } from '@/shared/store/barcodeStore';
 import { useUser } from '@/shared/store/userStore';
 
+// 메뉴 아이템 타입 정의
+interface MenuItem {
+  type: 'page' | 'modal';
+  icon: React.ComponentType<{ size?: number; className?: string }>;
+  title: string;
+  description: string;
+  path?: string;
+}
+
 const LoggedInContent = () => {
-  const [isBarcodeOpen, setIsBarcodeOpen] = useState(false);
   const user = useUser();
   const navigate = useNavigate();
+  const { open } = useBarcodeStore();
 
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     {
       type: 'page',
       icon: FaMapMarkerAlt,
@@ -85,8 +92,8 @@ const LoggedInContent = () => {
               <button
                 onClick={() =>
                   item.type === 'modal'
-                    ? setIsBarcodeOpen(true)
-                    : item.path && item.path && navigate(item.path)
+                    ? open() // ✅ 전역으로 열기
+                    : item.path && navigate(item.path)
                 }
                 className="w-full bg-white border border-light-gray rounded-xl p-3 hover:bg-gray-hover hover:shadow-sm active:scale-[0.98] transition-all duration-150"
               >
@@ -111,12 +118,6 @@ const LoggedInContent = () => {
         <div className="border border-gray" />
         <LogoutButton />
       </div>
-
-      {/* 바코드 모달 */}
-      <BarcodeBottomSheet
-        isOpen={isBarcodeOpen}
-        onClose={() => setIsBarcodeOpen(false)}
-      />
     </div>
   );
 };

@@ -1,9 +1,6 @@
-import { useState } from 'react';
-
 import { PATH } from '@paths';
 import { X } from 'lucide-react';
-import { FaMap } from 'react-icons/fa';
-import { FaMapMarkerAlt } from 'react-icons/fa';
+import { FaMap, FaMapMarkerAlt } from 'react-icons/fa';
 import { FaUser } from 'react-icons/fa6';
 import { HiGift } from 'react-icons/hi';
 import { LiaBarcodeSolid } from 'react-icons/lia';
@@ -12,15 +9,16 @@ import { NavLink, useLocation } from 'react-router-dom';
 import BarcodeItem from '@/shared/components/bottom_navigation/BarcodeItem';
 import NavItem from '@/shared/components/bottom_navigation/NavItem';
 import { useAuthCheckModal } from '@/shared/hooks/useAuthCheckModal';
+import { useBarcodeStore } from '@/shared/store/barcodeStore';
 import { useUser } from '@/shared/store/userStore';
 
 import { BarcodeBottomSheet } from './barcode/BarcodeBottomSheet';
 
 const BottomNavigation = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const { checkAuthAndExecuteModal, isLoggedIn } = useAuthCheckModal();
   const location = useLocation();
   const user = useUser();
+  const { isOpen, open, close } = useBarcodeStore();
 
   // URL 기반으로 활성 탭 결정
   const getActiveTab = (pathname: string) => {
@@ -36,12 +34,6 @@ const BottomNavigation = () => {
 
   const activeTab = getActiveTab(location.pathname);
 
-  const handleBarcodeClick = () => {
-    checkAuthAndExecuteModal(() => {
-      setIsOpen(prev => !prev);
-    });
-  };
-
   const handleMyPageClick = (e?: React.MouseEvent) => {
     if (!isLoggedIn) {
       e?.preventDefault();
@@ -54,6 +46,10 @@ const BottomNavigation = () => {
       e?.preventDefault();
       checkAuthAndExecuteModal(() => {});
     }
+  };
+
+  const handleBarcodeClick = () => {
+    return isOpen ? close() : open();
   };
 
   return (
@@ -127,10 +123,7 @@ const BottomNavigation = () => {
         )}
       </nav>
       <div className="absolute bottom-full w-full">
-        <BarcodeBottomSheet
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
-        ></BarcodeBottomSheet>
+        <BarcodeBottomSheet />
       </div>
     </div>
   );

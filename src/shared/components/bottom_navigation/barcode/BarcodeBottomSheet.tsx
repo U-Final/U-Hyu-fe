@@ -7,19 +7,13 @@ import {
   GuestBarcodeContent,
   LoggedInBarcodeContent,
 } from '@/shared/components/bottom_navigation/barcode/contents';
+import { useBarcodeStore } from '@/shared/store/barcodeStore';
 import { useIsLoggedIn, useUser } from '@/shared/store/userStore';
 
-interface BarcodeBottomSheetProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-export const BarcodeBottomSheet: FC<BarcodeBottomSheetProps> = ({
-  isOpen,
-  onClose,
-}) => {
+export const BarcodeBottomSheet: FC = () => {
   const isLoggedIn = useIsLoggedIn();
   const user = useUser();
+  const { isOpen, close } = useBarcodeStore();
   const [mainContentElement, setMainContentElement] =
     useState<HTMLElement | null>(null);
 
@@ -38,12 +32,12 @@ export const BarcodeBottomSheet: FC<BarcodeBottomSheetProps> = ({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') close();
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
+  }, [close]);
 
   if (!isOpen || !mainContentElement) return null;
 
@@ -51,7 +45,7 @@ export const BarcodeBottomSheet: FC<BarcodeBottomSheetProps> = ({
     <>
       {/* 오버레이 - main-content 전체를 덮음 */}
       <div
-        onClick={onClose}
+        onClick={close}
         role="presentation"
         className="absolute inset-0 bg-black/40 z-[50]"
       />
@@ -76,7 +70,7 @@ export const BarcodeBottomSheet: FC<BarcodeBottomSheetProps> = ({
                 : '멤버십 바코드'}
             </h2>
             <button
-              onClick={onClose}
+              onClick={close}
               aria-label="닫기"
               className="cursor-pointer hover:bg-gray-200 p-2 rounded-md transition-colors"
             >

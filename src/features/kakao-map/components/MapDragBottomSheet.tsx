@@ -17,6 +17,7 @@ interface MapDragBottomSheetProps {
 export interface MapDragBottomSheetRef {
   close: () => void; // 닫기
   open: () => void; // 열기
+  openMiddle: () => void; // 중간 열기
   toggle: () => void; // 토글
   initialize: () => void; // 최초 한 번만 열림
   setExplicitlyClosed: (closed: boolean) => void; // 외부에서 명시적으로 닫힘 상태 설정
@@ -87,6 +88,7 @@ export const MapDragBottomSheet = forwardRef<
   // 기본 위치 정의 (스냅용) - 패딩된 컨테이너 기준
   const openY = CONSTANTS.EXPANDED_BOTTOM_MARGIN; // 열린 상태 기본 위치
   const closedY = availableHeight - dynamicHandleHeight; // 닫힌 상태: 핸들이 네비게이션 바로 위에 위치
+  const middleY = availableHeight * 0.4; // 열린 중간 상태 기본 위치
 
   // 🎬 CSS transform을 통한 위치 제어
   const [translateY, setTranslateY] = useState(closedY);
@@ -115,6 +117,10 @@ export const MapDragBottomSheet = forwardRef<
         setIsOpen(true);
         animateToPosition(openY);
       },
+      openMiddle: () => {
+        setIsOpen(true);
+        animateToPosition(middleY);
+      },
       toggle: () => {
         if (isOpen) {
           setIsOpen(false);
@@ -138,7 +144,7 @@ export const MapDragBottomSheet = forwardRef<
       },
       getCurrentPosition: () => translateY,
     }),
-    [translateY, openY, closedY, isOpen, animateToPosition]
+    [translateY, openY, closedY, middleY, isOpen, animateToPosition]
   );
 
   // translateY 초기화

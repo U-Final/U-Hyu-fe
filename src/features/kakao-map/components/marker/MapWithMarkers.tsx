@@ -22,10 +22,7 @@ import { trackMarkerClick } from '@/shared/utils/actionlogTracker';
 
 import type { NormalizedPlace } from '../../api/types';
 import { useDistanceBasedSearch } from '../../hooks/useManualSearch';
-import {
-  getOffsetPosition,
-  useSimpleMapOffset,
-} from '../../hooks/useMapOffset';
+// import { useIntegratedMapOffset } from '../../hooks/useMapOffset';
 import { useToggleFavoriteMutation } from '../../hooks/useMapQueries';
 import type { Store } from '../../types/store';
 import ResponsiveManualSearchButton from '../ManualSearchButton';
@@ -77,12 +74,12 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   const [recommendedInfoWindowStore, setRecommendedInfoWindowStore] =
     useState<Store | null>(null);
   const [mapCenter, setMapCenter] = useState(center);
-  const [isPanto, setIsPanto] = useState(false);
+  // const [isPanto, setIsPanto] = useState(false);
   const mapRef = useRef<kakao.maps.Map | null>(null);
-  const pantoTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  // const pantoTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // 반응형 지도 오프셋
-  const mapOffset = useSimpleMapOffset();
+  // 줌 레벨을 고려한 반응형 지도 오프셋 (초기값만 사용)
+  // const { mapOffset, handleZoomChanged } = useIntegratedMapOffset(25, 3);
 
   // 내부 상태 정의(mymap)
   const sharedStores = useSharedMapStore(state => state.stores);
@@ -141,13 +138,24 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   const { checkAuthAndExecuteModal } = useAuthCheckModal();
 
   // center prop 동기화 및 검색 기준 위치 설정
+  const prevInfoWindowStore = useRef(infoWindowStore);
+  const prevRecommendedInfoWindowStore = useRef(recommendedInfoWindowStore);
+
   useEffect(() => {
-    // 인포윈도우가 열려있지 않을 때만 center prop 동기화
-    if (!infoWindowStore && !recommendedInfoWindowStore) {
+    const wasInfoWindowOpen =
+      prevInfoWindowStore.current || prevRecommendedInfoWindowStore.current;
+    const isInfoWindowOpen = infoWindowStore || recommendedInfoWindowStore;
+
+    // 인포윈도우가 열려있지 않고, 방금 닫힌 것도 아닐 때만 center prop 동기화
+    if (!isInfoWindowOpen && !wasInfoWindowOpen) {
       setMapCenter(center);
       // 새로운 center가 설정될 때 검색 기준 위치도 업데이트
       updateSearchPosition(center);
     }
+
+    // 이전 상태 업데이트
+    prevInfoWindowStore.current = infoWindowStore;
+    prevRecommendedInfoWindowStore.current = recommendedInfoWindowStore;
   }, [
     center,
     infoWindowStore,
@@ -179,24 +187,24 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
           setInfoWindowStore(targetStore);
         }
 
-        // 지도 중심을 해당 매장으로 이동 (반응형 오프셋 적용)
-        const targetCenter = getOffsetPosition(
-          targetStore.latitude,
-          targetStore.longitude,
-          mapOffset
-        );
+        // 지도 중심 이동 비활성화 (인포윈도우만 표시)
+        // const targetCenter = getOffsetPosition(
+        //   targetStore.latitude,
+        //   targetStore.longitude,
+        //   mapOffset
+        // );
 
-        setIsPanto(true);
-        setMapCenter(targetCenter);
+        // setIsPanto(true);
+        // setMapCenter(targetCenter);
 
-        if (pantoTimeoutRef.current) {
-          clearTimeout(pantoTimeoutRef.current);
-        }
+        // if (pantoTimeoutRef.current) {
+        //   clearTimeout(pantoTimeoutRef.current);
+        // }
 
-        pantoTimeoutRef.current = setTimeout(() => {
-          setIsPanto(false);
-          pantoTimeoutRef.current = null;
-        }, 500);
+        // pantoTimeoutRef.current = setTimeout(() => {
+        //   setIsPanto(false);
+        //   pantoTimeoutRef.current = null;
+        // }, 500);
       }
     }
   }, [globalSelectedStoreId, storesToRender, recommendedStores]);
@@ -223,38 +231,38 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
           setInfoWindowStore(selectedStore);
         }
 
-        // 지도 중심을 해당 매장으로 이동 (반응형 오프셋 적용)
-        const targetCenter = getOffsetPosition(
-          selectedStore.latitude,
-          selectedStore.longitude,
-          mapOffset
-        );
+        // 지도 중심 이동 비활성화 (인포윈도우만 표시)
+        // const targetCenter = getOffsetPosition(
+        //   selectedStore.latitude,
+        //   selectedStore.longitude,
+        //   mapOffset
+        // );
 
-        setIsPanto(true);
-        setMapCenter(targetCenter);
+        // setIsPanto(true);
+        // setMapCenter(targetCenter);
 
-        // 기존 timeout이 있다면 정리
-        if (pantoTimeoutRef.current) {
-          clearTimeout(pantoTimeoutRef.current);
-        }
+        // // 기존 timeout이 있다면 정리
+        // if (pantoTimeoutRef.current) {
+        //   clearTimeout(pantoTimeoutRef.current);
+        // }
 
-        // 애니메이션 완료 후 isPanto 리셋
-        pantoTimeoutRef.current = setTimeout(() => {
-          setIsPanto(false);
-          pantoTimeoutRef.current = null;
-        }, 500);
+        // // 애니메이션 완료 후 isPanto 리셋
+        // pantoTimeoutRef.current = setTimeout(() => {
+        //   setIsPanto(false);
+        //   pantoTimeoutRef.current = null;
+        // }, 500);
       }
     }
   }, [externalSelectedStoreId, storesToRender, recommendedStores]);
 
-  // 컴포넌트 언마운트 시 setTimeout cleanup
-  useEffect(() => {
-    return () => {
-      if (pantoTimeoutRef.current) {
-        clearTimeout(pantoTimeoutRef.current);
-      }
-    };
-  }, []);
+  // 컴포넌트 언마운트 시 setTimeout cleanup - 비활성화됨
+  // useEffect(() => {
+  //   return () => {
+  //     if (pantoTimeoutRef.current) {
+  //       clearTimeout(pantoTimeoutRef.current);
+  //     }
+  //   };
+  // }, []);
 
   const handleMarkerClick = useCallback(
     (store: Store) => {
@@ -275,33 +283,33 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
 
       trackMarkerClick(store.storeId);
 
-      // 인포 윈도우가 화면 중앙에 오도록 반응형 오프셋 적용
-      const targetCenter = getOffsetPosition(
-        store.latitude,
-        store.longitude,
-        mapOffset
-      );
+      // 지도 중심 이동 비활성화 (인포윈도우만 표시)
+      // const targetCenter = getOffsetPosition(
+      //   store.latitude,
+      //   store.longitude,
+      //   mapOffset
+      // );
 
-      // KakaoMap의 isPanto를 사용한 부드러운 이동
-      setIsPanto(true);
-      setMapCenter(targetCenter);
+      // // KakaoMap의 isPanto를 사용한 부드러운 이동
+      // setIsPanto(true);
+      // setMapCenter(targetCenter);
 
-      // 기존 timeout이 있다면 정리
-      if (pantoTimeoutRef.current) {
-        clearTimeout(pantoTimeoutRef.current);
-      }
+      // // 기존 timeout이 있다면 정리
+      // if (pantoTimeoutRef.current) {
+      //   clearTimeout(pantoTimeoutRef.current);
+      // }
 
-      // 애니메이션 완료 후 isPanto 리셋
-      pantoTimeoutRef.current = setTimeout(() => {
-        setIsPanto(false);
-        pantoTimeoutRef.current = null;
-      }, 500); // 애니메이션 시간을 500ms로 증가
+      // // 애니메이션 완료 후 isPanto 리셋
+      // pantoTimeoutRef.current = setTimeout(() => {
+      //   setIsPanto(false);
+      //   pantoTimeoutRef.current = null;
+      // }, 500); // 애니메이션 시간을 500ms로 증가
 
       // 외부에서 전달받은 onStoreClick 콜백도 호출
       onStoreClick?.(store);
       // });
     },
-    [onStoreClick, checkAuthAndExecuteModal, recommendedStores, mapOffset]
+    [onStoreClick, recommendedStores]
   );
 
   // 추천 매장인지 확인하는 함수
@@ -408,8 +416,8 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         center={mapCenter}
         className={className}
         level={level}
-        isPanto={isPanto}
         onDragEnd={handleDragEnd}
+        // onZoomChanged={handleZoomChanged} // 줌 레벨 변경 시 오프셋 재계산
         onClick={handleInfoWindowClose} // 지도 클릭 시 인포윈도우 닫기
         onCreate={map => {
           mapRef.current = map;
@@ -491,22 +499,22 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
                 <KeywordMarker
                   place={place}
                   onClick={clickedPlace => {
-                    // 마커 클릭 시 지도 이동 애니메이션 적용 (반응형 오프셋)
-                    if (mapRef.current) {
-                      const targetPosition = getOffsetPosition(
-                        clickedPlace.latitude,
-                        clickedPlace.longitude,
-                        mapOffset
-                      );
+                    // 지도 중심 이동 비활성화 (인포윈도우만 표시)
+                    // if (mapRef.current) {
+                    //   const targetPosition = getOffsetPosition(
+                    //     clickedPlace.latitude,
+                    //     clickedPlace.longitude,
+                    //     mapOffset
+                    //   );
 
-                      // 부드러운 이동을 위해 panTo 사용
-                      mapRef.current.panTo(
-                        new kakao.maps.LatLng(
-                          targetPosition.lat,
-                          targetPosition.lng
-                        )
-                      );
-                    }
+                    //   // 부드러운 이동을 위해 panTo 사용
+                    //   mapRef.current.panTo(
+                    //     new kakao.maps.LatLng(
+                    //       targetPosition.lat,
+                    //       targetPosition.lng
+                    //     )
+                    //   );
+                    // }
 
                     onPlaceClick?.(clickedPlace);
                   }}

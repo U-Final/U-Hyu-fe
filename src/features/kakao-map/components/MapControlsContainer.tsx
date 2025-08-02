@@ -6,7 +6,7 @@ import type { NormalizedPlace } from '../api/types';
 import { useMapUIContext } from '../context/MapUIContext';
 import { useKeywordSearch } from '../hooks/useKeywordSearch';
 import { useMapUI } from '../hooks/useMapUI';
-import { useSimpleMapOffset, getOffsetPosition } from '../hooks/useMapOffset';
+// import { useSimpleMapOffset, getOffsetPosition } from '../hooks/useMapOffset';
 import MapTopControls from './layout/MapTopControls';
 
 interface MapControlsContainerProps {
@@ -35,7 +35,6 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
   keywordResults = [],
   onClearMarkers,
   onCloseSearchResults,
-  mapCenterSetter,
   onPlaceClick,
   enableAutoSearch = true,
   debounceDelay = Number(import.meta.env.VITE_SEARCH_DEBOUNCE_DELAY) || 500,
@@ -79,9 +78,9 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
 
   // 바텀시트 열림/닫힘 상태 추적
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
-  
-  // 반응형 지도 오프셋
-  const mapOffset = useSimpleMapOffset();
+
+  // 반응형 지도 오프셋 (줌 레벨 미고려 - 검색 결과용) - 비활성화됨
+  // const mapOffset = useSimpleMapOffset();
   // searchValue와 keyword 동기화
   useEffect(() => {
     if (searchValue !== keyword) {
@@ -219,14 +218,14 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
       onPlaceClick?.(place);
     }
 
-    // useKeywordSearch 훅의 selectedPlace 업데이트 (검색 결과 하이라이트용)  
+    // useKeywordSearch 훅의 selectedPlace 업데이트 (검색 결과 하이라이트용)
     selectPlace(place);
 
-    // 지도 중심을 해당 위치로 이동 (인포윈도우가 화면 중앙에 오도록 반응형 오프셋 적용)
-    if (mapCenterSetter) {
-      const targetPosition = getOffsetPosition(place.latitude, place.longitude, mapOffset);
-      mapCenterSetter(targetPosition);
-    }
+    // 지도 중심 이동 비활성화 (인포윈도우만 표시)
+    // if (mapCenterSetter) {
+    //   const targetPosition = getOffsetPosition(place.latitude, place.longitude, mapOffset);
+    //   mapCenterSetter(targetPosition);
+    // }
 
     // 에러 클리어
     clearError();

@@ -22,6 +22,10 @@ import { trackMarkerClick } from '@/shared/utils/actionlogTracker';
 
 import type { NormalizedPlace } from '../../api/types';
 import { useDistanceBasedSearch } from '../../hooks/useManualSearch';
+import {
+  getOffsetPosition,
+  useSimpleMapOffset,
+} from '../../hooks/useMapOffset';
 import { useToggleFavoriteMutation } from '../../hooks/useMapQueries';
 import type { Store } from '../../types/store';
 import ResponsiveManualSearchButton from '../ManualSearchButton';
@@ -76,6 +80,9 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   const [isPanto, setIsPanto] = useState(false);
   const mapRef = useRef<kakao.maps.Map | null>(null);
   const pantoTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // 반응형 지도 오프셋
+  const mapOffset = useSimpleMapOffset();
 
   // 내부 상태 정의(mymap)
   const sharedStores = useSharedMapStore(state => state.stores);
@@ -172,11 +179,12 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
           setInfoWindowStore(targetStore);
         }
 
-        // 지도 중심을 해당 매장으로 이동
-        const offset = 0.0017;
-        const targetLat = targetStore.latitude + offset;
-        const targetLng = targetStore.longitude;
-        const targetCenter = { lat: targetLat, lng: targetLng };
+        // 지도 중심을 해당 매장으로 이동 (반응형 오프셋 적용)
+        const targetCenter = getOffsetPosition(
+          targetStore.latitude,
+          targetStore.longitude,
+          mapOffset
+        );
 
         setIsPanto(true);
         setMapCenter(targetCenter);
@@ -215,11 +223,12 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
           setInfoWindowStore(selectedStore);
         }
 
-        // 지도 중심을 해당 매장으로 이동
-        const offset = 0.0017;
-        const targetLat = selectedStore.latitude + offset;
-        const targetLng = selectedStore.longitude;
-        const targetCenter = { lat: targetLat, lng: targetLng };
+        // 지도 중심을 해당 매장으로 이동 (반응형 오프셋 적용)
+        const targetCenter = getOffsetPosition(
+          selectedStore.latitude,
+          selectedStore.longitude,
+          mapOffset
+        );
 
         setIsPanto(true);
         setMapCenter(targetCenter);
@@ -250,48 +259,49 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   const handleMarkerClick = useCallback(
     (store: Store) => {
       // 로그인 상태 확인 후 인포윈도우 표시
-      checkAuthAndExecuteModal(() => {
-        setInternalSelectedStoreId(store.storeId);
+      // checkAuthAndExecuteModal(() => {
+      setInternalSelectedStoreId(store.storeId);
+      setInfoWindowStore(store);
+
+      // 추천 매장인지 확인
+      const isRecommended = recommendedStores.some(
+        s => s.storeId === store.storeId
+      );
+      if (isRecommended) {
+        setRecommendedInfoWindowStore(store);
+      } else {
         setInfoWindowStore(store);
+      }
 
-        // 추천 매장인지 확인
-        const isRecommended = recommendedStores.some(
-          s => s.storeId === store.storeId
-        );
-        if (isRecommended) {
-          setRecommendedInfoWindowStore(store);
-        } else {
-          setInfoWindowStore(store);
-        }
+      trackMarkerClick(store.storeId);
 
-        trackMarkerClick(store.storeId);
+      // 인포 윈도우가 화면 중앙에 오도록 반응형 오프셋 적용
+      const targetCenter = getOffsetPosition(
+        store.latitude,
+        store.longitude,
+        mapOffset
+      );
 
-        // 인포 윈도우가 화면 중앙에 오도록 오프셋 적용
-        const offset = 0.0017;
-        const targetLat = store.latitude + offset;
-        const targetLng = store.longitude;
-        const targetCenter = { lat: targetLat, lng: targetLng };
+      // KakaoMap의 isPanto를 사용한 부드러운 이동
+      setIsPanto(true);
+      setMapCenter(targetCenter);
 
-        // KakaoMap의 isPanto를 사용한 부드러운 이동
-        setIsPanto(true);
-        setMapCenter(targetCenter);
+      // 기존 timeout이 있다면 정리
+      if (pantoTimeoutRef.current) {
+        clearTimeout(pantoTimeoutRef.current);
+      }
 
-        // 기존 timeout이 있다면 정리
-        if (pantoTimeoutRef.current) {
-          clearTimeout(pantoTimeoutRef.current);
-        }
+      // 애니메이션 완료 후 isPanto 리셋
+      pantoTimeoutRef.current = setTimeout(() => {
+        setIsPanto(false);
+        pantoTimeoutRef.current = null;
+      }, 500); // 애니메이션 시간을 500ms로 증가
 
-        // 애니메이션 완료 후 isPanto 리셋
-        pantoTimeoutRef.current = setTimeout(() => {
-          setIsPanto(false);
-          pantoTimeoutRef.current = null;
-        }, 500); // 애니메이션 시간을 500ms로 증가
-
-        // 외부에서 전달받은 onStoreClick 콜백도 호출
-        onStoreClick?.(store);
-      });
+      // 외부에서 전달받은 onStoreClick 콜백도 호출
+      onStoreClick?.(store);
+      // });
     },
-    [onStoreClick, checkAuthAndExecuteModal, recommendedStores]
+    [onStoreClick, checkAuthAndExecuteModal, recommendedStores, mapOffset]
   );
 
   // 추천 매장인지 확인하는 함수
@@ -481,15 +491,20 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
                 <KeywordMarker
                   place={place}
                   onClick={clickedPlace => {
-                    // 마커 클릭 시 지도 이동 애니메이션 적용
+                    // 마커 클릭 시 지도 이동 애니메이션 적용 (반응형 오프셋)
                     if (mapRef.current) {
-                      const offset = 0.0017;
-                      const targetLat = clickedPlace.latitude + offset;
-                      const targetLng = clickedPlace.longitude;
+                      const targetPosition = getOffsetPosition(
+                        clickedPlace.latitude,
+                        clickedPlace.longitude,
+                        mapOffset
+                      );
 
                       // 부드러운 이동을 위해 panTo 사용
                       mapRef.current.panTo(
-                        new kakao.maps.LatLng(targetLat, targetLng)
+                        new kakao.maps.LatLng(
+                          targetPosition.lat,
+                          targetPosition.lng
+                        )
                       );
                     }
 

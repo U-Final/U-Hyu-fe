@@ -5,6 +5,7 @@ import { CustomOverlayMap } from 'react-kakao-maps-sdk';
 import type { NormalizedPlace } from '../../api/types';
 import { useKeywordSearch } from '../../hooks/useKeywordSearch';
 import { useMapBounds, useSearchMarkers } from '../../hooks/useSearchMarkers';
+import { useSimpleMapOffset, getOffsetPosition } from '../../hooks/useMapOffset';
 import { ResponsiveManualSearchButton } from '../ManualSearchButton';
 import { KeywordInfoWindow } from '../marker/KeywordInfoWindow';
 import { KeywordMarker } from '../marker/KeywordMarker';
@@ -87,6 +88,9 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
   const [lastSearchCenter, setLastSearchCenter] = useState(center);
   const [showManualSearchButton, setShowManualSearchButton] = useState(false);
   const [manualSearchLoading, setManualSearchLoading] = useState(false);
+  
+  // 반응형 지도 오프셋
+  const mapOffset = useSimpleMapOffset();
 
   // 초기 검색어 설정
   useEffect(() => {
@@ -243,16 +247,14 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
 
       // 선택된 장소로 지도 중심 이동 (부드러운 애니메이션)
       if (map) {
-        // 인포윈도우가 화면 중앙에 오도록 오프셋 적용
-        const offset = 0.0017;
-        const targetLat = place.latitude + offset;
-        const targetLng = place.longitude;
+        // 인포윈도우가 화면 중앙에 오도록 반응형 오프셋 적용
+        const targetPosition = getOffsetPosition(place.latitude, place.longitude, mapOffset);
 
         // 부드러운 이동을 위해 panTo 사용
-        map.panTo(new kakao.maps.LatLng(targetLat, targetLng));
+        map.panTo(new kakao.maps.LatLng(targetPosition.lat, targetPosition.lng));
       }
     },
-    [selectPlace, selectMarker, onPlaceSelect, map]
+    [selectPlace, selectMarker, onPlaceSelect, map, mapOffset]
   );
 
   const handleMarkerClick = useCallback(

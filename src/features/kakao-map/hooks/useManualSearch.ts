@@ -113,9 +113,6 @@ export const useDistanceBasedSearch = () => {
         showButton: distance >= SHOW_BUTTON_DISTANCE,
       }));
 
-      if (import.meta.env.MODE === 'development') {
-        console.log(`🔍 Distance Search: 이동 거리 ${Math.round(distance)}m, 버튼 표시: ${distance >= SHOW_BUTTON_DISTANCE}`);
-      }
     },
     [calculateDistance]
   );
@@ -131,9 +128,6 @@ export const useDistanceBasedSearch = () => {
       distanceFromLastSearch: 0,
     }));
 
-    if (import.meta.env.MODE === 'development') {
-      console.log('🔍 Distance Search: 재검색 실행');
-    }
   }, []);
 
   /**
@@ -151,9 +145,6 @@ export const useDistanceBasedSearch = () => {
     // 캐시 초기화
     lastCalculatedDistance.current = null;
 
-    if (import.meta.env.MODE === 'development') {
-      console.log('🔍 Distance Search: 검색 위치 업데이트', position);
-    }
   }, []);
 
   /**
@@ -168,9 +159,6 @@ export const useDistanceBasedSearch = () => {
     });
     lastCalculatedDistance.current = null;
 
-    if (import.meta.env.MODE === 'development') {
-      console.log('🔍 Distance Search: 상태 초기화');
-    }
   }, []);
 
   const actions: SearchActions = {

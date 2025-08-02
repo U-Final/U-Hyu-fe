@@ -45,12 +45,6 @@ export const useSearchMarkers = () => {
       shouldFitBounds: places.length > 0,
     }));
 
-    if (import.meta.env.MODE === 'development') {
-      console.log('🗺️ 검색 마커 설정:', {
-        count: places.length,
-        places: places.map(p => ({ id: p.id, name: p.name })),
-      });
-    }
   }, []);
 
   const selectMarker = useCallback((place: NormalizedPlace | null) => {
@@ -59,9 +53,6 @@ export const useSearchMarkers = () => {
       selectedMarker: place,
     }));
 
-    if (import.meta.env.MODE === 'development') {
-      console.log('🗺️ 마커 선택:', place ? place.name : 'none');
-    }
   }, []);
 
   const boundsAdjusted = useCallback(() => {
@@ -86,9 +77,6 @@ export const useSearchMarkers = () => {
       visible: true,
     });
 
-    if (import.meta.env.MODE === 'development') {
-      console.log('🗺️ 검색 마커 초기화');
-    }
   }, []);
 
   const actions: SearchMarkerActions = {

@@ -25,9 +25,6 @@ export function saveScrollPosition(): void {
   try {
     sessionStorage.setItem(SCROLL_RESTORE_KEY, JSON.stringify(position));
     
-    if (import.meta.env.MODE === 'development') {
-      console.log('💾 Scroll position saved:', position);
-    }
   } catch (error) {
     console.warn('Failed to save scroll position:', error);
   }
@@ -56,9 +53,6 @@ export function restoreScrollPosition(): boolean {
       behavior: 'auto', // 즉시 이동
     });
     
-    if (import.meta.env.MODE === 'development') {
-      console.log('📜 Scroll position restored:', position);
-    }
     
     return true;
   } catch (error) {
@@ -74,9 +68,6 @@ export function clearScrollPosition(): void {
   try {
     sessionStorage.removeItem(SCROLL_RESTORE_KEY);
     
-    if (import.meta.env.MODE === 'development') {
-      console.log('🧹 Scroll position cleared');
-    }
   } catch (error) {
     console.warn('Failed to clear scroll position:', error);
   }
@@ -122,9 +113,6 @@ export function initScrollRestore(): () => void {
     restoreScrollPosition();
   }, 100);
   
-  if (import.meta.env.MODE === 'development') {
-    console.log('🔄 Scroll restore initialized');
-  }
   
   // 정리 함수 반환
   return () => {
@@ -133,9 +121,6 @@ export function initScrollRestore(): () => void {
     window.removeEventListener('blur', handleBlur);
     window.removeEventListener('popstate', handlePopState);
     
-    if (import.meta.env.MODE === 'development') {
-      console.log('🧹 Scroll restore cleaned up');
-    }
   };
 }
 
@@ -153,9 +138,6 @@ export function initKeyboardHandler(): () => void {
     if (heightDiff > 150) {
       saveScrollPosition();
       
-      if (import.meta.env.MODE === 'development') {
-        console.log('⌨️ Keyboard detected, height diff:', heightDiff);
-      }
     }
     // 키보드가 내려간 것으로 추정
     else if (heightDiff < 50) {
@@ -163,9 +145,6 @@ export function initKeyboardHandler(): () => void {
         restoreScrollPosition();
       }, 300);
       
-      if (import.meta.env.MODE === 'development') {
-        console.log('⌨️ Keyboard hidden, restoring scroll');
-      }
     }
   };
   

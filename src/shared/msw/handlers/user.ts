@@ -37,8 +37,6 @@ export const userHandlers = [
         interestedBrands?: number[];
       };
 
-      console.log('🔄 MSW: 온보딩 추가정보 요청 받음:', body);
-
       // 에러 시나리오: 필수 필드 누락 검증
       const missingFields = [];
       if (!body.age || body.age <= 0) missingFields.push('age');
@@ -83,7 +81,6 @@ export const userHandlers = [
       }
 
       // 성공 응답
-      console.log('✅ MSW: 온보딩 추가정보 저장 성공');
       return createResponse(
         {
           userId: 1, // MSW에서는 인증된 사용자 ID로 고정

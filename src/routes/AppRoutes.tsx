@@ -14,10 +14,10 @@ import { Outlet, Route, Routes, useLocation } from 'react-router-dom';
 
 import {
   AdminRoute,
+  AuthRoute,
   BaseLayout,
   BottomNavigation,
   ModalRoot,
-  UserRoute,
 } from '@/shared/components';
 import AppInitializer from '@/shared/components/AppInitializer';
 
@@ -63,27 +63,20 @@ export const AppRoutes = () => {
           <Route
             path={PATH.MYPAGE}
             element={
-              <UserRoute>
+              <AuthRoute>
                 <MyPage />
-              </UserRoute>
+              </AuthRoute>
             }
           />
           <Route
             path={PATH.MYPAGE_ACTIVITY}
             element={
-              <UserRoute>
+              <AuthRoute>
                 <MyPageActivity />
-              </UserRoute>
+              </AuthRoute>
             }
           />
-          <Route
-            path={PATH.EXTRA_INFO}
-            element={
-              <UserRoute>
-                <ExtraInfo />
-              </UserRoute>
-            }
-          />
+          <Route path={PATH.EXTRA_INFO} element={<ExtraInfo />} />
           <Route path={PATH.MAP} element={<MapPage />} />
           <Route path="/map/:uuid" element={<MapPage />} />
           <Route
@@ -97,9 +90,9 @@ export const AppRoutes = () => {
           <Route
             path={PATH.MYMAP}
             element={
-              <UserRoute>
+              <AuthRoute>
                 <MymapPage />
-              </UserRoute>
+              </AuthRoute>
             }
           />
         </Route>

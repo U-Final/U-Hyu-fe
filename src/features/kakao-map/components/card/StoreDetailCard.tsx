@@ -34,18 +34,29 @@ const getTruncatedText = (text: string, limit: number): string => {
 const ExpandButton: React.FC<{
   isExpanded: boolean;
   onClick: () => void;
-}> = ({ isExpanded, onClick }) => (
-  <button
-    onClick={e => {
-      e.stopPropagation();
-      onClick();
-    }}
-    className="inline text-blue-500 hover:text-blue-700 font-medium text-xs ml-1 transition-colors duration-200"
-    aria-label={isExpanded ? '접기' : '더보기'}
-  >
-    {isExpanded ? '접기' : '더보기'}
-  </button>
-);
+}> = ({ isExpanded, onClick }) => {
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onClick();
+  };
+
+  return (
+    <button
+      onClick={e => {
+        e.preventDefault();
+        e.stopPropagation();
+        onClick();
+      }}
+      onTouchEnd={handleTouchEnd}
+      className="inline text-blue-500 hover:text-blue-700 font-medium text-xs ml-1 transition-colors duration-200 touch-manipulation"
+      aria-label={isExpanded ? '접기' : '더보기'}
+      style={{ WebkitTapHighlightColor: 'transparent' }}
+    >
+      {isExpanded ? '접기' : '더보기'}
+    </button>
+  );
+};
 
 const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
   storeName,
@@ -71,7 +82,31 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
     }));
   };
   return (
-    <div className="relative w-[20rem] bg-white rounded-2xl shadow-lg p-6 pt-5 pb-8">
+    <div 
+      className="relative w-[20rem] bg-white rounded-2xl shadow-lg p-6 pt-5 pb-8" 
+      style={{ 
+        touchAction: 'manipulation',
+        WebkitTapHighlightColor: 'transparent' 
+      }}
+      onTouchStart={e => {
+        e.stopPropagation();
+      }}
+      onTouchEnd={e => {
+        e.stopPropagation();
+      }}
+      onTouchMove={e => {
+        e.stopPropagation();
+      }}
+      onClick={e => {
+        e.stopPropagation();
+      }}
+      onMouseDown={e => {
+        e.stopPropagation();
+      }}
+      onMouseUp={e => {
+        e.stopPropagation();
+      }}
+    >
       {/* 말풍선 꼬리 */}
       <div className="absolute left-1/2 -bottom-4 -translate-x-1/2 w-8 h-8 z-10">
         <svg width="2rem" height="2rem" viewBox="0 0 32 32">
@@ -82,19 +117,36 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
       <div className="relative z-10 mb-4">
         {/* 매장명 + 즐겨찾기 */}
         <div className="flex items-center justify-between mb-3">
-          <span className="text-xl font-bold text-left leading-7">
+          <span 
+            className="text-xl font-bold text-left leading-7"
+            onTouchEnd={e => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+            onClick={e => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
             {storeName}
           </span>
           <div className="flex items-center gap-1">
             <div
               onClick={e => {
+                e.preventDefault();
                 e.stopPropagation();
                 handleToggleFavorite?.();
               }}
-              className="cursor-pointer"
+              onTouchEnd={e => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleToggleFavorite?.();
+              }}
+              className="cursor-pointer touch-manipulation"
               tabIndex={0}
               role="button"
               aria-label={isFavorite ? '즐겨찾기 해제' : '즐겨찾기 추가'}
+              style={{ WebkitTapHighlightColor: 'transparent' }}
               onKeyDown={e => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
@@ -130,18 +182,68 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
           </div>
         </div>
         {/* 등급별 혜택 제목 */}
-        <div className="text-sm font-semibold text-gray-700 mb-2">
+        <div 
+          className="text-sm font-semibold text-gray-700 mb-2"
+          onTouchEnd={e => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          onClick={e => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
           등급별 혜택
         </div>
         {/* 혜택 정보 (등급+혜택) */}
-        <div className="flex flex-col w-full">
+        <div 
+          className="flex flex-col w-full"
+          onTouchEnd={e => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          onClick={e => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
           <div className="flex flex-row items-stretch">
-            <div className="bg-yellow-50 text-yellow-700 px-2 py-1 rounded-tl rounded-bl font-bold text-sm min-w-[48px] text-center shrink-0 flex items-center justify-center">
+            <div 
+              className="bg-yellow-50 text-yellow-700 px-2 py-1 rounded-tl rounded-bl font-bold text-sm min-w-[48px] text-center shrink-0 flex items-center justify-center"
+              onTouchEnd={e => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+              onClick={e => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            >
               <span>{benefits.grade}</span>
             </div>
-            <div className="bg-yellow-50 px-3 py-1 rounded-tr rounded-br text-sm flex-1 min-w-0">
+            <div 
+              className="bg-yellow-50 px-3 py-1 rounded-tr rounded-br text-sm flex-1 min-w-0"
+              onTouchEnd={e => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+              onClick={e => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            >
               <div className="break-words text-left">
-                <span className="whitespace-pre-wrap block">
+                <span 
+                  className="whitespace-pre-wrap block"
+                  onTouchEnd={e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                  onClick={e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                >
                   {expandedSections.benefits
                     ? benefits.benefitText
                     : getTruncatedText(benefits.benefitText, TEXT_LIMITS.benefits)}
@@ -159,11 +261,41 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
       </div>
       {/* 제공 횟수 */}
       <div className="mb-4 relative z-10">
-        <div className="text-sm font-semibold text-gray-700 mb-2">
+        <div 
+          className="text-sm font-semibold text-gray-700 mb-2"
+          onTouchEnd={e => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          onClick={e => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
           제공 횟수
         </div>
-        <div className="text-sm">
-          <span className="break-words whitespace-pre-wrap block">
+        <div 
+          className="text-sm"
+          onTouchEnd={e => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          onClick={e => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
+          <span 
+            className="break-words whitespace-pre-wrap block"
+            onTouchEnd={e => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+            onClick={e => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
             {expandedSections.usageLimit
               ? usageLimit
               : getTruncatedText(usageLimit, TEXT_LIMITS.usageLimit)}
@@ -178,9 +310,41 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
       </div>
       {/* 이용방법 */}
       <div className="relative z-10">
-        <div className="text-sm font-semibold text-gray-700 mb-2">이용방법</div>
-        <div className="text-xs text-gray-600">
-          <span className="break-words whitespace-pre-line block">
+        <div 
+          className="text-sm font-semibold text-gray-700 mb-2"
+          onTouchEnd={e => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          onClick={e => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
+          이용방법
+        </div>
+        <div 
+          className="text-xs text-gray-600"
+          onTouchEnd={e => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          onClick={e => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
+          <span 
+            className="break-words whitespace-pre-line block"
+            onTouchEnd={e => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+            onClick={e => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
             {expandedSections.usageMethod
               ? usageMethod
               : getTruncatedText(usageMethod, TEXT_LIMITS.usageMethod)}

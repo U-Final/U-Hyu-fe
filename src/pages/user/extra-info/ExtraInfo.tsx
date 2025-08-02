@@ -5,6 +5,7 @@ import { CurrentStep } from '@extra-info/components/CurrentStep';
 import { useSignupFlow } from '@extra-info/hooks/useSignupFlow';
 import type { SignupData } from '@extra-info/types';
 import { mapMembershipGrade } from '@extra-info/utils/membershipGrade';
+import { PATH } from '@paths';
 import { useSubmitExtraInfo } from '@user/hooks/useUserMutation';
 import { LayoutGroup } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -41,9 +42,9 @@ const ImprovedSignupFlow: React.FC = () => {
           duration: 2000,
         });
 
-        // 성공 후 홈으로 리다이렉트
+        // 성공 후 로그인 성공 페이지로 리다이렉트
         setTimeout(() => {
-          navigate('/', { replace: true });
+          navigate(PATH.AUTH_SUCCESS, { replace: true });
         }, 1500);
       } catch (error) {
         console.error('회원가입 실패:', error);

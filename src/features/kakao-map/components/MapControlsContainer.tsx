@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 import { useParams } from 'react-router-dom';
 
-import { getKakaoApiKeyStatus } from '../api/keywordSearchApi';
 import type { NormalizedPlace } from '../api/types';
 import { useMapUIContext } from '../context/MapUIContext';
 import { useKeywordSearch } from '../hooks/useKeywordSearch';
@@ -59,15 +58,6 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
 
   // 바텀시트 열림/닫힘 상태 추적
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
-
-  // 카카오 API 키 상태 확인 (개발 모드에서만)
-  useEffect(() => {
-    if (import.meta.env.MODE === 'development') {
-      const apiKeyStatus = getKakaoApiKeyStatus();
-      console.log('🔑 카카오 API 키 상태:', apiKeyStatus);
-    }
-  }, []);
-
   // searchValue와 keyword 동기화
   useEffect(() => {
     if (searchValue !== keyword) {
@@ -120,10 +110,6 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
 
   // 검색 실행 처리 (엔터키 입력 시)
   const handleSearch = async (value: string) => {
-    if (import.meta.env.MODE === 'development') {
-      console.log('MapControlsContainer - handleSearch 호출됨, 검색어:', value);
-    }
-
     if (value.trim()) {
       try {
         if (import.meta.env.MODE === 'development') {
@@ -181,33 +167,16 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
 
   // 지역 필터 변경 처리
   const handleRegionFilterChange = (region: string) => {
-    if (import.meta.env.MODE === 'development') {
-      console.log('지역 필터 변경:', region);
-    }
     setRegionFilter(region);
   };
 
   // 카테고리 필터 변경 처리
   const handleCategoryFilterChange = (category: string) => {
     setCategoryFilter(category);
-
-    if (import.meta.env.MODE === 'development') {
-      console.log('🔍 카테고리 필터 변경:', {
-        category,
-        note: 'API 재요청 실행됨 - 새로운 매장 목록으로 마커 업데이트',
-      });
-    }
   };
 
   // 바텀시트 토글 처리
   const handleToggleBottomSheet = () => {
-    if (import.meta.env.MODE === 'development') {
-      console.log(
-        '바텀시트 토글 버튼 클릭 - 현재 상태:',
-        isBottomSheetOpen ? '열림' : '닫힘'
-      );
-    }
-
     if (bottomSheetRef && bottomSheetRef.current) {
       bottomSheetRef.current.toggle();
     }
@@ -234,17 +203,6 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
         lat: targetLat,
         lng: targetLng,
       });
-
-      if (import.meta.env.MODE === 'development') {
-        console.log('🎯 지도 이동 - 검색 결과 클릭:', {
-          place: place.name,
-          coordinates: { lat: targetLat, lng: targetLng },
-        });
-      }
-    }
-
-    if (import.meta.env.MODE === 'development') {
-      console.log('🎯 검색 결과 아이템 클릭:', place.name);
     }
   };
 

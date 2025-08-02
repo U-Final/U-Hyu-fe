@@ -38,9 +38,6 @@ const BrandSelectContent: FC<BrandSelectContentProps> = ({
    * 부모 컴포넌트에 선택 결과를 전달합니다.
    */
   const handleBrandClick = (brandName: string) => {
-    if (import.meta.env.MODE === 'development') {
-      console.log('🏢 브랜드 선택:', brandName);
-    }
     onBrandSelect(brandName);
   };
 

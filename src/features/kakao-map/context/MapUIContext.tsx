@@ -86,14 +86,6 @@ const mapUIReducer = (state: MapUIState, action: MapUIAction): MapUIState => {
 
     // 바텀시트 관련 상태 변경
     case 'SET_BOTTOM_SHEET_STEP':
-      if (import.meta.env.MODE === 'development') {
-        console.log(
-          '🔄 바텀시트 step 변경:',
-          state.currentBottomSheetStep,
-          '→',
-          action.payload
-        );
-      }
       return { ...state, currentBottomSheetStep: action.payload };
 
     // 필터 관련 상태 변경

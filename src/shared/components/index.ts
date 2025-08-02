@@ -32,6 +32,6 @@ export { default as ModalRoot } from './modals/ModalRoot';
 
 export { default as PrimaryCheckbox } from './primary_checkbox/PrimaryCheckbox';
 
-export { AdminRoute, ProtectedRoute, UserRoute } from './route/ProtectedRoute';
+export { AdminRoute, AuthRoute, ProtectedRoute } from './route/ProtectedRoute';
 
 export { default as SearchInput } from './search_input/SearchInput';

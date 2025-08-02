@@ -147,7 +147,6 @@ export const mymapHandlers = [
   // My Map 상세 조회 (UUID 기반)
   http.get(MYMAP_ENDPOINTS.MYMAP.VIEW_MSW(), async ({ params }) => {
     const uuid = params.uuid;
-    console.log(params.uuid);
 
     if (!uuid) {
       return createErrorResponse('UUID가 없습니다.', 400);

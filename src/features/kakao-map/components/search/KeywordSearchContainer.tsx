@@ -313,6 +313,7 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
               totalCount={meta.total_count}
               currentCount={results.length}
               keyword={keyword}
+              category="all"
             />
           )}
           <div className="overflow-y-auto max-h-80">

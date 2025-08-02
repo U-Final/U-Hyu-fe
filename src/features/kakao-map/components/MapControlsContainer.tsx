@@ -54,6 +54,8 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
     keyword,
     results,
     loading,
+    meta,
+    hasSearched,
     selectedPlace,
     setKeyword,
     search,
@@ -240,6 +242,8 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
       selectedPlace={selectedPlace}
       onSearchResultClick={handleSearchResultClick}
       onCloseSearchResults={handleCloseSearchResults}
+      searchMeta={meta}
+      hasSearched={hasSearched}
     />
   );
 };

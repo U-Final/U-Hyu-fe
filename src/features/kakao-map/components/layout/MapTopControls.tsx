@@ -4,7 +4,7 @@ import RegionFilterDropdown from '@kakao-map/components/layout/RegionFilterDropd
 
 import { FilterTabs } from '@/shared/components';
 
-import type { NormalizedPlace } from '../../api/types';
+import type { NormalizedPlace, KakaoKeywordSearchResponse } from '../../api/types';
 import { MapSearchInput } from '../search/MapSearchInput';
 import { SearchResultList } from '../search/SearchResultList';
 import BottomSheetToggleButton from './BottomSheetToggleButton';
@@ -43,6 +43,10 @@ interface MapTopControlsProps {
   onSearchResultClick?: (place: NormalizedPlace) => void;
   /** 검색 결과 닫기 핸들러 */
   onCloseSearchResults?: () => void;
+  /** 검색 메타 정보 */
+  searchMeta?: KakaoKeywordSearchResponse['meta'] | null;
+  /** 검색이 실행되었는지 여부 */
+  hasSearched?: boolean;
 }
 
 /**
@@ -57,6 +61,7 @@ const MapTopControls: FC<MapTopControlsProps> = ({
   onSearchCancel,
   activeRegionFilter,
   onRegionFilterChange,
+  activeCategoryFilter,
   onCategoryFilterChange,
   onToggleBottomSheet,
   isBottomSheetOpen,
@@ -65,9 +70,12 @@ const MapTopControls: FC<MapTopControlsProps> = ({
   selectedPlace,
   onSearchResultClick,
   onCloseSearchResults,
+  searchMeta,
+  hasSearched = false,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const isSearchResultsVisible = keywordResults.length > 0 || isSearching;
+  // 검색 중이거나, 검색 결과가 있거나, 검색이 완료되었지만 결과가 없는 경우 표시
+  const isSearchResultsVisible = isSearching || keywordResults.length > 0 || (hasSearched && keywordResults.length === 0);
 
   // 외부 클릭 시 검색 결과 닫기
   useEffect(() => {
@@ -147,7 +155,10 @@ const MapTopControls: FC<MapTopControlsProps> = ({
 
       {/* 하단 라인: 카테고리 필터탭 전체 너비 사용 */}
       <div className="-mx-4 overflow-x-auto">
-        <FilterTabs variant="white" onChange={onCategoryFilterChange} />
+        <FilterTabs 
+          variant="white" 
+          onChange={onCategoryFilterChange}
+        />
       </div>
 
       {/* 검색 결과 리스트 */}
@@ -158,8 +169,13 @@ const MapTopControls: FC<MapTopControlsProps> = ({
             loading={isSearching}
             onItemClick={onSearchResultClick || (() => {})}
             selectedPlaceId={selectedPlace?.id}
+            hasSearched={hasSearched}
             emptyMessage="검색 결과가 없습니다."
-            className="max-h-80 overflow-y-auto"
+            className="max-h-80"
+            keyword={searchValue}
+            totalCount={searchMeta?.total_count || keywordResults.length}
+            category={activeCategoryFilter}
+            showSummary={true}
           />
         </div>
       )}

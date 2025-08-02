@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import VisitConfirmSection from '@barcode/components/VisitConfirmSection';
 import { useBarcodeImageQuery } from '@barcode/hooks/useBarcodeImageQuery';
 import { useNearbyStoreQuery } from '@barcode/hooks/useNearbyStoreQuery';
-import { RefreshCcw } from 'lucide-react';
+import { ImageUp } from 'lucide-react';
 import { BeatLoader } from 'react-spinners';
 
 import { PrimaryButton } from '@/shared/components';
@@ -74,7 +74,7 @@ export const LoggedInBarcodeContent = () => {
   }
 
   return (
-    <div className="flex flex-col w-full gap-4">
+    <div className="flex flex-col w-full gap-4 relative">
       {store && !isConfirmed && !isRejected && (
         <VisitConfirmSection
           store={store}
@@ -88,10 +88,10 @@ export const LoggedInBarcodeContent = () => {
           <CroppedImg imageUrl={imageUrl} onClick={triggerFileSelect} />
           <button
             onClick={triggerFileSelect}
-            className="absolute top-2 right-2 bg-white rounded-full p-2 shadow hover:bg-white"
+            className="absolute top-2 right-2 bg-white rounded-full p-2 shadow hover:bg-white cursor-pointer"
             aria-label="이미지 재업로드"
           >
-            <RefreshCcw size={16} />
+            <ImageUp size={16} />
           </button>
         </div>
       ) : (

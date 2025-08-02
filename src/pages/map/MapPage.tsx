@@ -40,12 +40,6 @@ const MapContent = () => {
     setSelectedPlace(place);
   }, []);
 
-  // 검색 결과 아이템 클릭 핸들러 (검색창 유지)
-  const handleSearchResultItemClick = useCallback((place: NormalizedPlace) => {
-    setSelectedPlace(place);
-    // 검색 결과는 유지 (keywordResults를 클리어하지 않음)
-  }, []);
-
   // 키워드 검색 결과 인포윈도우 닫기 핸들러
   const handlePlaceInfoClose = useCallback(() => {
     setSelectedPlace(null);
@@ -128,7 +122,6 @@ const MapContent = () => {
           onCloseSearchResults={handleCloseSearchResults}
           mapCenterSetter={mapCenterSetterRef.current}
           onPlaceClick={handlePlaceClick}
-          onSearchResultItemClick={handleSearchResultItemClick}
           mapCenter={mapCenter}
         />
         <MapButtonsContainer />

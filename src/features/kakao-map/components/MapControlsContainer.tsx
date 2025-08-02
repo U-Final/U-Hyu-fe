@@ -65,6 +65,7 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
     selectPlace,
     clearResults,
     clearError,
+    hideSearchResults,
   } = useKeywordSearch({
     autoSearchEnabled: enableAutoSearch,
     debounceDelay,
@@ -176,6 +177,14 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
     onCloseSearchResults?.();
   };
 
+  // 검색 결과 아이템 클릭 전용 닫기 처리 (selectedPlace 유지)
+  const handleCloseSearchResultsForItemClick = () => {
+    // MapPage의 keywordResults 초기화하여 검색 결과창 숨기기
+    onCloseSearchResults?.();
+    // useKeywordSearch의 hasSearched를 false로 설정하여 빈 상태 표시 방지
+    // 하지만 results와 selectedPlace는 유지
+    hideSearchResults();
+  };
 
   // 지역 필터 변경 처리
   const handleRegionFilterChange = (region: string) => {
@@ -194,17 +203,19 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
     }
   };
 
-  // 검색 결과 아이템 클릭 처리 (검색창 유지)
+  // 검색 결과 아이템 클릭 처리 (기본: 검색창 닫기)
   const handleSearchResultClick = (place: NormalizedPlace) => {
-    // 전용 핸들러가 있으면 사용, 없으면 기본 처리
+    // 전용 핸들러가 있으면 사용 (검색창 유지), 없으면 기본 처리 (검색창 닫기)
     if (onSearchResultItemClick) {
       onSearchResultItemClick(place);
     } else {
+      // 기본 처리: 검색 결과 리스트 닫기 (selectedPlace 유지)
+      handleCloseSearchResultsForItemClick();
       // MapPage의 selectedPlace 상태 업데이트 (인포윈도우 표시용)
       onPlaceClick?.(place);
     }
 
-    // useKeywordSearch 훅의 selectedPlace 업데이트 (검색 결과 하이라이트용)
+    // useKeywordSearch 훅의 selectedPlace 업데이트 (검색 결과 하이라이트용)  
     selectPlace(place);
 
     // 지도 중심을 해당 위치로 이동 (인포윈도우가 화면 중앙에 오도록 오프셋 적용)
@@ -219,7 +230,7 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
       });
     }
 
-    // 검색 결과창은 유지하고 에러만 클리어
+    // 에러 클리어
     clearError();
   };
 

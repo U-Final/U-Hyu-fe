@@ -62,6 +62,8 @@ export interface KeywordSearchActions {
   reset: () => void;
   /** 자동 검색 활성화/비활성화 */
   setAutoSearch: (enabled: boolean) => void;
+  /** 검색 결과창 숨기기 (hasSearched만 false로, 결과와 선택된 장소는 유지) */
+  hideSearchResults: () => void;
 }
 
 const initialState: KeywordSearchState = {
@@ -133,6 +135,10 @@ export const useKeywordSearch = (options?: {
 
   const setAutoSearch = useCallback((enabled: boolean) => {
     setAutoSearchState(enabled);
+  }, []);
+
+  const hideSearchResults = useCallback(() => {
+    setState(prev => ({ ...prev, hasSearched: false, error: null }));
   }, []);
 
   const executeSearch = useCallback(
@@ -294,6 +300,7 @@ export const useKeywordSearch = (options?: {
     clearError,
     reset,
     setAutoSearch,
+    hideSearchResults,
   };
 
   return {

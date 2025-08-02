@@ -50,7 +50,7 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
   onPlaceSelect,
   className = '',
   enableAutoSearch = false,
-  debounceDelay = 500,
+  debounceDelay = Number(import.meta.env.VITE_SEARCH_DEBOUNCE_DELAY) || 500,
 }) => {
   const {
     keyword,

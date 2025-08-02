@@ -85,7 +85,7 @@ export const useKeywordSearch = (options?: {
 }) => {
   const { 
     autoSearchEnabled = false, 
-    debounceDelay = 500,
+    debounceDelay = Number(import.meta.env.VITE_SEARCH_DEBOUNCE_DELAY) || 500,
     mapCenter,
     searchRadius = 5000
   } = options || {};

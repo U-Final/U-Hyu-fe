@@ -35,7 +35,7 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
   mapCenterSetter,
   onPlaceClick,
   enableAutoSearch = true,
-  debounceDelay = 500,
+  debounceDelay = Number(import.meta.env.VITE_SEARCH_DEBOUNCE_DELAY) || 500,
   mapCenter,
 }) => {
   // UI 상태와 액션들 가져오기

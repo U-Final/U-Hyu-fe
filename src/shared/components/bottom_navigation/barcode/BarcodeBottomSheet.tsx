@@ -85,7 +85,7 @@ export const BarcodeBottomSheet: FC<BarcodeBottomSheetProps> = ({
           </header>
 
           {/* 컨텐츠 */}
-          <div className="flex-1 overflow-y-auto px-6 pb-6 min-h-0">
+          <div className="flex-1 overflow-y-auto px-6 pb-10 min-h-0">
             {isLoggedIn ? <LoggedInBarcodeContent /> : <GuestBarcodeContent />}
           </div>
         </div>

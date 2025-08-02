@@ -9,11 +9,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/shared/components/shadcn/ui/sheet';
-import { useIsLoggedIn, useUser } from '@/shared/store/userStore';
+import LoggedInContent from '@/shared/components/sidebar/LoggedInContent';
+import LoggedOutContent from '@/shared/components/sidebar/LoggedOutContent';
+import { useIsLoggedIn } from '@/shared/store/userStore';
 
 const SidebarSheet = () => {
   const isLoggedIn = useIsLoggedIn();
-  const user = useUser();
 
   return (
     <Sheet modal={false}>
@@ -27,26 +28,23 @@ const SidebarSheet = () => {
       </SheetTrigger>
       <SheetContent side="left" className="w-[70%]" containerId="main-content">
         <SheetHeader>
-          <SheetTitle className="text-h3">U-HYU</SheetTitle>
+          <div className="flex justify-center items-center gap-4">
+            <img src="/public/images/Logo/Logo3D.png" className="w-10 h-10 " />
+            <SheetTitle className="text-h3">U-HYU Menu</SheetTitle>
+          </div>
         </SheetHeader>
 
-        <div className="px-8 mt-4">
-          <div>
-            {isLoggedIn ? (
-              <LogoutButton />
-            ) : (
-              <KakaoLoginButton className="w-full" />
-            )}
-          </div>
+        <div className="px-4 flex flex-col">
           {isLoggedIn ? (
-            <div>
-              <p>{user?.userName}님 반가워요!</p>
-              <p>등급: {user?.grade}</p>
-              <p>유저 롤: {user?.role}</p>
-              <img src={user?.profileImage} alt="프로필 이미지" />
-            </div>
+            <>
+              <LogoutButton />
+              <LoggedInContent />
+            </>
           ) : (
-            <></>
+            <>
+              <KakaoLoginButton className="w-full" />
+              <LoggedOutContent />
+            </>
           )}
         </div>
       </SheetContent>

@@ -19,7 +19,7 @@ import {
   ModalRoot,
 } from '@/shared/components';
 import AppInitializer from '@/shared/components/AppInitializer';
-import SidebarSheet from '@/shared/components/SidebarSheet';
+import SidebarSheet from '@/shared/components/sidebar/SidebarSheet';
 
 const Layout = () => {
   const { pathname } = useLocation();

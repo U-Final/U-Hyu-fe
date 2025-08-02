@@ -1,4 +1,3 @@
-import { LogoutButton } from '@/features/user/components/LogoutButton';
 import { Menu } from 'lucide-react';
 
 import {
@@ -34,14 +33,7 @@ const SidebarSheet = () => {
         </SheetHeader>
 
         <div className="px-4 flex flex-col">
-          {isLoggedIn ? (
-            <>
-              <LogoutButton />
-              <LoggedInContent />
-            </>
-          ) : (
-            <LoggedOutContent />
-          )}
+          {isLoggedIn ? <LoggedInContent /> : <LoggedOutContent />}
         </div>
       </SheetContent>
     </Sheet>

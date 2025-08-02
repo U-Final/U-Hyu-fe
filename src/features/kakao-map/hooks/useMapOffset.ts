@@ -1,15 +1,13 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
-interface MapOffsetConfig {
-  /** 인포윈도우 높이 (픽셀) */
-  infoWindowHeight?: number;
-  /** 추가 여백 (픽셀) */
-  additionalPadding?: number;
-  /** 지도 줌 레벨 */
-  mapLevel?: number;
-}
+// ================================
+// 타입 정의
+// ================================
 
-interface MapOffset {
+/**
+ * 지도 오프셋 정보
+ */
+export interface MapOffset {
   /** Y축 오프셋 (위도) */
   latOffset: number;
   /** X축 오프셋 (경도) - 현재는 0, 필요시 확장 가능 */
@@ -17,22 +15,41 @@ interface MapOffset {
 }
 
 /**
- * 반응형 지도 오프셋 계산 훅
- * 화면 크기, 인포윈도우 크기, 지도 줌 레벨을 고려하여 최적의 오프셋 계산
+ * 화면 크기 정보
  */
-export const useMapOffset = (config: MapOffsetConfig = {}): MapOffset => {
-  const {
-    infoWindowHeight = 120, // 기본 인포윈도우 높이
-    additionalPadding = 20,  // 추가 여백
-    mapLevel = 4,           // 기본 줌 레벨
-  } = config;
+interface ScreenDimensions {
+  width: number;
+  height: number;
+}
 
-  const [screenDimensions, setScreenDimensions] = useState({
-    width: typeof window !== 'undefined' ? window.innerWidth : 1024,
-    height: typeof window !== 'undefined' ? window.innerHeight : 768,
-  });
+// ================================
+// 상수 및 기본값
+// ================================
 
-  // 화면 크기 변경 감지
+const DEFAULT_SCREEN_SIZE = {
+  width: typeof window !== 'undefined' ? window.innerWidth : 1024,
+  height: typeof window !== 'undefined' ? window.innerHeight : 768,
+} as const;
+
+const DEFAULT_VH_OFFSET = 25; // 25vh
+const DEFAULT_ZOOM_LEVEL = 3;
+const PIXEL_TO_LAT_RATIO = 0.000025; // 기본 픽셀-위도 변환 비율
+const ZOOM_AWARE_PIXEL_TO_LAT_RATIO = 0.00001; // 줌 인식 픽셀-위도 변환 비율
+
+// 개발 모드 체크
+const isDevelopment = import.meta.env.MODE === 'development';
+
+// ================================
+// 화면 크기 관리 훅
+// ================================
+
+/**
+ * 화면 크기 변경을 추적하는 공통 훅
+ */
+const useScreenDimensions = (): ScreenDimensions => {
+  const [screenDimensions, setScreenDimensions] =
+    useState<ScreenDimensions>(DEFAULT_SCREEN_SIZE);
+
   useEffect(() => {
     const handleResize = () => {
       setScreenDimensions({
@@ -45,99 +62,179 @@ export const useMapOffset = (config: MapOffsetConfig = {}): MapOffset => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // 오프셋 계산 함수
-  const calculateOffset = useCallback((): MapOffset => {
-    const { width, height } = screenDimensions;
+  return screenDimensions;
+};
 
-    // 디바이스 타입 판별
-    const isMobile = width < 768;
-    const isTablet = width >= 768 && width < 1024;
-    const isDesktop = width >= 1024;
+// ================================
+// 오프셋 계산 함수들
+// ================================
 
-    // 화면 중심에서 인포윈도우가 보이도록 하기 위한 픽셀 단위 오프셋 계산
-    const totalInfoWindowSpace = infoWindowHeight + additionalPadding;
-    
-    // 모바일에서는 인포윈도우가 하단에 위치하므로 더 많은 오프셋 필요
-    let pixelOffset: number;
-    
-    if (isMobile) {
-      // 모바일: 화면 높이의 1/4 + 인포윈도우 공간
-      pixelOffset = height * 0.25 + totalInfoWindowSpace;
-    } else if (isTablet) {
-      // 태블릿: 화면 높이의 1/5 + 인포윈도우 공간
-      pixelOffset = height * 0.2 + totalInfoWindowSpace;
-    } else {
-      // 데스크톱: 화면 높이의 1/6 + 인포윈도우 공간
-      pixelOffset = height * 0.16 + totalInfoWindowSpace;
-    }
-
-    // 픽셀을 위도 단위로 변환
-    // 카카오맵의 줌 레벨에 따른 변환 계산
-    // 줌 레벨이 높을수록 (확대) 작은 위도 변화가 큰 픽셀 변화를 만듦
-    const zoomFactor = Math.pow(2, mapLevel - 1);
-    const baseLatPerPixel = 0.000003; // 기준 위도/픽셀 비율 (실험적 값)
-    const latPerPixel = baseLatPerPixel / zoomFactor;
-    
-    const latOffset = pixelOffset * latPerPixel;
-
-    return {
-      latOffset,
-      lngOffset: 0, // 현재는 수평 오프셋 불필요
-    };
-  }, [screenDimensions, infoWindowHeight, additionalPadding, mapLevel]);
-
-  return calculateOffset();
+/**
+ * VH를 픽셀로 변환
+ */
+const vhToPixels = (vh: number, screenHeight: number): number => {
+  return (screenHeight * vh) / 100;
 };
 
 /**
- * 간단한 오프셋 계산 (기존 방식과 호환)
+ * 픽셀을 위도 단위로 변환 (줌 레벨 미고려)
  */
-export const useSimpleMapOffset = (): MapOffset => {
-  const [screenDimensions, setScreenDimensions] = useState({
-    width: typeof window !== 'undefined' ? window.innerWidth : 1024,
-    height: typeof window !== 'undefined' ? window.innerHeight : 768,
-  });
+const pixelsToLatitude = (pixels: number): number => {
+  return pixels * PIXEL_TO_LAT_RATIO;
+};
 
-  useEffect(() => {
-    const handleResize = () => {
-      setScreenDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    };
+/**
+ * 픽셀을 위도 단위로 변환 (줌 레벨 고려)
+ */
+const pixelsToLatitudeWithZoom = (
+  pixels: number,
+  zoomLevel: number
+): number => {
+  const zoomFactor = Math.pow(2, zoomLevel - DEFAULT_ZOOM_LEVEL);
+  const adjustedRatio = ZOOM_AWARE_PIXEL_TO_LAT_RATIO / zoomFactor;
+  const result = pixels * adjustedRatio;
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  // 개발 모드에서 오프셋 계산 로그
+  if (isDevelopment) {
+    console.log(
+      `📐 [Offset Calc] pixels: ${pixels}, zoomLevel: ${zoomLevel}, zoomFactor: ${zoomFactor.toFixed(3)}, result: ${result.toFixed(6)}`
+    );
+  }
 
-  const calculateSimpleOffset = useCallback((): MapOffset => {
-    const { width } = screenDimensions;
-    
-    // 화면 크기별 기본 오프셋 값
-    let latOffset: number;
-    
-    if (width < 768) {
-      // 모바일: 더 큰 오프셋 (인포윈도우가 화면 하단에 위치)
-      latOffset = 0.003;
-    } else if (width < 1024) {
-      // 태블릿: 중간 오프셋
-      latOffset = 0.0025;
-    } else {
-      // 데스크톱: 기존 오프셋
-      latOffset = 0.0017;
-    }
+  return result;
+};
+
+// ================================
+// 메인 훅들
+// ================================
+
+/**
+ * 간단한 VH 기준 오프셋 계산
+ * 줌 레벨을 고려하지 않는 기본 버전
+ *
+ * @param offsetVh - 오프셋으로 사용할 vh 값 (기본값: 25vh)
+ * @returns 계산된 지도 오프셋
+ */
+export const useSimpleMapOffset = (
+  offsetVh: number = DEFAULT_VH_OFFSET
+): MapOffset => {
+  const { height } = useScreenDimensions();
+
+  const mapOffset = useMemo((): MapOffset => {
+    const offsetPixels = vhToPixels(offsetVh, height);
+    const latOffset = pixelsToLatitude(offsetPixels);
 
     return {
       latOffset,
       lngOffset: 0,
     };
-  }, [screenDimensions]);
+  }, [height, offsetVh]);
 
-  return calculateSimpleOffset();
+  return mapOffset;
 };
 
 /**
- * 지도 중심 이동을 위한 유틸리티 함수
+ * 줌 레벨 추적 훅
+ * onZoomChanged 이벤트와 함께 사용하여 현재 줌 레벨을 추적
+ *
+ * @param initialLevel - 초기 줌 레벨
+ * @returns 줌 레벨과 변경 핸들러
+ */
+export const useMapZoomLevel = (initialLevel: number = DEFAULT_ZOOM_LEVEL) => {
+  const [zoomLevel, setZoomLevel] = useState(initialLevel);
+
+  const handleZoomChanged = useCallback((map: kakao.maps.Map) => {
+    const level = map.getLevel();
+
+    // 실제로 줌 레벨이 변경된 경우에만 상태 업데이트 (불필요한 리렌더링 방지)
+    setZoomLevel(prevLevel => {
+      if (prevLevel !== level) {
+        // 개발 모드에서 줌 레벨 변경 로그
+        if (isDevelopment) {
+          console.log(`🔍 [Map Zoom] Level changed: ${prevLevel} → ${level}`);
+        }
+        return level;
+      }
+      return prevLevel;
+    });
+  }, []);
+
+  // 개발 모드에서 초기 줌 레벨 로그
+  useEffect(() => {
+    if (isDevelopment) {
+      console.log(`🗺️ [Map Zoom] Initial zoom level: ${initialLevel}`);
+    }
+  }, [initialLevel]);
+
+  return {
+    zoomLevel,
+    handleZoomChanged,
+  };
+};
+
+/**
+ * 줌 레벨을 고려한 VH 기준 오프셋 계산
+ * 지도 줌 레벨에 따라 정확한 오프셋을 계산하는 고급 버전
+ *
+ * @param offsetVh - 오프셋으로 사용할 vh 값 (기본값: 25vh)
+ * @param zoomLevel - 현재 지도 줌 레벨 (1-14)
+ * @returns 계산된 지도 오프셋
+ */
+export const useZoomAwareMapOffset = (
+  offsetVh: number = DEFAULT_VH_OFFSET,
+  zoomLevel: number = DEFAULT_ZOOM_LEVEL
+): MapOffset => {
+  const { height } = useScreenDimensions();
+
+  const mapOffset = useMemo((): MapOffset => {
+    const offsetPixels = vhToPixels(offsetVh, height);
+    const latOffset = pixelsToLatitudeWithZoom(offsetPixels, zoomLevel);
+
+    return {
+      latOffset,
+      lngOffset: 0,
+    };
+  }, [height, offsetVh, zoomLevel]);
+
+  return mapOffset;
+};
+
+/**
+ * 통합 지도 오프셋 훅
+ * 줌 레벨 추적과 오프셋 계산을 통합한 편의 훅
+ *
+ * @param offsetVh - 오프셋으로 사용할 vh 값 (기본값: 25vh)
+ * @param initialLevel - 초기 줌 레벨 (기본값: 3)
+ * @returns 오프셋 정보와 줌 변경 핸들러
+ */
+export const useIntegratedMapOffset = (
+  offsetVh: number = DEFAULT_VH_OFFSET,
+  initialLevel: number = DEFAULT_ZOOM_LEVEL
+) => {
+  // initialLevel 변경으로 인한 재생성 방지
+  const [stableInitialLevel] = useState(initialLevel);
+
+  const { zoomLevel, handleZoomChanged } = useMapZoomLevel(stableInitialLevel);
+  const mapOffset = useZoomAwareMapOffset(offsetVh, zoomLevel);
+
+  return {
+    mapOffset,
+    zoomLevel,
+    handleZoomChanged,
+  };
+};
+
+// ================================
+// 유틸리티 함수들
+// ================================
+
+/**
+ * 원본 좌표에 오프셋을 적용하여 새로운 좌표 계산
+ *
+ * @param originalLat - 원본 위도
+ * @param originalLng - 원본 경도
+ * @param offset - 적용할 오프셋
+ * @returns 오프셋이 적용된 새로운 좌표
  */
 export const getOffsetPosition = (
   originalLat: number,
@@ -148,4 +245,19 @@ export const getOffsetPosition = (
     lat: originalLat + offset.latOffset,
     lng: originalLng + offset.lngOffset,
   };
+};
+
+/**
+ * 오프셋 정보를 디버깅용으로 문자열로 변환
+ *
+ * @param offset - 오프셋 정보
+ * @param precision - 소수점 자릿수 (기본값: 6)
+ * @returns 디버깅용 문자열
+ */
+
+export const offsetToString = (
+  offset: MapOffset,
+  precision: number = 6
+): string => {
+  return `lat: ${offset.latOffset.toFixed(precision)}, lng: ${offset.lngOffset.toFixed(precision)}`;
 };

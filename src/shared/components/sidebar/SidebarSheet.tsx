@@ -37,7 +37,7 @@ const SidebarSheet = () => {
         </SheetHeader>
 
         <div className="px-4 flex flex-col">
-          {!isLoggedIn ? <LoggedInContent /> : <LoggedOutContent />}
+          {isLoggedIn ? <LoggedInContent /> : <LoggedOutContent />}
         </div>
       </SheetContent>
     </Sheet>

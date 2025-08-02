@@ -88,10 +88,10 @@ export const LoggedInBarcodeContent = () => {
           <CroppedImg imageUrl={imageUrl} onClick={triggerFileSelect} />
           <button
             onClick={triggerFileSelect}
-            className="absolute top-2 right-2 bg-white rounded-full p-2 shadow hover:bg-white cursor-pointer"
+            className="absolute top-2 right-0 bg-white rounded-full hover:bg-white cursor-pointer px-1"
             aria-label="이미지 재업로드"
           >
-            <ImageUp size={16} />
+            <ImageUp size={17} />
           </button>
         </div>
       ) : (

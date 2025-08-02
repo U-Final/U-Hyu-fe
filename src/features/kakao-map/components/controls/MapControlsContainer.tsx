@@ -9,7 +9,7 @@ import { LocationControlContainer } from '../location/LocationControlContainer';
  */
 export const MapControlsContainer: FC = () => {
   return (
-    <div className="fixed right-4 bottom-[7rem] z-40 flex flex-col gap-3 md:right-6">
+    <div className="absolute right-4 bottom-[7rem] z-40 flex flex-col gap-3 md:right-6">
       {/* 북마크 버튼 (상단) */}
       <BookmarkControlContainer />
       

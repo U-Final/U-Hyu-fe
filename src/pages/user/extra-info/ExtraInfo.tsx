@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 
 import type { UserGender } from '@/shared/types';
 
-const ImprovedSignupFlow: React.FC = () => {
+const ExtraInfo: React.FC = () => {
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -149,4 +149,4 @@ const ImprovedSignupFlow: React.FC = () => {
   );
 };
 
-export default ImprovedSignupFlow;
+export default ExtraInfo;

@@ -159,7 +159,7 @@ export const useKeywordSearch = (options?: {
       }
       abortControllerRef.current = new AbortController();
 
-      setState(prev => ({ ...prev, keyword, loading: true, error: null }));
+      setState(prev => ({ ...prev, keyword, loading: true, error: null, hasSearched: false }));
 
       try {
         const result = await searchFn();
@@ -265,15 +265,23 @@ export const useKeywordSearch = (options?: {
     if (autoSearch) {
       debouncedSearchRef.current = debounce(async (keyword: string) => {
         if (keyword.trim()) {
-          // 지도 중심 좌표가 있으면 위치 기반 검색, 없으면 일반 검색
-          if (mapCenter) {
+          const trimmedKeyword = keyword.trim();
+          
+          // 지역명이나 광범위한 키워드인지 확인
+          const isRegionKeyword = /^(서울|부산|대구|인천|광주|대전|울산|세종|경기|강원|충북|충남|전북|전남|경북|경남|제주)/.test(trimmedKeyword) ||
+                                 /시$|구$|군$|동$|읍$|면$/.test(trimmedKeyword) ||
+                                 trimmedKeyword.length <= 2;
+          
+          if (mapCenter && !isRegionKeyword) {
+            // 구체적인 장소명일 때만 거리 기반 검색
             await executeSearch(async () => {
-              const result = await getKeywordSearchByLocation(keyword.trim(), mapCenter, searchRadius);
+              const result = await getKeywordSearchByLocation(trimmedKeyword, mapCenter, searchRadius);
               return result;
             }, keyword);
           } else {
+            // 지역명이나 광범위한 키워드는 일반 검색
             await executeSearch(
-              () => getKeywordSearch(keyword.trim()),
+              () => getKeywordSearch(trimmedKeyword),
               keyword
             );
           }

@@ -32,19 +32,24 @@ import { KeywordInfoWindow } from './KeywordInfoWindow';
 import { KeywordMarker } from './KeywordMarker';
 import MyMapMarker from './MyMapMarker';
 import StoreInfoWindow from './StoreInfoWindow';
+import UserLocationMarker from './UserLocationMarker';
 
 interface MapWithMarkersProps {
   center: { lat: number; lng: number };
   stores: Store[];
   keywordResults?: NormalizedPlace[];
   selectedPlace?: NormalizedPlace | null;
-  currentLocation?: { lat: number; lng: number } | null;
+  currentLocation?: { lat: number; lng: number; _forceUpdate?: number } | null;
   level?: number;
   className?: string;
   onStoreClick?: (store: Store) => void;
   onPlaceClick?: (place: NormalizedPlace) => void;
   onPlaceInfoClose?: () => void;
-  onCenterChange?: (center: { lat: number; lng: number }) => void;
+  onCenterChange?: (center: {
+    lat: number;
+    lng: number;
+    _forceUpdate?: number;
+  }) => void;
   /** 검색 로딩 상태 (재검색 버튼 로딩 표시용) */
   isSearching?: boolean;
   /** 외부에서 제어하는 선택된 매장 ID */
@@ -73,6 +78,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   const [infoWindowStore, setInfoWindowStore] = useState<Store | null>(null);
   const [recommendedInfoWindowStore, setRecommendedInfoWindowStore] =
     useState<Store | null>(null);
+  const [showUserLocationInfo, setShowUserLocationInfo] = useState(false);
   const [mapCenter, setMapCenter] = useState(center);
   // const [isPanto, setIsPanto] = useState(false);
   const mapRef = useRef<kakao.maps.Map | null>(null);
@@ -147,10 +153,24 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
     const isInfoWindowOpen = infoWindowStore || recommendedInfoWindowStore;
 
     // 인포윈도우가 열려있지 않고, 방금 닫힌 것도 아닐 때만 center prop 동기화
-    if (!isInfoWindowOpen && !wasInfoWindowOpen) {
+    // 단, 사용자 위치 인포윈도우만 열려있는 경우는 허용
+    const shouldSyncCenter =
+      (!isInfoWindowOpen && !wasInfoWindowOpen) ||
+      (showUserLocationInfo && !infoWindowStore && !recommendedInfoWindowStore);
+
+    if (shouldSyncCenter) {
+      if (import.meta.env.MODE === 'development') {
+        console.log('🗺️ [MapWithMarkers] Syncing center to:', center);
+      }
       setMapCenter(center);
       // 새로운 center가 설정될 때 검색 기준 위치도 업데이트
       updateSearchPosition(center);
+    } else {
+      if (import.meta.env.MODE === 'development') {
+        console.log(
+          '🚫 [MapWithMarkers] Skipping center sync due to info windows'
+        );
+      }
     }
 
     // 이전 상태 업데이트
@@ -160,8 +180,54 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
     center,
     infoWindowStore,
     recommendedInfoWindowStore,
+    showUserLocationInfo,
     updateSearchPosition,
+    mapCenter,
   ]);
+
+  // 내 위치 버튼 클릭으로 인한 currentLocation 변경 감지 및 지도 이동
+  const prevCurrentLocation = useRef(currentLocation);
+  useEffect(() => {
+    // 개발 모드에서 디버깅 로그
+    if (import.meta.env.MODE === 'development') {
+      console.log('🌍 [Location Debug] currentLocation changed:', {
+        currentLocation,
+        prevCurrentLocation: prevCurrentLocation.current,
+        center,
+        mapCenter,
+      });
+    }
+
+    // currentLocation이 새로 설정되거나 변경되었을 때 지도 이동
+    // _forceUpdate 속성이 있으면 좌표가 같더라도 강제로 이동
+    const hasForceUpdate = currentLocation && '_forceUpdate' in currentLocation;
+    const hasLocationChanged =
+      currentLocation &&
+      (!prevCurrentLocation.current ||
+        Math.abs(currentLocation.lat - prevCurrentLocation.current.lat) >
+          0.0001 ||
+        Math.abs(currentLocation.lng - prevCurrentLocation.current.lng) >
+          0.0001);
+
+    if (currentLocation && (hasLocationChanged || hasForceUpdate)) {
+      if (import.meta.env.MODE === 'development') {
+        console.log(
+          '🎯 [Location Debug] Moving map to current location:',
+          currentLocation,
+          hasForceUpdate ? '(forced)' : '(changed)'
+        );
+      }
+
+      // _forceUpdate 속성을 제거한 깨끗한 좌표 객체로 지도 이동
+      const cleanLocation = {
+        lat: currentLocation.lat,
+        lng: currentLocation.lng,
+      };
+      setMapCenter(cleanLocation);
+      updateSearchPosition(cleanLocation);
+    }
+    prevCurrentLocation.current = currentLocation;
+  }, [currentLocation, updateSearchPosition, center, mapCenter]);
 
   // 전역 selectedStore 변경 시 해당 매장으로 포커스 (카드 클릭 시)
   useEffect(() => {
@@ -269,6 +335,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
       // 로그인 상태 확인 후 인포윈도우 표시
       // checkAuthAndExecuteModal(() => {
       setInternalSelectedStoreId(store.storeId);
+      setShowUserLocationInfo(false); // 사용자 위치 인포윈도우 닫기
       setInfoWindowStore(store);
 
       // 추천 매장인지 확인
@@ -324,9 +391,30 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
     setInternalSelectedStoreId(null);
     setInfoWindowStore(null);
     setRecommendedInfoWindowStore(null); // 추가
+    setShowUserLocationInfo(false); // 사용자 위치 인포윈도우도 닫기
     // 전역 상태도 초기화
     setSelectedStore(null);
   }, [setSelectedStore]);
+
+  const handleUserLocationClick = useCallback(() => {
+    if (!currentLocation) return;
+
+    // 1) 다른 인포윈도우들 닫기
+    setInfoWindowStore(null);
+    setRecommendedInfoWindowStore(null);
+    setSelectedStore(null);
+    setShowUserLocationInfo(true);
+
+    // 2) 지도 중심 이동 & 검색 기준 위치 업데이트
+    const { lat, lng } = currentLocation;
+    const cleanLocation = { lat, lng };
+    setMapCenter(cleanLocation);
+    updateSearchPosition(cleanLocation);
+  }, [currentLocation, updateSearchPosition]);
+
+  const handleUserLocationInfoClose = useCallback(() => {
+    setShowUserLocationInfo(false);
+  }, []);
 
   const toggleFavoriteMutation = useToggleFavoriteMutation();
 
@@ -536,16 +624,14 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
 
         {/* 사용자 위치 마커 */}
         {currentLocation && (
-          <CustomOverlayMap
+          <UserLocationMarker
             position={currentLocation}
-            yAnchor={0.5}
-            xAnchor={0.5}
-          >
-            <div className="relative">
-              <div className="w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg" />
-              <div className="absolute inset-0 w-12 h-12 border-2 border-blue-300 rounded-full opacity-30 animate-pulse -translate-x-4 -translate-y-4" />
-            </div>
-          </CustomOverlayMap>
+            showPulse={true}
+            size="medium"
+            onClick={handleUserLocationClick}
+            showInfoWindow={showUserLocationInfo}
+            onInfoWindowClose={handleUserLocationInfoClose}
+          />
         )}
       </KakaoMap>
     </>

@@ -29,7 +29,7 @@ const MapContent = () => {
   );
   const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number }>({
     lat: 37.570028,
-    lng: 126.977266
+    lng: 126.977266,
   });
   const mapCenterSetterRef = useRef<
     ((center: { lat: number; lng: number }) => void) | null
@@ -60,7 +60,6 @@ const MapContent = () => {
             lat: firstResult.latitude,
             lng: firstResult.longitude,
           });
-
         }
       }
       setSelectedPlace(null); // 새 검색 시 선택 초기화
@@ -83,18 +82,26 @@ const MapContent = () => {
   const handleMapCenterUpdate = useCallback(
     (setMapCenterFn: (center: { lat: number; lng: number }) => void) => {
       mapCenterSetterRef.current = setMapCenterFn;
+      if (import.meta.env.MODE === 'development') {
+        console.log(
+          '🔧 [MapPage] mapCenterSetterRef updated:',
+          !!setMapCenterFn
+        );
+      }
     },
     []
   );
 
   // 지도 중심 좌표 변경 핸들러
-  const handleMapCenterChange = useCallback((center: { lat: number; lng: number }) => {
-    setMapCenter(center);
-  }, []);
+  const handleMapCenterChange = useCallback(
+    (center: { lat: number; lng: number }) => {
+      setMapCenter(center);
+    },
+    []
+  );
 
   // selectedPlace 상태 변화 디버깅
-  useEffect(() => {
-  }, [selectedPlace]);
+  useEffect(() => {}, [selectedPlace]);
 
   // 바텀시트 초기화 - 닫힌 상태로 시작
   useEffect(() => {
@@ -124,7 +131,13 @@ const MapContent = () => {
           onPlaceClick={handlePlaceClick}
           mapCenter={mapCenter}
         />
-        <MapButtonsContainer />
+        <MapButtonsContainer
+          onCenterChange={center => {
+            if (mapCenterSetterRef.current) {
+              mapCenterSetterRef.current(center);
+            }
+          }}
+        />
       </div>
 
       <BottomSheetContainer ref={bottomSheetRef} />

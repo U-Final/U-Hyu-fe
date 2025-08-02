@@ -27,13 +27,17 @@ const SidebarSheet = () => {
       <SheetContent side="left" className="w-[70%]" containerId="main-content">
         <SheetHeader>
           <div className="flex justify-center items-center gap-4">
-            <img src="/public/images/Logo/Logo3D.png" className="w-10 h-10 " />
+            <img
+              src="/images/Logo/Logo3D.png"
+              alt="U-HYU 로고"
+              className="w-10 h-10"
+            />
             <SheetTitle className="text-h3">U-HYU Menu</SheetTitle>
           </div>
         </SheetHeader>
 
         <div className="px-4 flex flex-col">
-          {isLoggedIn ? <LoggedInContent /> : <LoggedOutContent />}
+          {!isLoggedIn ? <LoggedInContent /> : <LoggedOutContent />}
         </div>
       </SheetContent>
     </Sheet>

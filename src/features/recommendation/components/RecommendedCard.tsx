@@ -1,6 +1,10 @@
+import { useState } from 'react';
+
 import { useMapUIContext } from '@kakao-map/context/MapUIContext';
 import { useMapStore } from '@kakao-map/store/MapStore';
 import type { Store } from '@kakao-map/types/store';
+import { useRecommendExcludeMutation } from '@recommendation/hooks/useRecommendMutation';
+import { ThumbsDown } from 'lucide-react';
 
 import { BrandCard } from '@/shared/components';
 
@@ -16,6 +20,8 @@ const RecommendedStoreCard = ({
   const selectStore = useMapStore(state => state.selectStore);
   const setMapCenter = useMapStore(state => state.setMapCenter);
   const { bottomSheetRef } = useMapUIContext();
+  const [isExcluding, setIsExcluding] = useState(false);
+  const { mutate: excludeStore } = useRecommendExcludeMutation();
 
   const handleCardClick = () => {
     // 전역 상태에 선택된 매장 설정 (지도 포커스용)
@@ -28,6 +34,16 @@ const RecommendedStoreCard = ({
     if (autoCloseBottomSheet && bottomSheetRef && bottomSheetRef.current) {
       bottomSheetRef.current.setExplicitlyClosed(true);
       bottomSheetRef.current.close();
+    }
+  };
+
+  const handleDislikeClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isExcluding) {
+      setIsExcluding(true);
+      excludeStore(store.storeId, {
+        onSettled: () => setIsExcluding(false),
+      });
     }
   };
 
@@ -63,6 +79,16 @@ const RecommendedStoreCard = ({
             </div>
           </div>
         </div>
+        <button
+          onClick={handleDislikeClick}
+          className="absolute top-2 right-2 p-1 rounded-full bg-white shadow hover:bg-gray-100"
+          disabled={isExcluding}
+        >
+          <ThumbsDown
+            className="w-4 h-4 text-gray-500 hover:text-red-500"
+            aria-label="추천 제외"
+          />
+        </button>
       </BrandCard>
     </div>
   );

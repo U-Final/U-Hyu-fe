@@ -322,11 +322,6 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
               loading={loading}
               onItemClick={handlePlaceSelect}
               selectedPlaceId={selectedPlace?.id}
-              emptyMessage={
-                keyword
-                  ? `'${keyword}' 검색 결과가 없습니다.`
-                  : '검색어를 입력하세요.'
-              }
             />
           </div>
         </div>

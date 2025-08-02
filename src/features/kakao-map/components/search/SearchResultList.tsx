@@ -23,8 +23,6 @@ interface SearchResultListProps {
   selectedPlaceId?: string;
   /** 추가 CSS 클래스 */
   className?: string;
-  /** 빈 결과일 때 표시할 메시지 */
-  emptyMessage?: string;
   /** 검색 키워드 */
   keyword?: string;
   /** 총 결과 수 */
@@ -44,7 +42,6 @@ const SearchResultList: React.FC<SearchResultListProps> = ({
   onItemClick,
   selectedPlaceId,
   className = '',
-  emptyMessage = '검색 결과가 없습니다.',
   keyword = '',
   totalCount = 0,
   category,
@@ -60,25 +57,9 @@ const SearchResultList: React.FC<SearchResultListProps> = ({
     );
   }
 
+  // 결과가 없으면 아무것도 렌더링하지 않음 (빈 상태는 상위에서 처리)
   if (results.length === 0) {
-    return (
-      <div
-        className={`flex flex-col items-center justify-center py-12 px-4 text-center ${className}`}
-      >
-        <div className="mb-6 w-32 h-32 flex items-center justify-center">
-          <img
-            src="/images/recommendation/empty-state-2.png"
-            alt="검색 결과 없음"
-            className="w-full h-full object-contain"
-          />
-        </div>
-        <h3 className="text-lg font-semibold text-gray-700 mb-2">
-          검색 결과가 없습니다
-        </h3>
-        <p className="text-gray-500 text-sm mb-1">{emptyMessage}</p>
-        <p className="text-gray-400 text-xs">다른 키워드로 다시 검색해보세요</p>
-      </div>
-    );
+    return null;
   }
 
   return (

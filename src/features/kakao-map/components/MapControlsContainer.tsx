@@ -21,6 +21,8 @@ interface MapControlsContainerProps {
   debounceDelay?: number;
   /** 현재 지도 중심 좌표 */
   mapCenter?: { lat: number; lng: number };
+  /** 검색 결과를 유지한 채로 아이템 선택 (검색창은 닫지 않음) */
+  onSearchResultItemClick?: (place: NormalizedPlace) => void;
 }
 
 /**
@@ -37,6 +39,7 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
   enableAutoSearch = true,
   debounceDelay = Number(import.meta.env.VITE_SEARCH_DEBOUNCE_DELAY) || 500,
   mapCenter,
+  onSearchResultItemClick,
 }) => {
   // UI 상태와 액션들 가져오기
   const {
@@ -173,13 +176,6 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
     onCloseSearchResults?.();
   };
 
-  // 검색 결과 아이템 클릭 전용 닫기 처리 (selectedPlace 유지)
-  const handleCloseSearchResultsForItemClick = () => {
-    // clearResults()를 호출하지 않고 MapPage의 keywordResults만 초기화
-    // 이렇게 하면 useKeywordSearch의 selectedPlace가 유지됨
-    onCloseSearchResults?.();
-    clearError();
-  };
 
   // 지역 필터 변경 처리
   const handleRegionFilterChange = (region: string) => {
@@ -198,13 +194,15 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
     }
   };
 
-  // 검색 결과 아이템 클릭 처리 (마커 클릭과 동일한 효과)
+  // 검색 결과 아이템 클릭 처리 (검색창 유지)
   const handleSearchResultClick = (place: NormalizedPlace) => {
-    // 검색 결과 리스트 먼저 닫기 (selectedPlace 유지)
-    handleCloseSearchResultsForItemClick();
-
-    // MapPage의 selectedPlace 상태 업데이트 (인포윈도우 표시용)
-    onPlaceClick?.(place);
+    // 전용 핸들러가 있으면 사용, 없으면 기본 처리
+    if (onSearchResultItemClick) {
+      onSearchResultItemClick(place);
+    } else {
+      // MapPage의 selectedPlace 상태 업데이트 (인포윈도우 표시용)
+      onPlaceClick?.(place);
+    }
 
     // useKeywordSearch 훅의 selectedPlace 업데이트 (검색 결과 하이라이트용)
     selectPlace(place);
@@ -220,6 +218,9 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
         lng: targetLng,
       });
     }
+
+    // 검색 결과창은 유지하고 에러만 클리어
+    clearError();
   };
 
   const { uuid } = useParams();

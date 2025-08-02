@@ -164,18 +164,46 @@ const MapTopControls: FC<MapTopControlsProps> = ({
       {/* 검색 결과 리스트 */}
       {isSearchResultsVisible && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 max-h-80 z-30 backdrop-blur-sm overflow-hidden">
-          <SearchResultList
-            results={keywordResults}
-            loading={isSearching}
-            onItemClick={onSearchResultClick || (() => {})}
-            selectedPlaceId={selectedPlace?.id}
-            emptyMessage="검색 결과가 없습니다."
-            className="max-h-80"
-            keyword={searchValue}
-            totalCount={searchMeta?.total_count || keywordResults.length}
-            category={activeCategoryFilter}
-            showSummary={true}
-          />
+          {/* 로딩 중일 때 */}
+          {isSearching ? (
+            <SearchResultList
+              results={[]}
+              loading={true}
+              onItemClick={() => {}}
+              className="max-h-80"
+            />
+          ) : keywordResults.length > 0 ? (
+            /* 검색 결과가 있을 때 */
+            <SearchResultList
+              results={keywordResults}
+              loading={false}
+              onItemClick={onSearchResultClick || (() => {})}
+              selectedPlaceId={selectedPlace?.id}
+              className="max-h-80"
+              keyword={searchValue}
+              totalCount={searchMeta?.total_count || keywordResults.length}
+              category={activeCategoryFilter}
+              showSummary={true}
+            />
+          ) : (
+            /* 검색 결과가 없을 때 */
+            <div className="flex flex-col items-center justify-center py-12 px-4 text-center max-h-80">
+              <div className="mb-6 w-32 h-32 flex items-center justify-center">
+                <img
+                  src="/images/recommendation/empty-state-2.png"
+                  alt="검색 결과 없음"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-700 mb-2">
+                검색 결과가 없습니다
+              </h3>
+              <p className="text-gray-500 text-sm mb-1">
+                '{searchValue}' 에 대한 검색 결과가 없습니다.
+              </p>
+              <p className="text-gray-400 text-xs">다른 키워드로 다시 검색해보세요</p>
+            </div>
+          )}
         </div>
       )}
     </div>

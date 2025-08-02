@@ -100,18 +100,18 @@
 
 /* Tailwind CSS v4 테마 설정 */
 @theme {
-  --color-primary-50: #f0f7ff;
-  --color-primary-100: #e6ebff;
-  --color-primary-200: #dfeeff;
-  --color-primary-400: #b0b8c1;
-  --color-primary-600: #0064ff;
-  --color-primary-700: #0052d9;
-  --color-primary-800: #202632;
-  --color-primary-900: #1a1f2e;
+  --color-primary-50: #fdf2f8;
+  --color-primary-100: #fce7f3;
+  --color-primary-200: #fbcfe8;
+  --color-primary-400: #f9a8d4;
+  --color-primary-600: #e6007e;
+  --color-primary-700: #be185d;
+  --color-primary-800: #9d174d;
+  --color-primary-900: #831843;
 
-  --color-brand-blue: #0064ff;
-  --color-brand-blueLight: #dfeeff;
-  --color-brand-blueMuted: #e6ebff;
+  --color-brand-blue: #e6007e;
+  --color-brand-blueLight: #fce7f3;
+  --color-brand-blueMuted: #fdf2f8;
   --color-brand-dark: #202632;
   --color-brand-darkMuted: #b0b8c1;
   --color-brand-light: #f5f5f5;
@@ -122,13 +122,13 @@
 
   --color-text-primary: #202632;
   --color-text-secondary: #4e5867;
-  --color-text-accent: #3182f6;
+  --color-text-accent: #e6007e;
 
-  --color-button-primary: #0064ff;
+  --color-button-primary: #e6007e;
   --color-button-secondary: #d1d6da;
 
   --color-etc-BG-blue: #f2f4f6;
-  --color-etc-TXT-blue: #3182f6;
+  --color-etc-TXT-blue: #e6007e;
   --color-etc-TXT-gray: #4e5867;
   --color-etc-BT-blue: #d1d6da;
 
@@ -186,9 +186,9 @@
 /* 기본 변수 설정 */
 :root {
   /* BG Colors */
-  --bg-primary: #0064ff;
-  --bg-primary-hover: #0053d8;
-  --bg-primary-loading: #4d93ff;
+  --bg-primary: #e6007e;
+  --bg-primary-hover: #cc0066;
+  --bg-primary-loading: #ff4da6;
   --bg-black: #17171b;
   --bg-white: #ffffff;
   --bg-white-hover: #f2f6fc;
@@ -215,7 +215,7 @@
   --border-light-gray: #eceef0;
 
   /* Text Colors */
-  --text-primary: #3182f6;
+  --text-primary: #e6007e;
   --text-black: #202632;
   --text-tertiary: #d9d9d9;
   --text-secondary: #71717a;

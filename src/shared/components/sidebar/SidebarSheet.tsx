@@ -1,7 +1,6 @@
 import { LogoutButton } from '@/features/user/components/LogoutButton';
 import { Menu } from 'lucide-react';
 
-import { KakaoLoginButton } from '@/shared/components/buttons/KakaoLoginButton';
 import {
   Sheet,
   SheetContent,
@@ -41,10 +40,7 @@ const SidebarSheet = () => {
               <LoggedInContent />
             </>
           ) : (
-            <>
-              <KakaoLoginButton className="w-full" />
-              <LoggedOutContent />
-            </>
+            <LoggedOutContent />
           )}
         </div>
       </SheetContent>

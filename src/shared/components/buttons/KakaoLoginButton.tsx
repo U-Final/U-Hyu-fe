@@ -3,6 +3,8 @@ import { forwardRef } from 'react';
 import { Loader2 } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
+import { useKakaoLogin } from '@/shared/hooks';
+
 type KakaoButtonSize = 'sm' | 'md' | 'lg';
 
 export interface KakaoLoginButtonProps
@@ -67,12 +69,14 @@ export const KakaoLoginButton = forwardRef<
     );
 
     const buttonText = variant === 'full' ? '카카오 로그인' : '로그인';
+    const { login } = useKakaoLogin();
 
     return (
       <button
         ref={ref}
         disabled={isLoading || disabled}
         className={finalClassName}
+        onClick={login}
         {...props}
       >
         {isLoading ? (

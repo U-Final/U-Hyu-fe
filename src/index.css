@@ -197,6 +197,7 @@
   --bg-blue: #eff6ff;
   --bg-purple: #faf5ff;
   --bg-star: #ffe500;
+  --bg-sparkle: #ffd700;
   --bg-secondary: #e6f0ff;
   --bg-secondary-hover: #d6e7ff;
   --bg-gray: #b0b8c1;
@@ -330,6 +331,9 @@
   .text-yellow {
     color: var(--text-yellow);
   }
+  .text-sparkle {
+    color: var(--bg-sparkle);
+  }
   .text-green {
     color: var(--text-green);
   }
@@ -455,6 +459,9 @@
   }
   .bg-star {
     background-color: var(--bg-star);
+  }
+  .bg-sparkle {
+    background-color: var(--bg-sparkle);
   }
   .bg-secondary {
     background-color: var(--bg-secondary);

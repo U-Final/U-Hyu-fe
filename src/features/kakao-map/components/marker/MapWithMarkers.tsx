@@ -255,51 +255,51 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   const handleMarkerClick = useCallback(
     (store: Store) => {
       // 로그인 상태 확인 후 인포윈도우 표시
-      checkAuthAndExecuteModal(() => {
-        setInternalSelectedStoreId(store.storeId);
+      // checkAuthAndExecuteModal(() => {
+      setInternalSelectedStoreId(store.storeId);
+      setInfoWindowStore(store);
+
+      // 추천 매장인지 확인
+      const isRecommended = recommendedStores.some(
+        s => s.storeId === store.storeId
+      );
+      if (isRecommended) {
+        setRecommendedInfoWindowStore(store);
+      } else {
         setInfoWindowStore(store);
+      }
 
-        // 추천 매장인지 확인
-        const isRecommended = recommendedStores.some(
-          s => s.storeId === store.storeId
-        );
-        if (isRecommended) {
-          setRecommendedInfoWindowStore(store);
-        } else {
-          setInfoWindowStore(store);
-        }
+      trackMarkerClick(store.storeId);
 
-        trackMarkerClick(store.storeId);
+      // 인포 윈도우가 화면 중앙에 오도록 오프셋 적용
+      const offset = 0.0017;
+      const targetLat = store.latitude + offset;
+      const targetLng = store.longitude;
+      const targetCenter = { lat: targetLat, lng: targetLng };
 
-        // 인포 윈도우가 화면 중앙에 오도록 오프셋 적용
-        const offset = 0.0017;
-        const targetLat = store.latitude + offset;
-        const targetLng = store.longitude;
-        const targetCenter = { lat: targetLat, lng: targetLng };
+      // KakaoMap의 isPanto를 사용한 부드러운 이동
+      setIsPanto(true);
+      setMapCenter(targetCenter);
 
-        // KakaoMap의 isPanto를 사용한 부드러운 이동
-        setIsPanto(true);
-        setMapCenter(targetCenter);
+      // 지도 레벨을 4로 변경
+      if (mapRef.current) {
+        mapRef.current.setLevel(4);
+      }
 
-        // 지도 레벨을 4로 변경
-        if (mapRef.current) {
-          mapRef.current.setLevel(4);
-        }
+      // 기존 timeout이 있다면 정리
+      if (pantoTimeoutRef.current) {
+        clearTimeout(pantoTimeoutRef.current);
+      }
 
-        // 기존 timeout이 있다면 정리
-        if (pantoTimeoutRef.current) {
-          clearTimeout(pantoTimeoutRef.current);
-        }
+      // 애니메이션 완료 후 isPanto 리셋
+      pantoTimeoutRef.current = setTimeout(() => {
+        setIsPanto(false);
+        pantoTimeoutRef.current = null;
+      }, 500); // 애니메이션 시간을 500ms로 증가
 
-        // 애니메이션 완료 후 isPanto 리셋
-        pantoTimeoutRef.current = setTimeout(() => {
-          setIsPanto(false);
-          pantoTimeoutRef.current = null;
-        }, 500); // 애니메이션 시간을 500ms로 증가
-
-        // 외부에서 전달받은 onStoreClick 콜백도 호출
-        onStoreClick?.(store);
-      });
+      // 외부에서 전달받은 onStoreClick 콜백도 호출
+      onStoreClick?.(store);
+      // });
     },
     [onStoreClick, recommendedStores]
   );

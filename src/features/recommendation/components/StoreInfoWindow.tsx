@@ -1,5 +1,7 @@
 import type { Store } from '@kakao-map/types/store';
 import { CustomOverlayMap } from 'react-kakao-maps-sdk';
+import { useState, useEffect } from 'react';
+import { SimpleInfoWindowSkeleton } from '@kakao-map/components/marker/InfoWindowSkeleton';
 
 interface RecommendedStoreInfoWindowProps {
   store: Store;
@@ -9,6 +11,33 @@ interface RecommendedStoreInfoWindowProps {
 export const RecommendStoreInfoWindow: React.FC<
   RecommendedStoreInfoWindowProps
 > = ({ store, position }) => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  // 로딩 상태 시뮬레이션 (실제로는 데이터 페칭 상태에 따라 결정)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 300); // 300ms 후 로딩 완료
+
+    return () => clearTimeout(timer);
+  }, [store.storeId]);
+
+  // 로딩 중일 때 스켈레톤 표시
+  if (isLoading) {
+    return (
+      <CustomOverlayMap
+        position={position}
+        yAnchor={1.4}
+        xAnchor={0.5}
+        zIndex={1000}
+      >
+        <div className="relative">
+          <SimpleInfoWindowSkeleton position={position} />
+        </div>
+      </CustomOverlayMap>
+    );
+  }
+
   return (
     <CustomOverlayMap
       position={position}
@@ -25,7 +54,7 @@ export const RecommendStoreInfoWindow: React.FC<
         </div>
 
         <div
-          className="relative z-10 bg-white rounded-[14px] shadow-lg border border-gray-200 p-4 min-w-[280px] max-w-[320px] border-b-0"
+          className="relative z-10 bg-white rounded-[14px] shadow-lg border border-gray-200 p-4 min-w-[280px] max-w-[320px] border-b-0 animate-fadeIn"
           onClick={e => {
             e.stopPropagation();
           }}

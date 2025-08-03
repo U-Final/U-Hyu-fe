@@ -1,5 +1,7 @@
 import { FILTER_TABS } from '@/shared/components/filter_tabs/FilterTabs.variants';
 
+const DEFAULT_PRIMARY_COLOR = '#e6007e';
+
 /**
  * 카테고리 매핑 상수
  * 백엔드 카테고리명과 FilterTabs 카테고리를 연결하는 매핑 테이블
@@ -96,11 +98,16 @@ const colorCache = new Map<string, string>();
  * @returns FilterTabs에 정의된 색상 또는 기본 프라이머리 색상
  */
 export const getCategoryColorFromFilter = (categoryStr: string): string => {
+  // 입력 유효성 검사
+  if (!categoryStr || categoryStr.trim() === '') {
+    return DEFAULT_PRIMARY_COLOR;
+  }
+
   // 캐시에서 먼저 확인
   const cached = colorCache.get(categoryStr);
   if (cached) return cached;
 
-  let resultColor = '#e6007e'; // 기본값: 프라이머리 컬러
+  let resultColor = DEFAULT_PRIMARY_COLOR; // 기본값: 프라이머리 컬러
 
   // 카테고리 매칭 시도 (정확한 매칭)
   const categoryParts = categoryStr.split(' > ');
@@ -117,7 +124,7 @@ export const getCategoryColorFromFilter = (categoryStr: string): string => {
   }
 
   // 정확한 매칭이 없는 경우 키워드 매칭 시도 (부분 문자열 포함)
-  if (resultColor === '#e6007e') {
+  if (resultColor === DEFAULT_PRIMARY_COLOR) {
     for (const [keyword, filterCategory] of Object.entries(CATEGORY_MAPPINGS)) {
       if (categoryStr.includes(keyword)) {
         const filterTab = FILTER_TABS.find(tab => tab.value === filterCategory);

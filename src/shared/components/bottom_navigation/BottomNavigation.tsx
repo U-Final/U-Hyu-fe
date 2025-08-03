@@ -9,6 +9,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import BarcodeItem from '@/shared/components/bottom_navigation/BarcodeItem';
 import NavItem from '@/shared/components/bottom_navigation/NavItem';
 import { useAuthCheckModal } from '@/shared/hooks/useAuthCheckModal';
+import { useGA } from '@/shared/hooks/useGA';
 import { useBarcodeStore } from '@/shared/store/barcodeStore';
 import { useUser } from '@/shared/store/userStore';
 
@@ -19,6 +20,7 @@ const BottomNavigation = () => {
   const location = useLocation();
   const user = useUser();
   const { isOpen, open, close } = useBarcodeStore();
+  const { trackNavigationInteraction } = useGA();
 
   // URL 기반으로 활성 탭 결정
   const getActiveTab = (pathname: string) => {
@@ -38,6 +40,9 @@ const BottomNavigation = () => {
     if (!isLoggedIn) {
       e?.preventDefault();
       checkAuthAndExecuteModal(() => {});
+    } else {
+      // GA 추적: 마이페이지 탭 클릭
+      trackNavigationInteraction('tab_clicked', activeTab, '마이페이지');
     }
   };
 
@@ -45,11 +50,30 @@ const BottomNavigation = () => {
     if (!isLoggedIn) {
       e?.preventDefault();
       checkAuthAndExecuteModal(() => {});
+    } else {
+      // GA 추적: 마이맵 탭 클릭
+      trackNavigationInteraction('tab_clicked', activeTab, '마이맵');
     }
   };
 
   const handleBarcodeClick = () => {
+    // GA 추적: 바코드 버튼 클릭
+    trackNavigationInteraction(
+      'barcode_button_clicked',
+      activeTab,
+      isOpen ? 'close' : 'open'
+    );
     return isOpen ? close() : open();
+  };
+
+  const handleMapClick = () => {
+    // GA 추적: 지도 탭 클릭
+    trackNavigationInteraction('tab_clicked', activeTab, '지도');
+  };
+
+  const handleBenefitClick = () => {
+    // GA 추적: 혜택 탭 클릭
+    trackNavigationInteraction('tab_clicked', activeTab, '혜택');
   };
 
   return (
@@ -60,7 +84,7 @@ const BottomNavigation = () => {
             label="지도"
             icon={<FaMapMarkerAlt />}
             isActive={activeTab === '지도'}
-            onClick={() => {}}
+            onClick={handleMapClick}
           />
         </NavLink>
         {isLoggedIn ? (
@@ -69,7 +93,7 @@ const BottomNavigation = () => {
               label="마이맵"
               icon={<FaMap />}
               isActive={activeTab === '마이맵'}
-              onClick={() => {}}
+              onClick={handleMyMapClick}
             />
           </NavLink>
         ) : (
@@ -94,7 +118,7 @@ const BottomNavigation = () => {
             label="혜택"
             icon={<HiGift />}
             isActive={activeTab === '혜택'}
-            onClick={() => {}}
+            onClick={handleBenefitClick}
           />
         </NavLink>
         {isLoggedIn ? (
@@ -108,7 +132,7 @@ const BottomNavigation = () => {
               isActive={
                 activeTab === (user?.role === 'ADMIN' ? '관리자' : '마이페이지')
               }
-              onClick={() => {}}
+              onClick={handleMyPageClick}
             />
           </NavLink>
         ) : (

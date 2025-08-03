@@ -1,7 +1,9 @@
 import { type FC } from 'react';
 
-import type { Store } from '../../types/store.ts';
+import { useGA } from '@/shared/hooks/useGA';
+
 import { FILTER_TABS } from '../../../../shared/components/filter_tabs/FilterTabs.variants.ts';
+import type { Store } from '../../types/store.ts';
 
 interface BrandMarkerProps {
   store: Store;
@@ -16,6 +18,7 @@ const BrandMarker: FC<BrandMarkerProps> = ({
   isRecommended = false,
   onClick,
 }) => {
+  const { trackMapInteraction } = useGA();
   const brandImageSrc = store.logoImage;
 
   // FilterTabs 색상을 직접 사용하는 개선된 함수
@@ -24,35 +27,45 @@ const BrandMarker: FC<BrandMarkerProps> = ({
     const filterTab = FILTER_TABS.find(tab => {
       // 정확한 매칭
       if (tab.value === storeCategoryName) return true;
-      
+
       // 유사한 카테고리 매칭
       const categoryMappings: Record<string, string[]> = {
-        '테마파크': ['themepark'],
+        테마파크: ['themepark'],
         '워터파크/아쿠아리움': ['waterpark'],
-        '액티비티': ['activity'],
-        '뷰티': ['beauty'],
-        '건강': ['health', 'pharmacy'],
-        '쇼핑': ['shopping'],
+        액티비티: ['activity'],
+        뷰티: ['beauty'],
+        건강: ['health', 'pharmacy'],
+        쇼핑: ['shopping'],
         '생활/편의': ['lifestyle', 'convenience'],
         '베이커리/디저트': ['bakery', 'cafe'],
-        '음식점': ['food', 'restaurant', 'fastfood'],
+        음식점: ['food', 'restaurant', 'fastfood'],
         '영화/미디어': ['media', 'culture'],
         '공연/전시': ['performance'],
-        '교육': ['education'],
+        교육: ['education'],
         '여행/교통': ['travel'],
       };
-      
+
       const matchingCategories = categoryMappings[tab.value];
       return matchingCategories?.includes(storeCategoryName);
     });
-    
+
     return filterTab?.color || '#6b7280'; // 기본 회색
   };
 
   const categoryColor = getCategoryColorFromFilter(store.categoryName);
 
+  const handleMarkerClick = () => {
+    // GA 추적: 마커 클릭
+    trackMapInteraction('marker_click', store.storeId, store.categoryName);
+
+    // 기존 onClick 핸들러 실행
+    if (onClick) {
+      onClick();
+    }
+  };
+
   return (
-    <div className="relative" onClick={onClick}>
+    <div className="relative" onClick={handleMarkerClick}>
       {/* 추천 매장 배지 */}
       {isRecommended && (
         <div className="absolute -top-2 -left-2 w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center z-20 shadow-lg">

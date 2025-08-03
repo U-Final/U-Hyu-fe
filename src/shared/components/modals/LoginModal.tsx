@@ -1,5 +1,6 @@
 import { GhostButton, KakaoLoginButton } from '@/shared/components';
 import { useKakaoLogin } from '@/shared/hooks';
+import { useGA } from '@/shared/hooks/useGA';
 import { useModalStore } from '@/shared/store';
 
 import BaseModal from './BaseModal';
@@ -7,13 +8,18 @@ import BaseModal from './BaseModal';
 const LoginModal = () => {
   const { login } = useKakaoLogin();
   const closeModal = useModalStore(state => state.closeModal);
+  const { trackAuthInteraction } = useGA();
 
   const handleLogin = () => {
+    // GA 추적: 로그인 시도
+    trackAuthInteraction('login_attempted');
     closeModal();
     login();
   };
 
   const handleCancel = () => {
+    // GA 추적: 로그인 모달 취소
+    trackAuthInteraction('login_modal_cancelled');
     closeModal();
   };
 

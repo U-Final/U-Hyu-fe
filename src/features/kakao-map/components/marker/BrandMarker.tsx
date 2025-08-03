@@ -1,14 +1,13 @@
 import { type FC } from 'react';
 
-import { FILTER_TABS } from '../../../../shared/components/filter_tabs/FilterTabs.variants.ts';
 import type { Store } from '../../types/store.ts';
+import { getCategoryColorFromFilter } from '../../utils/categoryColorMapping';
 
 interface BrandMarkerProps {
   store: Store;
   isSelected?: boolean;
   isRecommended?: boolean;
   onClick?: () => void;
-  activeCategory?: string;
 }
 
 const BrandMarker: FC<BrandMarkerProps> = ({
@@ -18,117 +17,6 @@ const BrandMarker: FC<BrandMarkerProps> = ({
   onClick,
 }) => {
   const brandImageSrc = store.logoImage;
-
-  // FilterTabs 색상을 직접 사용하는 개선된 함수
-  const getCategoryColorFromFilter = (storeCategoryName: string): string => {
-    // 매장 카테고리명을 FilterTabs에서 찾기
-    const filterTab = FILTER_TABS.find(tab => {
-      // 1순위: 정확한 매칭 (대소문자 구분 없이)
-      if (tab.value.toLowerCase() === storeCategoryName.toLowerCase())
-        return true;
-
-      // 2순위: 부분 문자열 포함 검사
-      if (
-        storeCategoryName.includes(tab.value) ||
-        tab.value.includes(storeCategoryName)
-      )
-        return true;
-
-      // 3순위: 추가 매핑 테이블을 통한 매칭
-      const categoryMappings: Record<string, string[]> = {
-        '베이커리/디저트': [
-          'bakery',
-          'cafe',
-          '카페',
-          '베이커리',
-          '디저트',
-          '제과점',
-        ],
-        '영화/미디어': [
-          'media',
-          'culture',
-          '영화관',
-          '영화',
-          '미디어',
-          '엔터테인먼트',
-        ],
-        음식점: [
-          'food',
-          'restaurant',
-          'fastfood',
-          '한식',
-          '중식',
-          '일식',
-          '양식',
-          '분식',
-          '치킨',
-          '피자',
-        ],
-        쇼핑: ['shopping', '의류', '신발', '가방', '액세서리', '패션'],
-        뷰티: ['beauty', '미용실', '네일샵', '피부관리', '화장품', '미용'],
-        건강: [
-          'health',
-          'pharmacy',
-          '병원',
-          '약국',
-          '한의원',
-          '치과',
-          '헬스장',
-          '의료',
-        ],
-        '생활/편의': [
-          'lifestyle',
-          'convenience',
-          '편의점',
-          '대형마트',
-          '마트',
-          '슈퍼마켓',
-        ],
-        교육: ['education', '학교', '학원', '도서관', '교육기관'],
-        '여행/교통': [
-          'travel',
-          '지하철역',
-          '버스정류장',
-          '주차장',
-          '주유소',
-          '숙박',
-          '호텔',
-        ],
-        '공연/전시': ['performance', '박물관', '미술관', '공연장', '전시관'],
-        액티비티: ['activity', '스포츠', '수영장', '골프장', '볼링장', '운동'],
-        테마파크: ['themepark', '놀이공원', '테마파크'],
-        '워터파크/아쿠아리움': [
-          'waterpark',
-          '워터파크',
-          '아쿠아리움',
-          '수족관',
-        ],
-      };
-
-      const matchingCategories = categoryMappings[tab.value];
-      return matchingCategories?.some(
-        keyword =>
-          storeCategoryName.toLowerCase().includes(keyword.toLowerCase()) ||
-          keyword.toLowerCase().includes(storeCategoryName.toLowerCase())
-      );
-    });
-
-    const resultColor = filterTab?.color || '#6b7280';
-
-    // 개발 모드에서 매핑 결과 디버깅
-    if (import.meta.env.MODE === 'development') {
-      console.log(
-        `🎨 BrandMarker 매핑: "${storeCategoryName}" → ${filterTab?.label || '매칭 없음'} (${resultColor})`,
-        {
-          찾은탭: filterTab,
-          입력카테고리: storeCategoryName,
-          결과색상: resultColor,
-        }
-      );
-    }
-
-    return resultColor;
-  };
 
   // 항상 매장의 실제 카테고리 색상 사용
   const categoryColor = getCategoryColorFromFilter(store.categoryName);

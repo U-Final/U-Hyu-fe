@@ -91,7 +91,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
     state => state.selectedStore?.storeId
   );
 
-  const { bookmarkMode, bookmarkStores } = useMapStore();
+  const { bookmarkMode, bookmarkStores, selectStore } = useMapStore();
 
   // 마커에 사용할 store 배열 결정(mymap)
   // const storesToRender = isShared ? sharedStores : stores;
@@ -141,12 +141,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
       // 새로운 center가 설정될 때 검색 기준 위치도 업데이트
       updateSearchPosition(center);
     }
-  }, [
-    center,
-    updateSearchPosition,
-    // infoWindowStore와 recommendedInfoWindowStore 의존성 제거
-    // -> 인포윈도우 닫힐 때 useEffect 재실행으로 인한 지도 이동 방지
-  ]);
+  }, [center, updateSearchPosition]);
 
   // 전역 selectedStore 변경 시 해당 매장으로 포커스 (카드 클릭 시)
   useEffect(() => {
@@ -322,7 +317,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
     setInfoWindowStore(null);
     setRecommendedInfoWindowStore(null);
     // 전역 상태 초기화 시 지도 중심점 이동 방지
-    // setSelectedStore(null); // 제거: 인포윈도우 닫을 때 지도 중심점 이동 방지
+    selectStore(null);
   }, []);
 
   const toggleFavoriteMutation = useToggleFavoriteMutation();

@@ -158,6 +158,16 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
           console.error('즐겨찾기 매장 조회 실패:', e);
         }
       },
+
+      refreshBookmarkStores: async () => {
+        try {
+          const stores = await mapApi.getBookmark();
+          set({ bookmarkStores: stores });
+        } catch (e) {
+          console.error('즐겨찾기 매장 새로고침 실패:', e);
+        }
+      },
+
       /**
        * 지도 중심점 설정
        */
@@ -365,3 +375,5 @@ export const useBookmarkStores = () =>
   useMapStore(state => state.bookmarkStores);
 export const useFetchBookmarkStores = () =>
   useMapStore(state => state.fetchBookmarkStores);
+export const useRefreshBookmarkStores = () =>
+  useMapStore(state => state.refreshBookmarkStores);

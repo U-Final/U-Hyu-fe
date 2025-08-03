@@ -1,10 +1,9 @@
-import type {
-  GetNearbyStoresParams,
-  StoreDetail,
-  StoreListResponse,
-  StoreSummary,
-} from '../api/types';
+import type { GetNearbyStoresParams, StoreDetail, StoreListResponse, StoreSummary } from '../api/types';
 import type { Store } from '../types/store';
+
+
+
+
 
 export interface Position {
   lat: number;
@@ -79,6 +78,7 @@ export interface MapStoreActions {
   setShowRecommendedStores: (show: boolean) => void;
   toggleRecommendedStores: () => void;
   fetchRecommendedStores: () => Promise<void>;
+  refreshBookmarkStores: () => Promise<void>;
 
   // 필터링
   applyFilters: (filters: {

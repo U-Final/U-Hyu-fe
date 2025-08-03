@@ -1,6 +1,6 @@
 import { useActivityStatisticsQuery } from '@mypage/hooks/useActivityQuery';
 import { useUserInfo } from '@user/hooks/useUserQuery';
-import { MapPin, Heart } from 'lucide-react';
+import { MapPin, Search } from 'lucide-react';
 import { useState } from 'react';
 
 const ActivityBrands = () => {
@@ -88,14 +88,13 @@ const ActivityBrands = () => {
         {(!data.bestBrandList || data.bestBrandList.length === 0) ? (
           <div className="flex flex-col items-center justify-center py-8">
             <div className="relative mb-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-pink-50 to-rose-100 rounded-full flex items-center justify-center">
-                <Heart className="w-8 h-8 text-pink-500" />
+              <div className="w-16 h-16 bg-light-gray rounded-full flex items-center justify-center">
+                <Search className="w-8 h-8 text-blue-600" />
               </div>
             </div>
-            <h4 className="text-lg font-semibold text-gray-800 mb-2">아직 분석할 데이터가 없어요</h4>
+            <h4 className="text-lg font-semibold text-gray-800 mb-2">아직 클릭 기록이 없어요</h4>
             <p className="text-sm text-gray-500 text-center max-w-md">
-              지도에서 마커를 클릭해보세요!<br />
-              클릭한 곳들이 {userData?.data?.nickName || '사용자'}님의 관심사를 알려줄 거예요.
+              지도에서 마커를 클릭해보세요!<br/> 클릭한 곳들이 {userData?.data?.nickName || '사용자'}님의 관심사를 알려줄 거예요.
             </p>
           </div>
                                             ) : (
@@ -106,8 +105,8 @@ const ActivityBrands = () => {
                <div className="relative z-1 flex flex-col items-center">
                  <div className="w-20 h-20 bg-gradient-to-br from-amber-500 to-amber-600 rounded-full shadow-xl border-4 border-amber-400 flex items-center justify-center mb-4 transform hover:scale-110 transition-transform duration-200 overflow-hidden">
                    <img
-                     src={data.bestBrandList[2].logoImage}
-                     alt={data.bestBrandList[2].brandName}
+                     src={data.bestBrandList[2].bestBrandImage}
+                     alt={data.bestBrandList[2].bestBrandName}
                      className="w-12 h-12 object-cover rounded-full"
                      onError={(e) => {
                        e.currentTarget.src = '/images/share/url.png';
@@ -116,7 +115,7 @@ const ActivityBrands = () => {
                  </div>
                  
                  <p className="text-sm font-bold text-white whitespace-nowrap mb-4 bg-black/30 px-3 py-1 rounded-full backdrop-blur-sm">
-                   {data.bestBrandList[2].brandName}
+                   {data.bestBrandList[2].bestBrandName}
                  </p>
                  
                  <div className="absolute -top-2 -right-2 w-7 h-7 bg-amber-500 rounded-full flex items-center justify-center shadow-lg border-2 border-white">
@@ -132,8 +131,8 @@ const ActivityBrands = () => {
              
                  <div className="w-24 h-24 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full shadow-2xl border-4 border-yellow-300 flex items-center justify-center mb-4 transform hover:scale-110 transition-transform duration-200 overflow-hidden">
                    <img
-                     src={data.bestBrandList[0].logoImage}
-                     alt={data.bestBrandList[0].brandName}
+                     src={data.bestBrandList[0].bestBrandImage}
+                     alt={data.bestBrandList[0].bestBrandName}
                      className="w-16 h-16 object-cover rounded-full"
                      onError={(e) => {
                        e.currentTarget.src = '/images/share/url.png';
@@ -143,7 +142,7 @@ const ActivityBrands = () => {
                  
                 
                  <p className="text-base font-bold text-white whitespace-nowrap mb-4 bg-black/30 px-4 py-1 rounded-full backdrop-blur-sm">
-                   {data.bestBrandList[0].brandName}
+                   {data.bestBrandList[0].bestBrandName}
                  </p>
                  
             
@@ -160,8 +159,8 @@ const ActivityBrands = () => {
             
                  <div className="w-20 h-20 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full shadow-xl border-4 border-gray-200 flex items-center justify-center mb-4 transform hover:scale-110 transition-transform duration-200 overflow-hidden">
                    <img
-                     src={data.bestBrandList[1].logoImage}
-                     alt={data.bestBrandList[1].brandName}
+                     src={data.bestBrandList[1].bestBrandImage}
+                     alt={data.bestBrandList[1].bestBrandName}
                      className="w-12 h-12 object-cover rounded-full"
                      onError={(e) => {
                        e.currentTarget.src = '/images/share/url.png';
@@ -170,7 +169,7 @@ const ActivityBrands = () => {
                  </div>
                  
                  <p className="text-sm font-bold text-white whitespace-nowrap mb-4 bg-black/30 px-3 py-1 rounded-full backdrop-blur-sm">
-                   {data.bestBrandList[1].brandName}
+                   {data.bestBrandList[1].bestBrandName}
                  </p>
                 
                  <div className="absolute -top-2 -right-2 w-7 h-7 bg-gray-300 rounded-full flex items-center justify-center shadow-lg border-2 border-white">

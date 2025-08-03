@@ -49,9 +49,9 @@ export function AdminBrandList() {
 
   // 필터링된 브랜드 목록
   const filteredBrands = useMemo(() => {
-    if (!brandListResponse?.data) return [];
+    if (!brandListResponse?.brandList) return [];
     
-    let filtered = brandListResponse.data;
+    let filtered = brandListResponse.brandList;
     
     // 검색 필터
     if (searchTerm) {
@@ -67,7 +67,7 @@ export function AdminBrandList() {
     }
     
     return filtered;
-  }, [brandListResponse?.data, searchTerm, selectedCategory]);
+  }, [brandListResponse?.brandList, searchTerm, selectedCategory]);
 
   // 페이지네이션
   const totalPages = Math.ceil(filteredBrands.length / ITEMS_PER_PAGE);
@@ -158,20 +158,11 @@ export function AdminBrandList() {
     );
   }
 
-  const totalBrands = brandListResponse?.data?.length || 0;
+  const totalBrands = brandListResponse?.brandList?.length || 0;
   const filteredCount = filteredBrands.length;
 
   return (
     <>
-      {/* 브랜드 추가/수정 폼 */}
-      {showForm && (
-        <AdminBrandForm
-          editingBrand={editingBrand}
-          onCancel={handleFormCancel}
-          onSuccess={handleFormSuccess}
-        />
-      )}
-
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
@@ -187,6 +178,15 @@ export function AdminBrandList() {
           </p>
         </CardHeader>
         <CardContent className="space-y-6">
+          {/* 브랜드 추가 폼 */}
+          {showForm && !editingBrand && (
+            <AdminBrandForm
+              editingBrand={null}
+              onCancel={handleFormCancel}
+              onSuccess={handleFormSuccess}
+            />
+          )}
+
           {/* 검색 */}
           <div className="relative">
             <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -232,6 +232,9 @@ export function AdminBrandList() {
                   brand={brand}
                   onEdit={handleEditBrand}
                   onDelete={handleDeleteBrand}
+                  isEditing={editingBrand?.brandId === brand.brandId}
+                  onCancelEdit={handleFormCancel}
+                  onSuccessEdit={handleFormSuccess}
                 />
               ))
             )}

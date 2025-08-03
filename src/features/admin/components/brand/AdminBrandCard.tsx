@@ -4,11 +4,15 @@ import { Card, CardContent } from '@/shared/components/shadcn/ui/card';
 import { Button } from '@/shared/components/shadcn/ui/button';
 import type { AdminBrand } from '@admin/api/types';
 import { ADMIN_CATEGORIES } from '@admin/constants/categories';
+import { AdminBrandForm } from './AdminBrandForm';
 
 interface AdminBrandCardProps {
   brand: AdminBrand;
   onEdit: (brand: AdminBrand) => void;
   onDelete: (brand: AdminBrand) => void;
+  isEditing?: boolean;
+  onCancelEdit?: () => void;
+  onSuccessEdit?: () => void;
 }
 
 // 혜택 타입을 한글로 변환하는 함수
@@ -35,7 +39,7 @@ const getStoreTypeLabel = (storeType: string) => {
   }
 };
 
-export function AdminBrandCard({ brand, onEdit, onDelete }: AdminBrandCardProps) {
+export function AdminBrandCard({ brand, onEdit, onDelete, isEditing, onCancelEdit, onSuccessEdit }: AdminBrandCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const getCategoryName = (categoryId: number) => {
@@ -152,6 +156,17 @@ export function AdminBrandCard({ brand, onEdit, onDelete }: AdminBrandCardProps)
                 ))}
               </div>
             </div>
+          </div>
+        )}
+
+        {/* 수정 폼 */}
+        {isEditing && (
+          <div className="mt-4 pt-4 border-t border-gray-200">
+            <AdminBrandForm
+              editingBrand={brand}
+              onCancel={onCancelEdit || (() => {})}
+              onSuccess={onSuccessEdit || (() => {})}
+            />
           </div>
         )}
       </CardContent>

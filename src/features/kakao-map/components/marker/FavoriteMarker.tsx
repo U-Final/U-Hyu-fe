@@ -16,14 +16,20 @@ const FavoriteMarker: FC<FavoriteMarkerProps> = ({
       <div
         className={`
           text-3xl
-          drop-shadow-lg
-          transition-transform duration-200
+          drop-shadow-xl
+          transition-all duration-200
           cursor-pointer
           hover:scale-110
-          ${isSelected ? 'ring-4 ring-blue-300 rounded-full bg-white p-1' : ''}
+          hover:drop-shadow-2xl
+          ${isSelected ? 'ring-4 ring-blue-300 rounded-full bg-white p-1 shadow-2xl' : ''}
         `}
       >
-        <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center shadow-md">
+        <div 
+          className="w-6 h-6 bg-primary rounded-full flex items-center justify-center shadow-xl"
+          style={{
+            boxShadow: '0 8px 25px -5px #e6007e40, 0 10px 10px -5px #e6007e30',
+          }}
+        >
           <MdStar className="w-5 h-5 text-white" />
         </div>
       </div>

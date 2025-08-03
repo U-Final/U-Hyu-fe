@@ -1,7 +1,7 @@
 import { type FC } from 'react';
 
 import type { Store } from '../../types/store.ts';
-import { FILTER_TABS } from '../../../../shared/components/filter_tabs/FilterTabs.variants.ts';
+import { getCategoryColorFromFilter } from '../../utils/categoryColorMapping';
 
 interface BrandMarkerProps {
   store: Store;
@@ -18,46 +18,17 @@ const BrandMarker: FC<BrandMarkerProps> = ({
 }) => {
   const brandImageSrc = store.logoImage;
 
-  // FilterTabs 색상을 직접 사용하는 개선된 함수
-  const getCategoryColorFromFilter = (storeCategoryName: string): string => {
-    // 매장 카테고리명을 FilterTabs에서 찾기
-    const filterTab = FILTER_TABS.find(tab => {
-      // 정확한 매칭
-      if (tab.value === storeCategoryName) return true;
-      
-      // 유사한 카테고리 매칭
-      const categoryMappings: Record<string, string[]> = {
-        '테마파크': ['themepark'],
-        '워터파크/아쿠아리움': ['waterpark'],
-        '액티비티': ['activity'],
-        '뷰티': ['beauty'],
-        '건강': ['health', 'pharmacy'],
-        '쇼핑': ['shopping'],
-        '생활/편의': ['lifestyle', 'convenience'],
-        '베이커리/디저트': ['bakery', 'cafe'],
-        '음식점': ['food', 'restaurant', 'fastfood'],
-        '영화/미디어': ['media', 'culture'],
-        '공연/전시': ['performance'],
-        '교육': ['education'],
-        '여행/교통': ['travel'],
-      };
-      
-      const matchingCategories = categoryMappings[tab.value];
-      return matchingCategories?.includes(storeCategoryName);
-    });
-    
-    return filterTab?.color || '#6b7280'; // 기본 회색
-  };
-
+  // 항상 매장의 실제 카테고리 색상 사용
   const categoryColor = getCategoryColorFromFilter(store.categoryName);
 
   return (
     <div className="relative" onClick={onClick}>
-      {/* 추천 매장 배지 */}
+      {/* 추천 매장 심플한 효과 */}
       {isRecommended && (
-        <div className="absolute -top-2 -left-2 w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center z-20 shadow-lg">
-          <span className="text-white text-xs font-bold">★</span>
-        </div>
+        <>
+          {/* 단일 펄스 링 */}
+          <div className="absolute inset-0 w-16 h-16 -translate-x-1 -translate-y-1 rounded-full border-2 border-yellow-400 opacity-50 animate-pulse" />
+        </>
       )}
       {/* 메인 마커 */}
       <div
@@ -65,18 +36,22 @@ const BrandMarker: FC<BrandMarkerProps> = ({
           relative 
           w-14 h-14 
           rounded-full 
-          shadow-lg 
+          shadow-xl 
           border-3 
           border-white
           cursor-pointer
           transition-all 
           duration-200
           hover:scale-110
-          ${isSelected ? `ring-4 ${isRecommended ? 'ring-yellow-300' : 'ring-blue-300'}` : ''}
-          ${isRecommended ? 'animate-pulse' : ''}
+          hover:shadow-2xl
+          ${isSelected ? `ring-4 ${isRecommended ? 'ring-yellow-300' : 'ring-blue-300'} shadow-2xl` : ''}
         `}
         style={{
           backgroundColor: categoryColor,
+          boxShadow: isRecommended
+            ? `0 8px 25px -5px ${categoryColor}50, 0 10px 10px -5px ${categoryColor}30`
+            : `0 8px 25px -5px ${categoryColor}40, 0 10px 10px -5px ${categoryColor}30`,
+          border: isRecommended ? '3px solid #fbbf24' : '3px solid white',
         }}
       >
         {/* 브랜드 로고 */}
@@ -90,6 +65,13 @@ const BrandMarker: FC<BrandMarkerProps> = ({
             }}
           />
         </div>
+
+        {/* 추천 매장 간단한 표시 */}
+        {isRecommended && (
+          <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full border border-white flex items-center justify-center">
+            <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+          </div>
+        )}
 
         {/* 마커 포인터 */}
         <div
@@ -106,9 +88,13 @@ const BrandMarker: FC<BrandMarkerProps> = ({
             border-transparent
             border-t-current
             drop-shadow-md
+            ${isRecommended ? 'animate-pulse' : ''}
           `}
           style={{
-            borderTopColor: isRecommended ? '#eab308' : categoryColor, // yellow-500 or category color
+            borderTopColor: isRecommended ? '#fbbf24' : categoryColor, // amber-400 or category color
+            filter: isRecommended
+              ? 'drop-shadow(0 2px 4px rgba(251, 191, 36, 0.4))'
+              : 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))',
           }}
         />
       </div>

@@ -26,6 +26,8 @@ import {
   MdSchool,
 } from 'react-icons/md';
 
+import { getCategoryColorFromFilter } from '../../utils/categoryColorMapping';
+
 /**
  * 카카오 맵 카테고리 그룹 코드별 아이콘 매핑 (더 적절한 아이콘 사용)
  */
@@ -230,11 +232,7 @@ export const CategoryIcon: React.FC<CategoryIconProps> = ({
 
   // 색상 가져오기 - color prop이 있으면 우선 사용
   const iconColor =
-    color ||
-    (isSelected
-      ? '#3b82f6'
-      : CATEGORY_COLOR_MAP[code as keyof typeof CATEGORY_COLOR_MAP] ||
-        '#6b7280');
+    color || (isSelected ? '#3b82f6' : getCategoryColorFromFilter(category));
 
   return (
     <IconComponent

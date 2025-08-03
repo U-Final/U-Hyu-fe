@@ -24,8 +24,8 @@ import type { NormalizedPlace } from '../../api/types';
 import { useDistanceBasedSearch } from '../../hooks/useManualSearch';
 import { useToggleFavoriteMutation } from '../../hooks/useMapQueries';
 import type { Store } from '../../types/store';
-import CurrentLocationMarker from '../location/CurrentLocationMarker';
 import ResponsiveManualSearchButton from '../ManualSearchButton';
+import CurrentLocationMarker from '../location/CurrentLocationMarker';
 import BrandMarker from './BrandMarker';
 import FavoriteMarker from './FavoriteMarker';
 import { KeywordInfoWindow } from './KeywordInfoWindow';
@@ -90,9 +90,8 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   const globalSelectedStoreId = useMapStore(
     state => state.selectedStore?.storeId
   );
-  const setSelectedStore = useMapStore(state => state.selectStore);
 
-  const { bookmarkMode, bookmarkStores } = useMapStore();
+  const { bookmarkMode, bookmarkStores, selectStore } = useMapStore();
 
   // 마커에 사용할 store 배열 결정(mymap)
   // const storesToRender = isShared ? sharedStores : stores;
@@ -134,7 +133,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   // 인증 확인 및 로그인 모달 관리
   const { checkAuthAndExecuteModal } = useAuthCheckModal();
 
-  // center prop 동기화 및 검색 기준 위치 설정
+  // center prop 동기화 및 검색 기준 위치 설정 (인포윈도우 상태 변경 시 의존성 제외)
   useEffect(() => {
     // 인포윈도우가 열려있지 않을 때만 center prop 동기화
     if (!infoWindowStore && !recommendedInfoWindowStore) {
@@ -142,12 +141,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
       // 새로운 center가 설정될 때 검색 기준 위치도 업데이트
       updateSearchPosition(center);
     }
-  }, [
-    center,
-    infoWindowStore,
-    recommendedInfoWindowStore,
-    updateSearchPosition,
-  ]);
+  }, [center, updateSearchPosition]);
 
   // 전역 selectedStore 변경 시 해당 매장으로 포커스 (카드 클릭 시)
   useEffect(() => {
@@ -307,7 +301,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         onStoreClick?.(store);
       });
     },
-    [onStoreClick, recommendedStores]
+    [onStoreClick, recommendedStores, checkAuthAndExecuteModal]
   );
 
   // 추천 매장인지 확인하는 함수
@@ -321,10 +315,10 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   const handleInfoWindowClose = useCallback(() => {
     setInternalSelectedStoreId(null);
     setInfoWindowStore(null);
-    setRecommendedInfoWindowStore(null); // 추가
-    // 전역 상태도 초기화
-    setSelectedStore(null);
-  }, [setSelectedStore]);
+    setRecommendedInfoWindowStore(null);
+    // 전역 상태 초기화 시 지도 중심점 이동 방지
+    selectStore(null);
+  }, []);
 
   const toggleFavoriteMutation = useToggleFavoriteMutation();
 

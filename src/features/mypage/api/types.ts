@@ -20,13 +20,13 @@ export interface UpdateUserResponseData {
 export type UserInfoResponse = ApiResponse<UserInfoData>;
 export type UpdateUserResponse = ApiResponse<UpdateUserResponseData>;
 
-// 액티비티(활동내역) 관련 타입 (Postman API 기준)
+// 액티비티(활동내역) 관련 타입
 export interface ActivityBrand {
-  brandId: number;
-  brandName: string;
-  logoImage: string;
-  visitCount: number;
-  lastVisitAt: string;
+  bestBrandId: number;
+  bestBrandName: string;
+  bestBrandImage: string;
+  visitCount?: number;
+  lastVisitAt?: string;
 }
 
 export interface ActivityStore {
@@ -41,7 +41,7 @@ export interface ActivityStatistics {
   recentStoreList: ActivityStore[];
 }
 
-// 즐겨찾기(Bookmark) 관련 타입 (Postman API 기준)
+// 즐겨찾기(Bookmark) 관련 타입
 export interface Bookmark {
   bookmarkId: number;
   storeId: number;

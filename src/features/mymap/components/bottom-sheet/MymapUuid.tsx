@@ -109,7 +109,7 @@ const MyMapUuid = ({ uuid, onStoreClick }: MyMapUuidProps) => {
       ) : isError ? (
         <div className="text-sm text-red-500 mt-4">에러 발생</div>
       ) : (
-        <div className="divide-y divide-gray-100 mt-4">
+        <div className="divide-y divide-gray-100 mt-4 mb-13">
           {stores.map(store => (
             <div
               key={store.storeId}

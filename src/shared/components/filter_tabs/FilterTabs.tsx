@@ -116,10 +116,7 @@ const FilterTabs: FC<FilterTabProps> = ({
           style={
             active === value && color
               ? {
-                  backgroundColor: `${color}20`, // 20% opacity background
-                  borderColor: color,
-                  color: color,
-                  boxShadow: `0 2px 2px ${color}30, 0 0 0 2px ${color}40`,
+                  backgroundColor: `${color}15`, // 활성 상태 미묘한 배경
                 }
               : {}
           }
@@ -128,11 +125,18 @@ const FilterTabs: FC<FilterTabProps> = ({
             <IconComponent
               className="w-4 h-4 flex-shrink-0"
               style={{
-                color: active === value && color ? color : 'inherit',
+                color: color || '#6b7280', // 항상 카테고리 고유 색상 표시
               }}
             />
           )}
-          <span className="whitespace-nowrap">{label}</span>
+          <span 
+            className="whitespace-nowrap"
+            style={{
+              color: color || '#6b7280', // 항상 카테고리 고유 색상 표시
+            }}
+          >
+            {label}
+          </span>
         </button>
       ))}
     </div>

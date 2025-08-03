@@ -1,7 +1,9 @@
 import React from 'react';
 
+import { getCategoryColorFromFilter } from '../../utils/categoryColorMapping';
+
 import type { NormalizedPlace } from '../../api/types';
-import { CategoryIcon, getCategoryGroupCode, CATEGORY_COLOR_MAP } from '../search/CategoryIcon';
+import { CategoryIcon } from '../search/CategoryIcon';
 
 interface CategoryMarkerProps {
   /** 장소 정보 */
@@ -28,11 +30,7 @@ export const CategoryMarker: React.FC<CategoryMarkerProps> = ({
     onClick(place);
   };
 
-  // 카테고리 그룹 코드 추출
-  const categoryCode = getCategoryGroupCode(place.category, place.categoryGroupCode);
-  
-  // 카테고리별 배경색 가져오기
-  const backgroundColor = CATEGORY_COLOR_MAP[categoryCode as keyof typeof CATEGORY_COLOR_MAP] || '#6b7280';
+  const backgroundColor = getCategoryColorFromFilter(place.category);
   const selectedBackgroundColor = '#3b82f6'; // blue-500
 
   return (
@@ -57,13 +55,19 @@ export const CategoryMarker: React.FC<CategoryMarkerProps> = ({
       <div
         className={`
           relative w-10 h-10 rounded-full
-          border-2 border-white shadow-lg
+          border-2 border-white shadow-xl
           flex items-center justify-center
           transition-all duration-200
-          ${isSelected ? 'scale-125 ring-4 ring-blue-200' : 'hover:scale-110'}
+          hover:scale-110 hover:shadow-2xl
+          ${isSelected ? 'scale-125 ring-4 ring-blue-200 shadow-2xl' : ''}
         `}
         style={{
-          backgroundColor: isSelected ? selectedBackgroundColor : backgroundColor,
+          backgroundColor: isSelected
+            ? selectedBackgroundColor
+            : backgroundColor,
+          boxShadow: isSelected
+            ? `0 8px 25px -5px ${selectedBackgroundColor}40, 0 10px 10px -5px ${selectedBackgroundColor}30`
+            : `0 8px 25px -5px ${backgroundColor}40, 0 10px 10px -5px ${backgroundColor}30`,
         }}
       >
         {/* 카테고리 아이콘 - 마커 내부에서는 흰색으로 표시 */}
@@ -84,7 +88,9 @@ export const CategoryMarker: React.FC<CategoryMarkerProps> = ({
           transition-all duration-200
         `}
         style={{
-          borderTopColor: isSelected ? selectedBackgroundColor : backgroundColor,
+          borderTopColor: isSelected
+            ? selectedBackgroundColor
+            : backgroundColor,
         }}
       />
 

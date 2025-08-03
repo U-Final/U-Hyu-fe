@@ -10,9 +10,11 @@ import {
   useStoreBookmarkStatusQuery,
   useToggleMyMapStoreMutation,
 } from '@mymap/hooks';
+import { STORE_BOOKMARK_STATUS_QUERY_KEY } from '@mymap/hooks/useStoreBookmarkStatusQuery';
 import { MdStars } from 'react-icons/md';
 import { toast } from 'sonner';
 
+import { queryClient } from '@/shared/client';
 import { PrimaryButton, PrimaryCheckbox } from '@/shared/components';
 import { useModalStore } from '@/shared/store';
 
@@ -84,6 +86,10 @@ const AddStoreModal: FC<AddStoreProps> = ({ storeId }) => {
         if (bookmarkMode) {
           refreshBookmarkStores();
         }
+
+        queryClient.invalidateQueries({
+          queryKey: STORE_BOOKMARK_STATUS_QUERY_KEY(storeId),
+        });
       } catch (error) {
         toast.error('즐겨찾기 변경 중 오류가 발생했습니다.');
         console.error('즐겨찾기 토글 실패:', error);

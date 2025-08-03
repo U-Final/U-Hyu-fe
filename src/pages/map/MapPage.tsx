@@ -104,8 +104,37 @@ const MapContent = () => {
     }
   }, [bottomSheetRef]);
 
+  // 모바일에서 전체 페이지 스크롤 방지
+  useEffect(() => {
+    // body 스크롤 방지
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+
+    // 터치 이벤트 방지 (선택적)
+    const preventTouchMove = (e: TouchEvent) => {
+      // 바텀시트나 특정 스크롤 가능한 영역이 아닐 때만 방지
+      const target = e.target as HTMLElement;
+      const isScrollableArea = target.closest('[data-scrollable="true"]');
+      
+      if (!isScrollableArea) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('touchmove', preventTouchMove, { passive: false });
+
+    // 클린업
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.removeEventListener('touchmove', preventTouchMove);
+    };
+  }, []);
+
   return (
-    <div className="h-screen relative">
+    <div className="h-screen relative overflow-hidden">
       <div className="absolute inset-0">
         <MapContainer
           keywordResults={persistentMarkers}

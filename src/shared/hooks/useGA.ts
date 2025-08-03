@@ -10,34 +10,20 @@ import {
   trackPageView,
 } from '@/shared/utils/gaTracker';
 
-const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID;
-
 export const useGA = () => {
   const location = useLocation();
   const { isLoggedIn } = useAuthState();
 
-  // GA 초기화
   useEffect(() => {
-    if (import.meta.env.PROD) {
-      initGA(GA_MEASUREMENT_ID);
-    }
+    initGA();
   }, []);
 
-  // 페이지뷰 추적
   useEffect(() => {
-    if (
-      import.meta.env.PROD &&
-      typeof window !== 'undefined' &&
-      typeof window.gtag === 'function'
-    ) {
-      const pageTitle = document.title;
-      const pagePath = location.pathname;
+    const pageTitle = document.title;
+    const pagePath = location.pathname + location.search;
+    trackPageView(pageTitle, pagePath);
+  }, [location]);
 
-      trackPageView(GA_MEASUREMENT_ID, pageTitle, pagePath);
-    }
-  }, [location.pathname]);
-
-  // 이벤트 추적 함수들
   const trackMapInteraction = (
     action: string,
     storeId?: number,

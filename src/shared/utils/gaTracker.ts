@@ -1,72 +1,45 @@
-// Google Analytics 추적 유틸리티
+// utils/gaTracker.ts
+import ReactGA from 'react-ga4';
 
-declare global {
-  interface Window {
-    gtag: (...args: unknown[]) => void;
-    dataLayer: unknown[];
+const MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID;
+
+export const initGA = () => {
+  if (import.meta.env.PROD && MEASUREMENT_ID) {
+    ReactGA.initialize(MEASUREMENT_ID);
+    console.log('[GA] Initialized with ID:', MEASUREMENT_ID);
   }
-}
+};
 
-// GA 초기화
-export const initGA = (measurementId: string) => {
-  if (typeof window !== 'undefined' && !window.gtag) {
-    // GA 스크립트 로드
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
-    document.head.appendChild(script);
-
-    // gtag 함수 정의
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function (...args: unknown[]) {
-      window.dataLayer.push(args);
-    };
-    window.gtag('js', new Date());
-    window.gtag('config', measurementId, {
-      page_title: document.title,
-      page_location: window.location.href,
+export const trackPageView = (pageTitle: string, pagePath: string) => {
+  if (import.meta.env.PROD && MEASUREMENT_ID) {
+    ReactGA.send({
+      hitType: 'pageview',
+      page: pagePath,
+      title: pageTitle,
     });
   }
 };
 
-// 페이지뷰 추적
-export const trackPageView = (
-  measurementId: string,
-  pageTitle: string,
-  pagePath?: string
-) => {
-  if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-    window.gtag('config', measurementId, {
-      page_title: pageTitle,
-      page_location: pagePath || window.location.href,
-    });
-  }
-};
-
-// 이벤트 추적
 export const trackEvent = (
   action: string,
   category: string,
   label?: string,
   value?: number
 ) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', action, {
-      event_category: category,
-      event_label: label,
-      value: value,
+  if (import.meta.env.PROD && MEASUREMENT_ID) {
+    ReactGA.event(action, {
+      category,
+      label,
+      value,
     });
   }
 };
 
-// 커스텀 이벤트 추적
 export const trackCustomEvent = (
   eventName: string,
   parameters: Record<string, unknown> = {}
 ) => {
-  if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-    window.gtag('event', eventName, parameters);
-  } else {
-    console.warn('gtag not initialized. Event not tracked:', eventName);
+  if (import.meta.env.PROD && MEASUREMENT_ID) {
+    ReactGA.event(eventName, parameters);
   }
 };

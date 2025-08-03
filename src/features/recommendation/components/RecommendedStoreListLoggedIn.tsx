@@ -86,7 +86,7 @@ export const RecommendedStoreListLoggedIn = () => {
               dynamicBullets: true,
             }}
             autoplay={{
-              delay: 2000,
+              delay: 2500,
               disableOnInteraction: false,
             }}
             style={{ paddingRight: '1rem' }}

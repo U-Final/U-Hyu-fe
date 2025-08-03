@@ -81,11 +81,11 @@ const RecommendedStoreCard = ({
         </div>
         <button
           onClick={handleDislikeClick}
-          className="absolute top-2 right-2 p-1 rounded-full bg-white shadow hover:bg-gray-100"
+          className="absolute top-2 right-2 p-1 mr-3 rounded-full bg-white hover:bg-gray-100"
           disabled={isExcluding}
         >
           <ThumbsDown
-            className="w-4 h-4 text-gray-500 hover:text-red-500"
+            className="w-4 h-4 text-secondary hover:text-red-500"
             aria-label="추천 제외"
           />
         </button>

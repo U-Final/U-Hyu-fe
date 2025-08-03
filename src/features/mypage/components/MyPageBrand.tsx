@@ -1,5 +1,7 @@
 import type { UserInfoData, UpdateUserRequest } from '@mypage/api/types';
-import { BrandGrid } from '@/shared/components/brand_grid/BrandGrid';
+import { ApiBrandGrid } from '@/shared/components/brand_grid/ApiBrandGrid';
+import { useQuery } from '@tanstack/react-query';
+import { getInterestBrands } from '@/shared/components/brand_grid/api/brandApi';
 
 interface Props {
   user: UserInfoData;
@@ -9,6 +11,12 @@ interface Props {
 }
 
 const MyPageBrand = ({ user, editMode, pendingChanges, setPendingChanges }: Props) => {
+  // API에서 브랜드 목록 가져오기
+  const { data: apiBrands } = useQuery({
+    queryKey: ['interest-brands'],
+    queryFn: getInterestBrands,
+  });
+
   const handleBrandToggle = (brandId: number) => {
     if (!editMode) return;
 
@@ -25,8 +33,18 @@ const MyPageBrand = ({ user, editMode, pendingChanges, setPendingChanges }: Prop
     }));
   };
 
-  // 현재 선택된 브랜드 (pendingChanges 우선, 없으면 user.interestedBrandList)
-  const currentBrandIds = pendingChanges.updatedBrandIdList || user.interestedBrandList || [];
+  // API 브랜드 ID로 매핑된 현재 선택된 브랜드 ID 목록
+  const currentBrandIds = (() => {
+    const userSelectedIds = pendingChanges.updatedBrandIdList || user.interestedBrandList || [];
+    
+    // API 브랜드가 로드되지 않았으면 원본 ID 사용
+    if (!apiBrands) return userSelectedIds;
+    
+    // API 브랜드 ID와 매핑
+    return userSelectedIds.filter(id => 
+      apiBrands.some(apiBrand => apiBrand.brandId === id)
+    );
+  })();
 
   return (
     <div className="space-y-[1rem]">
@@ -34,7 +52,7 @@ const MyPageBrand = ({ user, editMode, pendingChanges, setPendingChanges }: Prop
         관심 브랜드
       </h3>
       <div className="p-[1rem] bg-white rounded-[0.75rem] border border-gray">
-        <BrandGrid
+        <ApiBrandGrid
           selectedBrands={currentBrandIds}
           onBrandToggle={handleBrandToggle}
           title="관심있는 브랜드를 선택해주세요"

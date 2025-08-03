@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { PATH } from '@/routes/path';
-import { userStore } from '@/shared/store/userStore';
 
 import {
   initKeyboardHandler,
@@ -21,11 +20,7 @@ const AppInitializer = () => {
   const isAdminPage = location.pathname === PATH.ADMIN;
 
   // 관리자 페이지가 아닐 때만 사용자 정보 요청
-  useEffect(() => {
-    if (!isAdminPage) {
-      userStore.getState().initAuthState();
-    }
-  }, [isAdminPage]);
+  // const { data, isSuccess, isError } = useUserInfo(!isAdminPage);
 
   // 개발 환경에서 로깅
   if (import.meta.env.DEV) {

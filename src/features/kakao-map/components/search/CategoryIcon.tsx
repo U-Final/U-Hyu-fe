@@ -26,6 +26,8 @@ import {
   MdSchool,
 } from 'react-icons/md';
 
+import { FILTER_TABS } from '@/shared/components/filter_tabs/FilterTabs.variants';
+
 /**
  * 카카오 맵 카테고리 그룹 코드별 아이콘 매핑 (더 적절한 아이콘 사용)
  */
@@ -228,13 +230,105 @@ export const CategoryIcon: React.FC<CategoryIconProps> = ({
     CATEGORY_ICON_MAP[code as keyof typeof CATEGORY_ICON_MAP] ||
     CATEGORY_ICON_MAP.DEFAULT;
 
+  // FilterTabs에서 색상 가져오기 함수
+  const getFilterTabsColor = (categoryStr: string): string => {
+    // 카카오 카테고리를 FilterTabs 카테고리로 매핑
+    const categoryMappings: Record<string, string> = {
+      // 음식 관련
+      음식점: '음식점',
+      한식: '음식점',
+      일식: '음식점',
+      중식: '음식점',
+      양식: '음식점',
+      분식: '음식점',
+      패스트푸드: '음식점',
+      치킨: '음식점',
+      피자: '음식점',
+      고기구이: '음식점',
+      // 카페/디저트
+      카페: '베이커리/디저트',
+      베이커리: '베이커리/디저트',
+      디저트: '베이커리/디저트',
+      제과점: '베이커리/디저트',
+      // 생활/편의
+      편의점: '생활/편의',
+      대형마트: '생활/편의',
+      마트: '생활/편의',
+      슈퍼마켓: '생활/편의',
+      // 쇼핑
+      쇼핑: '쇼핑',
+      의류: '쇼핑',
+      신발: '쇼핑',
+      가방: '쇼핑',
+      액세서리: '쇼핑',
+      // 뷰티
+      미용실: '뷰티',
+      네일샵: '뷰티',
+      피부관리: '뷰티',
+      화장품: '뷰티',
+      // 건강
+      병원: '건강',
+      약국: '건강',
+      한의원: '건강',
+      치과: '건강',
+      헬스장: '건강',
+      // 교육
+      학교: '교육',
+      학원: '교육',
+      도서관: '교육',
+      // 여행/교통
+      지하철역: '여행/교통',
+      버스정류장: '여행/교통',
+      주차장: '여행/교통',
+      주유소: '여행/교통',
+      숙박: '여행/교통',
+      // 문화/여가
+      영화관: '영화/미디어',
+      노래방: '영화/미디어',
+      PC방: '영화/미디어',
+      박물관: '공연/전시',
+      미술관: '공연/전시',
+      공연장: '공연/전시',
+      // 액티비티
+      스포츠: '액티비티',
+      수영장: '액티비티',
+      골프장: '액티비티',
+      볼링장: '액티비티',
+      // 테마파크
+      놀이공원: '테마파크',
+      테마파크: '테마파크',
+      // 워터파크
+      워터파크: '워터파크/아쿠아리움',
+      아쿠아리움: '워터파크/아쿠아리움',
+      수족관: '워터파크/아쿠아리움',
+    };
+
+    // 카테고리 매칭 시도
+    const categoryParts = categoryStr.split(' > ');
+    for (const part of categoryParts) {
+      const trimmedPart = part.trim();
+      if (categoryMappings[trimmedPart]) {
+        const filterCategory = categoryMappings[trimmedPart];
+        const filterTab = FILTER_TABS.find(tab => tab.value === filterCategory);
+        if (filterTab) return filterTab.color ?? '#e6007e';
+      }
+    }
+
+    // 키워드 매칭 시도 (부분 문자열 포함)
+    for (const [keyword, filterCategory] of Object.entries(categoryMappings)) {
+      if (categoryStr.includes(keyword)) {
+        const filterTab = FILTER_TABS.find(tab => tab.value === filterCategory);
+        if (filterTab) return filterTab.color ?? '#e6007e';
+      }
+    }
+
+    // 기본값: 프라이머리 컬러
+    return '#e6007e';
+  };
+
   // 색상 가져오기 - color prop이 있으면 우선 사용
   const iconColor =
-    color ||
-    (isSelected
-      ? '#3b82f6'
-      : CATEGORY_COLOR_MAP[code as keyof typeof CATEGORY_COLOR_MAP] ||
-        '#6b7280');
+    color || (isSelected ? '#3b82f6' : getFilterTabsColor(category));
 
   return (
     <IconComponent

@@ -1,7 +1,9 @@
 import React from 'react';
 
+import { FILTER_TABS } from '@/shared/components/filter_tabs/FilterTabs.variants';
+
 import type { NormalizedPlace } from '../../api/types';
-import { CategoryIcon, getCategoryGroupCode, CATEGORY_COLOR_MAP } from '../search/CategoryIcon';
+import { CategoryIcon } from '../search/CategoryIcon';
 
 interface CategoryMarkerProps {
   /** 장소 정보 */
@@ -28,11 +30,103 @@ export const CategoryMarker: React.FC<CategoryMarkerProps> = ({
     onClick(place);
   };
 
-  // 카테고리 그룹 코드 추출
-  const categoryCode = getCategoryGroupCode(place.category, place.categoryGroupCode);
-  
-  // 카테고리별 배경색 가져오기
-  const backgroundColor = CATEGORY_COLOR_MAP[categoryCode as keyof typeof CATEGORY_COLOR_MAP] || '#6b7280';
+  // FilterTabs 색상을 사용하는 함수
+  const getCategoryColorFromFilter = (placeCategory: string): string => {
+    // 카카오 카테고리를 FilterTabs 카테고리로 매핑
+    const categoryMappings: Record<string, string> = {
+      // 음식 관련
+      음식점: '음식점',
+      한식: '음식점',
+      일식: '음식점',
+      중식: '음식점',
+      양식: '음식점',
+      분식: '음식점',
+      패스트푸드: '음식점',
+      치킨: '음식점',
+      피자: '음식점',
+      고기구이: '음식점',
+      // 카페/디저트
+      카페: '베이커리/디저트',
+      베이커리: '베이커리/디저트',
+      디저트: '베이커리/디저트',
+      제과점: '베이커리/디저트',
+      // 생활/편의
+      편의점: '생활/편의',
+      대형마트: '생활/편의',
+      마트: '생활/편의',
+      슈퍼마켓: '생활/편의',
+      // 쇼핑
+      쇼핑: '쇼핑',
+      의류: '쇼핑',
+      신발: '쇼핑',
+      가방: '쇼핑',
+      액세서리: '쇼핑',
+      // 뷰티
+      미용실: '뷰티',
+      네일샵: '뷰티',
+      피부관리: '뷰티',
+      화장품: '뷰티',
+      // 건강
+      병원: '건강',
+      약국: '건강',
+      한의원: '건강',
+      치과: '건강',
+      헬스장: '건강',
+      // 교육
+      학교: '교육',
+      학원: '교육',
+      도서관: '교육',
+      // 여행/교통
+      지하철역: '여행/교통',
+      버스정류장: '여행/교통',
+      주차장: '여행/교통',
+      주유소: '여행/교통',
+      숙박: '여행/교통',
+      // 문화/여가
+      영화관: '영화/미디어',
+      노래방: '영화/미디어',
+      PC방: '영화/미디어',
+      박물관: '공연/전시',
+      미술관: '공연/전시',
+      공연장: '공연/전시',
+      // 액티비티
+      스포츠: '액티비티',
+      수영장: '액티비티',
+      골프장: '액티비티',
+      볼링장: '액티비티',
+      // 테마파크
+      놀이공원: '테마파크',
+      테마파크: '테마파크',
+      // 워터파크
+      워터파크: '워터파크/아쿠아리움',
+      아쿠아리움: '워터파크/아쿠아리움',
+      수족관: '워터파크/아쿠아리움',
+    };
+
+    // 카테고리 매칭 시도
+    const categoryParts = placeCategory.split(' > ');
+    for (const part of categoryParts) {
+      const trimmedPart = part.trim();
+      if (categoryMappings[trimmedPart]) {
+        const filterCategory = categoryMappings[trimmedPart];
+        const filterTab = FILTER_TABS.find(tab => tab.value === filterCategory);
+        if (filterTab) return filterTab.color ?? '#e6007e';
+      }
+    }
+
+    // 키워드 매칭 시도 (부분 문자열 포함)
+    for (const [keyword, filterCategory] of Object.entries(categoryMappings)) {
+      if (placeCategory.includes(keyword)) {
+        const filterTab = FILTER_TABS.find(tab => tab.value === filterCategory);
+        if (filterTab) return filterTab.color ?? '#e6007e';
+      }
+    }
+
+    // 기본값: 프라이머리 컬러
+    return '#e6007e';
+  };
+
+  const backgroundColor = getCategoryColorFromFilter(place.category);
   const selectedBackgroundColor = '#3b82f6'; // blue-500
 
   return (
@@ -57,13 +151,19 @@ export const CategoryMarker: React.FC<CategoryMarkerProps> = ({
       <div
         className={`
           relative w-10 h-10 rounded-full
-          border-2 border-white shadow-lg
+          border-2 border-white shadow-xl
           flex items-center justify-center
           transition-all duration-200
-          ${isSelected ? 'scale-125 ring-4 ring-blue-200' : 'hover:scale-110'}
+          hover:scale-110 hover:shadow-2xl
+          ${isSelected ? 'scale-125 ring-4 ring-blue-200 shadow-2xl' : ''}
         `}
         style={{
-          backgroundColor: isSelected ? selectedBackgroundColor : backgroundColor,
+          backgroundColor: isSelected
+            ? selectedBackgroundColor
+            : backgroundColor,
+          boxShadow: isSelected
+            ? `0 8px 25px -5px ${selectedBackgroundColor}40, 0 10px 10px -5px ${selectedBackgroundColor}30`
+            : `0 8px 25px -5px ${backgroundColor}40, 0 10px 10px -5px ${backgroundColor}30`,
         }}
       >
         {/* 카테고리 아이콘 - 마커 내부에서는 흰색으로 표시 */}
@@ -84,7 +184,9 @@ export const CategoryMarker: React.FC<CategoryMarkerProps> = ({
           transition-all duration-200
         `}
         style={{
-          borderTopColor: isSelected ? selectedBackgroundColor : backgroundColor,
+          borderTopColor: isSelected
+            ? selectedBackgroundColor
+            : backgroundColor,
         }}
       />
 

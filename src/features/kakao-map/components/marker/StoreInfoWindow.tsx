@@ -188,22 +188,6 @@ const tailVariants = {
   },
 };
 
-// 로딩 상태 애니메이션
-const loadingVariants = {
-  hidden: {
-    opacity: 0,
-    scale: 0.9,
-  },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      duration: 0.3,
-      ease: [0.04, 0.62, 0.23, 0.98] as const,
-    },
-  },
-};
-
 const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
   storeId,
   position,
@@ -321,8 +305,8 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
       xAnchor={0.5}
       zIndex={1000}
     >
-      <div 
-        className="relative perspective-1000" 
+      <div
+        className="relative perspective-1000"
         style={{ padding: '20px' }}
         onTouchStart={e => {
           e.stopPropagation();

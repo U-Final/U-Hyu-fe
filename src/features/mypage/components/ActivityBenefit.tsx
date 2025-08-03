@@ -1,8 +1,10 @@
 import { useActivityStatisticsQuery } from '@mypage/hooks/useActivityQuery';
+import { useUserInfo } from '@user/hooks/useUserQuery';
 import { Gift, Sparkles } from 'lucide-react';
 
 const ActivityBenefit = () => {
   const { data, isLoading, error } = useActivityStatisticsQuery();
+  const { data: userData } = useUserInfo();
   
   if (isLoading) {
     return (
@@ -44,7 +46,7 @@ const ActivityBenefit = () => {
         </h3>
         <p className="text-sm text-gray-600 leading-relaxed text-center">
           현재까지 받으신 혜택을 확인해보세요.
-                     <span className="text-primary font-medium">더 많은 혜택을 누려보세요!</span>
+          <span className="text-primary font-medium">더 많은 혜택을 누려보세요!</span>
         </p>
       </div>
       
@@ -57,14 +59,14 @@ const ActivityBenefit = () => {
           </div>
           <h4 className="text-lg font-semibold text-gray-800 mb-2">아직 혜택이 없어요</h4>
           <p className="text-sm text-gray-500 text-center max-w-md">
-            지도에서 매장을 찾아서 다양한 혜택을 받아보세요!
+            {userData?.data?.nickName || '사용자'}님의 {userData?.data?.grade || '등급'} 등급으로 다양한 혜택을 받아보세요!
           </p>
         </div>
       ) : (
         <div className="relative">
-          {/* 축포 애니메이션 배경 */}
+   
           <div className="absolute inset-0 overflow-hidden rounded-xl">
-            {/* 축포 파티클들 */}
+          
                          <div className="absolute top-4 left-4 w-2 h-2 bg-yellow-star rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
              <div className="absolute top-6 right-8 w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.3s' }}></div>
              <div className="absolute top-2 right-4 w-1 h-1 bg-blue rounded-full animate-bounce" style={{ animationDelay: '0.6s' }}></div>
@@ -75,17 +77,15 @@ const ActivityBenefit = () => {
 
           {/* 메인 혜택 카드 */}
           <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 shadow-sm border border-gray-200">
-            {/* 상단 축하 메시지 */}
             <div className="text-center mb-6">
                              <div className="flex items-center justify-center gap-2 mb-2">
                  <Sparkles className="w-5 h-5 text-sparkle animate-pulse" />
                  <span className="text-lg font-bold text-gray-800">축하합니다!</span>
                  <Sparkles className="w-5 h-5 text-sparkle animate-pulse" />
                </div>
-              <p className="text-sm text-gray-600">지금까지 이만큼 절약하셨네요</p>
+              <p className="text-sm text-gray-600">{userData?.data?.nickName || '사용자'}님, 지금까지 이만큼 절약하셨네요</p>
             </div>
 
-            {/* 절약 금액 표시 - 3D 효과 */}
             <div className="relative mb-6">
               <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200 transform hover:scale-105 transition-transform duration-300">
                 <div className="text-center">
@@ -94,7 +94,7 @@ const ActivityBenefit = () => {
                        <span className="text-white text-xl font-bold">₩</span>
                      </div>
                     <div className="text-left">
-                      <p className="text-sm text-gray-500">총 절약 금액</p>
+                      <p className="text-sm text-gray-500">총 혜택 사용 금액</p>
                       <p className="text-3xl font-bold text-gray-800">{data.discountMoney?.toLocaleString()}원</p>
                     </div>
                   </div>

@@ -104,32 +104,59 @@ const MapContent = () => {
     }
   }, [bottomSheetRef]);
 
-  // 모바일에서 전체 페이지 스크롤 방지
+  // 모바일에서 세로 스크롤만 방지 (가로 스크롤은 허용)
   useEffect(() => {
-    // body 스크롤 방지
-    document.body.style.overflow = 'hidden';
+    // body 세로 스크롤만 방지
+    document.body.style.overflowY = 'hidden';
+    document.body.style.overflowX = 'auto';
     document.body.style.position = 'fixed';
     document.body.style.width = '100%';
 
-    // 터치 이벤트 방지 (선택적)
-    const preventTouchMove = (e: TouchEvent) => {
-      // 바텀시트나 특정 스크롤 가능한 영역이 아닐 때만 방지
+    // 세로 터치 스크롤만 방지 (가로는 허용)
+    const preventVerticalTouchMove = (e: TouchEvent) => {
       const target = e.target as HTMLElement;
-      const isScrollableArea = target.closest('[data-scrollable="true"]');
+      
+      // 스크롤 가능한 영역이나 가로 스크롤 영역은 허용
+      const isScrollableArea = target.closest('[data-scrollable="true"]') || 
+                              target.closest('.overflow-x-auto') ||
+                              target.closest('.scrollbar-hide') ||
+                              target.closest('[class*="overflow-x"]');
       
       if (!isScrollableArea) {
-        e.preventDefault();
+        // 터치 이동이 주로 세로 방향인지 확인
+        const touch = e.touches[0];
+        if (touch) {
+          const deltaX = Math.abs(touch.clientX - (touch.target as any).startX || 0);
+          const deltaY = Math.abs(touch.clientY - (touch.target as any).startY || 0);
+          
+          // 세로 이동이 가로 이동보다 클 때만 방지
+          if (deltaY > deltaX) {
+            e.preventDefault();
+          }
+        }
       }
     };
 
-    document.addEventListener('touchmove', preventTouchMove, { passive: false });
+    // 터치 시작 지점 저장
+    const saveTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (touch && touch.target) {
+        (touch.target as any).startX = touch.clientX;
+        (touch.target as any).startY = touch.clientY;
+      }
+    };
+
+    document.addEventListener('touchstart', saveTouchStart, { passive: true });
+    document.addEventListener('touchmove', preventVerticalTouchMove, { passive: false });
 
     // 클린업
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflowY = '';
+      document.body.style.overflowX = '';
       document.body.style.position = '';
       document.body.style.width = '';
-      document.removeEventListener('touchmove', preventTouchMove);
+      document.removeEventListener('touchstart', saveTouchStart);
+      document.removeEventListener('touchmove', preventVerticalTouchMove);
     };
   }, []);
 

@@ -89,7 +89,7 @@ const ActivityFavorite = ({ enabled }: Props) => {
           </BrandWithFavoriteCard>
         </div>
       ))}
-      {bookmarks.length === 0 && (
+      {!isLoading && bookmarks.length === 0 && (
         <div className="flex flex-col items-center justify-center py-12 px-4">
           {/* 빈 상태 아이콘 */}
           <div className="relative mb-6">

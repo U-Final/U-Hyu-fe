@@ -9,6 +9,7 @@ export const initGA = () => {
     console.log('[GA] Initialized with ID:', MEASUREMENT_ID);
   } else {
     console.warn('[GA] Measurement ID not found');
+    console.log('Available env vars:', import.meta.env);
   }
 };
 
@@ -29,7 +30,7 @@ export const trackEvent = (
   label?: string,
   value?: number
 ) => {
-  if (import.meta.env.PROD && MEASUREMENT_ID) {
+  if (MEASUREMENT_ID) {
     ReactGA.event(action, {
       category,
       label,
@@ -42,7 +43,8 @@ export const trackCustomEvent = (
   eventName: string,
   parameters: Record<string, unknown> = {}
 ) => {
-  if (import.meta.env.PROD && MEASUREMENT_ID) {
+  if (MEASUREMENT_ID) {
     ReactGA.event(eventName, parameters);
+    console.log('[GA] Custom event tracked:', eventName, parameters);
   }
 };

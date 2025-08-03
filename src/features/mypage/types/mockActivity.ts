@@ -11,23 +11,23 @@ export const mockBenefit: ActivityBenefit = {
 // 마커 클릭 횟수 기반 top3 브랜드
 export const mockBestBrands: ActivityBrand[] = [
   {
-    brandId: 1,
-    brandName: 'CGV',
-    logoImage: 'https://uhyu-bucket.s3.ap-northeast-2.amazonaws.com/logo/CGV.png',
+    bestBrandId: 1,
+    bestBrandName: 'CGV',
+    bestBrandImage: 'https://uhyu-bucket.s3.ap-northeast-2.amazonaws.com/logo/CGV.png',
     visitCount: 15,
     lastVisitAt: '2024-01-20T15:30:00Z'
   },
   {
-    brandId: 2,
-    brandName: '뚜레쥬르',
-    logoImage: '/images/brands/뚜레쥬르.png',
+    bestBrandId: 2,
+    bestBrandName: '뚜레쥬르',
+    bestBrandImage: '/images/brands/뚜레쥬르.png',
     visitCount: 12,
     lastVisitAt: '2024-01-18T11:20:00Z'
   },
   {
-    brandId: 3,
-    brandName: '파리바게뜨',
-    logoImage: '/images/brands/파리바게뜨.png',
+    bestBrandId: 3,
+    bestBrandName: '파리바게뜨',
+    bestBrandImage: '/images/brands/파리바게뜨.png',
     visitCount: 8,
     lastVisitAt: '2024-01-15T09:10:00Z'
   }

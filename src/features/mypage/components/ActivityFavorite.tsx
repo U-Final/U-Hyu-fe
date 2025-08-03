@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { useBookmarkListInfiniteQuery } from '@mypage/hooks/useActivityQuery';
 import { BrandWithFavoriteCard } from '@/shared/components/cards/BrandWithFavoriteCard';
 import { deleteBookmark } from '@mypage/api/mypageApi';
@@ -12,13 +13,13 @@ interface Props {
 
 const ActivityFavorite = ({ enabled }: Props) => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const {
     data,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-    refetch,
   } = useBookmarkListInfiniteQuery(enabled);
   const loaderRef = useRef<HTMLDivElement | null>(null);
   const [removingIds, setRemovingIds] = useState<number[]>([]);
@@ -51,7 +52,8 @@ const ActivityFavorite = ({ enabled }: Props) => {
     setRemovingIds((prev) => [...prev, bookmarkId]);
     try {
       await deleteBookmark(bookmarkId);
-      await refetch();
+      // 캐시를 무효화하여 데이터를 새로 가져오기
+      await queryClient.invalidateQueries({ queryKey: ['bookmarkList'] });
     } catch (error) {
       console.error('즐겨찾기 삭제 실패:', error);
       // 에러 발생 시 removingIds에서 제거

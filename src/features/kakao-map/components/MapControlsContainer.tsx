@@ -15,6 +15,14 @@ interface MapControlsContainerProps {
   onCloseSearchResults?: () => void;
   mapCenterSetter?: ((center: { lat: number; lng: number }) => void) | null;
   onPlaceClick?: (place: NormalizedPlace) => void;
+  /** 자동 실시간 검색 활성화 여부 */
+  enableAutoSearch?: boolean;
+  /** 디바운스 지연 시간 (밀리초) */
+  debounceDelay?: number;
+  /** 현재 지도 중심 좌표 */
+  mapCenter?: { lat: number; lng: number };
+  /** 검색 결과를 유지한 채로 아이템 선택 (검색창은 닫지 않음) */
+  onSearchResultItemClick?: (place: NormalizedPlace) => void;
 }
 
 /**
@@ -28,6 +36,10 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
   onCloseSearchResults,
   mapCenterSetter,
   onPlaceClick,
+  enableAutoSearch = true,
+  debounceDelay = Number(import.meta.env.VITE_SEARCH_DEBOUNCE_DELAY) || 500,
+  mapCenter,
+  onSearchResultItemClick,
 }) => {
   // UI 상태와 액션들 가져오기
   const {
@@ -45,13 +57,21 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
     keyword,
     results,
     loading,
+    meta,
+    hasSearched,
     selectedPlace,
     setKeyword,
     search,
     selectPlace,
     clearResults,
     clearError,
-  } = useKeywordSearch();
+    hideSearchResults,
+  } = useKeywordSearch({
+    autoSearchEnabled: enableAutoSearch,
+    debounceDelay,
+    mapCenter,
+    searchRadius: 5000,
+  });
 
   // 바텀시트 REF 가져오기
   const { bottomSheetRef } = useMapUIContext();
@@ -159,10 +179,11 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
 
   // 검색 결과 아이템 클릭 전용 닫기 처리 (selectedPlace 유지)
   const handleCloseSearchResultsForItemClick = () => {
-    // clearResults()를 호출하지 않고 MapPage의 keywordResults만 초기화
-    // 이렇게 하면 useKeywordSearch의 selectedPlace가 유지됨
+    // MapPage의 keywordResults 초기화하여 검색 결과창 숨기기
     onCloseSearchResults?.();
-    clearError();
+    // useKeywordSearch의 hasSearched를 false로 설정하여 빈 상태 표시 방지
+    // 하지만 results와 selectedPlace는 유지
+    hideSearchResults();
   };
 
   // 지역 필터 변경 처리
@@ -182,15 +203,19 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
     }
   };
 
-  // 검색 결과 아이템 클릭 처리 (마커 클릭과 동일한 효과)
+  // 검색 결과 아이템 클릭 처리 (기본: 검색창 닫기)
   const handleSearchResultClick = (place: NormalizedPlace) => {
-    // 검색 결과 리스트 먼저 닫기 (selectedPlace 유지)
-    handleCloseSearchResultsForItemClick();
+    // 전용 핸들러가 있으면 사용 (검색창 유지), 없으면 기본 처리 (검색창 닫기)
+    if (onSearchResultItemClick) {
+      onSearchResultItemClick(place);
+    } else {
+      // 기본 처리: 검색 결과 리스트 닫기 (selectedPlace 유지)
+      handleCloseSearchResultsForItemClick();
+      // MapPage의 selectedPlace 상태 업데이트 (인포윈도우 표시용)
+      onPlaceClick?.(place);
+    }
 
-    // MapPage의 selectedPlace 상태 업데이트 (인포윈도우 표시용)
-    onPlaceClick?.(place);
-
-    // useKeywordSearch 훅의 selectedPlace 업데이트 (검색 결과 하이라이트용)
+    // useKeywordSearch 훅의 selectedPlace 업데이트 (검색 결과 하이라이트용)  
     selectPlace(place);
 
     // 지도 중심을 해당 위치로 이동 (인포윈도우가 화면 중앙에 오도록 오프셋 적용)
@@ -204,6 +229,9 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
         lng: targetLng,
       });
     }
+
+    // 에러 클리어
+    clearError();
   };
 
   const { uuid } = useParams();
@@ -226,6 +254,8 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
       selectedPlace={selectedPlace}
       onSearchResultClick={handleSearchResultClick}
       onCloseSearchResults={handleCloseSearchResults}
+      searchMeta={meta}
+      hasSearched={hasSearched}
     />
   );
 };

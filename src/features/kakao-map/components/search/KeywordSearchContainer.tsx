@@ -30,6 +30,10 @@ interface KeywordSearchContainerProps {
   onPlaceSelect?: (place: NormalizedPlace) => void;
   /** 추가 CSS 클래스 */
   className?: string;
+  /** 자동 실시간 검색 활성화 여부 */
+  enableAutoSearch?: boolean;
+  /** 디바운스 지연 시간 (밀리초) */
+  debounceDelay?: number;
 }
 
 /**
@@ -45,6 +49,8 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
   onSearchComplete,
   onPlaceSelect,
   className = '',
+  enableAutoSearch = false,
+  debounceDelay = Number(import.meta.env.VITE_SEARCH_DEBOUNCE_DELAY) || 500,
 }) => {
   const {
     keyword,
@@ -59,7 +65,11 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
     selectPlace,
     clearResults,
     clearError,
-  } = useKeywordSearch();
+    setAutoSearch,
+  } = useKeywordSearch({ 
+    autoSearchEnabled: enableAutoSearch, 
+    debounceDelay 
+  });
 
   const {
     markers,
@@ -84,6 +94,11 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
       setKeyword(initialKeyword);
     }
   }, [initialKeyword, keyword, setKeyword]);
+
+  // 자동 검색 설정 업데이트
+  useEffect(() => {
+    setAutoSearch(enableAutoSearch);
+  }, [enableAutoSearch, setAutoSearch]);
 
   // 검색 결과를 마커로 설정
   useEffect(() => {
@@ -298,6 +313,7 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
               totalCount={meta.total_count}
               currentCount={results.length}
               keyword={keyword}
+              category="all"
             />
           )}
           <div className="overflow-y-auto max-h-80">
@@ -306,6 +322,7 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
               loading={loading}
               onItemClick={handlePlaceSelect}
               selectedPlaceId={selectedPlace?.id}
+              hasSearched={hasSearched}
               emptyMessage={
                 keyword
                   ? `'${keyword}' 검색 결과가 없습니다.`

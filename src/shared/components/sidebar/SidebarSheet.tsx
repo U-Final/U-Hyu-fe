@@ -24,7 +24,11 @@ const SidebarSheet = () => {
           <Menu className="w-5 h-5 text-gray-600" />
         </button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-[70%]" containerId="main-content">
+      <SheetContent
+        side="left"
+        className="w-[70%] overflow-y-auto pb-20"
+        containerId="main-content"
+      >
         <SheetHeader>
           <div className="flex justify-center items-center gap-4">
             <img

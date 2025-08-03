@@ -24,6 +24,8 @@ const RecommendedStoreCard = ({
   const { mutate: excludeStore } = useRecommendExcludeMutation();
 
   const handleCardClick = () => {
+    if (!store.addressDetail) return; // 온라인 매장은 클릭 무시
+
     // 전역 상태에 선택된 매장 설정 (지도 포커스용)
     selectStore(store);
 
@@ -66,9 +68,11 @@ const RecommendedStoreCard = ({
               </span>
             </div>
 
-            <p className="text-black text-sm group-hover:text-gray-700 transition-colors">
-              📍 {store.addressDetail}
-            </p>
+            {store.addressDetail && (
+              <p className="text-black text-sm group-hover:text-gray-700 transition-colors">
+                📍 {store.addressDetail}
+              </p>
+            )}
 
             {/* 혜택 정보 - 강조된 스타일 */}
             <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-md p-2 group-hover:shadow-sm transition-shadow w-full">

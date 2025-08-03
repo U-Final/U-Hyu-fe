@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useBookmarkListInfiniteQuery } from '@mypage/hooks/useActivityQuery';
@@ -22,7 +22,6 @@ const ActivityFavorite = ({ enabled }: Props) => {
     isLoading,
   } = useBookmarkListInfiniteQuery(enabled);
   const loaderRef = useRef<HTMLDivElement | null>(null);
-  const [removingIds, setRemovingIds] = useState<number[]>([]);
 
   useEffect(() => {
     if (!hasNextPage || !enabled) return;
@@ -49,20 +48,31 @@ const ActivityFavorite = ({ enabled }: Props) => {
   const bookmarks = (data?.pages.flat() as Bookmark[]) || [];
 
   const handleFavoriteClick = async (bookmarkId: number) => {
-    setRemovingIds((prev) => [...prev, bookmarkId]);
+    const previousData = queryClient.getQueryData(['bookmarkList']);
+    
+    queryClient.setQueryData(['bookmarkList'], (old: { pages: Bookmark[][] } | undefined) => {
+      if (!old?.pages) return old;
+      
+      return {
+        ...old,
+        pages: old.pages.map((page: Bookmark[]) => 
+          page.filter((bookmark: Bookmark) => bookmark.bookmarkId !== bookmarkId)
+        )
+      };
+    });
+
     try {
       await deleteBookmark(bookmarkId);
-      // 캐시를 무효화하여 데이터를 새로 가져오기
+      // 성공 시 캐시 무효화로 최신 데이터 동기화
       await queryClient.invalidateQueries({ queryKey: ['bookmarkList'] });
     } catch (error) {
       console.error('즐겨찾기 삭제 실패:', error);
-      // 에러 발생 시 removingIds에서 제거
-      setRemovingIds((prev) => prev.filter((id) => id !== bookmarkId));
+      // 실패 시 이전 상태로 롤백
+      if (previousData) {
+        queryClient.setQueryData(['bookmarkList'], previousData);
+      }
       return;
     }
-    setTimeout(() => {
-      setRemovingIds((prev) => prev.filter((id) => id !== bookmarkId));
-    }, 300);
   };
 
   return (
@@ -70,12 +80,7 @@ const ActivityFavorite = ({ enabled }: Props) => {
       {bookmarks.map((store: Bookmark) => (
         <div
           key={store.bookmarkId}
-          className={
-            'transition-all duration-300' +
-            (removingIds.includes(store.bookmarkId)
-              ? ' opacity-0 translate-x-10 pointer-events-none'
-              : '')
-          }
+          className="transition-all duration-300"
         >
           <BrandWithFavoriteCard
             logoUrl={store.logoImage}

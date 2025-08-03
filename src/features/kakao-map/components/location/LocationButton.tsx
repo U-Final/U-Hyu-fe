@@ -15,74 +15,93 @@ const LocationButton: FC<LocationButtonProps> = ({
   className = '',
 }) => {
   return (
-    <button
-      onClick={onClick}
-      disabled={isLoading}
-      className={`
-          px-4 py-2 rounded-full
+    <div className="group relative">
+      <button
+        onClick={onClick}
+        disabled={isLoading}
+        className={`
+          relative
           w-12 h-12 
           bg-white 
+          rounded-full
           shadow-lg 
+          border border-gray-200
           flex items-center justify-center 
-          hover:bg-gray-50 
-          active:bg-gray-100 
+          hover:bg-primary/5
+          hover:border-primary/20
+          hover:shadow-xl
+          active:bg-primary/10
+          active:scale-95
           disabled:opacity-50 
           disabled:cursor-not-allowed
-          transition-all duration-200
+          transition-all duration-300
+          ${isLoading ? 'animate-pulse' : ''}
           ${className}
         `}
-      aria-label="내 위치로 이동"
-    >
-      {isLoading ? (
-        <BeatLoader />
-      ) : (
-        <FaLocationArrow className="w-5 h-5 text-primary" />
-      )}
+        aria-label="내 위치로 이동"
+      >
+        {/* 배경 그라데이션 */}
+        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/10 to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-      {/* 툴팁 */}
+        {/* 아이콘 또는 로딩 */}
+        <div className="relative z-10">
+          {isLoading ? (
+            <BeatLoader size={6} color="#e6007e" />
+          ) : (
+            <FaLocationArrow className="w-4 h-4 text-primary group-hover:text-primary/80 transition-colors duration-200" />
+          )}
+        </div>
+
+        {/* 호버 시 리플 효과 */}
+        <div className="absolute inset-0 rounded-full bg-primary opacity-0 group-hover:opacity-20 group-hover:animate-ping transition-opacity duration-300" />
+      </button>
+
+      {/* 개선된 툴팁 */}
       <div
         className="
-        absolute 
-        bottom-full 
-        right-0
-        mb-2 
-        px-3 
-        py-1.5 
-        bg-gray-900 
-        text-white 
-        text-xs 
-        font-medium
-        rounded-md 
-        shadow-lg
-        opacity-0 
-        group-hover:opacity-100 
-        transition-opacity 
-        duration-200 
-        pointer-events-none
-        whitespace-nowrap
-        z-50
-        invisible
-        group-hover:visible
-      "
+          absolute 
+          bottom-full 
+          left-1/2
+          transform -translate-x-1/2
+          mb-3
+          px-3 
+          py-2
+          bg-gray-800 
+          text-white 
+          text-xs 
+          font-medium
+          rounded-lg
+          shadow-xl
+          opacity-0 
+          group-hover:opacity-100 
+          transition-all
+          duration-300
+          pointer-events-none
+          whitespace-nowrap
+          z-50
+          scale-95
+          group-hover:scale-100
+        "
       >
         내 위치로 이동
         {/* 툴팁 화살표 */}
         <div
           className="
-          absolute 
-          top-full 
-          right-4
-          w-0 
-          h-0 
-          border-l-4 
-          border-r-4 
-          border-t-4 
-          border-transparent 
-          border-t-gray-900
-        "
+            absolute 
+            top-full 
+            left-1/2
+            transform -translate-x-1/2
+            w-0 
+            h-0 
+            border-l-2 
+            border-r-2 
+            border-t-4 
+            border-transparent 
+            border-t-gray-800
+          "
         />
       </div>
-    </button>
+    </div>
   );
 };
 

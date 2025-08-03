@@ -1,4 +1,5 @@
 import { client } from '@/shared/client';
+import { userStore } from '@/shared/store/userStore';
 import type {
   CounterData,
   UserAction,
@@ -194,10 +195,16 @@ const getActionLogCounter = (): ActionLogCounter => {
 };
 
 export const trackMarkerClick = (storeId: number) => {
+  const isLoggedIn = userStore.getState().user !== null;
+  if (!isLoggedIn) return;
+
   getActionLogCounter().addMarkerClick(storeId);
 };
 
 export const trackFilterUsed = (filterValue: string) => {
+  const isLoggedIn = userStore.getState().user !== null;
+  if (!isLoggedIn) return;
+
   getActionLogCounter().addFilterClick(filterValue);
 };
 

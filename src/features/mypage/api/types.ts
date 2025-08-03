@@ -30,11 +30,9 @@ export interface ActivityBrand {
 }
 
 export interface ActivityStore {
-  storeId: number;
-  storeName: string;
-  logoImage: string;
-  addressDetail: string;
-  visitAt: string;
+  recentStoreId: number;
+  recentStoreName: string;
+  recentBrandImage: string;
 }
 
 export interface ActivityStatistics {

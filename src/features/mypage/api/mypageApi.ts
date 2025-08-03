@@ -69,6 +69,12 @@ export const fetchBookmarkList = async (page = 1, size = 5): Promise<Bookmark[]>
 
 export const deleteBookmark = async (bookmarkId: number): Promise<{ statusCode: number; message: string }> => {
   const res = await client.delete<ApiResponse<string>>(MYPAGE_ENDPOINTS.BOOKMARK_DETAIL(bookmarkId));
+  
+  // 서버에서 에러 응답이 온 경우 (statusCode가 0이 아닌 경우)
+  if (res.data.statusCode !== 0) {
+    throw new Error(res.data.message || '즐겨찾기 삭제에 실패했습니다.');
+  }
+  
   return {
     statusCode: res.data.statusCode,
     message: res.data.message,

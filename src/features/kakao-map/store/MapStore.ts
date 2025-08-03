@@ -78,9 +78,9 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
        * 사용자의 현재 위치를 가져오는 비동기 함수
        * GPS 권한 요청 및 에러 처리 포함
        */
-      getCurrentLocation: async () => {
+      getCurrentLocation: async (force = false) => {
         const { loading } = get();
-        if (loading.location) return; // 이미 로딩 중이면 중복 실행 방지
+        if (loading.location && !force) return; // force가 true가 아니면 로딩 중일 때 중복 실행 방지
 
         // 로딩 상태 시작
         set(state => ({
@@ -94,7 +94,7 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
               navigator.geolocation.getCurrentPosition(resolve, reject, {
                 enableHighAccuracy: true,
                 timeout: 10000,
-                maximumAge: 300000, // 5분간 캐시된 위치 사용
+                maximumAge: 0, // 항상 새로운 위치 정보 요청
               });
             }
           );

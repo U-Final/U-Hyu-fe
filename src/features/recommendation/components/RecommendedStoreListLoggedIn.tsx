@@ -16,6 +16,7 @@ import { useUser } from '@/shared/store/userStore';
 export const RecommendedStoreListLoggedIn = () => {
   const { userLocation } = useMapStore();
   const user = useUser();
+  const RADIUS = Number(import.meta.env.VITE_RECOMMEND_RADIUS);
 
   // 전역상태에서 추천 매장 관련 상태와 액션 가져오기
   const setRecommendedStores = useMapStore(state => state.setRecommendedStores);
@@ -31,7 +32,7 @@ export const RecommendedStoreListLoggedIn = () => {
   } = useRecommendedStoresQuery({
     lat: userLocation?.lat ?? 37.56,
     lon: userLocation?.lng ?? 125.97,
-    radius: 5000,
+    radius: RADIUS,
   });
 
   // React Query 결과를 전역상태에 동기화
@@ -86,7 +87,7 @@ export const RecommendedStoreListLoggedIn = () => {
               dynamicBullets: true,
             }}
             autoplay={{
-              delay: 2000,
+              delay: 2500,
               disableOnInteraction: false,
             }}
             style={{ paddingRight: '1rem' }}

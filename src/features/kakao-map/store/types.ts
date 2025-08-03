@@ -61,7 +61,7 @@ export interface MapStoreState {
 
 export interface MapStoreActions {
   // 위치 관련
-  getCurrentLocation: () => Promise<void>;
+  getCurrentLocation: (force?: boolean) => Promise<void>;
   setMapCenter: (center: Position) => void;
 
   // 즐겨찾기 관련

@@ -1,50 +1,111 @@
 import { useActivityStatisticsQuery } from '@mypage/hooks/useActivityQuery';
+import { Gift, Sparkles } from 'lucide-react';
 
 const ActivityBenefit = () => {
   const { data, isLoading, error } = useActivityStatisticsQuery();
   
-  if (isLoading) return <div>로딩중...</div>;
-  
-  if (error || !data || data.discountMoney === null || data.discountMoney === 0) {
+  if (isLoading) {
     return (
-      <div className="border border-gray-200 rounded-[1rem] p-[1.25rem]">
-        <div className="rounded-[1rem] bg-white px-[1.25rem] py-[1.5rem] text-center">
-          <p className="text-[0.75rem] text-gray mb-[0.5rem]">이번 달 받은 혜택</p>
-          
-          {/* 빈 상태 UI */}
-          <div className="flex flex-col items-center justify-center py-[1rem]">
-            {/* 돼지저금통 아이콘 */}
-            <div className="relative w-[3rem] h-[3rem] mb-[0.75rem]">
-              <div className="absolute inset-0 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-sm">
-                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                </svg>
-              </div>
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
-                <span className="text-white text-xs font-bold">₩</span>
-              </div>
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div className="animate-pulse">
+          <div className="h-4 bg-gray-200 rounded w-1/3 mb-4"></div>
+          <div className="h-16 bg-gray-200 rounded w-full"></div>
+        </div>
+      </div>
+    );
+  }
+  
+  if (error || !data) {
+    return (
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div className="flex flex-col items-center justify-center py-8">
+          <div className="relative mb-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-red-50 to-red-100 rounded-full flex items-center justify-center">
+              <Gift className="w-8 h-8 text-red-500" />
             </div>
-            
-            <p className="font-medium text-[0.875rem] text-gray-700 mb-[0.25rem]">아직 혜택이 없어요</p>
-            <p className="text-[0.75rem] text-gray-500">
-              지도에서 매장을 찾아서 다양한 혜택을 받아보세요!
-            </p>
           </div>
+          <h4 className="text-lg font-semibold text-gray-800 mb-2">데이터를 불러올 수 없어요</h4>
+          <p className="text-sm text-gray-500 text-center max-w-xs">
+            잠시 후 다시 시도해주세요.
+          </p>
         </div>
       </div>
     );
   }
 
-  // 정상 데이터가 있을 때는 원래 UI 그대로
   return (
-    <div className="border border-gray-200 rounded-[1rem] p-[1.25rem]">
-      <div className="rounded-[1rem] bg-white px-[1.25rem] py-[1.5rem] text-center">
-        <p className="text-[0.75rem] text-gray mb-[0.5rem]">이번 달 받은 혜택</p>
-        <img src="/images/benefit/image.png" alt="benefit" className="mx-auto h-[4.5rem]" />
-        <p className="font-bold text-[1.125rem] text-black mt-[0.5rem]">
-          {data.discountMoney.toLocaleString()}원
+    <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 relative z-0">
+      <div className="mb-6">
+        <h3 className="text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">
+                     <div className="w-6 h-6 bg-purple-star rounded-full flex items-center justify-center">
+             <Gift className="w-4 h-4 text-white" />
+           </div>
+          혜택 현황
+        </h3>
+        <p className="text-sm text-gray-600 leading-relaxed text-center">
+          현재까지 받으신 혜택을 확인해보세요.
+                     <span className="text-primary font-medium">더 많은 혜택을 누려보세요!</span>
         </p>
       </div>
+      
+      {(!data.discountMoney || data.discountMoney === 0) ? (
+        <div className="flex flex-col items-center justify-center py-8">
+          <div className="relative mb-4">
+                         <div className="w-16 h-16 bg-light-gray rounded-full flex items-center justify-center">
+               <Gift className="w-8 h-8 text-primary" />
+             </div>
+          </div>
+          <h4 className="text-lg font-semibold text-gray-800 mb-2">아직 혜택이 없어요</h4>
+          <p className="text-sm text-gray-500 text-center max-w-md">
+            지도에서 매장을 찾아서 다양한 혜택을 받아보세요!
+          </p>
+        </div>
+      ) : (
+        <div className="relative">
+          {/* 축포 애니메이션 배경 */}
+          <div className="absolute inset-0 overflow-hidden rounded-xl">
+            {/* 축포 파티클들 */}
+                         <div className="absolute top-4 left-4 w-2 h-2 bg-yellow-star rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
+             <div className="absolute top-6 right-8 w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.3s' }}></div>
+             <div className="absolute top-2 right-4 w-1 h-1 bg-blue rounded-full animate-bounce" style={{ animationDelay: '0.6s' }}></div>
+             <div className="absolute top-8 left-8 w-1.5 h-1.5 bg-green-star rounded-full animate-bounce" style={{ animationDelay: '0.9s' }}></div>
+             <div className="absolute top-3 right-2 w-1 h-1 bg-purple-star rounded-full animate-bounce" style={{ animationDelay: '1.2s' }}></div>
+             <div className="absolute top-5 left-2 w-1 h-1 bg-orange-star rounded-full animate-bounce" style={{ animationDelay: '1.5s' }}></div>
+          </div>
+
+          {/* 메인 혜택 카드 */}
+          <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 shadow-sm border border-gray-200">
+            {/* 상단 축하 메시지 */}
+            <div className="text-center mb-6">
+                             <div className="flex items-center justify-center gap-2 mb-2">
+                 <Sparkles className="w-5 h-5 text-sparkle animate-pulse" />
+                 <span className="text-lg font-bold text-gray-800">축하합니다!</span>
+                 <Sparkles className="w-5 h-5 text-sparkle animate-pulse" />
+               </div>
+              <p className="text-sm text-gray-600">지금까지 이만큼 절약하셨네요</p>
+            </div>
+
+            {/* 절약 금액 표시 - 3D 효과 */}
+            <div className="relative mb-6">
+              <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200 transform hover:scale-105 transition-transform duration-300">
+                <div className="text-center">
+                  <div className="flex items-center justify-center gap-3 mb-3">
+                                         <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-lg">
+                       <span className="text-white text-xl font-bold">₩</span>
+                     </div>
+                    <div className="text-left">
+                      <p className="text-sm text-gray-500">총 절약 금액</p>
+                      <p className="text-3xl font-bold text-gray-800">{data.discountMoney?.toLocaleString()}원</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      )}
     </div>
   );
 };

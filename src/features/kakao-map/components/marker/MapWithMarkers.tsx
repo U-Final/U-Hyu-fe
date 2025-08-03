@@ -24,6 +24,7 @@ import type { NormalizedPlace } from '../../api/types';
 import { useDistanceBasedSearch } from '../../hooks/useManualSearch';
 import { useToggleFavoriteMutation } from '../../hooks/useMapQueries';
 import type { Store } from '../../types/store';
+import CurrentLocationMarker from '../location/CurrentLocationMarker';
 import ResponsiveManualSearchButton from '../ManualSearchButton';
 import BrandMarker from './BrandMarker';
 import FavoriteMarker from './FavoriteMarker';
@@ -533,10 +534,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
             yAnchor={0.5}
             xAnchor={0.5}
           >
-            <div className="relative">
-              <div className="w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg" />
-              <div className="absolute inset-0 w-12 h-12 border-2 border-blue-300 rounded-full opacity-30 animate-pulse -translate-x-4 -translate-y-4" />
-            </div>
+            <CurrentLocationMarker size="medium" animated={true} />
           </CustomOverlayMap>
         )}
       </KakaoMap>

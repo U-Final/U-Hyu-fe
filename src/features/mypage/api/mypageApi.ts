@@ -13,29 +13,58 @@ import { client } from '@/shared/client';
 // --- 마이페이지(개인정보/브랜드 등) 기존 API ---
 export const fetchUserInfo = async (): Promise<UserInfoData> => {
   const res = await client.get<ApiResponse<UserInfoData>>(MYPAGE_ENDPOINTS.USER_INFO);
-  if (!res.data.data) throw new Error('Invalid API response: missing data');
+  
+  // statusCode가 0이 아니거나 data가 없으면 에러
+  if (res.data.statusCode !== 0 || !res.data.data) {
+    throw new Error(res.data.message || 'Invalid API response: missing data');
+  }
+  
   return res.data.data;
 };
 
 export const updateUserInfo = async (update: UpdateUserRequest): Promise<UpdateUserResponseData> => {
   const res = await client.patch<ApiResponse<UpdateUserResponseData>>(MYPAGE_ENDPOINTS.UPDATE_USER, update);
-  if (!res.data.data) throw new Error('Invalid API response: missing data');
+  
+  // statusCode가 0이 아니거나 data가 없으면 에러
+  if (res.data.statusCode !== 0 || !res.data.data) {
+    throw new Error(res.data.message || 'Invalid API response: missing data');
+  }
+  
   return res.data.data;
 };
 
-// --- 액티비티(활동내역/즐겨찾기) API ---
 export const fetchActivityStatistics = async (): Promise<ActivityStatistics> => {
   const res = await client.get<ApiResponse<ActivityStatistics>>(MYPAGE_ENDPOINTS.STATISTICS);
-  if (!res.data.data) throw new Error('Invalid API response: missing data');
+  
+  // statusCode가 0이 아니거나 data가 없으면 에러
+  if (res.data.statusCode !== 0 || !res.data.data) {
+    throw new Error(res.data.message || 'Invalid API response: missing data');
+  }
+  
+  return res.data.data;
+};
+
+export const fetchAllBookmarks = async (): Promise<Bookmark[]> => {
+  const res = await client.get<ApiResponse<Bookmark[]>>(MYPAGE_ENDPOINTS.BOOKMARK_LIST);
+  
+  // statusCode가 0이 아니거나 data가 없으면 에러
+  if (res.data.statusCode !== 0 || !res.data.data) {
+    throw new Error(res.data.message || 'Invalid API response: missing data');
+  }
+  
   return res.data.data;
 };
 
 export const fetchBookmarkList = async (page = 1, size = 5): Promise<Bookmark[]> => {
-  const res = await client.get<ApiResponse<Bookmark[]>>(
-    `${MYPAGE_ENDPOINTS.BOOKMARK_LIST}?page=${page}&size=${size}`
-  );
-  if (!res.data.data) throw new Error('Invalid API response: missing data');
-  return res.data.data;
+  // 전체 데이터를 한 번만 가져와서 캐시
+  const allBookmarks = await fetchAllBookmarks();
+  
+  // 프론트엔드에서 페이지네이션 적용
+  const start = (page - 1) * size;
+  const end = start + size;
+  const pagedBookmarks = allBookmarks.slice(start, end);
+  
+  return pagedBookmarks;
 };
 
 export const deleteBookmark = async (bookmarkId: number): Promise<{ statusCode: number; message: string }> => {

@@ -181,6 +181,11 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         setIsPanto(true);
         setMapCenter(targetCenter);
 
+        // 지도 레벨을 4로 변경 (바텀시트에서 매장 선택시)
+        if (mapRef.current) {
+          mapRef.current.setLevel(4);
+        }
+
         if (pantoTimeoutRef.current) {
           clearTimeout(pantoTimeoutRef.current);
         }
@@ -223,6 +228,11 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
 
         setIsPanto(true);
         setMapCenter(targetCenter);
+
+        // 지도 레벨을 4로 변경
+        if (mapRef.current) {
+          mapRef.current.setLevel(4);
+        }
 
         // 기존 timeout이 있다면 정리
         if (pantoTimeoutRef.current) {
@@ -276,6 +286,11 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         setIsPanto(true);
         setMapCenter(targetCenter);
 
+        // 지도 레벨을 4로 변경
+        if (mapRef.current) {
+          mapRef.current.setLevel(4);
+        }
+
         // 기존 timeout이 있다면 정리
         if (pantoTimeoutRef.current) {
           clearTimeout(pantoTimeoutRef.current);
@@ -291,7 +306,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         onStoreClick?.(store);
       });
     },
-    [onStoreClick, checkAuthAndExecuteModal, recommendedStores]
+    [onStoreClick, recommendedStores]
   );
 
   // 추천 매장인지 확인하는 함수

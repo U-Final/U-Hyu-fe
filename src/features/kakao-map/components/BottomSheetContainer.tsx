@@ -98,7 +98,6 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
 
     // 필터 버튼 클릭 핸들러 - 바텀시트 높이 유지
     const handleFilterClick = (e?: React.MouseEvent) => {
-
       if (e) {
         e.stopPropagation();
       }
@@ -148,7 +147,6 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
 
     // 현재 바텀시트 단계에 따른 콘텐츠 렌더링
     const getCurrentStepContent = () => {
-
       switch (currentBottomSheetStep) {
         case 'list':
           return (

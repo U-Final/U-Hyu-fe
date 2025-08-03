@@ -4,7 +4,7 @@ import type { Store } from '../types/store';
 import { useMapData } from './useMapData';
 import { useMapUI } from './useMapUI';
 
-export const useMapInteraction = () => {
+export const useMapInteraction = (mapRef?: React.RefObject<kakao.maps.Map>) => {
   const { selectStore, setMapCenter } = useMapData();
   const { setSelectedMarker, selectedMarkerId } = useMapUI();
 
@@ -14,8 +14,13 @@ export const useMapInteraction = () => {
       setSelectedMarker(store.storeId);
       selectStore(store);
       setMapCenter({ lat: store.latitude, lng: store.longitude });
+      
+      // 지도 레벨을 4로 변경
+      if (mapRef?.current) {
+        mapRef.current.setLevel(4);
+      }
     },
-    [selectStore, setMapCenter, setSelectedMarker]
+    [selectStore, setMapCenter, setSelectedMarker, mapRef]
   );
 
   // 지도 중심점 변경 처리

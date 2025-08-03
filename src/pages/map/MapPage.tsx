@@ -27,6 +27,10 @@ const MapContent = () => {
   const [selectedPlace, setSelectedPlace] = useState<NormalizedPlace | null>(
     null
   );
+  const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number }>({
+    lat: 37.570028,
+    lng: 126.977266
+  });
   const mapCenterSetterRef = useRef<
     ((center: { lat: number; lng: number }) => void) | null
   >(null);
@@ -77,11 +81,16 @@ const MapContent = () => {
 
   // MapContainer에서 setMapCenter 함수를 받는 핸들러
   const handleMapCenterUpdate = useCallback(
-    (setMapCenter: (center: { lat: number; lng: number }) => void) => {
-      mapCenterSetterRef.current = setMapCenter;
+    (setMapCenterFn: (center: { lat: number; lng: number }) => void) => {
+      mapCenterSetterRef.current = setMapCenterFn;
     },
     []
   );
+
+  // 지도 중심 좌표 변경 핸들러
+  const handleMapCenterChange = useCallback((center: { lat: number; lng: number }) => {
+    setMapCenter(center);
+  }, []);
 
   // selectedPlace 상태 변화 디버깅
   useEffect(() => {
@@ -104,6 +113,7 @@ const MapContent = () => {
           onPlaceClick={handlePlaceClick}
           onPlaceInfoClose={handlePlaceInfoClose}
           onMapCenterUpdate={handleMapCenterUpdate}
+          onMapCenterChange={handleMapCenterChange}
         />
         <MapControlsContainer
           onKeywordSearchResults={handleKeywordSearchResults}
@@ -112,6 +122,7 @@ const MapContent = () => {
           onCloseSearchResults={handleCloseSearchResults}
           mapCenterSetter={mapCenterSetterRef.current}
           onPlaceClick={handlePlaceClick}
+          mapCenter={mapCenter}
         />
         <MapButtonsContainer />
       </div>

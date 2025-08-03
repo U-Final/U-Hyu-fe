@@ -64,8 +64,6 @@ export const fetchBookmarkList = async (page = 1, size = 5): Promise<Bookmark[]>
   const end = start + size;
   const pagedBookmarks = allBookmarks.slice(start, end);
   
-  console.log('🔧 프론트엔드 무한스크롤 페이지네이션:', { page, size, start, end, total: allBookmarks.length, paged: pagedBookmarks.length });
-  
   return pagedBookmarks;
 };
 

@@ -13,6 +13,7 @@ import {
 export const useGA = () => {
   const location = useLocation();
   const { isLoggedIn } = useAuthState();
+  
 
   useEffect(() => {
     initGA();

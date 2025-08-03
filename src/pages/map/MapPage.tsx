@@ -104,8 +104,64 @@ const MapContent = () => {
     }
   }, [bottomSheetRef]);
 
+  // 모바일에서 세로 스크롤만 방지 (가로 스크롤은 허용)
+  useEffect(() => {
+    // body 세로 스크롤만 방지
+    document.body.style.overflowY = 'hidden';
+    document.body.style.overflowX = 'auto';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+
+    // 세로 터치 스크롤만 방지 (가로는 허용)
+    const preventVerticalTouchMove = (e: TouchEvent) => {
+      const target = e.target as HTMLElement;
+      
+      // 스크롤 가능한 영역이나 가로 스크롤 영역은 허용
+      const isScrollableArea = target.closest('[data-scrollable="true"]') || 
+                              target.closest('.overflow-x-auto') ||
+                              target.closest('.scrollbar-hide') ||
+                              target.closest('[class*="overflow-x"]');
+      
+      if (!isScrollableArea) {
+        // 터치 이동이 주로 세로 방향인지 확인
+        const touch = e.touches[0];
+        if (touch) {
+          const deltaX = Math.abs(touch.clientX - (touch.target as any).startX || 0);
+          const deltaY = Math.abs(touch.clientY - (touch.target as any).startY || 0);
+          
+          // 세로 이동이 가로 이동보다 클 때만 방지
+          if (deltaY > deltaX) {
+            e.preventDefault();
+          }
+        }
+      }
+    };
+
+    // 터치 시작 지점 저장
+    const saveTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (touch && touch.target) {
+        (touch.target as any).startX = touch.clientX;
+        (touch.target as any).startY = touch.clientY;
+      }
+    };
+
+    document.addEventListener('touchstart', saveTouchStart, { passive: true });
+    document.addEventListener('touchmove', preventVerticalTouchMove, { passive: false });
+
+    // 클린업
+    return () => {
+      document.body.style.overflowY = '';
+      document.body.style.overflowX = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.removeEventListener('touchstart', saveTouchStart);
+      document.removeEventListener('touchmove', preventVerticalTouchMove);
+    };
+  }, []);
+
   return (
-    <div className="h-screen relative">
+    <div className="h-screen relative overflow-hidden">
       <div className="absolute inset-0">
         <MapContainer
           keywordResults={persistentMarkers}

@@ -100,7 +100,7 @@ export const BenefitList = () => {
 
       {/* 페이지네이션 */}
       {data && (
-        <div className="mt-6">
+        <div className="mt-6 pb-20 sm:pb-6">
           <Pagination
             currentPage={data.currentPage + 1}
             totalPages={data.totalPages}

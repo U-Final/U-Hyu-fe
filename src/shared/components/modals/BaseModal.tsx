@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 
 import { IconButton } from '@/shared/components/buttons/IconButton';
@@ -24,7 +24,7 @@ const BaseModal = ({ title, children }: BaseModalProps) => {
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, []);
+  });
 
   return (
     <AnimatePresence mode="wait">
@@ -87,7 +87,11 @@ const BaseModal = ({ title, children }: BaseModalProps) => {
             >
               <IconButton
                 icon={
-                  <X className="h-4" onClick={closeModal} aria-label="모달 닫기" />
+                  <X
+                    className="h-4"
+                    onClick={closeModal}
+                    aria-label="모달 닫기"
+                  />
                 }
               />
             </motion.div>

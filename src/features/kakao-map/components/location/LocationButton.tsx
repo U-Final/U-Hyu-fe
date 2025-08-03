@@ -42,7 +42,7 @@ const LocationButton: FC<LocationButtonProps> = ({
       >
         {/* 배경 그라데이션 */}
         <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/10 to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        
+
         {/* 아이콘 또는 로딩 */}
         <div className="relative z-10">
           {isLoading ? (

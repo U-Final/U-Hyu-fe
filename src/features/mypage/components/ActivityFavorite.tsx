@@ -18,7 +18,6 @@ const ActivityFavorite = ({ enabled }: Props) => {
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-    error,
     refetch,
   } = useBookmarkListInfiniteQuery(enabled);
   const loaderRef = useRef<HTMLDivElement | null>(null);
@@ -45,8 +44,7 @@ const ActivityFavorite = ({ enabled }: Props) => {
   if (!enabled) return null;
 
   if (isLoading) return <div>로딩중...</div>;
-  if (error) return <div>에러 발생</div>;
-
+ 
   const bookmarks = (data?.pages.flat() as Bookmark[]) || [];
 
   const handleFavoriteClick = async (bookmarkId: number) => {
@@ -91,7 +89,7 @@ const ActivityFavorite = ({ enabled }: Props) => {
           </BrandWithFavoriteCard>
         </div>
       ))}
-      {bookmarks.length === 0 && !isLoading && (
+      {!isLoading && bookmarks.length === 0 && (
         <div className="flex flex-col items-center justify-center py-12 px-4">
           {/* 빈 상태 아이콘 */}
           <div className="relative mb-6">

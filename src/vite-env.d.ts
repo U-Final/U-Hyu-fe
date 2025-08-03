@@ -12,6 +12,7 @@ interface ImportMetaEnv {
   readonly VITE_SEARCH_DEBOUNCE_DELAY: string;
   readonly VITE_KAKAO_REST_API_KEY: string;
   readonly VITE_KAKAO_JAVASCRIPT_KEY: string;
+  readonly VITE_GA4_MEASUREMENT_ID: string;
 }
 
 interface ImportMeta {

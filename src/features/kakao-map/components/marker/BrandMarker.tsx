@@ -8,6 +8,7 @@ interface BrandMarkerProps {
   isSelected?: boolean;
   isRecommended?: boolean;
   onClick?: () => void;
+  activeCategory?: string;
 }
 
 const BrandMarker: FC<BrandMarkerProps> = ({
@@ -15,6 +16,7 @@ const BrandMarker: FC<BrandMarkerProps> = ({
   isSelected = false,
   isRecommended = false,
   onClick,
+  activeCategory = 'all',
 }) => {
   const brandImageSrc = store.logoImage;
 
@@ -65,18 +67,20 @@ const BrandMarker: FC<BrandMarkerProps> = ({
           relative 
           w-14 h-14 
           rounded-full 
-          shadow-lg 
+          shadow-xl 
           border-3 
           border-white
           cursor-pointer
           transition-all 
           duration-200
           hover:scale-110
-          ${isSelected ? `ring-4 ${isRecommended ? 'ring-yellow-300' : 'ring-blue-300'}` : ''}
+          hover:shadow-2xl
+          ${isSelected ? `ring-4 ${isRecommended ? 'ring-yellow-300' : 'ring-blue-300'} shadow-2xl` : ''}
           ${isRecommended ? 'animate-pulse' : ''}
         `}
         style={{
           backgroundColor: categoryColor,
+          boxShadow: `0 8px 25px -5px ${categoryColor}40, 0 10px 10px -5px ${categoryColor}30`,
         }}
       >
         {/* 브랜드 로고 */}

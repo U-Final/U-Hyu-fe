@@ -68,16 +68,16 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
     const handleStoreClick = useCallback(
       (store: Store) => {
         // 로그인 상태 확인 후 인포윈도우 표시
-        checkAuthAndExecuteModal(() => {
-          // 바텀시트 명시적 닫힘 플래그 설정 후 닫기
-          if (bottomSheetRef && bottomSheetRef.current) {
-            bottomSheetRef.current.setExplicitlyClosed(true);
-            bottomSheetRef.current.close();
-          }
+        // checkAuthAndExecuteModal(() => {
+        // 바텀시트 명시적 닫힘 플래그 설정 후 닫기
+        if (bottomSheetRef && bottomSheetRef.current) {
+          bottomSheetRef.current.setExplicitlyClosed(true);
+          bottomSheetRef.current.close();
+        }
 
-          // 지도 마커 클릭과 동일한 효과 (바텀시트 닫고 인포윈도우 표시)
-          handleMapMarkerClick(store);
-        });
+        // 지도 마커 클릭과 동일한 효과 (바텀시트 닫고 인포윈도우 표시)
+        handleMapMarkerClick(store);
+        // });
       },
       [bottomSheetRef, handleMapMarkerClick, checkAuthAndExecuteModal]
     );
@@ -98,7 +98,6 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
 
     // 필터 버튼 클릭 핸들러 - 바텀시트 높이 유지
     const handleFilterClick = (e?: React.MouseEvent) => {
-
       if (e) {
         e.stopPropagation();
       }
@@ -148,7 +147,6 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
 
     // 현재 바텀시트 단계에 따른 콘텐츠 렌더링
     const getCurrentStepContent = () => {
-
       switch (currentBottomSheetStep) {
         case 'list':
           return (

@@ -1,6 +1,10 @@
+import { useState } from 'react';
+
 import { useMapUIContext } from '@kakao-map/context/MapUIContext';
 import { useMapStore } from '@kakao-map/store/MapStore';
 import type { Store } from '@kakao-map/types/store';
+import { useRecommendExcludeMutation } from '@recommendation/hooks/useRecommendMutation';
+import { ThumbsDown } from 'lucide-react';
 
 import { BrandCard } from '@/shared/components';
 
@@ -16,8 +20,12 @@ const RecommendedStoreCard = ({
   const selectStore = useMapStore(state => state.selectStore);
   const setMapCenter = useMapStore(state => state.setMapCenter);
   const { bottomSheetRef } = useMapUIContext();
+  const [isExcluding, setIsExcluding] = useState(false);
+  const { mutate: excludeStore } = useRecommendExcludeMutation();
 
   const handleCardClick = () => {
+    if (!store.addressDetail) return; // 온라인 매장은 클릭 무시
+
     // 전역 상태에 선택된 매장 설정 (지도 포커스용)
     selectStore(store);
 
@@ -28,6 +36,16 @@ const RecommendedStoreCard = ({
     if (autoCloseBottomSheet && bottomSheetRef && bottomSheetRef.current) {
       bottomSheetRef.current.setExplicitlyClosed(true);
       bottomSheetRef.current.close();
+    }
+  };
+
+  const handleDislikeClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isExcluding) {
+      setIsExcluding(true);
+      excludeStore(store.storeId, {
+        onSettled: () => setIsExcluding(false),
+      });
     }
   };
 
@@ -50,9 +68,11 @@ const RecommendedStoreCard = ({
               </span>
             </div>
 
-            <p className="text-black text-sm group-hover:text-gray-700 transition-colors">
-              📍 {store.addressDetail}
-            </p>
+            {store.addressDetail && (
+              <p className="text-black text-sm group-hover:text-gray-700 transition-colors">
+                📍 {store.addressDetail}
+              </p>
+            )}
 
             {/* 혜택 정보 - 강조된 스타일 */}
             <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-md p-2 group-hover:shadow-sm transition-shadow w-full">
@@ -63,6 +83,16 @@ const RecommendedStoreCard = ({
             </div>
           </div>
         </div>
+        <button
+          onClick={handleDislikeClick}
+          className="absolute top-2 right-2 p-1 mr-3 rounded-full bg-white hover:bg-gray-100"
+          disabled={isExcluding}
+        >
+          <ThumbsDown
+            className="w-4 h-4 text-secondary hover:text-red-500"
+            aria-label="추천 제외"
+          />
+        </button>
       </BrandCard>
     </div>
   );

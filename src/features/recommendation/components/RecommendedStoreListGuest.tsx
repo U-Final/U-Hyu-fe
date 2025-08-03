@@ -47,7 +47,7 @@ export const RecommendedStoreListGuest = () => {
           delay: 2000, // 2초마다 자동 이동
           disableOnInteraction: false,
         }}
-        style={{ height: '80px' }}
+        style={{ height: '100px' }}
       >
         {brands?.map(brand => (
           <SwiperSlide key={brand.brandId}>

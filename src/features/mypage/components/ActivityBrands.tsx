@@ -109,6 +109,9 @@ const ActivityBrands = () => {
                      src={data.bestBrandList[2].logoImage}
                      alt={data.bestBrandList[2].brandName}
                      className="w-12 h-12 object-cover rounded-full"
+                     onError={(e) => {
+                       e.currentTarget.src = '/images/share/url.png';
+                     }}
                    />
                  </div>
                  
@@ -132,6 +135,9 @@ const ActivityBrands = () => {
                      src={data.bestBrandList[0].logoImage}
                      alt={data.bestBrandList[0].brandName}
                      className="w-16 h-16 object-cover rounded-full"
+                     onError={(e) => {
+                       e.currentTarget.src = '/images/share/url.png';
+                     }}
                    />
                  </div>
                  
@@ -157,6 +163,9 @@ const ActivityBrands = () => {
                      src={data.bestBrandList[1].logoImage}
                      alt={data.bestBrandList[1].brandName}
                      className="w-12 h-12 object-cover rounded-full"
+                     onError={(e) => {
+                       e.currentTarget.src = '/images/share/url.png';
+                     }}
                    />
                  </div>
                  
@@ -212,6 +221,9 @@ const ActivityBrands = () => {
                     src={store.recentBrandImage}
                     alt={store.recentStoreName}
                     className="w-16 h-16 rounded-lg bg-white object-contain border border-gray-200 shadow-sm mb-3"
+                    onError={(e) => {
+                      e.currentTarget.src = '/images/share/url.png';
+                    }}
                   />
                   
                   <h4 className="text-sm font-semibold text-gray-800 text-center leading-tight">

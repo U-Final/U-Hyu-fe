@@ -1,26 +1,25 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/shadcn/ui/card';
 import { Button } from '@/shared/components/shadcn/ui/button';
-import { Input } from '@/shared/components/shadcn/ui/input';
-import { PlusIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { PlusIcon } from '@heroicons/react/24/outline';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { adminApi } from '@admin/api/adminApi';
 import type { AdminBrand } from '@admin/api/types';
+import { useAdminQueryParams } from '@admin/hooks/useAdminQueryParams';
 import { AdminBrandForm } from './AdminBrandForm';
 import { AdminBrandCard } from './AdminBrandCard';
 import { AdminBrandPagination } from './AdminBrandPagination';
 import { AdminBrandDeleteModal } from './AdminBrandDeleteModal';
 import { ADMIN_CATEGORIES } from '@admin/constants/categories';
 import FilterTabs from '@/shared/components/filter_tabs/FilterTabs';
+import SearchInput from '@/shared/components/search_input/SearchInput';
 import { getErrorMessage } from '@/shared/utils/getErrorMessage';
-
-const ITEMS_PER_PAGE = 5;
+import React from 'react';
 
 export function AdminBrandList() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const { params, setParam } = useAdminQueryParams();
+  const [searchTerm, setSearchTerm] = useState(params.brand_name ?? '');
   const [editingBrand, setEditingBrand] = useState<AdminBrand | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -28,10 +27,14 @@ export function AdminBrandList() {
   
   const queryClient = useQueryClient();
 
+  React.useEffect(() => {
+    setSearchTerm(params.brand_name ?? '');
+  }, [params.brand_name]);
+
   // 브랜드 목록 조회
   const { data: brandListResponse, isLoading, error } = useQuery({
-    queryKey: ['adminBrandList'],
-    queryFn: adminApi.getAdminBrandList,
+    queryKey: ['adminBrandList', params],
+    queryFn: () => adminApi.getAdminBrandList(params),
     enabled: true,
     refetchOnMount: 'always',
     gcTime: 0,
@@ -46,34 +49,6 @@ export function AdminBrandList() {
       setBrandToDelete(null);
     },
   });
-
-  // 필터링된 브랜드 목록
-  const filteredBrands = useMemo(() => {
-    if (!brandListResponse?.brandList) return [];
-    
-    let filtered = brandListResponse.brandList;
-    
-    // 검색 필터
-    if (searchTerm) {
-      filtered = filtered.filter(brand => 
-        brand.brandName.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-    
-    // 카테고리 필터
-    if (selectedCategory !== 'all') {
-      const categoryId = parseInt(selectedCategory);
-      filtered = filtered.filter(brand => brand.categoryId === categoryId);
-    }
-    
-    return filtered;
-  }, [brandListResponse?.brandList, searchTerm, selectedCategory]);
-
-  // 페이지네이션
-  const totalPages = Math.ceil(filteredBrands.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentBrands = filteredBrands.slice(startIndex, endIndex);
 
   // 카테고리 필터 탭 설정
   const categoryTabs = [
@@ -112,12 +87,11 @@ export function AdminBrandList() {
   };
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    setParam('page', (page - 1).toString());
   };
 
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
-    setCurrentPage(1); // 카테고리 변경 시 첫 페이지로
+  const handleFilterChange = (value: string) => {
+    setParam('category', value);
   };
 
   const handleFormSuccess = () => {
@@ -158,8 +132,10 @@ export function AdminBrandList() {
     );
   }
 
-  const totalBrands = brandListResponse?.brandList?.length || 0;
-  const filteredCount = filteredBrands.length;
+  const brandList = brandListResponse?.brandList || [];
+  const totalPages = brandListResponse?.totalPages || 0;
+  const currentPage = brandListResponse?.currentPage || 0;
+  const totalBrands = brandList.length;
 
   return (
     <>
@@ -173,12 +149,11 @@ export function AdminBrandList() {
             </Button>
           </CardTitle>
           <p className="text-sm text-gray-600">
-            총 {totalBrands}개의 브랜드가 등록되어 있습니다.
-            {searchTerm || selectedCategory !== 'all' ? ` (필터링: ${filteredCount}개)` : ''}
+            총 {totalBrands}개의 브랜드가 조회되었습니다.
+            {searchTerm || params.category ? ` (필터링 적용)` : ''}
           </p>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* 브랜드 추가 폼 */}
           {showForm && !editingBrand && (
             <AdminBrandForm
               editingBrand={null}
@@ -187,24 +162,18 @@ export function AdminBrandList() {
             />
           )}
 
-          {/* 검색 */}
-          <div className="relative">
-            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input
-              placeholder="브랜드명으로 검색..."
+          <div className="flex flex-col gap-3">
+            <SearchInput
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              onChange={setSearchTerm}
+              onSearch={value => setParam('brand_name', value)}
+              placeholder="브랜드명으로 검색..."
             />
-          </div>
-
-          {/* 카테고리 필터 */}
-          <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-3">카테고리별 필터</h3>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto px-0">
               <FilterTabs
                 tabs={categoryTabs}
-                onChange={handleCategoryChange}
+                value={params.category || 'all'}
+                onChange={handleFilterChange}
                 variant="gray"
               />
             </div>
@@ -212,21 +181,21 @@ export function AdminBrandList() {
 
           {/* 브랜드 목록 */}
           <div className="space-y-4">
-            {currentBrands.length === 0 ? (
+            {brandList.length === 0 ? (
               <div className="text-center py-12">
                 <div className="text-gray-400 mb-2">
-                  {searchTerm || selectedCategory !== 'all' 
+                  {searchTerm || params.category 
                     ? '검색 조건에 맞는 브랜드가 없습니다.' 
                     : '등록된 브랜드가 없습니다.'}
                 </div>
                 <p className="text-sm text-gray-500">
-                  {searchTerm || selectedCategory !== 'all' 
+                  {searchTerm || params.category 
                     ? '검색어나 필터를 변경해보세요.' 
                     : '브랜드 추가 버튼을 클릭하여 첫 번째 브랜드를 등록하세요.'}
                 </p>
               </div>
             ) : (
-              currentBrands.map((brand) => (
+              brandList.map((brand) => (
                 <AdminBrandCard
                   key={brand.brandId}
                   brand={brand}
@@ -243,7 +212,7 @@ export function AdminBrandList() {
           {/* 페이지네이션 */}
           {totalPages > 1 && (
             <AdminBrandPagination
-              currentPage={currentPage}
+              currentPage={currentPage + 1}
               totalPages={totalPages}
               onPageChange={handlePageChange}
             />

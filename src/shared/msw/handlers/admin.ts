@@ -7,6 +7,7 @@ import {
     mockRecommendStats,
     mockTotalStats,
 } from '@admin/api/mockData';
+import type { AdminBrandListResponse } from '@admin/api/types';
 
 import { http, HttpResponse } from 'msw';
 
@@ -38,9 +39,61 @@ export const adminHandlers = [
     return createResponse(mockMembershipStats, '멤버십 통계 조회 성공');
   }),
   
-  http.get(ADMIN_ENDPOINTS.BRAND_LIST, () => {
+  http.get(ADMIN_ENDPOINTS.BRAND_LIST, ({ request }) => {
     console.log('🔧 MSW GET 브랜드 목록 조회 요청');
-    return createResponse(mockAdminBrandListResponse, '브랜드 목록 조회 성공');
+    
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get('page') ?? '0');
+    const size = Number(url.searchParams.get('size') ?? '10');
+    const category = url.searchParams.get('category');
+    const brandName = url.searchParams.get('brand_name');
+    
+    console.log('🔧 API 파라미터:', { page, size, category, brandName });
+    
+    let filteredBrands = [...mockAdminBrandListResponse.brandList];
+    console.log('🔧 초기 브랜드 수:', filteredBrands.length);
+    
+    // 카테고리 필터링
+    if (category && category !== 'all') {
+      const categoryIdNum = parseInt(category);
+      filteredBrands = filteredBrands.filter(brand => brand.categoryId === categoryIdNum);
+      console.log('🔧 카테고리 필터링 후 브랜드 수:', filteredBrands.length, '카테고리 ID:', categoryIdNum);
+    }
+    
+    // 브랜드명 검색 필터링
+    if (brandName) {
+      filteredBrands = filteredBrands.filter(brand => 
+        brand.brandName.toLowerCase().includes(brandName.toLowerCase())
+      );
+      console.log('🔧 브랜드명 검색 후 브랜드 수:', filteredBrands.length, '검색어:', brandName);
+      console.log('🔧 검색된 브랜드들:', filteredBrands.map(b => b.brandName));
+    }
+    
+    // 페이지네이션 계산
+    const totalItems = filteredBrands.length;
+    const totalPages = Math.ceil(totalItems / size);
+    const startIndex = page * size;
+    const endIndex = startIndex + size;
+    const currentPageBrands = filteredBrands.slice(startIndex, endIndex);
+    
+    console.log('🔧 페이지네이션 결과:', {
+      totalItems,
+      totalPages,
+      currentPage: page,
+      startIndex,
+      endIndex,
+      currentPageBrandsCount: currentPageBrands.length,
+      hasNext: page < totalPages - 1
+    });
+    
+    const response: AdminBrandListResponse = {
+      brandList: currentPageBrands,
+      hasNext: page < totalPages - 1,
+      totalPages,
+      currentPage: page,
+    };
+    
+    return createResponse(response, '브랜드 목록 조회 성공');
   }),
   
   http.post(ADMIN_ENDPOINTS.BRAND_CREATE, async ({ request }) => {

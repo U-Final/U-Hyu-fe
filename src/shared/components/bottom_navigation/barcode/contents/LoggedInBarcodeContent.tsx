@@ -68,8 +68,11 @@ export const LoggedInBarcodeContent = () => {
   if (isLoading) return <BeatLoader className="text-center" size={10} />;
 
   if (error && isApiError(error)) {
+    // 4103은 바코드 이미지가 없는 경우로, 정상적인 상황임
     if (error.statusCode !== 4103) {
-      return <p>{error.message}</p>;
+      console.error('바코드 이미지 로드 실패:', error);
+      // 사용자에게는 에러를 표시하지 않고 바코드 업로드 버튼을 보여줌
+      // return <p className="text-red-500 text-center">바코드를 불러올 수 없습니다. 다시 시도해주세요.</p>;
     }
   }
 

@@ -2,6 +2,7 @@ import { useVisitConfirmMutation } from '@barcode/hooks/useVisitConfirmMutation'
 import type { StoreSummary } from '@kakao-map/api/types';
 
 import { GhostButton, PrimaryButton } from '@/shared/components';
+import { useGA } from '@/shared/hooks/useGA';
 
 interface StoreProps {
   store: StoreSummary;
@@ -11,8 +12,12 @@ interface StoreProps {
 
 const VisitConfirmSection = ({ store, onConfirm, onReject }: StoreProps) => {
   const { mutate: confirmVisit, isPending } = useVisitConfirmMutation();
+  const { trackBarcodeInteraction } = useGA();
 
   const handleVisitConfirm = () => {
+    // GA 추적: 방문 확인
+    trackBarcodeInteraction('visit_confirmed', store.storeId);
+
     confirmVisit(store.storeId, {
       onSuccess: () => {
         console.log(`${store.storeName} 방문 처리 완료`);
@@ -23,6 +28,13 @@ const VisitConfirmSection = ({ store, onConfirm, onReject }: StoreProps) => {
       },
     });
   };
+
+  const handleReject = () => {
+    // GA 추적: 방문 거부
+    trackBarcodeInteraction('visit_rejected', store.storeId);
+    onReject();
+  };
+
   return (
     <div className="flex">
       <div className="flex-1 flex flex-col justify-center">
@@ -32,7 +44,7 @@ const VisitConfirmSection = ({ store, onConfirm, onReject }: StoreProps) => {
         </p>
       </div>
       <div className="flex gap-4">
-        <GhostButton size="sm" onClick={onReject}>
+        <GhostButton size="sm" onClick={handleReject}>
           아니요
         </GhostButton>
         <PrimaryButton

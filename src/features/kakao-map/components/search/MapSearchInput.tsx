@@ -2,6 +2,8 @@ import React, { useRef } from 'react';
 
 import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/solid';
 
+import { useGA } from '@/shared/hooks/useGA';
+
 interface KeywordSearchInputProps {
   /** 현재 검색어 */
   value: string;
@@ -36,11 +38,14 @@ export const KeywordSearchInput: React.FC<KeywordSearchInputProps> = ({
   autoFocus = false,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const { trackSearchInteraction } = useGA();
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       if (value.trim() && !loading) {
+        // GA 추적: 검색 실행
+        trackSearchInteraction('search_performed', value.trim());
         onSearch(value.trim());
         inputRef.current?.blur();
       }
@@ -48,6 +53,8 @@ export const KeywordSearchInput: React.FC<KeywordSearchInputProps> = ({
   };
 
   const handleClear = () => {
+    // GA 추적: 검색 취소
+    trackSearchInteraction('search_cancelled', value);
     onChange('');
     onCancel?.();
     inputRef.current?.focus();
@@ -131,15 +138,20 @@ export const MapSearchInput: React.FC<{
   className = '',
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const { trackSearchInteraction } = useGA();
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
+      // GA 추적: 검색 실행
+      trackSearchInteraction('search_performed', value);
       onSearch?.(value);
     }
   };
 
   const handleCancel = () => {
+    // GA 추적: 검색 취소
+    trackSearchInteraction('search_cancelled', value);
     onChange('');
     onCancel?.();
     inputRef.current?.blur();

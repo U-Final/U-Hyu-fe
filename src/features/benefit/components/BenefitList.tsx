@@ -9,14 +9,16 @@ import { useBenefitQueryParams, useGetBrandListQuery } from '@benefit/hooks';
 import { formatGradeDescriptions } from '@benefit/utils/formatGradeDescriptions';
 
 import { BrandCard, FilterTabs, SearchInput } from '@/shared/components';
-import { SkeletonBrandCard } from '@/shared/components/skeleton';
 import { BENEFIT_FILTER_TABS } from '@/shared/components/filter_tabs/FilterTabs.variants';
+import { SkeletonBrandCard } from '@/shared/components/skeleton';
+import { useGA } from '@/shared/hooks/useGA';
 import { useModalStore } from '@/shared/store';
 import { trackFilterUsed } from '@/shared/utils/actionlogTracker';
 
 export const BenefitList = () => {
   const { params, setParam, setParams } = useBenefitQueryParams();
   const [searchTerm, setSearchTerm] = useState(params.brand_name ?? '');
+  const { trackBenefitInteraction } = useGA();
 
   const openModal = useModalStore(state => state.openModal);
 
@@ -29,6 +31,14 @@ export const BenefitList = () => {
   const handleBrandClick = async (brandId: number) => {
     if (!brandId) return;
 
+    // GA 추적: 브랜드 상세보기
+    const brand = data?.brandList.find(b => b.brandId === brandId);
+    trackBenefitInteraction(
+      'brand_detail_viewed',
+      brandId.toString(),
+      brand?.brandName
+    );
+
     openModal('base', {
       title: '브랜드 상세정보',
       children: <BrandDetailModal brandId={brandId} />,
@@ -40,6 +50,8 @@ export const BenefitList = () => {
 
     if (value !== 'all' && value !== '전체') {
       trackFilterUsed(value);
+      // GA 추적: 필터 사용
+      trackBenefitInteraction('filter_used', undefined, value);
     }
   };
 

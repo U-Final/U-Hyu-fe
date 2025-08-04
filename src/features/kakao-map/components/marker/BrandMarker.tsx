@@ -1,5 +1,7 @@
 import { type FC } from 'react';
 
+import { useGA } from '@/shared/hooks/useGA';
+
 import type { Store } from '../../types/store.ts';
 import { getCategoryColorFromFilter } from '../../utils/categoryColorMapping';
 
@@ -16,13 +18,24 @@ const BrandMarker: FC<BrandMarkerProps> = ({
   isRecommended = false,
   onClick,
 }) => {
+  const { trackMapInteraction } = useGA();
   const brandImageSrc = store.logoImage;
 
   // 항상 매장의 실제 카테고리 색상 사용
   const categoryColor = getCategoryColorFromFilter(store.categoryName);
 
+  const handleMarkerClick = () => {
+    // GA 추적: 마커 클릭
+    trackMapInteraction('marker_click', store.storeId, store.categoryName);
+
+    // 기존 onClick 핸들러 실행
+    if (onClick) {
+      onClick();
+    }
+  };
+
   return (
-    <div className="relative" onClick={onClick}>
+    <div className="relative" onClick={handleMarkerClick}>
       {/* 추천 매장 심플한 효과 */}
       {isRecommended && (
         <>

@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { BrowserRouter } from 'react-router-dom';
@@ -7,7 +9,12 @@ import { AppRoutes } from '@/routes/AppRoutes';
 
 import { queryClient } from '@/shared/client';
 
+import { initGA } from './shared/utils/gaTracker';
+
 function App() {
+  useEffect(() => {
+    initGA();
+  }, []);
   return (
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>

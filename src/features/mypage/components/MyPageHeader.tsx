@@ -113,10 +113,12 @@ const MyPageHeader = ({ user }: MyPageHeaderProps) => {
         </div>
         <button
           onClick={() => navigate(nextPath)}
-          className="flex items-center gap-[0.25rem] text-[0.875rem] text-gray"
+          className="group flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all duration-200 ease-in-out transform hover:scale-[1.02] active:scale-[0.98]"
         >
-          {isActivity ? '마이페이지' : '활동 내역'}
-          <ChevronRight className="w-4 h-4" />
+          <span className="transition-colors duration-200">
+            {isActivity ? '마이페이지' : '활동 내역'}
+          </span>
+          <ChevronRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5" />
         </button>
       </div>
     </div>

@@ -36,7 +36,7 @@ const ActivityBrands = () => {
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 relative z-0">
         <div className="mb-6">
           <h3 className="text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">
-            <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+            <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
               <span className="text-white text-sm">🔍</span>
             </div>
             클릭 패턴 분석
@@ -44,7 +44,7 @@ const ActivityBrands = () => {
           <p className="text-sm text-gray-600 leading-relaxed text-center">
             최근 클릭 기록을 바탕으로, 자주 살펴본 멤버십 사용처를 알려드릴게요.
             <br/>
-            <span className="text-blue-600 font-medium">U-HYU에서의 활동이 {userData?.data?.nickName || '사용자'}님의 관심사를 보여줘요</span>.
+            <span className="text-primary font-medium">U-HYU에서의 활동이 {userData?.data?.nickName || '사용자'}님의 관심사를 보여줘요</span>.
           </p>
         </div>
         
@@ -52,7 +52,7 @@ const ActivityBrands = () => {
           <div className="flex flex-col items-center justify-center py-8">
             <div className="relative mb-4">
               <div className="w-16 h-16 bg-light-gray rounded-full flex items-center justify-center">
-                <Search className="w-8 h-8 text-blue-600" />
+                <Search className="w-8 h-8 text-primary" />
               </div>
             </div>
             <h4 className="text-lg font-semibold text-gray-800 mb-2">아직 클릭 기록이 없어요</h4>
@@ -158,7 +158,7 @@ const ActivityBrands = () => {
           <p className="text-sm text-gray-600 leading-relaxed text-center">
             최근에 방문하신 매장들을 확인해보세요.
             <br/>
-            <span className="text-blue-600 font-medium">다양한 매장을 탐방해보세요!</span>
+            <span className="text-primary font-medium">다양한 매장을 탐방해보세요!</span>
           </p>
         </div>
         
@@ -166,7 +166,7 @@ const ActivityBrands = () => {
           <div className="flex flex-col items-center justify-center py-8">
             <div className="relative mb-4">
               <div className="w-16 h-16 bg-light-gray rounded-full flex items-center justify-center">
-                <MapPin className="w-8 h-8 text-blue-600" />
+                <MapPin className="w-8 h-8 text-primary" />
               </div>
             </div>
             <h4 className="text-lg font-semibold text-gray-800 mb-2">아직 방문 기록이 없어요</h4>

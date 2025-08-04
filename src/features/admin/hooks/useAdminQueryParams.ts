@@ -14,7 +14,7 @@ export const useAdminQueryParams = () => {
 
   const params: AdminBrandListParams = useMemo(() => {
     return parseAdminQueryParams(searchParams);
-  }, [searchParams.toString()]);
+  }, [searchParams]);
 
   return {
     params,

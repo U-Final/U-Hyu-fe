@@ -1,22 +1,22 @@
 import { useEffect, useState } from 'react';
 
-import type { UserInfoData, UpdateUserRequest } from '@mypage/api/types';
+import type { UpdateUserRequest, UserInfoData } from '@mypage/api/types';
 import { BadgeCheck, Pencil } from 'lucide-react';
 
 interface Props {
   user: UserInfoData;
-  editMode: boolean;
-  setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
+  isEditMode: boolean;
+  setisEditMode: React.Dispatch<React.SetStateAction<boolean>>;
   setPendingChanges: React.Dispatch<React.SetStateAction<UpdateUserRequest>>;
   onSaveAll: () => Promise<void>;
 }
 
-const MyPageUserInfo = ({ 
-  user, 
-  editMode, 
-  setEditMode, 
-  setPendingChanges, 
-  onSaveAll 
+const MyPageUserInfo = ({
+  user,
+  isEditMode,
+  setisEditMode,
+  setPendingChanges,
+  onSaveAll,
 }: Props) => {
   const [localEdit, setLocalEdit] = useState(user);
 
@@ -37,14 +37,14 @@ const MyPageUserInfo = ({
     if (field === 'nickName') {
       setPendingChanges(prev => ({
         ...prev,
-        updatedNickName: value as string || '',
+        updatedNickName: (value as string) || '',
       }));
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      if (editMode) onSaveAll();
+      if (isEditMode) onSaveAll();
     }
   };
 
@@ -92,21 +92,19 @@ const MyPageUserInfo = ({
   return (
     <div className="space-y-[1rem]">
       <div className="flex items-center justify-between">
-        <h3 className="font-bold text-[1rem] text-black">
-          개인정보
-        </h3>
+        <h3 className="font-bold text-[1rem] text-black">개인정보</h3>
         <button
-          onClick={() => (editMode ? handleSave() : setEditMode(true))}
+          onClick={() => (isEditMode ? handleSave() : setisEditMode(true))}
           className="flex items-center gap-[0.25rem] text-[0.875rem] text-primary"
         >
           <Pencil className="w-4 h-4" />
-          {editMode ? '저장' : '수정'}
+          {isEditMode ? '저장' : '수정'}
         </button>
       </div>
 
       <div className="space-y-[0.75rem]">
         {fields.map(({ key, label, icon, editable }) => {
-          const isEditable = editMode && editable;
+          const isEditable = isEditMode && editable;
           const value = localEdit[key];
 
           return (
@@ -116,16 +114,14 @@ const MyPageUserInfo = ({
             >
               <div className="flex items-center gap-[0.75rem]">
                 {icon}
-                <span className="text-[0.875rem] text-gray">
-                  {label}
-                </span>
+                <span className="text-[0.875rem] text-gray">{label}</span>
               </div>
               <div className="flex items-center gap-[0.5rem]">
                 {isEditable ? (
                   <input
                     type="text"
                     value={String(value || '')}
-                    onChange={(e) => handleChange(key, e.target.value)}
+                    onChange={e => handleChange(key, e.target.value)}
                     onKeyDown={handleKeyDown}
                     className="text-right text-[0.875rem] text-black bg-transparent border-none outline-none"
                     placeholder="닉네임을 입력하세요"
@@ -136,8 +132,8 @@ const MyPageUserInfo = ({
                       ? value === 'MALE'
                         ? '남성'
                         : value === 'FEMALE'
-                        ? '여성'
-                        : '미설정'
+                          ? '여성'
+                          : '미설정'
                       : value || '미설정'}
                   </span>
                 )}

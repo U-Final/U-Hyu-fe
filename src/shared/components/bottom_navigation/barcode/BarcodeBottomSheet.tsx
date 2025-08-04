@@ -79,7 +79,10 @@ export const BarcodeBottomSheet: FC = () => {
           </header>
 
           {/* 컨텐츠 */}
-          <div className="flex-1 overflow-y-auto px-6 pb-10 min-h-0">
+          <div
+            className="flex-1 overflow-y-auto px-6 pb-18 sm:pb-10 min-h-0"
+            data-scrollable="true"
+          >
             {isLoggedIn ? <LoggedInBarcodeContent /> : <GuestBarcodeContent />}
           </div>
         </div>

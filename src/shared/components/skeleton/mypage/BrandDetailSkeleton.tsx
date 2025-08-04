@@ -1,4 +1,4 @@
-import { Skeleton } from '../shadcn/ui/skeleton';
+import { Skeleton } from '../../shadcn/ui/skeleton';
 
 export const BrandDetailSkeleton = () => (
   <div className="flex flex-col gap-4 text-black text-caption">

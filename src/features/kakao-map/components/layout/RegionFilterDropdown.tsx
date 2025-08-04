@@ -27,8 +27,30 @@ export default function RegionFilterDropdown({
 }) {
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="w-28 min-w-28 max-w-28 h-[44px] bg-white border border-gray-200 rounded-md text-sm font-semibold shadow-lg hover:shadow-xl focus:shadow-xl transition-all duration-200">
-        <SelectValue placeholder="지역" className="truncate" />
+      <SelectTrigger
+        className="w-20 min-w-20 max-w-20 h-[44px] bg-white border border-gray-200 rounded-md text-sm font-semibold shadow-lg hover:shadow-xl focus:shadow-xl transition-all duration-200 flex-shrink-0"
+        style={{
+          width: '80px',
+          minWidth: '80px',
+          maxWidth: '112px',
+          flexShrink: 0,
+        }}
+      >
+        <div
+          className="w-full overflow-hidden"
+          style={{ width: '100%', overflow: 'hidden' }}
+        >
+          <SelectValue
+            placeholder="지역"
+            className="truncate block w-full text-left"
+            style={{
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              width: '100%',
+            }}
+          />
+        </div>
       </SelectTrigger>
       <SelectContent
         position="popper"

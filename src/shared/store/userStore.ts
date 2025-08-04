@@ -25,6 +25,19 @@ export const userStore = create<UserState>()(
 
       // 쿠키 기반 초기 인증 상태 확인
       initAuthState: async () => {
+        // 환경변수로 개발용 유저 활성화 체크
+        if (import.meta.env.VITE_DEV_USER_ENABLED === 'true') {
+          const mockUser: SimpleUserInfo = {
+            userName: '테스트 유저',
+            grade: 'VIP',
+            profileImage: '/images/default-profile.png',
+            role: 'USER',
+          };
+          console.log('🛠️ 환경변수 기반 개발용 유저 활성화:', mockUser);
+          set({ user: mockUser, isAuthChecked: true });
+          return;
+        }
+
         try {
           // sessionStorage에 사용자 정보가 있으면 서버에서 검증
           const storedUser = get().user;
@@ -58,8 +71,7 @@ export const userStore = create<UserState>()(
           get().clearUser(); // clearUser 호출로 sessionStorage도 함께 정리
           toast.info(res.message);
         } catch (error) {
-          toast.error('❌ 로그아웃 실패했습니다. 다시 시도해주세요');
-          throw error;
+          console.error('로그아웃 실패:', error);
         }
       },
 
@@ -118,12 +130,9 @@ export const useIsLoggedIn = () => {
   const user = userStore(state => state.user);
   const isAuthChecked = userStore(state => state.isAuthChecked);
 
-  // 관리자 페이지에서는 유저 정보 로깅하지 않음
-  if (import.meta.env.DEV && typeof window !== 'undefined') {
-    const isAdminPage = window.location.pathname === '/admin';
-    if (!isAdminPage) {
-      console.log('user', user);
-    }
+  // 환경변수로 개발용 유저가 활성화된 경우
+  if (import.meta.env.VITE_DEV_USER_ENABLED === 'true') {
+    return true;
   }
 
   // 인증 확인이 완료되지 않았다면 false 반환 (초기 로딩 중)
@@ -139,6 +148,16 @@ export const useAuthState = () => {
   const user = userStore(state => state.user);
   const isAuthChecked = userStore(state => state.isAuthChecked);
 
+  // 환경변수로 개발용 유저가 활성화된 경우
+  if (import.meta.env.VITE_DEV_USER_ENABLED === 'true') {
+    return {
+      user,
+      isLoggedIn: true,
+      isAuthChecked: true,
+      isLoading: false,
+    };
+  }
+
   return {
     user,
     isLoggedIn: isAuthChecked && user !== null,
@@ -147,4 +166,18 @@ export const useAuthState = () => {
   };
 };
 
-export const useUser = () => userStore(state => state.user);
+export const useUser = () => {
+  const user = userStore(state => state.user);
+
+  // 환경변수로 개발용 유저가 활성화된 경우, 스토어에 유저가 없으면 기본값 반환
+  if (import.meta.env.VITE_DEV_USER_ENABLED === 'true' && !user) {
+    return {
+      userName: '테스트 유저',
+      grade: 'VIP',
+      profileImage: '/images/default-profile.png',
+      role: 'USER',
+    };
+  }
+
+  return user;
+};

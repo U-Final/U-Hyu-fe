@@ -123,7 +123,7 @@ const BottomNavigation = () => {
         </NavLink>
         {isLoggedIn ? (
           <NavLink
-            to={user?.role === 'ADMIN' ? PATH.ADMIN : PATH.MYPAGE}
+            to={user?.role === 'ADMIN' ? PATH.ADMIN : PATH.MYPAGE_ACTIVITY}
             className="flex gap-4"
           >
             <NavItem

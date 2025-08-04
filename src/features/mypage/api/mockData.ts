@@ -1,16 +1,17 @@
+import type { UpdateUserResponseData, UserInfoData } from '@mypage/api/types';
+
 import type { ApiResponse } from '@/shared/client/client.type';
-import type { UserInfoData, UpdateUserResponseData } from '@mypage/api/types';
 
 // 실제 API 응답 구조에 맞춘 목업 데이터
 export const mockUserInfoData: UserInfoData = {
   profileImage:
     'http://img1.kakaocdn.net/thumb/R640x640.q70/?fname=http://t1.kakaocdn.net/account_images/default_profile.jpeg',
-  userName: '박희준',
-  nickName: '길길길길길동이',
-  email: 'isk8520@naver.com',
+  userName: '테스트 유저',
+  nickName: '테스트 유저',
+  email: 'test@test.com',
   age: 27,
   gender: 'MALE',
-  grade: 'VVIP',
+  grade: 'VIP',
   role: 'ADMIN',
   // role: 'USER',    // 마이페이지 확인하려면 유저 타입 변경
   interestedBrandList: [2, 15, 25],

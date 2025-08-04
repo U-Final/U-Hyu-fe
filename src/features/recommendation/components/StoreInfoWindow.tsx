@@ -45,7 +45,7 @@ export const RecommendStoreInfoWindow: React.FC<
       xAnchor={0.5}
       zIndex={1000}
     >
-      <div className="relative">
+      <div className="relative" style={{ padding: '20px' }}>
         {/* 말풍선 꼬리 - 뒤쪽에 배치 */}
         <div className="absolute left-1/2 -bottom-3 -translate-x-1/2 w-6 h-6 z-0">
           <svg width="24" height="24" viewBox="0 0 24 24" className="">
@@ -62,6 +62,15 @@ export const RecommendStoreInfoWindow: React.FC<
             e.stopPropagation();
           }}
           onMouseUp={e => {
+            e.stopPropagation();
+          }}
+          onTouchStart={e => {
+            e.stopPropagation();
+          }}
+          onTouchEnd={e => {
+            e.stopPropagation();
+          }}
+          onTouchMove={e => {
             e.stopPropagation();
           }}
         >

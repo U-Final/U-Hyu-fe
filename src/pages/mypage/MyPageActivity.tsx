@@ -10,6 +10,7 @@ import ActivityTabs from '@mypage/components/ActivityTabs';
 import MyPageHeader from '@mypage/components/MyPageHeader';
 import { MYPAGE_TABS } from '@mypage/constants/tabs';
 import type { MyPageTab } from '@mypage/types';
+import { MyPageActivitySkeleton } from '@/shared/components/skeleton';
 
 const MyPageActivity = () => {
   const location = useLocation();
@@ -39,7 +40,7 @@ const MyPageActivity = () => {
     }
   }, [refetchStatistics, refetchBookmarks]);
 
-  if (isLoading) return <div>로딩중...</div>;
+  if (isLoading) return <MyPageActivitySkeleton />;
   if (error || !user) return <div>에러 발생</div>;
 
   return (

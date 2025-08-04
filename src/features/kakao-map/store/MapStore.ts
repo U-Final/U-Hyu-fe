@@ -30,9 +30,12 @@ const initialState: MapStoreState = {
     lng: parseCoordinate(import.meta.env.VITE_MAP_INITIAL_LNG, 127.09598),
   },
 
-  // 줌 레벨 및 검색 반경 초기 상태
+  // 줄 레벨 및 검색 반경 초기 상태
   zoomLevel: 4, // 기본 줌 레벨
   searchRadius: getSearchRadiusByZoomLevel(4), // 기본 검색 반경
+
+  // 검색 실행 파라미터 (재검색 버튼 클릭시에만 업데이트)
+  searchParams: null,
 
   // 매장 관련 상태
   stores: [],
@@ -198,6 +201,13 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
         const { zoomLevel } = get();
         const newRadius = getSearchRadiusByZoomLevel(zoomLevel);
         set({ searchRadius: newRadius });
+      },
+
+      /**
+       * 검색 실행 파라미터 설정 (재검색 버튼 클릭시에만 호출)
+       */
+      setSearchParams: (params) => {
+        set({ searchParams: params });
       },
 
       //추천 매장 관련 액션 추가

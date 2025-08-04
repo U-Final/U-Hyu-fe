@@ -149,6 +149,9 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   const { visibleByZoom, currentZoomLevel, currentRadius, markSearched } =
     useZoomSearchTrigger({ levelDeltaThreshold: 1 });
 
+  // 검색 파라미터 업데이트 액션 가져오기
+  const setSearchParams = useMapStore(state => state.setSearchParams);
+
   // 재검색 버튼 클릭 (거리 + 줌 기준 동시 갱신)
   const handleSearchClick = useCallback(() => {
     if (!onCenterChange || !mapRef.current) return;
@@ -157,14 +160,21 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
 
     const pos = { lat: c.getLat(), lng: c.getLng() };
 
-    // 거리 기반 기준 갱신 + API
+    // 검색 파라미터 업데이트 (API 호출 트리거)
+    setSearchParams({
+      lat: pos.lat,
+      lng: pos.lng,
+      radius: currentRadius,
+    });
+
+    // 거리 기반 기준 갱신
     handleSearch();
     updateSearchPosition(pos);
     onCenterChange(pos);
 
     // 줌 기준 갱신
     markSearched();
-  }, [onCenterChange, handleSearch, updateSearchPosition, markSearched]);
+  }, [onCenterChange, handleSearch, updateSearchPosition, markSearched, setSearchParams, currentRadius]);
 
   // center prop 동기화 및 검색 기준 위치 설정 (인포윈도우 상태 변경 시 의존성 제외)
   // useEffect(() => {

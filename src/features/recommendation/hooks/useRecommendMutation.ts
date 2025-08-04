@@ -1,4 +1,3 @@
-import type { Store } from '@kakao-map/types/store';
 import { postRecommendExclude } from '@recommendation/api/recommendedStoresApi';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -11,20 +10,13 @@ export const useRecommendExcludeMutation = () => {
 
   return useMutation({
     mutationFn: (brandId: number) => postRecommendExclude(brandId),
-    onSuccess: (res, brandId) => {
+    onSuccess: res => {
       toast.success(res.message || '추천 목록에서 제외했습니다.');
 
-      // ✅ 동일 브랜드 매장을 추천 목록에서 제거
-      queryClient.setQueryData<Store[]>(
-        ['recommendStoresByLocation'],
-        oldData => {
-          if (!oldData) return [];
-          return oldData.filter(item => item.brandId !== brandId);
-        }
-      );
-    },
-    onError: () => {
-      toast.error('처리 중 오류가 발생했습니다.');
+      // 캐시 무효화 → 서버에서 최신 데이터 재요청
+      queryClient.invalidateQueries({
+        queryKey: ['recommendStoresByLocation'],
+      });
     },
   });
 };

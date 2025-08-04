@@ -55,9 +55,30 @@ export const adminHandlers = [
     
     // 카테고리 필터링
     if (category && category !== 'all') {
-      const categoryIdNum = parseInt(category);
-      filteredBrands = filteredBrands.filter(brand => brand.categoryId === categoryIdNum);
-      console.log('🔧 카테고리 필터링 후 브랜드 수:', filteredBrands.length, '카테고리 ID:', categoryIdNum);
+      const categoryMapping: { [key: string]: number } = {
+        '음식점': 9,
+        '베이커리/디저트': 10,
+        '생활/편의': 7,
+        '쇼핑': 8,
+        '뷰티(피부과, 클리닉)': 5,
+        '건강(제약, 영양제 등)': 6,
+        '영화/미디어': 2,
+        '여행/교통': 14,
+        '교육': 13,
+        '공연/전시': 12,
+        '액티비티': 4,
+        '테마파크': 11,
+        '워터파크/아쿠아리움': 3,
+        'APP/기기': 1,
+      };
+      
+      const categoryId = categoryMapping[category];
+      if (categoryId) {
+        filteredBrands = filteredBrands.filter(brand => brand.categoryId === categoryId);
+        console.log('🔧 카테고리 필터링 후 브랜드 수:', filteredBrands.length, '카테고리:', category, '카테고리 ID:', categoryId);
+      } else {
+        console.log('🔧 알 수 없는 카테고리:', category);
+      }
     }
     
     // 브랜드명 검색 필터링

@@ -56,7 +56,7 @@ export function AdminBrandList() {
     ...ADMIN_CATEGORIES.map(cat => ({
       key: cat.id.toString(),
       label: cat.name,
-      value: cat.id.toString()
+      value: cat.name // 카테고리 이름을 value로 사용
     }))
   ];
 

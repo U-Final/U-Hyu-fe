@@ -1,24 +1,19 @@
-import {
-  type FC,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { type FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import {
-  useMapStore,
-  useRecommendedStores,
-  useShowRecommendedStores,
-} from '@kakao-map/store/MapStore';
+
+
+import { useMapStore, useRecommendedStores, useRefreshBookmarkStores, useShowRecommendedStores } from '@kakao-map/store/MapStore';
 import { useSharedMapStore } from '@mymap/store/SharedMapStore';
 import { RecommendStoreInfoWindow } from '@recommendation/components/StoreInfoWindow';
 import { CustomOverlayMap, Map as KakaoMap } from 'react-kakao-maps-sdk';
 import { useParams } from 'react-router-dom';
 
+
+
 import { useAuthCheckModal } from '@/shared/hooks/useAuthCheckModal';
 import { trackMarkerClick } from '@/shared/utils/actionlogTracker';
+
+
 
 import type { NormalizedPlace } from '../../api/types';
 import { useDistanceBasedSearch } from '../../hooks/useManualSearch';
@@ -32,6 +27,10 @@ import { KeywordInfoWindow } from './KeywordInfoWindow';
 import { KeywordMarker } from './KeywordMarker';
 import MyMapMarker from './MyMapMarker';
 import StoreInfoWindow from './StoreInfoWindow';
+
+
+
+
 
 interface MapWithMarkersProps {
   center: { lat: number; lng: number };
@@ -77,6 +76,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   const [isPanto, setIsPanto] = useState(false);
   const mapRef = useRef<kakao.maps.Map | null>(null);
   const pantoTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const refreshBookmarkStores = useRefreshBookmarkStores();
 
   // 내부 상태 정의(mymap)
   const sharedStores = useSharedMapStore(state => state.stores);
@@ -338,12 +338,22 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
           await toggleFavoriteMutation.mutateAsync({
             storeId: infoWindowStore.storeId,
           });
+
+          if (bookmarkMode) {
+            refreshBookmarkStores();
+          }
         } catch (error) {
           console.error('즐겨찾기 토글 실패:', error);
         }
       });
     },
-    [infoWindowStore, toggleFavoriteMutation, checkAuthAndExecuteModal]
+    [
+      infoWindowStore,
+      toggleFavoriteMutation,
+      checkAuthAndExecuteModal,
+      bookmarkMode,
+      refreshBookmarkStores,
+    ]
   );
 
   const handleDragEnd = useCallback(

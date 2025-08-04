@@ -4,7 +4,6 @@ import type { NormalizedPlace } from '@kakao-map/api/types';
 import { BottomSheetContainer } from '@kakao-map/components/BottomSheetContainer';
 import { MapContainer } from '@kakao-map/components/MapContainer';
 import { MapControlsContainer } from '@kakao-map/components/MapControlsContainer';
-import { MapControlsContainer as MapButtonsContainer } from '@kakao-map/components/controls/MapControlsContainer';
 import { MapUIProvider } from '@kakao-map/context/MapUIContext';
 import { useMapUIContext } from '@kakao-map/context/MapUIContext';
 import useKakaoLoader from '@kakao-map/hooks/useKakaoLoader';
@@ -180,7 +179,6 @@ const MapContent = () => {
           onPlaceClick={handlePlaceClick}
           mapCenter={mapCenter}
         />
-        <MapButtonsContainer />
       </div>
 
       <BottomSheetContainer ref={bottomSheetRef} />

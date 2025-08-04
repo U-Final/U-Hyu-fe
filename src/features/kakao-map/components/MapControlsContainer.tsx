@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+import { MapControlsContainer as MapButtonsContainer } from '@kakao-map/components/controls/MapControlsContainer';
 import { useParams } from 'react-router-dom';
 
 import type { NormalizedPlace } from '../api/types';
@@ -215,7 +216,7 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
       onPlaceClick?.(place);
     }
 
-    // useKeywordSearch 훅의 selectedPlace 업데이트 (검색 결과 하이라이트용)  
+    // useKeywordSearch 훅의 selectedPlace 업데이트 (검색 결과 하이라이트용)
     selectPlace(place);
 
     // 지도 중심을 해당 위치로 이동 (인포윈도우가 화면 중앙에 오도록 오프셋 적용)
@@ -238,24 +239,27 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
   const isShared = !!uuid;
 
   return isShared ? null : (
-    <MapTopControls
-      searchValue={searchValue}
-      onSearchValueChange={handleSearchValueChange}
-      onSearch={handleSearch}
-      onSearchCancel={handleSearchCancel}
-      activeRegionFilter={activeRegionFilter}
-      onRegionFilterChange={handleRegionFilterChange}
-      activeCategoryFilter={activeCategoryFilter}
-      onCategoryFilterChange={handleCategoryFilterChange}
-      onToggleBottomSheet={handleToggleBottomSheet}
-      isBottomSheetOpen={isBottomSheetOpen}
-      keywordResults={keywordResults}
-      isSearching={loading}
-      selectedPlace={selectedPlace}
-      onSearchResultClick={handleSearchResultClick}
-      onCloseSearchResults={handleCloseSearchResults}
-      searchMeta={meta}
-      hasSearched={hasSearched}
-    />
+    <div>
+      <MapTopControls
+        searchValue={searchValue}
+        onSearchValueChange={handleSearchValueChange}
+        onSearch={handleSearch}
+        onSearchCancel={handleSearchCancel}
+        activeRegionFilter={activeRegionFilter}
+        onRegionFilterChange={handleRegionFilterChange}
+        activeCategoryFilter={activeCategoryFilter}
+        onCategoryFilterChange={handleCategoryFilterChange}
+        onToggleBottomSheet={handleToggleBottomSheet}
+        isBottomSheetOpen={isBottomSheetOpen}
+        keywordResults={keywordResults}
+        isSearching={loading}
+        selectedPlace={selectedPlace}
+        onSearchResultClick={handleSearchResultClick}
+        onCloseSearchResults={handleCloseSearchResults}
+        searchMeta={meta}
+        hasSearched={hasSearched}
+      />
+      <MapButtonsContainer />
+    </div>
   );
 };

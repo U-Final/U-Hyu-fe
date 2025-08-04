@@ -1,14 +1,20 @@
 import { type FC, useEffect, useState } from 'react';
 
 import { useToggleFavoriteMutation } from '@kakao-map/hooks/useMapQueries';
+import {
+  useMapStore,
+  useRefreshBookmarkStores,
+} from '@kakao-map/store/MapStore';
 import { MYMAP_COLOR, type MarkerColor } from '@mymap/constants/mymapColor';
 import {
   useStoreBookmarkStatusQuery,
   useToggleMyMapStoreMutation,
 } from '@mymap/hooks';
+import { STORE_BOOKMARK_STATUS_QUERY_KEY } from '@mymap/hooks/useStoreBookmarkStatusQuery';
 import { MdStars } from 'react-icons/md';
 import { toast } from 'sonner';
 
+import { queryClient } from '@/shared/client';
 import { PrimaryButton, PrimaryCheckbox } from '@/shared/components';
 import { useModalStore } from '@/shared/store';
 
@@ -34,6 +40,9 @@ const AddStoreModal: FC<AddStoreProps> = ({ storeId }) => {
 
   // 즐겨찾기 현재 체크 상태
   const [isBookmarked, setIsBookmarked] = useState(false);
+
+  const refreshBookmarkStores = useRefreshBookmarkStores();
+  const bookmarkMode = useMapStore(state => state.bookmarkMode);
 
   // 데이터 로딩 후 초기값 저장
   useEffect(() => {
@@ -64,20 +73,27 @@ const AddStoreModal: FC<AddStoreProps> = ({ storeId }) => {
   };
 
   // 저장 버튼 클릭 시 변경된 것만 요청
-  const handleSave = () => {
+  const handleSave = async () => {
     let hasChanges = false;
 
     // 즐겨찾기 상태 변경 감지
     if (initialIsBookmarked !== isBookmarked) {
-      toggleFavoriteMutation.mutate(
-        { storeId },
-        {
-          onError: () => {
-            toast.error('매장 추가/삭제 중 오류가 발생했습니다.');
-          },
+      try {
+        await toggleFavoriteMutation.mutateAsync({ storeId });
+        hasChanges = true;
+
+        // 즐겨찾기 모드일 때만 새로고침
+        if (bookmarkMode) {
+          refreshBookmarkStores();
         }
-      );
-      hasChanges = true;
+
+        queryClient.invalidateQueries({
+          queryKey: STORE_BOOKMARK_STATUS_QUERY_KEY(storeId),
+        });
+      } catch (error) {
+        toast.error('즐겨찾기 변경 중 오류가 발생했습니다.');
+        console.error('즐겨찾기 토글 실패:', error);
+      }
     }
 
     // MyMap 항목 변경 감지

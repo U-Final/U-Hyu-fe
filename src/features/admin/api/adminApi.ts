@@ -64,6 +64,8 @@ export const adminApi = {
     return res.data.data;
   },
 
+
+
   // 브랜드 관리 API
   getAdminBrandList: async (params?: AdminBrandListParams): Promise<AdminBrandListResponse> => {
     const res = await client.get<ApiResponse<AdminBrandListResponse>>(ADMIN_ENDPOINTS.BRAND_LIST, { params });

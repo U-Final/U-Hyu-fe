@@ -39,6 +39,7 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
     data: [INITIAL_BENEFIT],
   });
   const [previewUrl, setPreviewUrl] = useState<string>('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const queryClient = useQueryClient();
 
@@ -72,6 +73,7 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
         data: editingBrand.data,
       });
       setPreviewUrl(editingBrand.brandImg);
+      setSelectedFile(null); // 편집 모드에서는 새 파일 선택을 위해 초기화
     } else {
       setFormData({
         brandName: '',
@@ -83,14 +85,27 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
         data: [INITIAL_BENEFIT],
       });
       setPreviewUrl('');
+      setSelectedFile(null);
     }
   }, [editingBrand]);
+
+  // 파일을 Base64로 변환하는 함수
+  const convertFileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setSelectedFile(file);
       const url = URL.createObjectURL(file);
       setPreviewUrl(url);
+      // 임시로 blob URL을 설정하지만, 실제 제출 시에는 Base64로 교체
       setFormData(prev => ({ ...prev, brandImg: url }));
     }
   };
@@ -106,10 +121,23 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
     }
     
     try {
+      let finalImageUrl = formData.brandImg;
+      
+      // 새로 선택된 파일이 있으면 Base64로 변환
+      if (selectedFile) {
+        finalImageUrl = await convertFileToBase64(selectedFile);
+      }
+      
+      // 최종 데이터 준비
+      const finalData = {
+        ...formData,
+        brandImg: finalImageUrl,
+      };
+      
       if (editingBrand) {
-        await updateMutation.mutateAsync({ brandId: editingBrand.brandId, data: formData });
+        await updateMutation.mutateAsync({ brandId: editingBrand.brandId, data: finalData });
       } else {
-        await createMutation.mutateAsync(formData);
+        await createMutation.mutateAsync(finalData);
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);

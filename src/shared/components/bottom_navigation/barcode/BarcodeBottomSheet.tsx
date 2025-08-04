@@ -1,8 +1,5 @@
 import { type FC, useEffect } from 'react';
 
-import { X } from 'lucide-react';
-import { createPortal } from 'react-dom';
-
 import {
   GuestBarcodeContent,
   LoggedInBarcodeContent,
@@ -36,30 +33,34 @@ export const BarcodeBottomSheet: FC = () => {
 
   if (!isOpen) return null;
 
-  return createPortal(
+  return (
     <>
-      {/* 오버레이 */}
+      {/* 오버레이 (바텀 네비게이션 영역 제외) */}
       <div
         onClick={close}
         role="presentation"
-        className="fixed inset-0 bg-black/40 z-[1000]"
+        className="fixed top-0 left-0 right-0 bg-black/40 z-[998]"
+        style={{
+          bottom: 'calc(48px + env(safe-area-inset-bottom, 0px))',
+        }}
       />
 
       {/* 바텀시트 */}
       <div
         role="dialog"
         aria-label="바코드 바텀시트"
-        className="fixed left-0 right-0 bottom-0 z-[1001] desktop-padding"
+        className="fixed left-0 right-0 bottom-0 z-[999] desktop-padding"
       >
         <div
           className="
             bg-white rounded-t-2xl border border-light-gray
-            flex flex-col max-h-[70vh] shadow-lg
+            flex flex-col shadow-lg
           "
-          // 하단 네비+안전영역만큼 패딩으로 겹침 방지
+          // 바텀 네비게이션 높이(48px)와 안전영역을 고려한 최대 높이 설정
           style={{
-            paddingBottom:
-              'calc(env(safe-area-inset-bottom, 0px) + var(--bottom-nav-height, 0px))',
+            maxHeight:
+              'calc(100vh - 48px - env(safe-area-inset-bottom, 0px) - 20px)',
+            marginBottom: 'calc(48px + env(safe-area-inset-bottom, 0px))',
           }}
         >
           {/* 핸들 */}
@@ -68,19 +69,12 @@ export const BarcodeBottomSheet: FC = () => {
           </div>
 
           {/* 헤더 */}
-          <header className="flex justify-between items-center px-6 pb-4 flex-shrink-0">
-            <h2 className="text-lg font-semibold flex-1">
+          <header className="flex justify-center items-center px-6 pb-4 flex-shrink-0">
+            <h2 className="text-lg font-semibold">
               {user
                 ? `${user.userName} ${user.grade} 멤버십 바코드`
                 : '멤버십 바코드'}
             </h2>
-            <button
-              onClick={close}
-              aria-label="닫기"
-              className="cursor-pointer hover:bg-gray-200 p-2 rounded-md transition-colors"
-            >
-              <X size={20} />
-            </button>
           </header>
 
           {/* 안내 문구 */}
@@ -96,14 +90,13 @@ export const BarcodeBottomSheet: FC = () => {
 
           {/* 컨텐츠 */}
           <div
-            className="flex-1 overflow-y-auto px-6 pb-18 sm:pb-10 min-h-0"
+            className="flex-1 overflow-y-auto px-6 pb-6 min-h-0"
             data-scrollable="true"
           >
             {isLoggedIn ? <LoggedInBarcodeContent /> : <GuestBarcodeContent />}
           </div>
         </div>
       </div>
-    </>,
-    document.body
+    </>
   );
 };

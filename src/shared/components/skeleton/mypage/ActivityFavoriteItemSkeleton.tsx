@@ -1,4 +1,4 @@
-import { Skeleton } from '../shadcn/ui/skeleton';
+import { Skeleton } from '../../shadcn/ui/skeleton';
 
 /**
  * 즐겨찾기 아이템 스켈레톤 컴포넌트

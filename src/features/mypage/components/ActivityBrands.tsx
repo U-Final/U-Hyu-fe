@@ -2,6 +2,7 @@ import { useActivityStatisticsQuery } from '@mypage/hooks/useActivityQuery';
 import { useUserInfo } from '@user/hooks/useUserQuery';
 import { MapPin, Search } from 'lucide-react';
 import { useState } from 'react';
+import { ActivityBrandsDetailSkeleton } from '@/shared/components/skeleton';
 
 const ActivityBrands = () => {
   const { data, isLoading, error } = useActivityStatisticsQuery();
@@ -9,45 +10,7 @@ const ActivityBrands = () => {
   const [showAllStores, setShowAllStores] = useState(false);
   
   if (isLoading) {
-    return (
-      <div className="space-y-6">
-        {/* 관심 브랜드 로딩 */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <div className="animate-pulse">
-            <div className="h-4 bg-gray-200 rounded w-1/3 mb-4"></div>
-            <div className="space-y-3">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
-                  <div className="flex-1">
-                    <div className="h-4 bg-gray-200 rounded w-2/3 mb-2"></div>
-                    <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        
-        {/* 최근 방문 매장 로딩 */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <div className="animate-pulse">
-            <div className="h-4 bg-gray-200 rounded w-1/3 mb-4"></div>
-            <div className="space-y-3">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
-                  <div className="flex-1">
-                    <div className="h-4 bg-gray-200 rounded w-2/3 mb-2"></div>
-                    <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <ActivityBrandsDetailSkeleton />;
   }
   
   if (error || !data) {

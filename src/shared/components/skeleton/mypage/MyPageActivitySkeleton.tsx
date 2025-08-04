@@ -1,4 +1,4 @@
-import { Skeleton } from '../shadcn/ui/skeleton';
+import { Skeleton } from '../../shadcn/ui/skeleton';
 
 /**
  * 활동 탭 스켈레톤 컴포넌트
@@ -87,10 +87,10 @@ export const MyPageActivitySkeleton = () => (
           <Skeleton className="h-9 w-20 rounded-lg bg-light-gray" />
         </div>
       </div>
-      
+
       {/* 탭 스켈레톤 */}
       <ActivityTabsSkeleton />
-      
+
       {/* 콘텐츠 스켈레톤 */}
       <div className="space-y-6">
         <ActivityBenefitSkeleton />

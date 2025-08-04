@@ -16,3 +16,7 @@ export {
   ActivityBrandsSkeleton,
   ActivityFavoriteSkeleton
 } from './MyPageActivitySkeleton';
+export {
+  ActivityFavoriteItemSkeleton,
+  ActivityFavoriteListSkeleton
+} from './ActivityFavoriteItemSkeleton';

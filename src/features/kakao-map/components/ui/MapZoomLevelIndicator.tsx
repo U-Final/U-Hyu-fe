@@ -38,7 +38,7 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
     return () => {
       kakao.maps.event.removeListener(map, 'zoom_changed', handleZoomChanged);
     };
-  });
+  }, [map, zoomLevel, setZoomLevel]);
 
   const handleZoomIn = () => {
     if (!map) return;

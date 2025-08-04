@@ -5,8 +5,8 @@ import { devtools, subscribeWithSelector } from 'zustand/middleware';
 
 import type { StoreDetail, StoreListResponse } from '../api/types';
 import type { Store } from '../types/store';
+import { getSearchRadiusByZoomLevel } from '../utils/zoomUtils';
 import type { MapStoreActions, MapStoreState, Position } from './types';
-import { getSearchRadiusByZoomLevel } from '../components/ui/MapZoomLevelIndicator';
 
 /**
  * 환경변수에서 좌표값을 안전하게 파싱하는 유틸리티 함수
@@ -185,9 +185,9 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
        */
       setZoomLevel: (level: number) => {
         const newRadius = getSearchRadiusByZoomLevel(level);
-        set({ 
-          zoomLevel: level, 
-          searchRadius: newRadius 
+        set({
+          zoomLevel: level,
+          searchRadius: newRadius,
         });
       },
 

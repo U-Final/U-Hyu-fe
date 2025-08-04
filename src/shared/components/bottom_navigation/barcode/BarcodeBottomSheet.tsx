@@ -29,7 +29,9 @@ export const BarcodeBottomSheet: FC = () => {
         document.body.style.overflow = prev;
       };
     }
-    return () => window.removeEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+    };
   }, [isOpen, close]);
 
   if (!isOpen) return null;

@@ -5,8 +5,8 @@ import type { AdminBrandListParams } from '@admin/api/types';
 const parseAdminQueryParams = (params: URLSearchParams): AdminBrandListParams => ({
   category: params.get('category') || undefined,
   brand_name: params.get('brand_name') || undefined,
-  page: Number(params.get('page') || '0'),
-  size: Number(params.get('size') || '10'),
+  page: parseInt(params.get('page') || '0', 10) || 0,
+  size: parseInt(params.get('size') || '10', 10) || 10,
 });
 
 export const useAdminQueryParams = () => {

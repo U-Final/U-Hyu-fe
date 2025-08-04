@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { Minus, Plus, ZoomIn, ZoomOut } from 'lucide-react';
+
+import { useMapStore, useSearchRadius, useZoomLevel } from '../../store/MapStore';
 
 // 줌 레벨에 따른 검색 반경 계산 (줌 레벨 4를 5km 기준으로 설정)
 export const getSearchRadiusByZoomLevel = (zoomLevel: number): number => {
@@ -22,17 +24,21 @@ interface MapZoomLevelIndicatorProps {
  * @param map - 카카오 지도 인스턴스
  */
 export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
-  const [zoomLevel, setZoomLevel] = useState<number>(4);
+  // MapStore에서 줌 레벨과 검색 반경 상태 구독
+  const zoomLevel = useZoomLevel();
+  const searchRadius = useSearchRadius();
+  const setZoomLevel = useMapStore(state => state.setZoomLevel);
 
   useEffect(() => {
     if (!map) {
-      setZoomLevel(4); // 기본값
       return;
     }
 
-    // 초기 줌 레벨 설정
+    // 초기 줌 레벨을 MapStore와 동기화
     const currentLevel = map.getLevel();
-    setZoomLevel(currentLevel);
+    if (currentLevel !== zoomLevel) {
+      setZoomLevel(currentLevel);
+    }
 
     // 줌 레벨 변경 이벤트 리스너
     const handleZoomChanged = () => {
@@ -47,7 +53,7 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
     return () => {
       kakao.maps.event.removeListener(map, 'zoom_changed', handleZoomChanged);
     };
-  }, [map]);
+  }, [map, zoomLevel, setZoomLevel]);
 
   // 줌 인 (확대) 핸들러
   const handleZoomIn = () => {
@@ -83,7 +89,7 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
               줌 레벨 {zoomLevel}
             </span>
             <span className="text-xs text-gray leading-tight">
-              {getSearchRadiusByZoomLevel(zoomLevel) / 1000}km 반경 매장
+              {searchRadius / 1000}km 반경 매장
             </span>
           </div>
         </div>

@@ -6,6 +6,7 @@ import { devtools, subscribeWithSelector } from 'zustand/middleware';
 import type { StoreDetail, StoreListResponse } from '../api/types';
 import type { Store } from '../types/store';
 import type { MapStoreActions, MapStoreState, Position } from './types';
+import { getSearchRadiusByZoomLevel } from '../components/ui/MapZoomLevelIndicator';
 
 /**
  * 환경변수에서 좌표값을 안전하게 파싱하는 유틸리티 함수
@@ -28,6 +29,10 @@ const initialState: MapStoreState = {
     lat: parseCoordinate(import.meta.env.VITE_MAP_INITIAL_LAT, 37.54699),
     lng: parseCoordinate(import.meta.env.VITE_MAP_INITIAL_LNG, 127.09598),
   },
+
+  // 줌 레벨 및 검색 반경 초기 상태
+  zoomLevel: 4, // 기본 줌 레벨
+  searchRadius: getSearchRadiusByZoomLevel(4), // 기본 검색 반경
 
   // 매장 관련 상태
   stores: [],
@@ -175,6 +180,26 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
         set({ mapCenter: center });
       },
 
+      /**
+       * 줌 레벨 설정 및 검색 반경 자동 업데이트
+       */
+      setZoomLevel: (level: number) => {
+        const newRadius = getSearchRadiusByZoomLevel(level);
+        set({ 
+          zoomLevel: level, 
+          searchRadius: newRadius 
+        });
+      },
+
+      /**
+       * 현재 줌 레벨을 기반으로 검색 반경 업데이트
+       */
+      updateSearchRadius: () => {
+        const { zoomLevel } = get();
+        const newRadius = getSearchRadiusByZoomLevel(zoomLevel);
+        set({ searchRadius: newRadius });
+      },
+
       //추천 매장 관련 액션 추가
       setRecommendedStores: (stores: Store[]) => {
         set({ recommendedStores: stores });
@@ -191,7 +216,7 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
       },
 
       fetchRecommendedStores: async () => {
-        const { mapCenter, userLocation } = get();
+        const { mapCenter, userLocation, searchRadius } = get();
         const position = userLocation || mapCenter;
 
         // 로딩 시작
@@ -204,7 +229,7 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
           const params = {
             lat: position.lat,
             lon: position.lng,
-            radius: 5000, // 5km
+            radius: searchRadius, // 동적 검색 반경 사용
           };
 
           // API 호출 (가정)
@@ -366,6 +391,11 @@ export const useSelectedStore = () => useMapStore(state => state.selectedStore);
 export const useUserLocation = () => useMapStore(state => state.userLocation);
 export const useMapLoading = () => useMapStore(state => state.loading);
 export const useMapErrors = () => useMapStore(state => state.errors);
+
+// 줌 레벨 및 검색 반경 관련 селекторы
+export const useZoomLevel = () => useMapStore(state => state.zoomLevel);
+export const useSearchRadius = () => useMapStore(state => state.searchRadius);
+
 export const useRecommendedStores = () =>
   useMapStore(state => state.recommendedStores);
 export const useShowRecommendedStores = () =>

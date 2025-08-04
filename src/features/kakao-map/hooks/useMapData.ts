@@ -7,6 +7,7 @@ import {
   useBookmarkMode,
   useMapStore,
   useRecommendedStores,
+  useSearchRadius,
   useShowRecommendedStores,
 } from '../store/MapStore';
 import {
@@ -17,7 +18,7 @@ import {
 } from './useMapQueries';
 
 /**
- * 기본 검색 반경 (미터 단위)
+ * 기본 검색 반경 (미터 단위) - 줌 레벨 기반 검색이 비활성화되었을 때 사용
  */
 const DEFAULT_RADIUS = Number(import.meta.env.VITE_DEFAULT_RADIUS) || 5000;
 
@@ -39,6 +40,9 @@ export const useMapData = () => {
   // 추천 매장 상태 추가
   const recommendedStores = useRecommendedStores();
   const showRecommendedStores = useShowRecommendedStores();
+
+  // 줌 레벨 기반 동적 검색 반경
+  const dynamicSearchRadius = useSearchRadius();
 
   // 액션 함수들을 개별적으로 구독
   const setStoresFromQuery = useMapStore(state => state.setStoresFromQuery);
@@ -108,13 +112,13 @@ export const useMapData = () => {
 
   /**
    * 백엔드 API 호출을 위한 쿼리 파라미터 생성
-   * 지도 중심점, 필터 상태, 검색어를 종합하여 파라미터 구성
+   * 지도 중심점, 필터 상태, 검색어, 동적 검색 반경을 종합하여 파라미터 구성
    */
   const storeListParams: GetNearbyStoresParams = useMemo(() => {
     const baseParams: GetNearbyStoresParams = {
       lat: mapCenter.lat,
       lon: mapCenter.lng,
-      radius: DEFAULT_RADIUS,
+      radius: dynamicSearchRadius, // 줌 레벨 기반 동적 반경 사용
     };
 
     // 카테고리 필터 파라미터 추가 (값이 있을 때만)
@@ -132,6 +136,7 @@ export const useMapData = () => {
   }, [
     mapCenter.lat,
     mapCenter.lng,
+    dynamicSearchRadius, // 동적 검색 반경 의존성 추가
     uiState.activeCategoryFilter,
     uiState.selectedBrand,
     mapCategoryToBackend,

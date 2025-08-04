@@ -38,7 +38,12 @@ export const useBrandsByCategory = (categoryKey: StoreCategory | null) => {
     if (!isError || !error) return null;
 
     // Axios 에러인 경우
-    if ('response' in error && error.response && typeof error.response === 'object' && 'status' in error.response) {
+    if (
+      'response' in error &&
+      error.response &&
+      typeof error.response === 'object' &&
+      'status' in error.response
+    ) {
       const status = error.response.status;
       switch (status) {
         case 404:
@@ -126,20 +131,20 @@ export const useBrandsCategoryDebug = (categoryKey: StoreCategory | null) => {
       isEmpty: result.isEmpty,
     },
     logState: () => {
-      console.group(`🏷️ Brands by Category Debug: ${categoryKey}`);
-      console.log('Category Key:', categoryKey);
-      console.log(
-        'Category ID:',
-        categoryKey ? getCategoryId(categoryKey) : null
-      );
-      console.log('Brand Count:', result.brandCount);
-      console.log('Brands:', result.brands);
-      console.log('Loading:', result.isLoading);
-      console.log('Error:', result.isError);
-      console.log('Error Message:', result.errorMessage);
-      console.log('Is Empty:', result.isEmpty);
-      console.log('Raw Data:', result.rawData);
-      console.groupEnd();
+      // console.group(`🏷️ Brands by Category Debug: ${categoryKey}`);
+      // console.log('Category Key:', categoryKey);
+      // console.log(
+      //   'Category ID:',
+      //   categoryKey ? getCategoryId(categoryKey) : null
+      // );
+      // console.log('Brand Count:', result.brandCount);
+      // console.log('Brands:', result.brands);
+      // console.log('Loading:', result.isLoading);
+      // console.log('Error:', result.isError);
+      // console.log('Error Message:', result.errorMessage);
+      // console.log('Is Empty:', result.isEmpty);
+      // console.log('Raw Data:', result.rawData);
+      // console.groupEnd();
     },
   };
 };

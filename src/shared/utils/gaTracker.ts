@@ -45,6 +45,8 @@ export const trackCustomEvent = (
 ) => {
   if (MEASUREMENT_ID) {
     ReactGA.event(eventName, parameters);
-    console.log('[GA] Custom event tracked:', eventName, parameters);
+    if (import.meta.env.MODE === 'development') {
+      console.log('[GA] Custom event tracked:', eventName, parameters);
+    }
   }
 };

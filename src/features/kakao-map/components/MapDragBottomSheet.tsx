@@ -81,14 +81,14 @@ export const MapDragBottomSheet = forwardRef<
 
   const dynamicHandleHeight = 100;
 
-  // 기본 위치 정의 (스냅용) - 패딩된 컨테이너 기준
-  const openY = windowHeight * 0.1; // 열린 상태 기본 위치
-  const closedY = availableHeight - dynamicHandleHeight; // 닫힌 상태: 핸들이 네비게이션 바로 위에 위치
-  const middleY = availableHeight * 0.4; // 열린 중간 상태 기본 위치
-
-  const minY = openY; // 최대로 올라갈 수 있는 위치
+  const minY = CONSTANTS.MIN_HEIGHT_FROM_TOP; // 최대로 올라갈 수 있는 위치
   const maxY =
     availableHeight - dynamicHandleHeight + CONSTANTS.EXTRA_DRAG_BUFFER; // 최대로 내려갈 수 있는 위치
+
+  // 기본 위치 정의 (스냅용) - 패딩된 컨테이너 기준
+  const openY = CONSTANTS.EXPANDED_BOTTOM_MARGIN; // 열린 상태 기본 위치
+  const closedY = availableHeight - dynamicHandleHeight; // 닫힌 상태: 핸들이 네비게이션 바로 위에 위치
+  const middleY = availableHeight * 0.4; // 열린 중간 상태 기본 위치
 
   // 🎬 CSS transform을 통한 위치 제어
   const [translateY, setTranslateY] = useState(closedY);

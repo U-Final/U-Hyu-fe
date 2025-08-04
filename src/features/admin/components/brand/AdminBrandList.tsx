@@ -143,7 +143,7 @@ export function AdminBrandList() {
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             <span>브랜드 관리</span>
-            <Button onClick={handleAddBrand} className="flex items-center gap-2">
+            <Button onClick={handleAddBrand} variant="outline" className="flex items-center gap-2 border-primary text-primary hover:bg-primary hover:text-white">
               <PlusIcon className="h-4 w-4" />
               브랜드 추가
             </Button>

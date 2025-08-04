@@ -6,9 +6,9 @@ import {
 import { useAuthState } from '@/shared/store/userStore';
 
 export const RecommendedStoreListWrapper = () => {
-  const { user } = useAuthState();
+  const { isAuthChecked } = useAuthState();
 
-  return user ? (
+  return isAuthChecked ? (
     <RecommendedStoreListLoggedIn />
   ) : (
     <RecommendedStoreListGuest />

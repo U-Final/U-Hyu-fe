@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-import { Minus, Plus, ZoomIn, ZoomOut } from 'lucide-react';
+import { Minus, Plus } from 'lucide-react';
 
 import {
   useMapStore,
@@ -22,15 +22,11 @@ interface MapZoomLevelIndicatorProps {
   map: kakao.maps.Map | null;
 }
 
-/**
- * 인포 영역과 확대/축소 영역 분리 렌더링(인포 하단에 컨트롤 배치)
- * - 아이콘 크기 반응형으로 조절
- * - 컨테이너 최소 너비 확장
- */
 export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
   const zoomLevel = useZoomLevel();
   const searchRadius = useSearchRadius();
   const setZoomLevel = useMapStore(state => state.setZoomLevel);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   useEffect(() => {
     if (!map) return;
@@ -56,38 +52,83 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
     if (lv < 14) map.setLevel(lv + 1);
   };
 
-  const ZoomIcon = zoomLevel <= 7 ? ZoomOut : ZoomIn;
+  const handleRadiusClick = () => {
+    setShowTooltip(true);
+    setTimeout(() => setShowTooltip(false), 2000);
+  };
 
   return (
     <div className="flex flex-col gap-2">
-      {/* 인포 박스 */}
-      <div
-        className="
-          bg-white/95 backdrop-blur-sm border border-light-gray
-          rounded-xl shadow-sm px-3 py-2
-        "
-        aria-live="polite"
-      >
-        <div className="flex items-center gap-2">
-          {/* 아이콘: 반응형 크기 */}
-          <ZoomIcon className="w-5 h-5 md:w-6 md:h-6 text-primary flex-shrink-0" />
-          <div className="flex flex-col leading-tight">
-            <span className="text-xs font-medium text-black">
-              줌 레벨 {zoomLevel}
-            </span>
-            <span className="text-xs text-gray">
-              {(searchRadius / 1000).toFixed(0)}km 반경 매장
-            </span>
+      {/* 컴팩트한 반경 인디케이터 */}
+      <div className="relative">
+        <button
+          onClick={handleRadiusClick}
+          className="
+            w-12 h-12 
+            bg-white/95 backdrop-blur-sm 
+            border border-light-gray
+            rounded-full 
+            shadow-sm 
+            flex items-center justify-center 
+            hover:bg-gray-50 
+            active:bg-gray-100 
+            transition-all duration-200
+          "
+          aria-label={`${(searchRadius / 1000).toFixed(0)}km 반경 매장 검색`}
+        >
+          <span className="text-xs font-bold text-primary">
+            {(searchRadius / 1000).toFixed(0)}km
+          </span>
+        </button>
+
+        {/* 툴팁 */}
+        {showTooltip && (
+          <div
+            className="
+              absolute 
+              bottom-full 
+              left-0 
+              mb-2
+              px-3 
+              py-1.5 
+              bg-gray-900 
+              text-white 
+              text-xs 
+              font-medium
+              rounded-md 
+              shadow-lg
+              whitespace-nowrap
+              z-50
+            "
+          >
+            {(searchRadius / 1000).toFixed(0)}km 반경의 매장을 검색합니다
+            <div
+              className="
+                absolute 
+                top-full 
+                left-4
+                w-0 
+                h-0 
+                border-l-4 
+                border-r-4 
+                border-t-4 
+                border-transparent 
+                border-t-gray-900
+              "
+            />
           </div>
-        </div>
+        )}
       </div>
 
-      {/* 컨트롤 박스 (인포 하단) */}
+      {/* 컴팩트한 줌 컨트롤 */}
       <div
         className="
-          w-1/2
-          bg-white/95 backdrop-blur-sm border border-light-gray
-          rounded-xl shadow-sm overflow-hidden
+          w-12
+          bg-white/95 backdrop-blur-sm 
+          border border-light-gray
+          rounded-full 
+          shadow-sm 
+          overflow-hidden
         "
         role="group"
         aria-label="지도 확대/축소 컨트롤"
@@ -99,17 +140,16 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
           disabled={zoomLevel <= 1}
           aria-label="지도 확대"
           className="
-            w-full h-14 md:h-14
+            w-full h-10
             flex items-center justify-center
             hover:bg-primary hover:text-white
             transition-colors
             disabled:opacity-50 disabled:cursor-not-allowed
             disabled:hover:bg-transparent disabled:hover:text-inherit
-            rounded-t-xl
+            rounded-t-full
           "
         >
-          {/* 버튼 아이콘: 반응형 크기 */}
-          <Plus className="w-6 h-6 md:w-7 md:h-7" />
+          <Plus className="w-4 h-4" />
         </button>
 
         <div className="h-px bg-light-gray" />
@@ -121,16 +161,16 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
           disabled={zoomLevel >= 14}
           aria-label="지도 축소"
           className="
-            w-full h-12 md:h-12
+            w-full h-10
             flex items-center justify-center
             hover:bg-primary hover:text-white
             transition-colors
             disabled:opacity-50 disabled:cursor-not-allowed
             disabled:hover:bg-transparent disabled:hover:text-inherit
-            rounded-b-xl
+            rounded-b-full
           "
         >
-          <Minus className="w-6 h-6 md:w-7 md:h-7" />
+          <Minus className="w-4 h-4" />
         </button>
       </div>
     </div>

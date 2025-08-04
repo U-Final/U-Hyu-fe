@@ -1,4 +1,4 @@
-import { type FC, useEffect, useState } from 'react';
+import { type FC, useEffect } from 'react';
 
 import { X } from 'lucide-react';
 import { createPortal } from 'react-dom';
@@ -14,49 +14,52 @@ export const BarcodeBottomSheet: FC = () => {
   const isLoggedIn = useIsLoggedIn();
   const user = useUser();
   const { isOpen, close } = useBarcodeStore();
-  const [mainContentElement, setMainContentElement] =
-    useState<HTMLElement | null>(null);
 
+  // ESC 닫기 + 바디 스크롤 잠금(선택)
   useEffect(() => {
-    // main-content 엘리먼트 찾기
-    const element = document.getElementById('main-content');
-    if (element) {
-      setMainContentElement(element);
-      // relative positioning 확인 및 설정
-      const computedStyle = window.getComputedStyle(element);
-      if (computedStyle.position === 'static') {
-        element.style.position = 'relative';
-      }
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && close();
+    window.addEventListener('keydown', onKey);
+
+    // 열려있을 때 body 스크롤 잠금
+    if (isOpen) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        window.removeEventListener('keydown', onKey);
+        document.body.style.overflow = prev;
+      };
     }
-  }, []);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isOpen, close]);
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') close();
-    };
+  if (!isOpen) return null;
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [close]);
-
-  if (!isOpen || !mainContentElement) return null;
-
-  const modalContent = (
+  return createPortal(
     <>
-      {/* 오버레이 - main-content 전체를 덮음 */}
+      {/* 오버레이 */}
       <div
         onClick={close}
         role="presentation"
-        className="absolute inset-0 bg-black/40 z-[50]"
+        className="fixed inset-0 bg-black/40 z-[1000]"
       />
 
-      {/* 바텀시트 - main-content 하단에 고정 */}
+      {/* 바텀시트 */}
       <div
         role="dialog"
         aria-label="바코드 바텀시트"
-        className="absolute bottom-0 left-0 right-0 z-[51] desktop-padding"
+        className="fixed left-0 right-0 bottom-0 z-[1001]"
       >
-        <div className="bg-white rounded-t-2xl border border-light-gray flex flex-col max-h-[70vh] shadow-lg">
+        <div
+          className="
+            bg-white rounded-t-2xl border border-light-gray
+            flex flex-col max-h-[70vh] shadow-lg
+          "
+          // 하단 네비+안전영역만큼 패딩으로 겹침 방지
+          style={{
+            paddingBottom:
+              'calc(env(safe-area-inset-bottom, 0px) + var(--bottom-nav-height, 0px))',
+          }}
+        >
           {/* 핸들 */}
           <div className="flex justify-center py-3 flex-shrink-0">
             <div className="w-12 h-1.5 bg-gray-300 rounded-full" />
@@ -87,9 +90,7 @@ export const BarcodeBottomSheet: FC = () => {
           </div>
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
-
-  // main-content 컨테이너에 포털로 렌더링
-  return createPortal(modalContent, mainContentElement);
 };

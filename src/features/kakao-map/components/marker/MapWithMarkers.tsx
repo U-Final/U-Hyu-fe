@@ -26,7 +26,7 @@ import type { NormalizedPlace } from '../../api/types';
 import { useDistanceBasedSearch } from '../../hooks/useManualSearch';
 import { useToggleFavoriteMutation } from '../../hooks/useMapQueries';
 import type { Store } from '../../types/store';
-import ResponsiveManualSearchButton from '../ManualSearchButton';
+import ManualSearchButton from '../ManualSearchButton';
 import CurrentLocationMarker from '../location/CurrentLocationMarker';
 import BrandMarker from './BrandMarker';
 import FavoriteMarker from './FavoriteMarker';
@@ -382,7 +382,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   return (
     <>
       {/* 거리/줌 기반 재검색 버튼 */}
-      <ResponsiveManualSearchButton
+      <ManualSearchButton
         visible={showManualButton}
         loading={isSearching}
         onClick={handleSearchClick}

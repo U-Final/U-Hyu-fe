@@ -15,6 +15,7 @@ import { ADMIN_CATEGORIES } from '@admin/constants/categories';
 import FilterTabs from '@/shared/components/filter_tabs/FilterTabs';
 import SearchInput from '@/shared/components/search_input/SearchInput';
 import { getErrorMessage } from '@/shared/utils/getErrorMessage';
+import { BrandListSkeleton } from '@admin/components/common';
 import React from 'react';
 
 export function AdminBrandList() {
@@ -105,16 +106,7 @@ export function AdminBrandList() {
   };
 
   if (isLoading) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>브랜드 관리</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-8">로딩 중...</div>
-        </CardContent>
-      </Card>
-    );
+    return <BrandListSkeleton />;
   }
 
   if (error) {

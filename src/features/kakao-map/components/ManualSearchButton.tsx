@@ -77,7 +77,7 @@ export const ManualSearchButton: React.FC<ManualSearchButtonProps> = ({
         </span>
 
         {/* 이동 거리 표시 */}
-        {distance && (
+        {typeof distance === 'number' && distance > 0 && (
           <span className="text-xs text-gray-500 ml-1">
             ({Math.round(distance)}m)
           </span>

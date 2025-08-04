@@ -19,7 +19,7 @@ const ActivityTabs = ({ activeTab, setActiveTab }: Props) => {
           className={`
             absolute top-[0.35rem] bottom-[0.35rem] left-[0.25rem]
             w-[calc(50%-0.37rem)]
-            rounded-[0.8rem] bg-blue-500
+            rounded-[0.8rem] bg-primary
             transition-transform duration-300 ease-in-out
             ${activeTab === MYPAGE_TABS[0] ? 'translate-x-0' : 'translate-x-[calc(100%+0.25rem)]'}
           `}

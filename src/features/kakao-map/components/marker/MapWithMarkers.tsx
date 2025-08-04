@@ -101,16 +101,6 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
 
   const { bookmarkMode, bookmarkStores, selectStore } = useMapStore();
 
-  const ensureMinZoomOnce = useCallback(
-    (map: kakao.maps.Map | null, minLevel = 6) => {
-      if (!map) return;
-      const curr = map.getLevel();
-      // 숫자가 클수록 더 멀리(축소)
-      if (curr > minLevel) map.setLevel(minLevel);
-    },
-    []
-  );
-
   // 마커에 사용할 store 배열 결정 (일반 매장 + 추천 매장)
   const storesToRender = useMemo(() => {
     if (isShared) return sharedStores;
@@ -177,17 +167,17 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   }, [onCenterChange, handleSearch, updateSearchPosition, markSearched]);
 
   // center prop 동기화 및 검색 기준 위치 설정 (인포윈도우 상태 변경 시 의존성 제외)
-  useEffect(() => {
-    if (!infoWindowStore && !recommendedInfoWindowStore) {
-      setMapCenter(center);
-      updateSearchPosition(center);
-    }
-  }, [
-    center,
-    updateSearchPosition,
-    infoWindowStore,
-    recommendedInfoWindowStore,
-  ]);
+  // useEffect(() => {
+  //   if (!infoWindowStore && !recommendedInfoWindowStore) {
+  //     setMapCenter(center);
+  //     updateSearchPosition(center);
+  //   }
+  // }, [
+  //   center,
+  //   updateSearchPosition,
+  //   infoWindowStore,
+  //   recommendedInfoWindowStore,
+  // ]);
 
   // 전역 selectedStore 변경 시 해당 매장으로 포커스 (카드 클릭 시)
   useEffect(() => {
@@ -215,8 +205,6 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         setIsPanto(true);
         setMapCenter(targetCenter);
 
-        if (mapRef.current) ensureMinZoomOnce(mapRef.current, 6);
-
         if (pantoTimeoutRef.current) clearTimeout(pantoTimeoutRef.current);
         pantoTimeoutRef.current = setTimeout(() => {
           setIsPanto(false);
@@ -224,12 +212,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         }, 500);
       }
     }
-  }, [
-    globalSelectedStoreId,
-    storesToRender,
-    recommendedStores,
-    ensureMinZoomOnce,
-  ]);
+  }, [globalSelectedStoreId, storesToRender, recommendedStores]);
 
   // 외부에서 selectedStoreId가 변경될 때 인포윈도우 표시
   useEffect(() => {
@@ -256,8 +239,6 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         setIsPanto(true);
         setMapCenter(targetCenter);
 
-        if (mapRef.current) ensureMinZoomOnce(mapRef.current, 6);
-
         if (pantoTimeoutRef.current) clearTimeout(pantoTimeoutRef.current);
         pantoTimeoutRef.current = setTimeout(() => {
           setIsPanto(false);
@@ -265,12 +246,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         }, 500);
       }
     }
-  }, [
-    externalSelectedStoreId,
-    storesToRender,
-    recommendedStores,
-    ensureMinZoomOnce,
-  ]);
+  }, [externalSelectedStoreId, storesToRender, recommendedStores]);
 
   // 컴포넌트 언마운트 시 setTimeout cleanup
   useEffect(() => {
@@ -301,8 +277,9 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
 
         setIsPanto(true);
         setMapCenter(targetCenter);
-
-        if (mapRef.current) ensureMinZoomOnce(mapRef.current, 6);
+        if (mapRef.current) {
+          mapRef.current.setLevel(3);
+        }
 
         if (pantoTimeoutRef.current) clearTimeout(pantoTimeoutRef.current);
         pantoTimeoutRef.current = setTimeout(() => {
@@ -313,12 +290,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         onStoreClick?.(store);
       });
     },
-    [
-      onStoreClick,
-      recommendedStores,
-      checkAuthAndExecuteModal,
-      ensureMinZoomOnce,
-    ]
+    [onStoreClick, recommendedStores, checkAuthAndExecuteModal]
   );
 
   const isRecommendedStore = useCallback(
@@ -329,10 +301,10 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   );
 
   const handleInfoWindowClose = useCallback(() => {
+    selectStore(null);
     setInternalSelectedStoreId(null);
     setInfoWindowStore(null);
     setRecommendedInfoWindowStore(null);
-    selectStore(null);
   }, [selectStore]);
 
   const toggleFavoriteMutation = useToggleFavoriteMutation();
@@ -420,9 +392,6 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         onCreate={map => {
           mapRef.current = map;
           onMapCreate?.(map);
-          // 여기에서는 상태 업데이트 하지 않음 (무한 루프 방지)
-          // 초기 레벨을 강제하고 싶다면 아래처럼 1회만:
-          // if (typeof level === 'number') map.setLevel(level);
         }}
       >
         {/* 매장 마커들 */}

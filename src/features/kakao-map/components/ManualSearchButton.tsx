@@ -49,7 +49,8 @@ export const ManualSearchButton: React.FC<ManualSearchButtonProps> = ({
         onClick={handleClick}
         disabled={loading}
         className={`
-          flex items-center gap-2 px-4 py-2.5
+          flex items-center gap-2 px-6 py-2.5
+          min-w-max
           bg-white text-gray-800 
           border border-gray-200 
           rounded-full shadow-lg hover:shadow-xl
@@ -81,7 +82,7 @@ export const ManualSearchButton: React.FC<ManualSearchButtonProps> = ({
           </span>
         )} */}
         {(typeof zoomLevel === 'number' || typeof radius === 'number') && (
-          <span className="text-xs text-gray-500 ml-2">
+          <span className="text-xs text-gray-500 ml-2 whitespace-nowrap">
             {typeof zoomLevel === 'number'}
             {typeof radius === 'number' && (
               <>{Math.round(radius / 1000)}km 반경</>

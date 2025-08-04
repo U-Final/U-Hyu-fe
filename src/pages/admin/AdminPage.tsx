@@ -29,7 +29,7 @@ type TabKey = 'bookmark' | 'filtering' | 'recommendation' | 'membership';
 
 // 통계 탭 정의
 const STATS_TABS = [
-  { label: '즐겨찾기', value: 'bookmark', icon: BookmarkIcon, color: 'var(--admin-bookmark)' },
+  { label: '저장된 매장', value: 'bookmark', icon: BookmarkIcon, color: 'var(--admin-bookmark)' },
   { label: '필터링', value: 'filtering', icon: FunnelIcon, color: 'var(--admin-filtering)' },
   { label: '추천', value: 'recommendation', icon: HeartIcon, color: 'var(--admin-recommendation)' },
   { label: '멤버십', value: 'membership', icon: UserGroupIcon, color: 'var(--admin-membership)' },

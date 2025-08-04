@@ -10,8 +10,8 @@ export const useRecommendExcludeMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (storeId: number) => postRecommendExclude(storeId),
-    onSuccess: (res, storeId) => {
+    mutationFn: (brandId: number) => postRecommendExclude(brandId),
+    onSuccess: (res, brandId) => {
       toast.success(res.message || '추천 목록에서 제외했습니다.');
 
       // ✅ 동일 브랜드 매장을 추천 목록에서 제거
@@ -19,7 +19,7 @@ export const useRecommendExcludeMutation = () => {
         ['recommendStoresByLocation'],
         oldData => {
           if (!oldData) return [];
-          return oldData.filter(item => item.storeId !== storeId);
+          return oldData.filter(item => item.brandId !== brandId);
         }
       );
     },

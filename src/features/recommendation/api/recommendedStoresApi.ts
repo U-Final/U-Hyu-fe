@@ -34,10 +34,10 @@ export const getRecommendedRanking = async (): Promise<
 };
 
 export const postRecommendExclude = async (
-  storeId: number
+  brandId: number
 ): Promise<ApiResponse> => {
   const res = await client.post<ApiResponse>(RECOMMEND_ENDPOINT.EXCLUDE, {
-    storeId,
+    brandId,
   });
 
   return res.data;

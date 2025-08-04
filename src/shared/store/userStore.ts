@@ -71,8 +71,7 @@ export const userStore = create<UserState>()(
           get().clearUser(); // clearUser 호출로 sessionStorage도 함께 정리
           toast.info(res.message);
         } catch (error) {
-          toast.error('❌ 로그아웃 실패했습니다. 다시 시도해주세요');
-          throw error;
+          console.error('로그아웃 실패:', error);
         }
       },
 

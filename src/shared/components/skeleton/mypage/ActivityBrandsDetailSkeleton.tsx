@@ -19,10 +19,10 @@ export const ActivityClickPatternSkeleton = () => (
 
     {/* 시상대 차트 영역 */}
     <div className="relative flex items-end justify-center gap-6 h-80">
-      <Skeleton className="absolute bottom-0 left-0 right-0 h-75 rounded-t-3xl bg-light-gray" />
+      <Skeleton className="absolute bottom-0 left-0 right-0 h-72 rounded-t-3xl bg-light-gray" />
 
       {/* 3위 */}
-      <div className="relative z-1 flex flex-col items-center">
+      <div className="relative z-10 flex flex-col items-center">
         <Skeleton className="w-20 h-20 rounded-full bg-light-gray mb-4" />
         <Skeleton className="h-4 w-16 rounded-full bg-light-gray mb-4" />
         <Skeleton className="w-7 h-7 rounded-full bg-light-gray absolute -top-2 -right-2" />

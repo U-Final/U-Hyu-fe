@@ -8,6 +8,7 @@ import MyPageBrand from '@mypage/components/MyPageBrand';
 // import MyPageMarker from '@mypage/components/MyPageMarker';
 import type { UserInfoData, UpdateUserRequest } from '@mypage/api/types';
 import { updateUserInfo } from '@mypage/api/mypageApi';
+import { MyPageSkeleton } from '@/shared/components/skeleton';
 
 const MyPage = () => {
   const { data: user, isLoading, error, refetch } = useUserInfoQuery();
@@ -45,7 +46,7 @@ const MyPage = () => {
     }
   };
 
-  if (isLoading) return <div>로딩중...</div>;
+  if (isLoading) return <MyPageSkeleton />;
   if (error || !localUser) return <div>에러 발생</div>;
 
   return (

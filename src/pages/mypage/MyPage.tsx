@@ -16,7 +16,7 @@ const MyPage = () => {
   const [localUser, setLocalUser] = useState<UserInfoData | undefined>(
     undefined
   );
-  const [editMode, setEditMode] = useState(false);
+  const [isEditMode, setisEditMode] = useState(false);
   const [pendingChanges, setPendingChanges] = useState<UpdateUserRequest>({});
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const MyPage = () => {
   const handleSaveAll = async () => {
     // 변경사항이 있는지 확인
     if (Object.keys(pendingChanges).length === 0) {
-      setEditMode(false);
+      setisEditMode(false);
       return;
     }
 
@@ -39,7 +39,7 @@ const MyPage = () => {
       await refetch();
 
       setPendingChanges({});
-      setEditMode(false);
+      setisEditMode(false);
       // console.log('통합 수정 요청 성공:', pendingChanges);
     } catch (err) {
       alert('수정 실패');
@@ -56,20 +56,20 @@ const MyPage = () => {
         <MyPageHeader user={localUser} />
         <MyPageUserInfo
           user={localUser}
-          editMode={editMode}
-          setEditMode={setEditMode}
+          isEditMode={isEditMode}
+          setisEditMode={setisEditMode}
           setPendingChanges={setPendingChanges}
           onSaveAll={handleSaveAll}
         />
         <MyPageMembership
           user={localUser}
-          editMode={editMode}
+          isEditMode={isEditMode}
           pendingChanges={pendingChanges}
           setPendingChanges={setPendingChanges}
         />
         <MyPageBrand
           user={localUser}
-          editMode={editMode}
+          isEditMode={isEditMode}
           pendingChanges={pendingChanges}
           setPendingChanges={setPendingChanges}
         />

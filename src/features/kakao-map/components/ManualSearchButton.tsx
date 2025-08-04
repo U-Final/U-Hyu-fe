@@ -13,6 +13,8 @@ interface ManualSearchButtonProps {
   distance?: number;
   /** 추가 CSS 클래스 */
   className?: string;
+  zoomLevel?: number;
+  radius?: number; // meter
 }
 
 /**
@@ -25,6 +27,8 @@ export const ManualSearchButton: React.FC<ManualSearchButtonProps> = ({
   onClick,
   distance,
   className = '',
+  zoomLevel,
+  radius,
 }) => {
   if (!visible) return null;
 
@@ -76,6 +80,15 @@ export const ManualSearchButton: React.FC<ManualSearchButtonProps> = ({
         {distance && (
           <span className="text-xs text-gray-500 ml-1">
             ({Math.round(distance)}m)
+          </span>
+        )}
+
+        {(typeof zoomLevel === 'number' || typeof radius === 'number') && (
+          <span className="text-xs text-gray-500 ml-2">
+            {typeof zoomLevel === 'number'}
+            {typeof radius === 'number' && (
+              <>{Math.round(radius / 1000)}km 반경</>
+            )}
           </span>
         )}
       </button>

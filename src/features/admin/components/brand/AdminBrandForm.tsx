@@ -11,6 +11,15 @@ import { toast } from 'sonner';
 import { adminApi } from '@admin/api/adminApi';
 import type { AdminBrand, AdminBrandBenefit, AdminBrandUpdateRequest } from '@admin/api/types';
 import { ADMIN_CATEGORIES } from '@admin/constants/categories';
+import { 
+  INITIAL_BENEFIT, 
+  GRADE_BADGES, 
+  BENEFIT_TYPE_OPTIONS, 
+  CATEGORY_STYLES, 
+  STORE_TYPE_OPTIONS,
+  FORM_PLACEHOLDERS,
+  FILE_UPLOAD_CONFIG
+} from '@admin/constants/brandForm';
 import { getErrorMessage } from '@/shared/utils/getErrorMessage';
 
 interface AdminBrandFormProps {
@@ -18,23 +27,6 @@ interface AdminBrandFormProps {
   onCancel: () => void;
   onSuccess: () => void;
 }
-
-const INITIAL_BENEFIT: AdminBrandBenefit = {
-  grade: 'GOOD',
-  description: '',
-  benefitType: 'DISCOUNT',
-};
-
-const GRADE_BADGES = [
-  { value: 'VVIP', label: 'VVIP', color: 'bg-purple-100 text-purple-800 border-purple-200' },
-  { value: 'VIP', label: 'VIP', color: 'bg-blue-100 text-blue-800 border-blue-200' },
-  { value: 'GOOD', label: 'GOOD', color: 'bg-green-100 text-green-800 border-green-200' },
-];
-
-const BENEFIT_TYPE_OPTIONS = [
-  { value: 'DISCOUNT', label: '할인' },
-  { value: 'GIFT', label: '증정품' },
-];
 
 export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrandFormProps) {
   const [formData, setFormData] = useState({
@@ -173,27 +165,36 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
                 value={formData.brandName}
                 onChange={(e) => setFormData(prev => ({ ...prev, brandName: e.target.value }))}
                 required
-                placeholder="브랜드명을 입력하세요"
+                placeholder={FORM_PLACEHOLDERS.brandName}
               />
             </div>
             
             <div>
-              <Label htmlFor="categoryId">카테고리 *</Label>
-              <Select
-                value={formData.categoryId.toString()}
-                onValueChange={(value) => setFormData(prev => ({ ...prev, categoryId: parseInt(value) }))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="카테고리를 선택하세요" />
-                </SelectTrigger>
-                <SelectContent>
+              <Label>카테고리 *</Label>
+              <div className="mt-2">
+                <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto p-2 border rounded-lg bg-gray-50">
                   {ADMIN_CATEGORIES.map(category => (
-                    <SelectItem key={category.id} value={category.id.toString()}>
+                    <button
+                      key={category.id}
+                      type="button"
+                      onClick={() => setFormData(prev => ({ ...prev, categoryId: category.id }))}
+                      className={`px-3 py-2 rounded-lg border text-sm font-medium transition-all duration-200 flex items-center justify-center ${
+                        formData.categoryId === category.id
+                          ? `${CATEGORY_STYLES[category.id]?.selected} border-2 border-current shadow-md`
+                          : `${CATEGORY_STYLES[category.id]?.unselected} bg-white text-gray-600 border-gray-300`
+                      }`}
+                    >
+                      {formData.categoryId === category.id && (
+                        <CheckIcon className="h-4 w-4 mr-1" />
+                      )}
                       {category.name}
-                    </SelectItem>
+                    </button>
                   ))}
-                </SelectContent>
-              </Select>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  브랜드의 카테고리를 선택해주세요
+                </p>
+              </div>
             </div>
           </div>
 
@@ -204,7 +205,7 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
               <div className="flex items-center gap-4">
                 <Input
                   type="file"
-                  accept="image/*"
+                  accept={FILE_UPLOAD_CONFIG.accept}
                   onChange={handleFileChange}
                   className="flex-1"
                 />
@@ -217,7 +218,7 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
                 )}
               </div>
               <p className="text-xs text-gray-500">
-                JPG, PNG, GIF 파일을 업로드할 수 있습니다. (최대 5MB)
+                {FILE_UPLOAD_CONFIG.description}
               </p>
             </div>
           </div>
@@ -229,7 +230,7 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
                 id="usageLimit"
                 value={formData.usageLimit}
                 onChange={(e) => setFormData(prev => ({ ...prev, usageLimit: e.target.value }))}
-                placeholder="예: 일 1회, 월 2회"
+                placeholder={FORM_PLACEHOLDERS.usageLimit}
                 required
               />
             </div>
@@ -244,8 +245,11 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
                   <SelectValue placeholder="매장 타입을 선택하세요" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ONLINE">온라인</SelectItem>
-                  <SelectItem value="OFFLINE">오프라인</SelectItem>
+                  {STORE_TYPE_OPTIONS.map(option => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -257,7 +261,7 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
               id="usageMethod"
               value={formData.usageMethod}
               onChange={(e) => setFormData(prev => ({ ...prev, usageMethod: e.target.value }))}
-              placeholder="사용 방법을 입력하세요"
+              placeholder={FORM_PLACEHOLDERS.usageMethod}
               required
               rows={3}
             />
@@ -342,7 +346,7 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
                       <Input
                         value={benefit.description}
                         onChange={(e) => updateBenefit(index, 'description', e.target.value)}
-                        placeholder="혜택 설명"
+                        placeholder={FORM_PLACEHOLDERS.benefitDescription}
                         required
                       />
                     </div>

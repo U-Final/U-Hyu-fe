@@ -29,7 +29,7 @@ type TabKey = 'bookmark' | 'filtering' | 'recommendation' | 'membership';
 
 // 통계 탭 정의
 const STATS_TABS = [
-  { label: '즐겨찾기', value: 'bookmark', icon: BookmarkIcon, color: 'var(--admin-bookmark)' },
+  { label: '저장된 매장', value: 'bookmark', icon: BookmarkIcon, color: 'var(--admin-bookmark)' },
   { label: '필터링', value: 'filtering', icon: FunnelIcon, color: 'var(--admin-filtering)' },
   { label: '추천', value: 'recommendation', icon: HeartIcon, color: 'var(--admin-recommendation)' },
   { label: '멤버십', value: 'membership', icon: UserGroupIcon, color: 'var(--admin-membership)' },
@@ -61,9 +61,10 @@ export default function AdminPage() {
   });
 
   // 브랜드 목록은 브랜드 탭에서만 호출
-  const { isLoading: brandLoading } = useAdminBrandListQuery({
-    enabled: mainTab === 'brands'
-  });
+  const { isLoading: brandLoading } = useAdminBrandListQuery(
+    undefined,
+    { enabled: mainTab === 'brands' }
+  );
 
   // 통계 탭 변경 핸들러
   const handleStatsTabChange = (tab: string) => {
@@ -147,7 +148,6 @@ export default function AdminPage() {
 
     return (
       <div className="space-y-6">
-        {/* 전체 통계 카드 - 항상 표시 */}
         <div>
           <h2 className="text-xl font-semibold mb-4">전체 통계</h2>
           {totalLoading ? (
@@ -167,7 +167,6 @@ export default function AdminPage() {
           />
         </div>
 
-        {/* 카테고리 필터 - 필터링 통계에서는 숨김 */}
         {selectedStatsTab !== 'filtering' && (
           <div>
             <h3 className="text-sm font-medium mb-3">카테고리별 필터</h3>
@@ -192,7 +191,6 @@ export default function AdminPage() {
         <h1 className="text-3xl font-bold">관리자 대시보드</h1>
       </div>
 
-      {/* 메인 토글 탭 (통계/브랜드 관리) */}
       <AdminToggleTabs 
         activeTab={mainTab}
         setActiveTab={handleMainTabChange}

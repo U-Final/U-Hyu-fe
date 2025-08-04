@@ -14,6 +14,7 @@ import type {
   AdminBrandCreateResponse,
   AdminBrandUpdateResponse,
   AdminBrandDeleteResponse,
+  AdminBrandListParams,
 } from './types';
 
 export const adminApi = {
@@ -64,8 +65,8 @@ export const adminApi = {
   },
 
   // 브랜드 관리 API
-  getAdminBrandList: async (): Promise<AdminBrandListResponse> => {
-    const res = await client.get<ApiResponse<AdminBrandListResponse>>(ADMIN_ENDPOINTS.BRAND_LIST);
+  getAdminBrandList: async (params?: AdminBrandListParams): Promise<AdminBrandListResponse> => {
+    const res = await client.get<ApiResponse<AdminBrandListResponse>>(ADMIN_ENDPOINTS.BRAND_LIST, { params });
     
     if (!res.data.data) {
       throw new Error('Invalid API response: missing data');

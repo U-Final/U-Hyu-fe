@@ -44,7 +44,6 @@ export interface MembershipBrandDetail {
   sumMembershipUsageByBrand: number;
 }
 
-// 새로운 브랜드 관리 API 타입들
 export interface AdminBrandBenefit {
   grade: 'VVIP' | 'VIP' | 'GOOD';
   description: string;
@@ -98,5 +97,13 @@ export interface AdminBrandUpdateResponse {
 }
 
 export interface AdminBrandDeleteResponse {
-  data: string;
+  brandId: number;
+}
+
+// 브랜드 목록 조회 API 파라미터
+export interface AdminBrandListParams {
+  page?: number;
+  size?: number;
+  category?: string;
+  brand_name?: string;
 } 

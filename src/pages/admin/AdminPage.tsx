@@ -20,16 +20,14 @@ import {
   useAdminRecommendStatsQuery,
   useAdminMembershipStatsQuery,
   useAdminTotalStatsQuery,
-  useAdminBrandListQuery,
 } from '@admin/hooks';
 import type { CategoryId } from '@admin/constants/categories';
-import { Card, CardHeader, CardTitle, CardContent } from '@/shared/components/shadcn/ui/card';
 
 type TabKey = 'bookmark' | 'filtering' | 'recommendation' | 'membership';
 
 // 통계 탭 정의
 const STATS_TABS = [
-  { label: '즐겨찾기', value: 'bookmark', icon: BookmarkIcon, color: 'var(--admin-bookmark)' },
+  { label: '저장된 매장', value: 'bookmark', icon: BookmarkIcon, color: 'var(--admin-bookmark)' },
   { label: '필터링', value: 'filtering', icon: FunnelIcon, color: 'var(--admin-filtering)' },
   { label: '추천', value: 'recommendation', icon: HeartIcon, color: 'var(--admin-recommendation)' },
   { label: '멤버십', value: 'membership', icon: UserGroupIcon, color: 'var(--admin-membership)' },
@@ -60,18 +58,13 @@ export default function AdminPage() {
     enabled: mainTab === 'stats' && selectedStatsTab === 'membership'
   });
 
-  // 브랜드 목록은 브랜드 탭에서만 호출
-  const { isLoading: brandLoading } = useAdminBrandListQuery({
-    enabled: mainTab === 'brands'
-  });
+
 
   // 통계 탭 변경 핸들러
   const handleStatsTabChange = (tab: string) => {
     const newTab = tab as TabKey;
     setSelectedStatsTab(newTab);
-    setSelectedCategory('all'); // 카테고리별 필터를 전체로 초기화
-    
-    // 해당 차트 API와 전체 통계 API 호출
+    setSelectedCategory('all');
     refetchTotalStats();
     
     switch (newTab) {
@@ -96,7 +89,6 @@ export default function AdminPage() {
     setMainTab(newTab);
     
     if (newTab === 'stats') {
-      // 통계 탭: 즐겨찾기로 초기화하고 API 호출
       setSelectedStatsTab('bookmark');
       setSelectedCategory('all');
       refetchTotalStats();
@@ -130,24 +122,11 @@ export default function AdminPage() {
 
   const renderContent = () => {
     if (mainTab === 'brands') {
-      if (brandLoading) {
-        return (
-          <Card>
-            <CardHeader>
-              <CardTitle>브랜드 관리</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8">로딩 중...</div>
-            </CardContent>
-          </Card>
-        );
-      }
       return <AdminBrandList />;
     }
 
     return (
       <div className="space-y-6">
-        {/* 전체 통계 카드 - 항상 표시 */}
         <div>
           <h2 className="text-xl font-semibold mb-4">전체 통계</h2>
           {totalLoading ? (
@@ -157,7 +136,6 @@ export default function AdminPage() {
           )}
         </div>
 
-        {/* 통계 탭 버튼 */}
         <div>
           <h2 className="text-xl font-semibold mb-4">상세 통계</h2>
           <FilterTabs 
@@ -167,7 +145,6 @@ export default function AdminPage() {
           />
         </div>
 
-        {/* 카테고리 필터 - 필터링 통계에서는 숨김 */}
         {selectedStatsTab !== 'filtering' && (
           <div>
             <h3 className="text-sm font-medium mb-3">카테고리별 필터</h3>
@@ -178,7 +155,6 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* 선택된 통계 차트 */}
         <div className="mt-6">
           {renderStatsContent()}
         </div>
@@ -192,7 +168,6 @@ export default function AdminPage() {
         <h1 className="text-3xl font-bold">관리자 대시보드</h1>
       </div>
 
-      {/* 메인 토글 탭 (통계/브랜드 관리) */}
       <AdminToggleTabs 
         activeTab={mainTab}
         setActiveTab={handleMainTabChange}

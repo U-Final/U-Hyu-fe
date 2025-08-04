@@ -18,25 +18,25 @@ export function BookmarkChart({ data, selectedCategory = 'all' }: BookmarkChartP
         .sort((a, b) => (b.sumStatisticsBookmarksByCategory || 0) - (a.sumStatisticsBookmarksByCategory || 0))
         .map((category) => ({
           name: category.categoryName,
-          즐겨찾기: category.sumStatisticsBookmarksByCategory || 0,
+          '저장된 매장': category.sumStatisticsBookmarksByCategory || 0,
         }))
     : // 특정 카테고리 선택시: 해당 카테고리의 브랜드별 데이터만
       filteredData.flatMap(category => 
         category.bookmarksByBrandList?.map(brand => ({
           name: brand.brandName,
-          즐겨찾기: brand.sumBookmarksByBrand || 0,
+          '저장된 매장': brand.sumBookmarksByBrand || 0,
         })) || []
-      ).sort((a, b) => b.즐겨찾기 - a.즐겨찾기);
+      ).sort((a, b) => b['저장된 매장'] - a['저장된 매장']);
 
   // 데이터가 없거나 모든 값이 0인 경우
-  const hasData = lineData.length > 0 && lineData.some(item => item.즐겨찾기 > 0);
+  const hasData = lineData.length > 0 && lineData.some(item => item['저장된 매장'] > 0);
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <BookmarkIcon className="h-5 w-5" />
-          즐겨찾기 통계
+          저장된 매장 통계
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -44,7 +44,7 @@ export function BookmarkChart({ data, selectedCategory = 'all' }: BookmarkChartP
           {/* 라인 차트 */}
           <div>
             <h4 className="text-sm font-medium mb-8">
-              {selectedCategory === 'all' ? '즐겨찾기 트렌드' : `${getCategoryDisplayName(selectedCategory)} 상세`}
+              {selectedCategory === 'all' ? '저장된 매장 트렌드' : `${getCategoryDisplayName(selectedCategory)} 상세`}
             </h4>
             
             {hasData ? (
@@ -57,7 +57,7 @@ export function BookmarkChart({ data, selectedCategory = 'all' }: BookmarkChartP
                   <Legend />
                   <Line 
                     type="monotone" 
-                    dataKey="즐겨찾기" 
+                    dataKey="저장된 매장" 
                     stroke="var(--admin-bookmark)" 
                     strokeWidth={3}
                     dot={{ fill: 'var(--admin-bookmark)', strokeWidth: 2, r: 6 }}

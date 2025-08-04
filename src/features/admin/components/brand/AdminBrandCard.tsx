@@ -39,6 +39,18 @@ const getStoreTypeLabel = (storeType: string) => {
   }
 };
 
+// 매장 타입별 뱃지 스타일
+const getStoreTypeBadgeStyle = (storeType: string) => {
+  switch (storeType) {
+    case 'ONLINE':
+      return 'bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-md animate-pulse';
+    case 'OFFLINE':
+      return 'bg-gradient-to-r from-green-600 to-green-800 text-white shadow-md animate-pulse';
+    default:
+      return 'bg-gray-600 text-white shadow-md animate-pulse';
+  }
+};
+
 export function AdminBrandCard({ brand, onEdit, onDelete, isEditing, onCancelEdit, onSuccessEdit }: AdminBrandCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -56,28 +68,35 @@ export function AdminBrandCard({ brand, onEdit, onDelete, isEditing, onCancelEdi
       <CardContent className="p-4">
         {/* 기본 정보 */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <img 
-              src={brand.brandImg} 
-              alt={brand.brandName}
-              className="w-16 h-16 rounded-lg object-cover border border-gray-200"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = '/images/brands/default-brand-logo.png';
-              }}
-            />
-            <div className="flex-1">
-              <h3 className="font-semibold text-lg text-gray-900">{brand.brandName}</h3>
+          <div className="flex items-center gap-4 flex-1 min-w-0">
+            <div className="w-16 h-16 flex items-center justify-center flex-shrink-0">
+              <img 
+                src={brand.brandImg} 
+                alt={brand.brandName}
+                className="w-full h-full object-contain border-2 border-gray-300 rounded-full"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = '/images/brands/default-brand-logo.png';
+                }}
+              />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-5">
+                <h3 className="font-semibold text-lg text-gray-900">{brand.brandName}</h3>
+                <span 
+                  className={`px-2 py-0.5 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105 ${getStoreTypeBadgeStyle(brand.storeType)}`}
+                >
+                  {getStoreTypeLabel(brand.storeType)}
+                </span>
+              </div>
               <p className="text-sm text-gray-600">{getCategoryName(brand.categoryId)}</p>
               <div className="flex items-center gap-4 mt-1">
                 <span className="text-xs text-gray-500">사용 제한: {brand.usageLimit}</span>
-                <span className="text-xs text-gray-500">혜택: {brand.data.length}개</span>
-                <span className="text-xs text-gray-500">{getStoreTypeLabel(brand.storeType)}</span>
               </div>
             </div>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 ml-8 flex-shrink-0">
             <Button
               variant="outline"
               size="sm"

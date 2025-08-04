@@ -20,6 +20,9 @@ export interface FilterTabProps {
   /** 탭 목록 (label + value 쌍으로 구성) */
   tabs?: FilterTabItem[];
 
+  /** 현재 선택된 탭의 값 */
+  value?: string;
+
   /** 탭이 선택될 때 호출되는 콜백 */
   onChange?: (value: string) => void;
 

@@ -20,7 +20,7 @@ export function AdminBrandPagination({ currentPage, totalPages, onPageChange }: 
   };
 
   return (
-    <div className="flex items-center justify-center gap-4 mt-6">
+    <div className="flex items-center justify-center gap-7">
       <button
         onClick={handlePrevClick}
         disabled={currentPage === 1}
@@ -30,9 +30,9 @@ export function AdminBrandPagination({ currentPage, totalPages, onPageChange }: 
         이전
       </button>
       
-      <div className="flex items-center gap-2">
-        <span className="text-lg font-semibold text-gray-900">{currentPage}</span>
-        <span className="text-gray-500">/ {totalPages}</span>
+      <div>
+        <span>{currentPage}</span>{' '}
+        <span className="text-gray">/ {totalPages}</span>
       </div>
       
       <button

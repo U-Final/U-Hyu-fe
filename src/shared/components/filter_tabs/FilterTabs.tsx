@@ -13,25 +13,30 @@ import { trackFilterUsed } from '@/shared/utils/actionlogTracker';
 
 const FilterTabs: FC<FilterTabProps> = ({
   tabs = FILTER_TABS,
+  value,
   onChange,
   variant = 'gray',
 }) => {
-  const [active, setActive] = useState(tabs[0]?.value ?? '');
+  const [internalActive, setInternalActive] = useState(tabs[0]?.value ?? '');
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
 
-  const handleClick = (value: string) => {
+  const active = value !== undefined ? value : internalActive;
+
+  const handleClick = (clickedValue: string) => {
     // 드래그 중이었다면 클릭 무시
     if (isDragging.current) {
       return;
     }
 
-    setActive(value);
-    onChange?.(value);
+    if (value === undefined) {
+      setInternalActive(clickedValue);
+    }
+    onChange?.(clickedValue);
 
     // 🎯 이게 전부!
-    if (value !== 'all') {
-      trackFilterUsed(value); // 'shopping' 그대로 전달
+    if (clickedValue !== 'all') {
+      trackFilterUsed(clickedValue); // 'shopping' 그대로 전달
     }
   };
 

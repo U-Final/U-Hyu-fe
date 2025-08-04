@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react';
+
+import { SimpleInfoWindowSkeleton } from '@kakao-map/components/marker/InfoWindowSkeleton';
 import type { Store } from '@kakao-map/types/store';
 import { CustomOverlayMap } from 'react-kakao-maps-sdk';
-import { useState, useEffect } from 'react';
-import { SimpleInfoWindowSkeleton } from '@kakao-map/components/marker/InfoWindowSkeleton';
 
 interface RecommendedStoreInfoWindowProps {
   store: Store;
@@ -45,7 +46,7 @@ export const RecommendStoreInfoWindow: React.FC<
       xAnchor={0.5}
       zIndex={1000}
     >
-      <div className="relative" style={{ padding: '20px' }}>
+      <div className="relative">
         {/* 말풍선 꼬리 - 뒤쪽에 배치 */}
         <div className="absolute left-1/2 -bottom-3 -translate-x-1/2 w-6 h-6 z-0">
           <svg width="24" height="24" viewBox="0 0 24 24" className="">

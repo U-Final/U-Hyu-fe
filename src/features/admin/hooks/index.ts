@@ -8,14 +8,12 @@ export {
 } from './useAdminStatsQuery';
 
 // 브랜드 관련 hooks
-export {
-  useAdminBrandListQuery,
-} from './useAdminBrandQuery';
-
-export {
+export { useAdminBrandListQuery } from './useAdminBrandQuery';
+export { 
   useCreateAdminBrandMutation,
   useUpdateAdminBrandMutation,
-  useDeleteAdminBrandMutation,
+  useDeleteAdminBrandMutation 
 } from './useAdminBrandMutation';
+export { useAdminQueryParams } from './useAdminQueryParams';
 
  

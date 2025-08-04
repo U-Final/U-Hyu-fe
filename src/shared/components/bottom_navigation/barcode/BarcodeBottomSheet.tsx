@@ -83,6 +83,17 @@ export const BarcodeBottomSheet: FC = () => {
             </button>
           </header>
 
+          {/* 안내 문구 */}
+          <div className="px-6 pb-4">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <p className="text-sm text-blue-800 leading-relaxed">
+                실제 U+ 멤버십에서 사용하는 바코드를 등록 후 사용해주세요!{' '}
+                <br className="hidden sm:block" />
+                U-HYU가 방문처리 및 추천을 더 정확하게 해드릴게요!
+              </p>
+            </div>
+          </div>
+
           {/* 컨텐츠 */}
           <div
             className="flex-1 overflow-y-auto px-6 pb-18 sm:pb-10 min-h-0"

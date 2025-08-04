@@ -165,10 +165,8 @@ export const RecommendedStoreListLoggedIn = () => {
                 pagination={{
                   clickable: true,
                   dynamicBullets: true,
-                  bulletClass:
-                    'swiper-pagination-bullet !bg-indigo-300 !opacity-60',
-                  bulletActiveClass:
-                    'swiper-pagination-bullet-active !bg-indigo-500 !opacity-100',
+                  bulletClass: 'swiper-pagination-bullet',
+                  bulletActiveClass: 'swiper-pagination-bullet-active',
                 }}
                 autoplay={{
                   delay: 3500,
@@ -213,10 +211,14 @@ export const RecommendedStoreListLoggedIn = () => {
           width: 8px;
           height: 8px;
           margin: 0 4px;
+          background-color: rgb(165 180 252) !important;
+          opacity: 0.6 !important;
           transition: all 0.3s ease;
         }
 
         .recommendation-swiper .swiper-pagination-bullet-active {
+          background-color: rgb(99 102 241) !important;
+          opacity: 1 !important;
           transform: scale(1.2);
         }
       `}</style>

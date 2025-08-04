@@ -63,7 +63,7 @@ export interface AdminBrand {
 }
 
 export interface AdminBrandListResponse {
-  data: AdminBrand[];
+  brandList: AdminBrand[];
   hasNext: boolean;
   totalPages: number;
   currentPage: number;

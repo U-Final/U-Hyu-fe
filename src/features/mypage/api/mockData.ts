@@ -11,8 +11,8 @@ export const mockUserInfoData: UserInfoData = {
   age: 27,
   gender: 'MALE',
   grade: 'VVIP',
-  // role: 'ADMIN',
-  role: 'USER',    // 마이페이지 확인하려면 유저 타입 변경
+  role: 'ADMIN',
+  // role: 'USER',    // 마이페이지 확인하려면 유저 타입 변경
   interestedBrandList: [2, 15, 25],
   updatedAt: '2025-07-28T02:25:39.470165',
 };

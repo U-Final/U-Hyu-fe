@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/shadcn/ui/card';
+
 import { Button } from '@/shared/components/shadcn/ui/button';
 import { Input } from '@/shared/components/shadcn/ui/input';
 import { Label } from '@/shared/components/shadcn/ui/label';
@@ -153,16 +153,16 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
 
   return (
-    <Card className="mb-6">
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <span>{editingBrand ? '브랜드 수정' : '브랜드 추가'}</span>
-          <Button variant="ghost" size="sm" onClick={onCancel}>
-            <XMarkIcon className="h-4 w-4" />
-          </Button>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-gray-900">
+          {editingBrand ? '브랜드 수정' : '브랜드 추가'}
+        </h3>
+        <Button variant="ghost" size="sm" onClick={onCancel}>
+          <XMarkIcon className="h-4 w-4" />
+        </Button>
+      </div>
+      <div>
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* 기본 정보 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -362,7 +362,7 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
             </Button>
           </div>
         </form>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 } 

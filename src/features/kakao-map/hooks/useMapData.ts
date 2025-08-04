@@ -18,11 +18,6 @@ import {
 } from './useMapQueries';
 
 /**
- * 기본 검색 반경 (미터 단위) - 줌 레벨 기반 검색이 비활성화되었을 때 사용
- */
-const DEFAULT_RADIUS = Number(import.meta.env.VITE_DEFAULT_RADIUS) || 5000;
-
-/**
  * 지도 관련 데이터 관리를 위한 메인 훅
  * MapStore의 상태와 React Query를 연결하여 백엔드 API 기반 필터링 제공
  */

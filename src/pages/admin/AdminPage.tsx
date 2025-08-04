@@ -20,10 +20,8 @@ import {
   useAdminRecommendStatsQuery,
   useAdminMembershipStatsQuery,
   useAdminTotalStatsQuery,
-  useAdminBrandListQuery,
 } from '@admin/hooks';
 import type { CategoryId } from '@admin/constants/categories';
-import { Card, CardHeader, CardTitle, CardContent } from '@/shared/components/shadcn/ui/card';
 
 type TabKey = 'bookmark' | 'filtering' | 'recommendation' | 'membership';
 
@@ -60,19 +58,13 @@ export default function AdminPage() {
     enabled: mainTab === 'stats' && selectedStatsTab === 'membership'
   });
 
-  // 브랜드 목록은 브랜드 탭에서만 호출
-  const { isLoading: brandLoading } = useAdminBrandListQuery(
-    undefined,
-    { enabled: mainTab === 'brands' }
-  );
+
 
   // 통계 탭 변경 핸들러
   const handleStatsTabChange = (tab: string) => {
     const newTab = tab as TabKey;
     setSelectedStatsTab(newTab);
-    setSelectedCategory('all'); // 카테고리별 필터를 전체로 초기화
-    
-    // 해당 차트 API와 전체 통계 API 호출
+    setSelectedCategory('all');
     refetchTotalStats();
     
     switch (newTab) {
@@ -97,7 +89,6 @@ export default function AdminPage() {
     setMainTab(newTab);
     
     if (newTab === 'stats') {
-      // 통계 탭: 즐겨찾기로 초기화하고 API 호출
       setSelectedStatsTab('bookmark');
       setSelectedCategory('all');
       refetchTotalStats();
@@ -131,18 +122,6 @@ export default function AdminPage() {
 
   const renderContent = () => {
     if (mainTab === 'brands') {
-      if (brandLoading) {
-        return (
-          <Card>
-            <CardHeader>
-              <CardTitle>브랜드 관리</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8">로딩 중...</div>
-            </CardContent>
-          </Card>
-        );
-      }
       return <AdminBrandList />;
     }
 
@@ -157,7 +136,6 @@ export default function AdminPage() {
           )}
         </div>
 
-        {/* 통계 탭 버튼 */}
         <div>
           <h2 className="text-xl font-semibold mb-4">상세 통계</h2>
           <FilterTabs 
@@ -177,7 +155,6 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* 선택된 통계 차트 */}
         <div className="mt-6">
           {renderStatsContent()}
         </div>

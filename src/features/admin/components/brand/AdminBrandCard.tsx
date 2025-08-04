@@ -68,17 +68,19 @@ export function AdminBrandCard({ brand, onEdit, onDelete, isEditing, onCancelEdi
       <CardContent className="p-4">
         {/* 기본 정보 */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <img 
-              src={brand.brandImg} 
-              alt={brand.brandName}
-              className="w-16 h-16 rounded-lg object-cover border border-gray-200"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = '/images/brands/default-brand-logo.png';
-              }}
-            />
-            <div className="flex-1">
+          <div className="flex items-center gap-4 flex-1 min-w-0">
+            <div className="w-16 h-16 flex items-center justify-center flex-shrink-0">
+              <img 
+                src={brand.brandImg} 
+                alt={brand.brandName}
+                className="w-full h-full object-contain border-2 border-gray-300 rounded-full"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = '/images/brands/default-brand-logo.png';
+                }}
+              />
+            </div>
+            <div className="flex-1 min-w-0">
               <div className="flex items-center gap-5">
                 <h3 className="font-semibold text-lg text-gray-900">{brand.brandName}</h3>
                 <span 
@@ -94,7 +96,7 @@ export function AdminBrandCard({ brand, onEdit, onDelete, isEditing, onCancelEdi
             </div>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 ml-8 flex-shrink-0">
             <Button
               variant="outline"
               size="sm"

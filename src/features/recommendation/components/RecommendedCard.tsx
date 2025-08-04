@@ -41,9 +41,9 @@ const RecommendedStoreCard = ({
 
   const handleDislikeClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!isExcluding) {
+    if (!isExcluding && store.brandId !== undefined) {
       setIsExcluding(true);
-      excludeStore(store.storeId, {
+      excludeStore(store.brandId, {
         onSettled: () => setIsExcluding(false),
       });
     }

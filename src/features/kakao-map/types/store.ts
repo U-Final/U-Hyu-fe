@@ -6,6 +6,7 @@ export interface Store {
   benefit: string; // 매장 혜택 정보
   logoImage: string; // 브랜드 로고 이미지 URL
   brandName: string; // 브랜드 이름 (백엔드에서 정규화됨)
+  brandId?: number;
   latitude: number; // 위도
   longitude: number; // 경도
 }

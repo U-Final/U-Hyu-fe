@@ -308,24 +308,6 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
       <div
         className="relative perspective-1000"
         style={{ padding: '20px' }}
-        onTouchStart={e => {
-          e.stopPropagation();
-        }}
-        onTouchEnd={e => {
-          e.stopPropagation();
-        }}
-        onTouchMove={e => {
-          e.stopPropagation();
-        }}
-        onClick={e => {
-          e.stopPropagation();
-        }}
-        onMouseDown={e => {
-          e.stopPropagation();
-        }}
-        onMouseUp={e => {
-          e.stopPropagation();
-        }}
       >
         {/* 베이스 그림자 (가장 넓고 흐린 그림자) */}
         <motion.div
@@ -387,6 +369,24 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
           whileHover={{
             y: -2,
             transition: { duration: 0.2, ease: 'easeOut' },
+          }}
+          onTouchStart={e => {
+            e.stopPropagation();
+          }}
+          onTouchEnd={e => {
+            e.stopPropagation();
+          }}
+          onTouchMove={e => {
+            e.stopPropagation();
+          }}
+          onClick={e => {
+            e.stopPropagation();
+          }}
+          onMouseDown={e => {
+            e.stopPropagation();
+          }}
+          onMouseUp={e => {
+            e.stopPropagation();
           }}
         >
           {/* 내용 컨테이너 */}

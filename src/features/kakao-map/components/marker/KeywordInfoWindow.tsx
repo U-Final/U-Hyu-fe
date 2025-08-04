@@ -49,9 +49,7 @@ export const KeywordInfoWindow: React.FC<KeywordInfoWindowProps> = ({
     >
       <div
         className="relative z-50 max-w-64"
-        onClick={(e) => e.stopPropagation()}
-        onMouseDown={(e) => e.stopPropagation()}
-        onMouseUp={(e) => e.stopPropagation()}
+        style={{ padding: '20px' }}
       >
         {/* 말풍선 꼬리 */}
         <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full">
@@ -62,6 +60,11 @@ export const KeywordInfoWindow: React.FC<KeywordInfoWindowProps> = ({
         <div 
           className="bg-white rounded-lg shadow-lg border border-gray-200 p-3 cursor-pointer hover:bg-gray-50 transition-colors"
           onClick={handleClick}
+          onMouseDown={(e) => e.stopPropagation()}
+          onMouseUp={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+          onTouchEnd={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
         >
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0 pr-2">

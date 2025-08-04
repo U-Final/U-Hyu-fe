@@ -32,7 +32,6 @@ export const StepContent: React.FC<StepContentProps> = ({
   const genderOptions = [
     { value: 'MALE', label: '남성' },
     { value: 'FEMALE', label: '여성' },
-    { value: 'OTHER', label: '기타' },
   ];
 
   const getSelectedGenderLabel = () => {

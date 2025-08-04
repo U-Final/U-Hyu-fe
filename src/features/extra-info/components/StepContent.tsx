@@ -217,11 +217,11 @@ export const StepContent: React.FC<StepContentProps> = ({
         <div className="space-y-6">
           <div className="bg-primary-50 border border-primary-100 rounded-lg p-4 mb-6">
             <h3 className="text-sm font-semibold text-primary-900 mb-2">
-              관심 브랜드 신상품 & 할인 알림
+              관심 브랜드 할인 알림
             </h3>
             <p className="text-xs text-primary-700 leading-relaxed">
-              관심있는 브랜드를 선택하시면 신상품 출시와 특별 할인 이벤트를 가장
-              먼저 알려드려요!
+              관심있는 브랜드를 선택하시면 비슷한 브랜드의 혜택 정보를 가장 먼저
+              알려드려요!
             </p>
           </div>
 

@@ -48,6 +48,10 @@ interface MapWithMarkersProps {
   isSearching?: boolean;
   /** 외부에서 제어하는 선택된 매장 ID */
   selectedStoreId?: number | null;
+  /** 지도 생성 콜백 */
+  onMapCreate?: (map: kakao.maps.Map) => void;
+  /** 지도 인스턴스 */
+  map?: kakao.maps.Map | null;
 }
 
 const MapWithMarkers: FC<MapWithMarkersProps> = ({
@@ -64,6 +68,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   onCenterChange,
   isSearching = false,
   selectedStoreId: externalSelectedStoreId,
+  onMapCreate,
 }) => {
   const [internalSelectedStoreId, setInternalSelectedStoreId] = useState<
     number | null
@@ -413,6 +418,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         distance={distanceFromLastSearch}
       />
 
+
       <KakaoMap
         id="map"
         center={mapCenter}
@@ -423,6 +429,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         onClick={handleInfoWindowClose} // 지도 클릭 시 인포윈도우 닫기
         onCreate={map => {
           mapRef.current = map;
+          onMapCreate?.(map);
         }}
       >
         {/* 매장 마커들 */}
@@ -541,6 +548,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
             <CurrentLocationMarker size="medium" animated={true} />
           </CustomOverlayMap>
         )}
+        
       </KakaoMap>
     </>
   );

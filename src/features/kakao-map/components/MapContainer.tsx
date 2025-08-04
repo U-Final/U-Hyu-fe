@@ -18,6 +18,7 @@ interface MapContainerProps {
     setMapCenter: (center: { lat: number; lng: number }) => void
   ) => void;
   onMapCenterChange?: (center: { lat: number; lng: number }) => void;
+  onMapCreate?: (map: kakao.maps.Map) => void;
 }
 
 export const MapContainer: React.FC<MapContainerProps> = ({
@@ -27,6 +28,7 @@ export const MapContainer: React.FC<MapContainerProps> = ({
   onPlaceInfoClose,
   onMapCenterUpdate,
   onMapCenterChange,
+  onMapCreate,
 }) => {
   const { stores, mapCenter, userLocation, loading, setMapCenter } =
     useMapData();
@@ -34,6 +36,9 @@ export const MapContainer: React.FC<MapContainerProps> = ({
     useMapInteraction();
   const { bottomSheetRef } = useMapUIContext();
   const { activeCategoryFilter } = useMapUI();
+
+  // 지도 인스턴스를 저장할 ref
+  const [map, setMap] = React.useState<kakao.maps.Map | null>(null);
 
   // 매장 데이터는 이미 useMapData에서 백엔드 API를 통해 필터링됨
   // 추가 프론트엔드 필터링 불필요
@@ -149,6 +154,11 @@ export const MapContainer: React.FC<MapContainerProps> = ({
       onCenterChange={handleMapCenterChange}
       isSearching={loading.stores}
       selectedStoreId={selectedMarkerId}
+      onMapCreate={(mapInstance) => {
+        setMap(mapInstance);
+        onMapCreate?.(mapInstance);
+      }}
+      map={map}
     />
   );
 };

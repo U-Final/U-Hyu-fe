@@ -1,19 +1,25 @@
-import { type FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  type FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
-
-
-import { useMapStore, useRecommendedStores, useRefreshBookmarkStores, useShowRecommendedStores } from '@kakao-map/store/MapStore';
+import {
+  useMapStore,
+  useRecommendedStores,
+  useRefreshBookmarkStores,
+  useShowRecommendedStores,
+} from '@kakao-map/store/MapStore';
 import { useSharedMapStore } from '@mymap/store/SharedMapStore';
 import { RecommendStoreInfoWindow } from '@recommendation/components/StoreInfoWindow';
 import { CustomOverlayMap, Map as KakaoMap } from 'react-kakao-maps-sdk';
 import { useParams } from 'react-router-dom';
 
-
-
 import { useAuthCheckModal } from '@/shared/hooks/useAuthCheckModal';
 import { trackMarkerClick } from '@/shared/utils/actionlogTracker';
-
-
 
 import type { NormalizedPlace } from '../../api/types';
 import { useDistanceBasedSearch } from '../../hooks/useManualSearch';
@@ -27,10 +33,6 @@ import { KeywordInfoWindow } from './KeywordInfoWindow';
 import { KeywordMarker } from './KeywordMarker';
 import MyMapMarker from './MyMapMarker';
 import StoreInfoWindow from './StoreInfoWindow';
-
-
-
-
 
 interface MapWithMarkersProps {
   center: { lat: number; lng: number };
@@ -97,6 +99,13 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   );
 
   const { bookmarkMode, bookmarkStores, selectStore } = useMapStore();
+
+  const ensureMinZoomOnce = (map: kakao.maps.Map | null, minLevel = 6) => {
+    if (!map) return;
+    const curr = map.getLevel();
+    // 숫자가 클수록 더 멀리(축소) — 너무 멀면 한 번만 가까이
+    if (curr > minLevel) map.setLevel(minLevel);
+  };
 
   // 마커에 사용할 store 배열 결정(mymap)
   // const storesToRender = isShared ? sharedStores : stores;
@@ -183,7 +192,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
 
         // 지도 레벨을 4로 변경 (바텀시트에서 매장 선택시)
         if (mapRef.current) {
-          mapRef.current.setLevel(4);
+          ensureMinZoomOnce(mapRef.current, 6);
         }
 
         if (pantoTimeoutRef.current) {
@@ -231,7 +240,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
 
         // 지도 레벨을 4로 변경
         if (mapRef.current) {
-          mapRef.current.setLevel(4);
+          ensureMinZoomOnce(mapRef.current, 6);
         }
 
         // 기존 timeout이 있다면 정리
@@ -288,7 +297,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
 
         // 지도 레벨을 4로 변경
         if (mapRef.current) {
-          mapRef.current.setLevel(4);
+          ensureMinZoomOnce(mapRef.current, 6);
         }
 
         // 기존 timeout이 있다면 정리
@@ -417,7 +426,6 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         onClick={handleSearchClick}
         distance={distanceFromLastSearch}
       />
-
 
       <KakaoMap
         id="map"
@@ -548,7 +556,6 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
             <CurrentLocationMarker size="medium" animated={true} />
           </CustomOverlayMap>
         )}
-        
       </KakaoMap>
     </>
   );

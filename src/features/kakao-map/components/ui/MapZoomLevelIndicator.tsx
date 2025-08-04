@@ -42,7 +42,7 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
     return () => {
       kakao.maps.event.removeListener(map, 'zoom_changed', handleZoomChanged);
     };
-  }, [map, zoomLevel, setZoomLevel]);
+  });
 
   const handleZoomIn = () => {
     if (!map) return;
@@ -59,7 +59,7 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
   const ZoomIcon = zoomLevel <= 7 ? ZoomOut : ZoomIn;
 
   return (
-    <div className="flex flex-col gap-2 min-w-[100px] md:min-w-[160px]">
+    <div className="flex flex-col gap-2">
       {/* 인포 박스 */}
       <div
         className="
@@ -85,7 +85,7 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
       {/* 컨트롤 박스 (인포 하단) */}
       <div
         className="
-        w-1/2
+          w-1/2
           bg-white/95 backdrop-blur-sm border border-light-gray
           rounded-xl shadow-sm overflow-hidden
         "
@@ -99,7 +99,7 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
           disabled={zoomLevel <= 1}
           aria-label="지도 확대"
           className="
-            w-full h-14 md:h-16
+            w-full h-14 md:h-14
             flex items-center justify-center
             hover:bg-primary hover:text-white
             transition-colors
@@ -121,7 +121,7 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
           disabled={zoomLevel >= 14}
           aria-label="지도 축소"
           className="
-            w-full h-14 md:h-16
+            w-full h-12 md:h-12
             flex items-center justify-center
             hover:bg-primary hover:text-white
             transition-colors

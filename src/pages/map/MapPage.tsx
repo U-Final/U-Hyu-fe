@@ -28,8 +28,9 @@ const MapContent = () => {
   );
   const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number }>({
     lat: 37.570028,
-    lng: 126.977266
+    lng: 126.977266,
   });
+  const [map, setMap] = useState<kakao.maps.Map | null>(null);
   const mapCenterSetterRef = useRef<
     ((center: { lat: number; lng: number }) => void) | null
   >(null);
@@ -59,7 +60,6 @@ const MapContent = () => {
             lat: firstResult.latitude,
             lng: firstResult.longitude,
           });
-
         }
       }
       setSelectedPlace(null); // 새 검색 시 선택 초기화
@@ -86,14 +86,21 @@ const MapContent = () => {
     []
   );
 
-  // 지도 중심 좌표 변경 핸들러
-  const handleMapCenterChange = useCallback((center: { lat: number; lng: number }) => {
-    setMapCenter(center);
+  // MapContainer에서 지도 인스턴스를 받는 핸들러
+  const handleMapCreate = useCallback((mapInstance: kakao.maps.Map) => {
+    setMap(mapInstance);
   }, []);
 
+  // 지도 중심 좌표 변경 핸들러
+  const handleMapCenterChange = useCallback(
+    (center: { lat: number; lng: number }) => {
+      setMapCenter(center);
+    },
+    []
+  );
+
   // selectedPlace 상태 변화 디버깅
-  useEffect(() => {
-  }, [selectedPlace]);
+  useEffect(() => {}, [selectedPlace]);
 
   // 바텀시트 초기화 - 닫힌 상태로 시작
   useEffect(() => {
@@ -114,20 +121,26 @@ const MapContent = () => {
     // 세로 터치 스크롤만 방지 (가로는 허용)
     const preventVerticalTouchMove = (e: TouchEvent) => {
       const target = e.target as HTMLElement;
-      
+
       // 스크롤 가능한 영역이나 가로 스크롤 영역은 허용
-      const isScrollableArea = target.closest('[data-scrollable="true"]') || 
-                              target.closest('.overflow-x-auto') ||
-                              target.closest('.scrollbar-hide') ||
-                              target.closest('[class*="overflow-x"]');
-      
+      const isScrollableArea =
+        target.closest('[data-scrollable="true"]') ||
+        target.closest('.overflow-x-auto') ||
+        target.closest('.scrollbar-hide') ||
+        target.closest('[class*="overflow-x"]');
+
       if (!isScrollableArea) {
         // 터치 이동이 주로 세로 방향인지 확인
         const touch = e.touches[0];
         if (touch) {
-          const deltaX = Math.abs(touch.clientX - (touch.target as any).startX || 0);
-          const deltaY = Math.abs(touch.clientY - (touch.target as any).startY || 0);
-          
+          const target = touch.target as EventTarget & { startX?: number; startY?: number };
+          const deltaX = Math.abs(
+            touch.clientX - (target.startX || 0)
+          );
+          const deltaY = Math.abs(
+            touch.clientY - (target.startY || 0)
+          );
+
           // 세로 이동이 가로 이동보다 클 때만 방지
           if (deltaY > deltaX) {
             e.preventDefault();
@@ -140,13 +153,16 @@ const MapContent = () => {
     const saveTouchStart = (e: TouchEvent) => {
       const touch = e.touches[0];
       if (touch && touch.target) {
-        (touch.target as any).startX = touch.clientX;
-        (touch.target as any).startY = touch.clientY;
+        const target = touch.target as EventTarget & { startX?: number; startY?: number };
+        target.startX = touch.clientX;
+        target.startY = touch.clientY;
       }
     };
 
     document.addEventListener('touchstart', saveTouchStart, { passive: true });
-    document.addEventListener('touchmove', preventVerticalTouchMove, { passive: false });
+    document.addEventListener('touchmove', preventVerticalTouchMove, {
+      passive: false,
+    });
 
     // 클린업
     return () => {
@@ -169,6 +185,7 @@ const MapContent = () => {
           onPlaceInfoClose={handlePlaceInfoClose}
           onMapCenterUpdate={handleMapCenterUpdate}
           onMapCenterChange={handleMapCenterChange}
+          onMapCreate={handleMapCreate}
         />
         <MapControlsContainer
           onKeywordSearchResults={handleKeywordSearchResults}
@@ -178,6 +195,7 @@ const MapContent = () => {
           mapCenterSetter={mapCenterSetterRef.current}
           onPlaceClick={handlePlaceClick}
           mapCenter={mapCenter}
+          map={map}
         />
       </div>
 

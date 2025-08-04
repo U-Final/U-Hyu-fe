@@ -1,10 +1,17 @@
 import { MYPAGE_ENDPOINTS } from '@/features/mypage/api/endpoints';
-import { mockUserInfoData, mockUpdateUserResponse } from '@/features/mypage/api/mockData';
-import { http, HttpResponse } from 'msw';
+import {
+  mockUpdateUserResponse,
+  mockUserInfoData,
+} from '@/features/mypage/api/mockData';
+import {
+  mockActivityStatistics,
+  mockBookmarks,
+} from '@/features/mypage/types/mockActivity';
 import type { UpdateUserRequest } from '@mypage/api/types';
-import type { ApiResponse } from '@/shared/client/client.type';
+import { HttpResponse, http } from 'msw';
 import { delay } from 'msw';
-import { mockActivityStatistics, mockBookmarks } from '@/features/mypage/types/mockActivity';
+
+import type { ApiResponse } from '@/shared/client/client.type';
 
 const createResponse = <T>(result: T, message: string): ApiResponse<T> => ({
   statusCode: 0,
@@ -16,12 +23,17 @@ export const mypageHandlers = [
   // 개인정보 수정
   http.patch(MYPAGE_ENDPOINTS.UPDATE_USER, async ({ request }) => {
     const body = (await request.json()) as Partial<UpdateUserRequest>;
-    
-    console.log('🔧 MSW PATCH 요청 받음:', body);
-    console.log('🔧 현재 mockUserInfoData:', mockUserInfoData);
+
+    if (import.meta.env.MODE === 'development') {
+      console.log('🔧 MSW PATCH 요청 받음:', body);
+      console.log('🔧 현재 mockUserInfoData:', mockUserInfoData);
+    }
 
     // 에러 케이스: 잘못된 등급
-    if (body.updatedGrade && !['VVIP', 'VIP', 'GOOD'].includes(body.updatedGrade)) {
+    if (
+      body.updatedGrade &&
+      !['VVIP', 'VIP', 'GOOD'].includes(body.updatedGrade)
+    ) {
       return new HttpResponse(
         JSON.stringify({
           statusCode: 400,
@@ -48,37 +60,53 @@ export const mypageHandlers = [
     const updatedData = { ...mockUserInfoData };
     if (body.updatedNickName) {
       updatedData.nickName = body.updatedNickName;
-      console.log('✅ 닉네임 업데이트:', body.updatedNickName);
+      if (import.meta.env.MODE === 'development') {
+        console.log('✅ 닉네임 업데이트:', body.updatedNickName);
+      }
     }
     if (body.updatedGrade) {
       updatedData.grade = body.updatedGrade;
-      console.log('✅ 등급 업데이트:', body.updatedGrade);
+      if (import.meta.env.MODE === 'development') {
+        console.log('✅ 등급 업데이트:', body.updatedGrade);
+      }
     }
     if (body.updatedBrandIdList) {
       updatedData.interestedBrandList = body.updatedBrandIdList;
-      console.log('✅ 브랜드 업데이트:', body.updatedBrandIdList);
+      if (import.meta.env.MODE === 'development') {
+        console.log('✅ 브랜드 업데이트:', body.updatedBrandIdList);
+      }
     }
     updatedData.updatedAt = new Date().toISOString();
-    
+
     // 전역 mock 데이터 업데이트
     Object.assign(mockUserInfoData, updatedData);
-    
-    console.log('🔧 업데이트 후 mockUserInfoData:', mockUserInfoData);
-    
+
+    if (import.meta.env.MODE === 'development') {
+      console.log('🔧 업데이트 후 mockUserInfoData:', mockUserInfoData);
+    }
+
     await delay(300);
-    return HttpResponse.json(createResponse(mockUpdateUserResponse, '정상 처리 되었습니다.'));
+    return HttpResponse.json(
+      createResponse(mockUpdateUserResponse, '정상 처리 되었습니다.')
+    );
   }),
-  
+
   // 개인정보 조회
   http.get(MYPAGE_ENDPOINTS.USER_INFO, () => {
-    console.log('🔧 MSW GET 요청 - 현재 mockUserInfoData:', mockUserInfoData);
-    return HttpResponse.json(createResponse(mockUserInfoData, '정상 처리 되었습니다.'));
+    if (import.meta.env.MODE === 'development') {
+      console.log('🔧 MSW GET 요청 - 현재 mockUserInfoData:', mockUserInfoData);
+    }
+    return HttpResponse.json(
+      createResponse(mockUserInfoData, '정상 처리 되었습니다.')
+    );
   }),
 
   // --- 액티비티: 활동내역 조회 ---
   http.get(MYPAGE_ENDPOINTS.STATISTICS, async () => {
     await delay(200);
-    return HttpResponse.json(createResponse(mockActivityStatistics, '정상 처리 되었습니다.'));
+    return HttpResponse.json(
+      createResponse(mockActivityStatistics, '정상 처리 되었습니다.')
+    );
   }),
 
   // --- 액티비티: 즐겨찾기 리스트 조회 ---
@@ -97,7 +125,9 @@ export const mypageHandlers = [
   http.delete(MYPAGE_ENDPOINTS.BOOKMARK_DETAIL(), async ({ params }) => {
     const { bookmarkId } = params;
     // 실제로 mockBookmarks에서 해당 id를 삭제
-    const idx = mockBookmarks.findIndex(b => b.bookmarkId === Number(bookmarkId));
+    const idx = mockBookmarks.findIndex(
+      b => b.bookmarkId === Number(bookmarkId)
+    );
     if (idx !== -1) {
       mockBookmarks.splice(idx, 1);
     }
@@ -108,4 +138,4 @@ export const mypageHandlers = [
       data: 'BOOKMARK_DELETE_SUCCESS',
     });
   }),
-]; 
+];

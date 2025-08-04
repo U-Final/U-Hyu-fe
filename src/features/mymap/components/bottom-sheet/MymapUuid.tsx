@@ -25,7 +25,7 @@ const MyMapUuid = ({ uuid, onStoreClick }: MyMapUuidProps) => {
   const isLoggedIn = useIsLoggedIn();
   const resultAuth = useMyMapUuidQuery(uuid, isLoggedIn);
   const resultGuest = useMyMapUuidGuestQuery(uuid, !isLoggedIn);
-  console.log(`로그인상태: ${isLoggedIn}`);
+  // console.log(`로그인상태: ${isLoggedIn}`);
 
   const data = isLoggedIn ? resultAuth.data : resultGuest.data;
   const isPending = isLoggedIn ? resultAuth.isPending : resultGuest.isPending;

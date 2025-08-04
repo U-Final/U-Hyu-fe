@@ -29,6 +29,11 @@ export interface MapStoreState {
   // 위치 관련 (LocationStore 통합)
   userLocation: Position | null;
   mapCenter: Position;
+  
+  // 줌 레벨 및 검색 반경 관리
+  zoomLevel: number;
+  searchRadius: number;
+  
   // 매장 관련 (StoreListStore + Context 통합)
   stores: Store[];
   selectedStore: Store | null;
@@ -62,6 +67,10 @@ export interface MapStoreActions {
   // 위치 관련
   getCurrentLocation: (force?: boolean) => Promise<void>;
   setMapCenter: (center: Position) => void;
+  
+  // 줌 레벨 및 검색 반경 관리
+  setZoomLevel: (level: number) => void;
+  updateSearchRadius: () => void;
 
   // 즐겨찾기 관련
   setBookmarkMode: (mode: boolean) => void;

@@ -24,6 +24,8 @@ interface MapControlsContainerProps {
   mapCenter?: { lat: number; lng: number };
   /** 검색 결과를 유지한 채로 아이템 선택 (검색창은 닫지 않음) */
   onSearchResultItemClick?: (place: NormalizedPlace) => void;
+  /** 지도 인스턴스 (줌 레벨 표시용) */
+  map?: kakao.maps.Map | null;
 }
 
 /**
@@ -41,6 +43,7 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
   debounceDelay = Number(import.meta.env.VITE_SEARCH_DEBOUNCE_DELAY) || 500,
   mapCenter,
   onSearchResultItemClick,
+  map,
 }) => {
   // UI 상태와 액션들 가져오기
   const {
@@ -258,6 +261,7 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
         onCloseSearchResults={handleCloseSearchResults}
         searchMeta={meta}
         hasSearched={hasSearched}
+        map={map}
       />
       <MapButtonsContainer />
     </div>

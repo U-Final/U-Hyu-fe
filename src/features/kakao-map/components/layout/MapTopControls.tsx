@@ -4,9 +4,13 @@ import RegionFilterDropdown from '@kakao-map/components/layout/RegionFilterDropd
 
 import { FilterTabs } from '@/shared/components';
 
-import type { NormalizedPlace, KakaoKeywordSearchResponse } from '../../api/types';
+import type {
+  KakaoKeywordSearchResponse,
+  NormalizedPlace,
+} from '../../api/types';
 import { MapSearchInput } from '../search/MapSearchInput';
 import { SearchResultList } from '../search/SearchResultList';
+import { MapZoomLevelIndicator } from '../ui/MapZoomLevelIndicator';
 import BottomSheetToggleButton from './BottomSheetToggleButton';
 
 /**
@@ -47,6 +51,8 @@ interface MapTopControlsProps {
   searchMeta?: KakaoKeywordSearchResponse['meta'] | null;
   /** 검색이 실행되었는지 여부 */
   hasSearched?: boolean;
+  /** 지도 인스턴스 (줌 레벨 표시용) */
+  map?: kakao.maps.Map | null;
 }
 
 /**
@@ -72,10 +78,14 @@ const MapTopControls: FC<MapTopControlsProps> = ({
   onCloseSearchResults,
   searchMeta,
   hasSearched = false,
+  map,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   // 검색 중이거나, 검색 결과가 있거나, 검색이 완료되었지만 결과가 없는 경우 표시
-  const isSearchResultsVisible = isSearching || keywordResults.length > 0 || (hasSearched && keywordResults.length === 0);
+  const isSearchResultsVisible =
+    isSearching ||
+    keywordResults.length > 0 ||
+    (hasSearched && keywordResults.length === 0);
 
   // 외부 클릭 시 검색 결과 닫기
   useEffect(() => {
@@ -155,10 +165,12 @@ const MapTopControls: FC<MapTopControlsProps> = ({
 
       {/* 하단 라인: 카테고리 필터탭 전체 너비 사용 */}
       <div className="-mx-4 overflow-x-auto">
-        <FilterTabs 
-          variant="white" 
-          onChange={onCategoryFilterChange}
-        />
+        <FilterTabs variant="white" onChange={onCategoryFilterChange} />
+      </div>
+
+      {/* 줌 레벨 표시 UI - 필터탭 아래에 위치 */}
+      <div className="flex justify-start">
+        <MapZoomLevelIndicator map={map ?? null} />
       </div>
 
       {/* 검색 결과 리스트 */}

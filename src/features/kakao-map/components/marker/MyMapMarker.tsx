@@ -14,7 +14,7 @@ const MyMapMarker: FC<MyMapMarkerProps> = ({ isSelected = false, onClick }) => {
   const markerColor = useSharedMapStore(state => state.markerColor);
   const markerColorClass =
     MYMAP_COLOR_BG[markerColor as MarkerColor] ?? MYMAP_COLOR_BG.RED;
-  console.log(`즐겨찾기색: ${markerColorClass}`);
+  // console.log(`즐겨찾기색: ${markerColorClass}`);
 
   return (
     <div className="relative" onClick={onClick}>

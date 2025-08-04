@@ -74,7 +74,17 @@ export const StepContent: React.FC<StepContentProps> = ({
   switch (step) {
     case 1:
       return (
-        <div className="space-y-4">
+        <div className="space-y-6">
+          <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6">
+            <h3 className="text-sm font-semibold text-blue-900 mb-2">
+              맞춤 혜택을 위한 기본 정보
+            </h3>
+            <p className="text-xs text-blue-700 leading-relaxed">
+              나이와 성별 정보를 통해 회원님의 라이프스타일에 맞는 매장과 혜택을
+              우선적으로 추천해드려요!
+            </p>
+          </div>
+
           <div>
             <Label className="text-sm text-gray-600">나이</Label>
             <Select
@@ -129,57 +139,92 @@ export const StepContent: React.FC<StepContentProps> = ({
 
     case 2:
       return (
-        <div className="space-y-4">
-          <button
-            onClick={() => !disabled && setIsMembershipSheetOpen(true)}
-            disabled={disabled}
-            className={`w-full h-12 bg-gray-50 rounded-md border border-gray-300 px-4 text-left transition-all ${
-              disabled
-                ? 'opacity-50 cursor-not-allowed'
-                : 'hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500'
-            }`}
-          >
-            <span
-              className={
-                data.membershipGrade ? 'text-gray-900' : 'text-gray-500'
-              }
-            >
-              {getSelectedMembershipLabel()}
-            </span>
-          </button>
+        <div className="space-y-6">
+          <div className="bg-purple-50 border border-purple-100 rounded-lg p-4 mb-6">
+            <h3 className="text-sm font-semibold text-purple-900 mb-2">
+              멤버십 등급별 특별 혜택
+            </h3>
+            <p className="text-xs text-purple-700 leading-relaxed">
+              LG U+ 멤버십 등급을 알려주시면 등급에 맞는 특별 할인과 포인트 적립
+              혜택을 제공해드려요!
+            </p>
+          </div>
 
-          <SelectionBottomSheet
-            isOpen={isMembershipSheetOpen}
-            onClose={() => setIsMembershipSheetOpen(false)}
-            title="LG U+ 멤버십 등급"
-            subtitle="멤버십 등급을 선택해주세요"
-            items={membershipItems}
-            selectedItems={data.membershipGrade ? [data.membershipGrade] : []}
-            onItemSelect={handleMembershipSelect}
-            multiSelect={false}
-            autoCloseOnSelect={true}
-            height="medium"
-          />
+          <div>
+            <Label className="text-sm text-gray-600">LG U+ 멤버십 등급</Label>
+            <button
+              onClick={() => !disabled && setIsMembershipSheetOpen(true)}
+              disabled={disabled}
+              className={`w-full h-12 bg-gray-50 rounded-md border border-gray-300 px-4 text-left transition-all mt-2 ${
+                disabled
+                  ? 'opacity-50 cursor-not-allowed'
+                  : 'hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500'
+              }`}
+            >
+              <span
+                className={
+                  data.membershipGrade ? 'text-gray-900' : 'text-gray-500'
+                }
+              >
+                {getSelectedMembershipLabel()}
+              </span>
+            </button>
+
+            <SelectionBottomSheet
+              isOpen={isMembershipSheetOpen}
+              onClose={() => setIsMembershipSheetOpen(false)}
+              title="LG U+ 멤버십 등급"
+              subtitle="멤버십 등급을 선택해주세요"
+              items={membershipItems}
+              selectedItems={data.membershipGrade ? [data.membershipGrade] : []}
+              onItemSelect={handleMembershipSelect}
+              multiSelect={false}
+              autoCloseOnSelect={true}
+              height="medium"
+            />
+          </div>
         </div>
       );
 
     case 3:
       return (
-        <ApiBrandGrid
-          selectedBrands={data.recentBrands}
-          onBrandToggle={
-            disabled
-              ? undefined
-              : brandId => onToggleBrand(brandId, 'recentBrands')
-          }
-          title="최근 이용한 브랜드"
-          disabled={disabled}
-        />
+        <div className="space-y-6">
+          <div className="bg-green-50 border border-green-100 rounded-lg p-4 mb-6">
+            <h3 className="text-sm font-semibold text-green-900 mb-2">
+              자주 이용하는 브랜드 맞춤 추천
+            </h3>
+            <p className="text-xs text-green-700 leading-relaxed">
+              최근 이용한 브랜드를 선택하시면 비슷한 스타일의 매장과 연관
+              브랜드의 할인 정보를 우선적으로 알려드려요!
+            </p>
+          </div>
+
+          <ApiBrandGrid
+            selectedBrands={data.recentBrands}
+            onBrandToggle={
+              disabled
+                ? undefined
+                : brandId => onToggleBrand(brandId, 'recentBrands')
+            }
+            title="최근 이용한 브랜드"
+            disabled={disabled}
+          />
+        </div>
       );
 
     case 4:
       return (
-        <div>
+        <div className="space-y-6">
+          <div className="bg-orange-50 border border-orange-100 rounded-lg p-4 mb-6">
+            <h3 className="text-sm font-semibold text-orange-900 mb-2">
+              관심 브랜드 신상품 & 할인 알림
+            </h3>
+            <p className="text-xs text-orange-700 leading-relaxed">
+              관심있는 브랜드를 선택하시면 신상품 출시와 특별 할인 이벤트를 가장
+              먼저 알려드려요!
+            </p>
+          </div>
+
           <ApiBrandGrid
             selectedBrands={data.selectedBrands}
             onBrandToggle={

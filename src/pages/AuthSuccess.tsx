@@ -8,7 +8,7 @@ import { userStore } from '@/shared/store/userStore';
 
 const AuthSuccess = () => {
   useEffect(() => {
-    console.log('AuthSuccess mounted', window.location.pathname);
+    // console.log('AuthSuccess mounted', window.location.pathname);
   }, []);
 
   const navigate = useNavigate();

@@ -1,6 +1,7 @@
 import { useMapUIContext } from '@kakao-map/context/MapUIContext';
 import { useMapStore } from '@kakao-map/store/MapStore';
 import type { Store } from '@kakao-map/types/store';
+import { PATH } from '@paths';
 import ConfirmExcludeModalContent from '@recommendation/components/ConfirmExcludeModalContent';
 import { ThumbsDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -28,7 +29,7 @@ const RecommendedStoreCard = ({
     if (!store.addressDetail) {
       if (store.brandName) {
         const query = encodeURIComponent(store.brandName);
-        navigate(`/benefit?brand_name=${query}`);
+        navigate(`${PATH.BENEFIT}?brand_name=${query}`);
       }
       return;
     }

@@ -259,7 +259,7 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
               variants={contentVariants}
               initial="hidden"
               animate="visible"
-              className="bg-white rounded-2xl overflow-hidden w-[280px] sm:w-[300px] md:w-[320px] lg:w-[340px] max-w-[90vw] h-[260px] sm:h-[280px]"
+              className="bg-white rounded-2xl overflow-hidden w-[280px] sm:w-[300px] md:w-[320px] lg:w-[340px] max-w-[90vw] h-[260px] sm:h-[280px] max-h-[40vh]"
               style={{
                 boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.6)',
               }}
@@ -392,7 +392,7 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="bg-white rounded-2xl overflow-hidden w-[280px] sm:w-[300px] md:w-[320px] lg:w-[340px] max-w-[90vw] min-h-[260px] sm:min-h-[280px]"
+            className="bg-white rounded-2xl overflow-hidden w-[280px] sm:w-[300px] md:w-[320px] lg:w-[340px] max-w-[90vw] min-h-[260px] sm:min-h-[280px] max-h-[40vh]"
             style={{
               boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.6)',
             }}

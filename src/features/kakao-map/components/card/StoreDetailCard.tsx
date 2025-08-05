@@ -83,10 +83,12 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
   };
   return (
     <div 
-      className="relative w-[280px] sm:w-[300px] md:w-[320px] lg:w-[340px] max-w-[90vw] min-h-[260px] sm:min-h-[280px] bg-white rounded-2xl shadow-lg p-4 sm:p-6 pt-4 sm:pt-5 pb-6 sm:pb-8" 
+      className="relative w-[280px] sm:w-[300px] md:w-[320px] lg:w-[340px] max-w-[90vw] min-h-[260px] sm:min-h-[280px] max-h-[40vh] bg-white rounded-2xl shadow-lg overflow-y-auto store-detail-scrollbar" 
       style={{ 
-        touchAction: 'manipulation',
-        WebkitTapHighlightColor: 'transparent' 
+        touchAction: 'pan-y',
+        WebkitTapHighlightColor: 'transparent',
+        scrollbarWidth: 'thin',
+        scrollbarColor: '#cbd5e1 transparent'
       }}
       onTouchStart={e => {
         e.stopPropagation();
@@ -95,18 +97,34 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
         e.stopPropagation();
       }}
       onTouchMove={e => {
-        e.stopPropagation();
+        const target = e.currentTarget;
+        const isScrollable = target.scrollHeight > target.clientHeight;
+        if (isScrollable) {
+          e.stopPropagation();
+        }
       }}
       onClick={e => {
         e.stopPropagation();
       }}
       onMouseDown={e => {
-        e.stopPropagation();
+        const target = e.currentTarget;
+        const isScrollable = target.scrollHeight > target.clientHeight;
+        if (isScrollable) {
+          e.stopPropagation();
+        }
       }}
       onMouseUp={e => {
+        const target = e.currentTarget;
+        const isScrollable = target.scrollHeight > target.clientHeight;
+        if (isScrollable) {
+          e.stopPropagation();
+        }
+      }}
+      onWheel={e => {
         e.stopPropagation();
       }}
     >
+      <div className="p-4 sm:p-6 pt-4 sm:pt-5 pb-6 sm:pb-8">
       {/* 말풍선 꼬리 */}
       <div className="absolute left-1/2 -bottom-4 -translate-x-1/2 w-8 h-8 z-10">
         <svg width="2rem" height="2rem" viewBox="0 0 32 32">
@@ -356,6 +374,7 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
             />
           )}
         </div>
+      </div>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import type { Store } from '@kakao-map/types/store';
 import { CustomOverlayMap } from 'react-kakao-maps-sdk';
@@ -10,9 +10,9 @@ interface RecommendedStoreInfoWindowProps {
 
 // 텍스트 길이 제한 상수
 const TEXT_LIMITS = {
-  benefit: 60,
-  address: 35,
-  storeName: 20,
+  benefit: 80, // 혜택 설명을 더 길게 허용
+  address: 40, // 주소도 약간 더 길게
+  storeName: 25, // 매장명도 약간 더 길게
 };
 
 // 텍스트가 제한을 초과하는지 확인하는 헬퍼 함수
@@ -30,11 +30,22 @@ const getTruncatedText = (text: string, limit: number): string => {
 const ExpandButton: React.FC<{
   isExpanded: boolean;
   onClick: () => void;
-}> = ({ isExpanded, onClick }) => {
+  scrollContainerRef?: React.RefObject<HTMLDivElement>;
+}> = ({ isExpanded, onClick, scrollContainerRef }) => {
   const handleTouchEnd = (e: React.TouchEvent) => {
     e.preventDefault();
     e.stopPropagation();
     onClick();
+    
+    // 확장 시 스크롤을 하단으로 이동
+    if (!isExpanded && scrollContainerRef?.current) {
+      setTimeout(() => {
+        scrollContainerRef.current?.scrollTo({
+          top: scrollContainerRef.current.scrollHeight,
+          behavior: 'smooth'
+        });
+      }, 100);
+    }
   };
 
   return (
@@ -43,6 +54,16 @@ const ExpandButton: React.FC<{
         e.preventDefault();
         e.stopPropagation();
         onClick();
+        
+        // 확장 시 스크롤을 하단으로 이동
+        if (!isExpanded && scrollContainerRef?.current) {
+          setTimeout(() => {
+            scrollContainerRef.current?.scrollTo({
+              top: scrollContainerRef.current.scrollHeight,
+              behavior: 'smooth'
+            });
+          }, 100);
+        }
       }}
       onTouchEnd={handleTouchEnd}
       className="inline text-primary hover:text-primary-dark font-medium text-xs ml-1 transition-colors duration-200 touch-manipulation"
@@ -62,6 +83,8 @@ export const RecommendStoreInfoWindow: React.FC<
     address: false,
     storeName: false,
   });
+  
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // 섹션 확장/축소 토글 함수
   const toggleSection = (section: keyof typeof expandedSections) => {
@@ -87,15 +110,13 @@ export const RecommendStoreInfoWindow: React.FC<
         </div>
 
         <div
-          className="relative z-10 bg-white rounded-[14px] shadow-lg border border-gray-200 p-3 sm:p-4 w-[280px] sm:w-[300px] md:w-[320px] lg:w-[340px] max-w-[90vw] min-h-[140px] sm:min-h-[160px] border-b-0 animate-fadeIn"
-          onClick={e => {
-            e.stopPropagation();
-          }}
-          onMouseDown={e => {
-            e.stopPropagation();
-          }}
-          onMouseUp={e => {
-            e.stopPropagation();
+          ref={scrollContainerRef}
+          className="relative z-10 bg-white rounded-[14px] shadow-lg border border-gray-200 w-[280px] sm:w-[300px] md:w-[320px] lg:w-[340px] max-w-[90vw] min-h-[140px] sm:min-h-[160px] max-h-[40vh] border-b-0 animate-fadeIn overflow-y-auto store-detail-scrollbar"
+          style={{
+            touchAction: 'pan-y',
+            WebkitTapHighlightColor: 'transparent',
+            scrollbarWidth: 'thin',
+            scrollbarColor: '#cbd5e1 transparent',
           }}
           onTouchStart={e => {
             e.stopPropagation();
@@ -104,9 +125,34 @@ export const RecommendStoreInfoWindow: React.FC<
             e.stopPropagation();
           }}
           onTouchMove={e => {
+            const target = e.currentTarget;
+            const isScrollable = target.scrollHeight > target.clientHeight;
+            if (isScrollable) {
+              e.stopPropagation();
+            }
+          }}
+          onClick={e => {
+            e.stopPropagation();
+          }}
+          onMouseDown={e => {
+            const target = e.currentTarget;
+            const isScrollable = target.scrollHeight > target.clientHeight;
+            if (isScrollable) {
+              e.stopPropagation();
+            }
+          }}
+          onMouseUp={e => {
+            const target = e.currentTarget;
+            const isScrollable = target.scrollHeight > target.clientHeight;
+            if (isScrollable) {
+              e.stopPropagation();
+            }
+          }}
+          onWheel={e => {
             e.stopPropagation();
           }}
         >
+          <div className="p-3 sm:p-4">
           <div className="flex items-center gap-2 sm:gap-3 mb-3">
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex-shrink-0">
               <img
@@ -120,7 +166,7 @@ export const RecommendStoreInfoWindow: React.FC<
             </div>
 
             <div className="flex-1 min-w-0">
-              <div className="font-bold text-black text-base sm:text-lg">
+              <div className="font-bold text-black text-base sm:text-lg break-words whitespace-pre-wrap">
                 {shouldShowExpand(
                   store.storeName || '',
                   TEXT_LIMITS.storeName
@@ -135,13 +181,14 @@ export const RecommendStoreInfoWindow: React.FC<
                     <ExpandButton
                       isExpanded={expandedSections.storeName}
                       onClick={() => toggleSection('storeName')}
+                      scrollContainerRef={scrollContainerRef}
                     />
                   </>
                 ) : (
                   store.storeName
                 )}
               </div>
-              <div className="text-xs sm:text-sm text-secondary mb-1">
+              <div className="text-xs sm:text-sm text-secondary mb-1 break-words whitespace-pre-wrap">
                 {shouldShowExpand(
                   store.addressDetail || '',
                   TEXT_LIMITS.address
@@ -157,6 +204,7 @@ export const RecommendStoreInfoWindow: React.FC<
                     <ExpandButton
                       isExpanded={expandedSections.address}
                       onClick={() => toggleSection('address')}
+                      scrollContainerRef={scrollContainerRef}
                     />
                   </>
                 ) : (
@@ -180,7 +228,7 @@ export const RecommendStoreInfoWindow: React.FC<
                 멤버십 혜택
               </span>
             </div>
-            <div className="text-yellow-900 font-semibold text-xs sm:text-sm leading-relaxed mb-2">
+            <div className="text-yellow-900 font-semibold text-xs sm:text-sm leading-relaxed mb-2 break-words whitespace-pre-wrap">
               {shouldShowExpand(store.benefit || '', TEXT_LIMITS.benefit) ? (
                 <>
                   {expandedSections.benefit
@@ -192,6 +240,7 @@ export const RecommendStoreInfoWindow: React.FC<
                   <ExpandButton
                     isExpanded={expandedSections.benefit}
                     onClick={() => toggleSection('benefit')}
+                    scrollContainerRef={scrollContainerRef}
                   />
                 </>
               ) : (
@@ -199,6 +248,7 @@ export const RecommendStoreInfoWindow: React.FC<
               )}
             </div>
           </div>
+        </div>
         </div>
       </div>
     </CustomOverlayMap>

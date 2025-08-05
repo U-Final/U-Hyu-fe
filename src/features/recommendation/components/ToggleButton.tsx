@@ -27,7 +27,6 @@ export const RecommendedStoresToggle: React.FC = () => {
       `}
       aria-label={`추천 매장 ${showRecommendedStores ? '숨기기' : '보기'}`}
     >
-      <span className="text-lg">★</span>
       <span>추천 매장</span>
       {recommendedStores.length > 0 && (
         <span className="text-xs bg-white px-1.5 py-0.5 rounded-full">

@@ -84,7 +84,7 @@ export const RecommendedStoreListLoggedIn = () => {
             grabCursor
             pagination={{
               clickable: true,
-              dynamicBullets: true,
+              dynamicBullets: false,
             }}
             autoplay={{
               delay: 2500,

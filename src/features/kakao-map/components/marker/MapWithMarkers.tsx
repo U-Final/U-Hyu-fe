@@ -16,7 +16,11 @@ import {
 } from '@kakao-map/store/MapStore';
 import { useSharedMapStore } from '@mymap/store/SharedMapStore';
 import { RecommendStoreInfoWindow } from '@recommendation/components/StoreInfoWindow';
-import { CustomOverlayMap, Map as KakaoMap } from 'react-kakao-maps-sdk';
+import {
+  CustomOverlayMap,
+  Map as KakaoMap,
+  MarkerClusterer,
+} from 'react-kakao-maps-sdk';
 import { useParams } from 'react-router-dom';
 
 import { useAuthCheckModal } from '@/shared/hooks/useAuthCheckModal';
@@ -85,6 +89,8 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   const pantoTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const didInitZoomSyncRef = useRef(false);
   const refreshBookmarkStores = useRefreshBookmarkStores();
+
+  const CLUSTER_MIN_LEVEL = Number(import.meta.env.VITE_CLUSTER_MIN_LEVEL) || 5;
 
   // 내부 상태 정의(mymap)
   const sharedStores = useSharedMapStore(state => state.stores);
@@ -174,7 +180,14 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
 
     // 줌 기준 갱신
     markSearched();
-  }, [onCenterChange, handleSearch, updateSearchPosition, markSearched, setSearchParams, currentRadius]);
+  }, [
+    onCenterChange,
+    handleSearch,
+    updateSearchPosition,
+    markSearched,
+    setSearchParams,
+    currentRadius,
+  ]);
 
   // center prop 동기화 및 검색 기준 위치 설정 (인포윈도우 상태 변경 시 의존성 제외)
   // useEffect(() => {
@@ -404,118 +417,124 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
           onMapCreate?.(map);
         }}
       >
-        {/* 매장 마커들 */}
-        {filteredStoresToRender.map(store => (
-          <CustomOverlayMap
-            key={store.storeId}
-            position={{ lat: store.latitude, lng: store.longitude }}
-            yAnchor={1}
-            xAnchor={0.5}
-          >
-            {isShared ? (
-              <MyMapMarker
-                isSelected={selectedStoreId === store.storeId}
-                onClick={() => handleMarkerClick(store)}
-              />
-            ) : (
-              <BrandMarker
-                store={store}
-                isSelected={selectedStoreId === store.storeId}
-                isRecommended={isRecommendedStore(store.storeId)}
-                onClick={() => handleMarkerClick(store)}
-              />
-            )}
-          </CustomOverlayMap>
-        ))}
-
-        {/* 즐겨찾기 마커 */}
-        {bookmarkMode &&
-          bookmarkStores.map(store => (
+        <MarkerClusterer
+          averageCenter={true} // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
+          minLevel={CLUSTER_MIN_LEVEL} // 클러스터 할 최소 지도 레벨
+          gridSize={80}
+        >
+          {/* 매장 마커들 */}
+          {filteredStoresToRender.map(store => (
             <CustomOverlayMap
-              key={`bookmark-${store.storeId}`}
+              key={store.storeId}
               position={{ lat: store.latitude, lng: store.longitude }}
               yAnchor={1}
               xAnchor={0.5}
             >
-              <FavoriteMarker
-                isSelected={selectedStoreId === store.storeId}
-                onClick={() => handleMarkerClick(store)}
-              />
+              {isShared ? (
+                <MyMapMarker
+                  isSelected={selectedStoreId === store.storeId}
+                  onClick={() => handleMarkerClick(store)}
+                />
+              ) : (
+                <BrandMarker
+                  store={store}
+                  isSelected={selectedStoreId === store.storeId}
+                  isRecommended={isRecommendedStore(store.storeId)}
+                  onClick={() => handleMarkerClick(store)}
+                />
+              )}
             </CustomOverlayMap>
           ))}
 
-        {/* 스토어 상세 정보 인포윈도우 */}
-        {infoWindowStore && (
-          <StoreInfoWindow
-            storeId={infoWindowStore.storeId}
-            position={{
-              lat: infoWindowStore.latitude,
-              lng: infoWindowStore.longitude,
-            }}
-            handleToggleFavorite={handleToggleFavorite}
-          />
-        )}
-
-        {/* 추천 매장 간단 정보 인포윈도우 */}
-        {recommendedInfoWindowStore && (
-          <RecommendStoreInfoWindow
-            store={recommendedInfoWindowStore}
-            position={{
-              lat: recommendedInfoWindowStore.latitude,
-              lng: recommendedInfoWindowStore.longitude,
-            }}
-          />
-        )}
-
-        {/* 키워드 검색 결과 마커들 */}
-        {keywordResults.length > 0 && (
-          <>
-            {keywordResults.map((place, index) => (
+          {/* 즐겨찾기 마커 */}
+          {bookmarkMode &&
+            bookmarkStores.map(store => (
               <CustomOverlayMap
-                key={place.id}
-                position={{ lat: place.latitude, lng: place.longitude }}
+                key={`bookmark-${store.storeId}`}
+                position={{ lat: store.latitude, lng: store.longitude }}
                 yAnchor={1}
                 xAnchor={0.5}
               >
-                <KeywordMarker
-                  place={place}
-                  onClick={clickedPlace => {
-                    if (mapRef.current) {
-                      const offset = 0.0017;
-                      const targetLat = clickedPlace.latitude + offset;
-                      const targetLng = clickedPlace.longitude;
-                      mapRef.current.panTo(
-                        new kakao.maps.LatLng(targetLat, targetLng)
-                      );
-                    }
-                    onPlaceClick?.(clickedPlace);
-                  }}
-                  isSelected={selectedPlace?.id === place.id}
-                  index={index + 1}
+                <FavoriteMarker
+                  isSelected={selectedStoreId === store.storeId}
+                  onClick={() => handleMarkerClick(store)}
                 />
               </CustomOverlayMap>
             ))}
-          </>
-        )}
 
-        {/* 선택된 키워드 검색 결과의 인포윈도우 */}
-        {selectedPlace && (
-          <KeywordInfoWindow
-            place={selectedPlace}
-            onClose={() => onPlaceInfoClose?.()}
-          />
-        )}
+          {/* 스토어 상세 정보 인포윈도우 */}
+          {infoWindowStore && (
+            <StoreInfoWindow
+              storeId={infoWindowStore.storeId}
+              position={{
+                lat: infoWindowStore.latitude,
+                lng: infoWindowStore.longitude,
+              }}
+              handleToggleFavorite={handleToggleFavorite}
+            />
+          )}
 
-        {/* 사용자 위치 마커 */}
-        {currentLocation && (
-          <CustomOverlayMap
-            position={currentLocation}
-            yAnchor={0.5}
-            xAnchor={0.5}
-          >
-            <CurrentLocationMarker size="medium" animated={true} />
-          </CustomOverlayMap>
-        )}
+          {/* 추천 매장 간단 정보 인포윈도우 */}
+          {recommendedInfoWindowStore && (
+            <RecommendStoreInfoWindow
+              store={recommendedInfoWindowStore}
+              position={{
+                lat: recommendedInfoWindowStore.latitude,
+                lng: recommendedInfoWindowStore.longitude,
+              }}
+            />
+          )}
+
+          {/* 키워드 검색 결과 마커들 */}
+          {keywordResults.length > 0 && (
+            <>
+              {keywordResults.map((place, index) => (
+                <CustomOverlayMap
+                  key={place.id}
+                  position={{ lat: place.latitude, lng: place.longitude }}
+                  yAnchor={1}
+                  xAnchor={0.5}
+                >
+                  <KeywordMarker
+                    place={place}
+                    onClick={clickedPlace => {
+                      if (mapRef.current) {
+                        const offset = 0.0017;
+                        const targetLat = clickedPlace.latitude + offset;
+                        const targetLng = clickedPlace.longitude;
+                        mapRef.current.panTo(
+                          new kakao.maps.LatLng(targetLat, targetLng)
+                        );
+                      }
+                      onPlaceClick?.(clickedPlace);
+                    }}
+                    isSelected={selectedPlace?.id === place.id}
+                    index={index + 1}
+                  />
+                </CustomOverlayMap>
+              ))}
+            </>
+          )}
+
+          {/* 선택된 키워드 검색 결과의 인포윈도우 */}
+          {selectedPlace && (
+            <KeywordInfoWindow
+              place={selectedPlace}
+              onClose={() => onPlaceInfoClose?.()}
+            />
+          )}
+
+          {/* 사용자 위치 마커 */}
+          {currentLocation && (
+            <CustomOverlayMap
+              position={currentLocation}
+              yAnchor={0.5}
+              xAnchor={0.5}
+            >
+              <CurrentLocationMarker size="medium" animated={true} />
+            </CustomOverlayMap>
+          )}
+        </MarkerClusterer>
       </KakaoMap>
     </>
   );

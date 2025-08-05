@@ -8,9 +8,8 @@ import { MapUIProvider } from '@kakao-map/context/MapUIContext';
 import { useMapUIContext } from '@kakao-map/context/MapUIContext';
 import useKakaoLoader from '@kakao-map/hooks/useKakaoLoader';
 
-import { useScrollPrevention } from '@/shared/hooks/useScrollPrevention';
 import { useFirstVisit } from '@/shared/hooks/useFirstVisit';
-import { BottomSheetTutorial } from '@/shared/components/tutorial/BottomSheetTutorial';
+import { useScrollPrevention } from '@/shared/hooks/useScrollPrevention';
 
 /**
  * 카카오 맵과 관련된 리소스를 로드하고, 지도 및 UI 컨트롤, 위치 제어, 하단 시트가 포함된 전체 지도 페이지를 렌더링합니다.
@@ -179,13 +178,6 @@ const MapContent = () => {
       </div>
 
       <BottomSheetContainer ref={bottomSheetRef} />
-      
-      {/* 첫 방문시 바텀시트 사용법 튜토리얼 */}
-      <BottomSheetTutorial
-        isVisible={showTutorial}
-        onComplete={handleTutorialComplete}
-        autoCompleteDelay={4000} // 4초 후 자동 완료
-      />
     </div>
   );
 };

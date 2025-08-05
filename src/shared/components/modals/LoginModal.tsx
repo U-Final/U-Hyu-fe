@@ -1,4 +1,4 @@
-import { GhostButton, KakaoLoginButton } from '@/shared/components';
+import { KakaoLoginButton } from '@/shared/components';
 import { useKakaoLogin } from '@/shared/hooks';
 import { useGA } from '@/shared/hooks/useGA';
 import { useModalStore } from '@/shared/store';
@@ -23,42 +23,71 @@ const LoginModal = () => {
     closeModal();
   };
 
+  interface FeatureItemProps {
+    icon: React.ReactNode;
+    label: string;
+    description: string;
+  }
+
+  const FeatureItem = ({ icon, label, description }: FeatureItemProps) => {
+    return (
+      <div className="flex items-center gap-4">
+        <div className="w-12">
+          {icon}
+        </div>
+        <div>
+          <p className="text-xs text-muted-foreground">{label}</p>
+          <p className="text-black text-sm font-bold">{description}</p>
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <BaseModal title="로그인이 필요합니다">
-      <div className="flex flex-col gap-6">
+    <BaseModal title=" ">
+      <div className="flex flex-col gap-4">
         {/* 로그인 필요성 설명 */}
-        <div className="text-center space-y-4">
-          <p className="text-body1 text-gray-700 leading-relaxed">
-            LG U+ 유휴의 모든 기능을 누리기 위해
+        <div className="space-y-4">
+          <p className="text-lg text-black font-bold leading-relaxed text-center">
+            지금 로그인하고
             <br />
-            로그인해 주세요
+            U-HYU만의 혜택을 누려보세요
           </p>
 
           {/* 제공 기능 리스트 */}
-          <div className="bg-primary/5 rounded-lg p-4 space-y-3">
-            <p className="text-body2 font-semibold text-primary mb-3 text-center">
-              로그인 후 이용 가능한 기능
-            </p>
-            <ul className="text-body2 text-gray-700 space-y-3">
-              <li className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
-                <span className="flex-1">등급별 맞춤 혜택 정보</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
-                <span className="flex-1">개인화 추천 서비스</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
-                <span className="flex-1">마이맵 생성 및 즐겨찾기</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
-                <span className="flex-1">
-                  바코드 방문 확인 및 활동 내역 관리
-                </span>
-              </li>
-            </ul>
+          <div className="flex bg-primary/5 justify-center rounded-lg p-4 space-y-3">
+            <div className="flex flex-col gap-6">
+              <FeatureItem
+                icon={
+                  <img
+                    src="/images/kakao-login/1.png"
+                    alt="VIP"
+                  />
+                }
+                label="사용자의 정보를 기반한"
+                description="등급별 맞춤 혜택 정보"
+              />
+              <FeatureItem
+                icon={
+                  <img
+                    src="/images/kakao-login/2.png"
+                    alt="추천"
+                  />
+                }
+                label="사용내역을 바탕으로"
+                description="개인화 추천 서비스"
+              />
+              <FeatureItem
+                icon={
+                  <img
+                    src="/images/kakao-login/3.png"
+                    alt="마이맵"
+                  />
+                }
+                label="제휴처 공유할 수 있는"
+                description="마이맵 생성 및 즐겨찾기"
+              />
+            </div>
           </div>
         </div>
 
@@ -66,16 +95,16 @@ const LoginModal = () => {
         <div className="flex flex-col gap-3 pt-2">
           <KakaoLoginButton
             onClick={handleLogin}
-            size="lg"
+            size="md"
             variant="full"
             className="w-full shadow-sm"
           />
-          <GhostButton
+          <button
             onClick={handleCancel}
-            className="text-primary/60 hover:text-primary transition-colors"
+            className="text-primary/60 text-sm text-gray hover:text-primary transition-colors"
           >
-            나중에 하기
-          </GhostButton>
+            일단 둘러볼게요
+          </button>
         </div>
       </div>
     </BaseModal>

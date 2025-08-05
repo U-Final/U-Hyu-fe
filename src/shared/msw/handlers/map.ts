@@ -110,7 +110,7 @@ export const mapHandlers = [
     }
 
     // 개발 환경에서 디버깅 정보 출력
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.MODE === 'development') {
       console.log('🔍 MSW Store Filter Applied:', {
         originalQuery: {
           lat,

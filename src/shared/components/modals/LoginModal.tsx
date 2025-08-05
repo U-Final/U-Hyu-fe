@@ -29,32 +29,34 @@ const LoginModal = () => {
         {/* 로그인 필요성 설명 */}
         <div className="text-center space-y-4">
           <p className="text-body1 text-gray-700 leading-relaxed">
-            유휴 앱의 모든 혜택을 누리기 위해
+            LG U+ 유휴의 모든 기능을 누리기 위해
             <br />
             로그인해 주세요
           </p>
-          
+
           {/* 제공 기능 리스트 */}
-          <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-            <p className="text-body2 font-semibold text-gray-800 mb-3">
+          <div className="bg-primary/5 rounded-lg p-4 space-y-3">
+            <p className="text-body2 font-semibold text-primary mb-3 text-center">
               로그인 후 이용 가능한 기능
             </p>
-            <ul className="text-body2 text-gray-600 space-y-2 text-left">
-              <li className="flex items-start gap-2">
-                <span className="text-blue-500 font-bold mt-1">•</span>
-                <span>등급별 맞춤 혜택 정보</span>
+            <ul className="text-body2 text-gray-700 space-y-3">
+              <li className="flex items-center gap-3">
+                <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
+                <span className="flex-1">등급별 맞춤 혜택 정보</span>
               </li>
-              <li className="flex items-start gap-2">
-                <span className="text-blue-500 font-bold mt-1">•</span>
-                <span>개인화 추천 서비스</span>
+              <li className="flex items-center gap-3">
+                <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
+                <span className="flex-1">개인화 추천 서비스</span>
               </li>
-              <li className="flex items-start gap-2">
-                <span className="text-blue-500 font-bold mt-1">•</span>
-                <span>마이맵 생성 및 즐겨찾기</span>
+              <li className="flex items-center gap-3">
+                <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
+                <span className="flex-1">마이맵 생성 및 즐겨찾기</span>
               </li>
-              <li className="flex items-start gap-2">
-                <span className="text-blue-500 font-bold mt-1">•</span>
-                <span>바코드 방문 확인 및 활동 내역 관리</span>
+              <li className="flex items-center gap-3">
+                <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
+                <span className="flex-1">
+                  바코드 방문 확인 및 활동 내역 관리
+                </span>
               </li>
             </ul>
           </div>
@@ -68,9 +70,9 @@ const LoginModal = () => {
             variant="full"
             className="w-full shadow-sm"
           />
-          <GhostButton 
+          <GhostButton
             onClick={handleCancel}
-            className="text-gray-500 hover:text-gray-700 transition-colors"
+            className="text-primary/60 hover:text-primary transition-colors"
           >
             나중에 하기
           </GhostButton>

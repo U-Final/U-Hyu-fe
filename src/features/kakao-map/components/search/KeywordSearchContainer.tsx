@@ -5,7 +5,7 @@ import { CustomOverlayMap } from 'react-kakao-maps-sdk';
 import type { NormalizedPlace } from '../../api/types';
 import { useKeywordSearch } from '../../hooks/useKeywordSearch';
 import { useMapBounds, useSearchMarkers } from '../../hooks/useSearchMarkers';
-import { ResponsiveManualSearchButton } from '../ManualSearchButton';
+import ManualSearchButton from '../ManualSearchButton';
 import { KeywordInfoWindow } from '../marker/KeywordInfoWindow';
 import { KeywordMarker } from '../marker/KeywordMarker';
 import { MapSearchInput } from './MapSearchInput';
@@ -298,7 +298,7 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
       )}
 
       {/* 재검색 버튼 */}
-      <ResponsiveManualSearchButton
+      <ManualSearchButton
         visible={showManualSearchButton && !autoSearchOnDrag}
         loading={manualSearchLoading}
         onClick={handleManualSearch}

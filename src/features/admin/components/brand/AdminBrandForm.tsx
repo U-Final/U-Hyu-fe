@@ -47,7 +47,10 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
   const createMutation = useMutation({
     mutationFn: adminApi.createAdminBrand,
     onSuccess: () => {
+      // 모든 adminBrandList 관련 쿼리를 무효화
       queryClient.invalidateQueries({ queryKey: ['adminBrandList'] });
+      queryClient.removeQueries({ queryKey: ['adminBrandList'] });
+      toast.success('브랜드가 성공적으로 추가되었습니다.');
       onSuccess();
     },
   });
@@ -55,7 +58,10 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
   const updateMutation = useMutation({
     mutationFn: ({ brandId, data }: { brandId: number; data: AdminBrandUpdateRequest }) => adminApi.updateAdminBrand(brandId, data),
     onSuccess: () => {
+      // 모든 adminBrandList 관련 쿼리를 무효화
       queryClient.invalidateQueries({ queryKey: ['adminBrandList'] });
+      queryClient.removeQueries({ queryKey: ['adminBrandList'] });
+      toast.success('브랜드가 성공적으로 수정되었습니다.');
       onSuccess();
     },
   });

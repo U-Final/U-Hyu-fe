@@ -10,7 +10,7 @@ export function StatsSummaryCards({ totalStats }: StatsSummaryCardsProps) {
   const cards = [
     {
       title: '총 저장된 매장',
-      value: totalStats.totalBookmark,
+      value: totalStats.totalBookmarkMyMap,
       icon: BookmarkIcon,
       description: '즐겨찾기 및 마이맵에 저장된 매장 수',
       color: 'var(--admin-bookmark)',

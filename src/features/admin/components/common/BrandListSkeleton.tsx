@@ -13,9 +13,9 @@ export function BrandListSkeleton() {
             브랜드 추가
           </Button>
         </CardTitle>
-        <p className="text-sm text-gray-600">
+        <div className="text-sm text-gray-600">
           <div className="h-4 w-48 bg-gray-200 rounded animate-pulse" />
-        </p>
+        </div>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="flex flex-col gap-3">

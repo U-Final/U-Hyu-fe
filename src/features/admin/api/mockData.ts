@@ -9,7 +9,7 @@ import type {
 
 // 전체 통계 목 데이터
 export const mockTotalStats: TotalStats = {
-  totalBookmark: 156,
+  totalBookmarkMyMap: 156,
   totalFiltering: 89,
   totalMembershipUsage: 234,
 };

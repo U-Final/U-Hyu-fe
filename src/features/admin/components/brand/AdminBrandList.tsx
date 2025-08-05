@@ -33,7 +33,7 @@ export function AdminBrandList() {
   }, [params.brand_name]);
 
   // 브랜드 목록 조회
-  const { data: brandListResponse, isLoading, error } = useQuery({
+  const { data: brandListResponse, isLoading, error, refetch } = useQuery({
     queryKey: ['adminBrandList', params],
     queryFn: () => adminApi.getAdminBrandList(params),
     enabled: true,
@@ -98,6 +98,8 @@ export function AdminBrandList() {
   const handleFormSuccess = () => {
     setShowForm(false);
     setEditingBrand(null);
+    // 브랜드 목록을 즉시 새로고침
+    refetch();
   };
 
   const handleFormCancel = () => {
@@ -131,7 +133,7 @@ export function AdminBrandList() {
 
   return (
     <>
-      <Card>
+      <Card className="mb-10">
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             <span>브랜드 관리</span>

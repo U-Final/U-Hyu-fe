@@ -83,7 +83,7 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
   };
   return (
     <div 
-      className="relative w-[20rem] bg-white rounded-2xl shadow-lg p-6 pt-5 pb-8" 
+      className="relative w-[20rem] min-h-[280px] bg-white rounded-2xl shadow-lg p-6 pt-5 pb-8" 
       style={{ 
         touchAction: 'manipulation',
         WebkitTapHighlightColor: 'transparent' 

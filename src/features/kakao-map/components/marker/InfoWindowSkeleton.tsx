@@ -13,7 +13,7 @@ interface InfoWindowSkeletonProps {
  */
 const InfoWindowSkeleton: FC<InfoWindowSkeletonProps> = () => {
   return (
-    <div className="relative w-[20rem] bg-white rounded-2xl shadow-lg p-6 pt-5 pb-8 animate-pulse">
+    <div className="relative w-[20rem] h-[280px] bg-white rounded-2xl shadow-lg p-6 pt-5 pb-8 animate-pulse">
       {/* 말풍선 꼬리 */}
       <div className="absolute left-1/2 -bottom-4 -translate-x-1/2 w-8 h-8 z-10">
         <svg width="2rem" height="2rem" viewBox="0 0 32 32">
@@ -95,7 +95,7 @@ export const SimpleInfoWindowSkeleton: FC<
         </svg>
       </div>
 
-      <div className="relative z-10 bg-white rounded-[14px] shadow-lg border border-gray-200 p-4 min-w-[280px] max-w-[320px] border-b-0 animate-pulse">
+      <div className="relative z-10 bg-white rounded-[14px] shadow-lg border border-gray-200 p-4 w-[280px] h-[140px] border-b-0 animate-pulse">
         {/* 로고 + 매장 정보 스켈레톤 */}
         <div className="flex items-center gap-3 mb-3">
           {/* 로고 스켈레톤 */}

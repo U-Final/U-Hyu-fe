@@ -259,7 +259,7 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
               variants={contentVariants}
               initial="hidden"
               animate="visible"
-              className="bg-white rounded-2xl overflow-hidden"
+              className="bg-white rounded-2xl overflow-hidden w-[20rem] h-[280px]"
               style={{
                 boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.6)',
               }}
@@ -395,7 +395,7 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="bg-white rounded-2xl overflow-hidden"
+            className="bg-white rounded-2xl overflow-hidden w-[20rem] min-h-[280px]"
             style={{
               boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.6)',
             }}

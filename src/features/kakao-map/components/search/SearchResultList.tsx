@@ -71,15 +71,14 @@ const SearchResultList: React.FC<SearchResultListProps> = ({
       >
         <div className="mb-6 w-32 h-32 flex items-center justify-center">
           <img
-            src="/images/recommendation/empty-state-2.png"
+            src="/images/empty/empty-state.png"
             alt="검색 결과 없음"
             className="w-full h-full object-contain"
           />
         </div>
-        <h3 className="text-lg font-semibold text-gray-700 mb-2">
-          검색 결과가 없습니다
-        </h3>
-        <p className="text-gray-500 text-sm mb-1">{emptyMessage}</p>
+        <p className="text-lg font-semibold text-gray-700 text-sm mb-1">
+          {emptyMessage}
+        </p>
         <p className="text-gray-400 text-xs">다른 키워드로 다시 검색해보세요</p>
       </div>
     );

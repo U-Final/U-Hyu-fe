@@ -3,6 +3,7 @@ import { useMapStore } from '@kakao-map/store/MapStore';
 import type { Store } from '@kakao-map/types/store';
 import ConfirmExcludeModalContent from '@recommendation/components/ConfirmExcludeModalContent';
 import { ThumbsDown } from 'lucide-react';
+import { toast } from 'sonner';
 
 import { BrandCard } from '@/shared/components';
 import { useModalStore } from '@/shared/store';
@@ -39,7 +40,10 @@ const RecommendedStoreCard = ({
 
   const handleDislikeClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!store.brandId) return;
+    if (!store.brandId) {
+      toast.error('추천 매장을 찾을 수 없습니다.');
+      return;
+    }
 
     openModal('base', {
       title: '앞으로 이 브랜드는 추천에서 제외 됩니다.',

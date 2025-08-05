@@ -20,16 +20,6 @@ const Flag3D: FC<{ brandImageSrc: string }> = ({ brandImageSrc }) => {
     opacity: 0.9
   }));
 
-  const WAVE_CONFIG = {
-    WIND_FREQUENCY: 2,
-    WIND_AMPLITUDE: 0.08,
-    WAVE_FREQUENCY: 3, 
-    WAVE_AMPLITUDE: 0.04,
-    MAX_Z_OFFSET: 0.3,
-    MIN_Z_OFFSET: 0.01
-  } as const;
-
-  // 애니메이션 상수
   const ANIMATION_CONFIG = {
     WIND_SPEED: 2,
     WIND_AMPLITUDE: 0.08,
@@ -37,6 +27,8 @@ const Flag3D: FC<{ brandImageSrc: string }> = ({ brandImageSrc }) => {
     WAVE_AMPLITUDE: 0.04,
     ROTATION_SPEED: 1.5,
     ROTATION_AMPLITUDE: 0.4,
+    MAX_Z_OFFSET: 0.3,
+    MIN_Z_OFFSET: 0.01
   } as const;
 
   //브랜드 이미지 텍스처 로드
@@ -55,7 +47,7 @@ const Flag3D: FC<{ brandImageSrc: string }> = ({ brandImageSrc }) => {
     return () => {
       geometry.dispose();
       material.dispose();
-      texture.dispose();
+      texture?.dispose();
     };
   }, [geometry, material, texture]);
 
@@ -74,7 +66,7 @@ const Flag3D: FC<{ brandImageSrc: string }> = ({ brandImageSrc }) => {
         const windStrength = Math.sin(time * ANIMATION_CONFIG.WIND_SPEED + x * 3) * ANIMATION_CONFIG.WIND_AMPLITUDE * distanceFromPole;
         const waveEffect = Math.sin(time * ANIMATION_CONFIG.WAVE_SPEED + y * 4) * ANIMATION_CONFIG.WAVE_AMPLITUDE * distanceFromPole;
        
-        const zOffset = Math.max(WAVE_CONFIG.MIN_Z_OFFSET, Math.min(WAVE_CONFIG.MAX_Z_OFFSET, windStrength + waveEffect + 0.1));
+        const zOffset = Math.max(ANIMATION_CONFIG.MIN_Z_OFFSET, Math.min(ANIMATION_CONFIG.MAX_Z_OFFSET, windStrength + waveEffect + 0.1));
         positions.setZ(i, zOffset);
       }
       positions.needsUpdate = true;
@@ -95,7 +87,7 @@ const Flag3D: FC<{ brandImageSrc: string }> = ({ brandImageSrc }) => {
       <Box args={[0.15, 4, 0.15]} position={[-1.8, -1, -0.5]}>
         <meshStandardMaterial color="#FFD700" metalness={0.5} roughness={0.3} />
       </Box>
-      <mesh ref={flagRef} geometry={geometry} material={material} position={[-0.5, 1, 0.1]}>
+      <mesh ref={flagRef} geometry={geometry} position={[-0.5, 1, 0.1]}>
         <meshStandardMaterial 
           color="#FFD700"
           metalness={0.3}

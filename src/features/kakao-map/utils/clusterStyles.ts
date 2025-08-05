@@ -1,5 +1,5 @@
 /* 프라이머리 톤 */
-const P_LIGHT = '#fbeff6';
+const P_LIGHT = '#f9c4de';
 const P_BASE = '#ef5aa7';
 const P_DEEP = '#e6007e';
 
@@ -55,4 +55,4 @@ export const clusterStyles = [
     lineHeight: '54px',
     ...textDarkBG,
   },
-] as const;
+];

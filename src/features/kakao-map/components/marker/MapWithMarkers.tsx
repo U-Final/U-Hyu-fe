@@ -420,9 +420,9 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
       >
         <MarkerClusterer
           averageCenter
+          styles={clusterStyles}
           gridSize={80}
           minLevel={CLUSTER_MIN_LEVEL} // 예: 6
-          styles={clusterStyles} // ← 방금 만든 배열
           calculator={[10, 30]} // 0~9 / 10~29 / 30+
         >
           {/* 매장 마커들 */}

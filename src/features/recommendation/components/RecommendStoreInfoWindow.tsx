@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-import { SimpleInfoWindowSkeleton } from '@kakao-map/components/marker/InfoWindowSkeleton';
 import type { Store } from '@kakao-map/types/store';
 import { CustomOverlayMap } from 'react-kakao-maps-sdk';
 
@@ -9,40 +8,73 @@ interface RecommendedStoreInfoWindowProps {
   position: { lat: number; lng: number };
 }
 
+// 텍스트 길이 제한 상수
+const TEXT_LIMITS = {
+  benefit: 60,
+  address: 35,
+  storeName: 20,
+};
+
+// 텍스트가 제한을 초과하는지 확인하는 헬퍼 함수
+const shouldShowExpand = (text: string, limit: number): boolean => {
+  return text.length > limit;
+};
+
+// 축약된 텍스트를 반환하는 헬퍼 함수
+const getTruncatedText = (text: string, limit: number): string => {
+  if (text.length <= limit) return text;
+  return text.substring(0, limit) + '...';
+};
+
+// 더보기 버튼 컴포넌트
+const ExpandButton: React.FC<{
+  isExpanded: boolean;
+  onClick: () => void;
+}> = ({ isExpanded, onClick }) => {
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onClick();
+  };
+
+  return (
+    <button
+      onClick={e => {
+        e.preventDefault();
+        e.stopPropagation();
+        onClick();
+      }}
+      onTouchEnd={handleTouchEnd}
+      className="inline text-blue-500 hover:text-blue-700 font-medium text-xs ml-1 transition-colors duration-200 touch-manipulation"
+      aria-label={isExpanded ? '접기' : '더보기'}
+      style={{ WebkitTapHighlightColor: 'transparent' }}
+    >
+      {isExpanded ? '접기' : '더보기'}
+    </button>
+  );
+};
+
 export const RecommendStoreInfoWindow: React.FC<
   RecommendedStoreInfoWindowProps
 > = ({ store, position }) => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [expandedSections, setExpandedSections] = useState({
+    benefit: false,
+    address: false,
+    storeName: false,
+  });
 
-  // 로딩 상태 시뮬레이션 (실제로는 데이터 페칭 상태에 따라 결정)
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 300); // 300ms 후 로딩 완료
-
-    return () => clearTimeout(timer);
-  }, [store.storeId]);
-
-  // 로딩 중일 때 스켈레톤 표시
-  if (isLoading) {
-    return (
-      <CustomOverlayMap
-        position={position}
-        yAnchor={1.4}
-        xAnchor={0.5}
-        zIndex={1000}
-      >
-        <div className="relative">
-          <SimpleInfoWindowSkeleton position={position} />
-        </div>
-      </CustomOverlayMap>
-    );
-  }
+  // 섹션 확장/축소 토글 함수
+  const toggleSection = (section: keyof typeof expandedSections) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
 
   return (
     <CustomOverlayMap
       position={position}
-      yAnchor={1.4}
+      yAnchor={1.3}
       xAnchor={0.5}
       zIndex={1000}
     >
@@ -55,7 +87,7 @@ export const RecommendStoreInfoWindow: React.FC<
         </div>
 
         <div
-          className="relative z-10 bg-white rounded-[14px] shadow-lg border border-gray-200 p-4 min-w-[280px] max-w-[320px] border-b-0 animate-fadeIn"
+          className="relative z-10 bg-white rounded-[14px] shadow-lg border border-gray-200 p-4 w-[300px] min-h-[160px] border-b-0 animate-fadeIn"
           onClick={e => {
             e.stopPropagation();
           }}
@@ -88,17 +120,58 @@ export const RecommendStoreInfoWindow: React.FC<
             </div>
 
             <div className="flex-1 min-w-0">
-              <h3 className="font-bold text-black text-lg truncate">
-                {store.storeName}
-              </h3>
-              <p className="text-sm text-secondary truncate">
-                {store.addressDetail}
-              </p>
+              <div className="font-bold text-black text-lg">
+                {shouldShowExpand(
+                  store.storeName || '',
+                  TEXT_LIMITS.storeName
+                ) ? (
+                  <>
+                    {expandedSections.storeName
+                      ? store.storeName
+                      : getTruncatedText(
+                          store.storeName || '',
+                          TEXT_LIMITS.storeName
+                        )}
+                    <ExpandButton
+                      isExpanded={expandedSections.storeName}
+                      onClick={() => toggleSection('storeName')}
+                    />
+                  </>
+                ) : (
+                  store.storeName
+                )}
+              </div>
+              <div className="text-sm text-secondary mb-1">
+                {shouldShowExpand(
+                  store.addressDetail || '',
+                  TEXT_LIMITS.address
+                ) ? (
+                  <>
+                    📍{' '}
+                    {expandedSections.address
+                      ? store.addressDetail
+                      : getTruncatedText(
+                          store.addressDetail || '',
+                          TEXT_LIMITS.address
+                        )}
+                    <ExpandButton
+                      isExpanded={expandedSections.address}
+                      onClick={() => toggleSection('address')}
+                    />
+                  </>
+                ) : (
+                  `📍 ${store.addressDetail}`
+                )}
+              </div>
+              {/* 브랜드 정보 추가 */}
+              <div className="text-xs text-gray-500">
+                🏪 {store.brandName} • {store.categoryName}
+              </div>
             </div>
           </div>
 
           <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg p-3">
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex items-center gap-2 mb-2">
               <span className="text-lg">🎁</span>
               <span className="font-bold text-yellow-800 text-md">
                 U-HYU 추천
@@ -107,9 +180,24 @@ export const RecommendStoreInfoWindow: React.FC<
                 멤버십 혜택
               </span>
             </div>
-            <p className="text-yellow-900 font-semibold text-lg leading-relaxed">
-              {store.benefit}
-            </p>
+            <div className="text-yellow-900 font-semibold text-sm leading-relaxed mb-2">
+              {shouldShowExpand(store.benefit || '', TEXT_LIMITS.benefit) ? (
+                <>
+                  {expandedSections.benefit
+                    ? store.benefit
+                    : getTruncatedText(
+                        store.benefit || '',
+                        TEXT_LIMITS.benefit
+                      )}
+                  <ExpandButton
+                    isExpanded={expandedSections.benefit}
+                    onClick={() => toggleSection('benefit')}
+                  />
+                </>
+              ) : (
+                store.benefit
+              )}
+            </div>
           </div>
         </div>
       </div>

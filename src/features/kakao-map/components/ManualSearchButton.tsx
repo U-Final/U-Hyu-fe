@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { RefreshCw } from 'lucide-react';
+
+import { useMapUIContext } from '../context/MapUIContext';
 
 interface ManualSearchButtonProps {
   /** 버튼 표시 여부 */
@@ -29,6 +31,46 @@ export const ManualSearchButton: React.FC<ManualSearchButtonProps> = ({
   zoomLevel,
   radius,
 }) => {
+  const { bottomSheetRef } = useMapUIContext();
+  const [bottomSheetPosition, setBottomSheetPosition] = useState<number>(window.innerHeight);
+
+  // BottomSheet 위치를 실시간으로 추적
+  useEffect(() => {
+    if (!bottomSheetRef?.current) return;
+
+    const updatePosition = () => {
+      if (bottomSheetRef.current) {
+        const currentPos = bottomSheetRef.current.getCurrentPosition();
+        setBottomSheetPosition(currentPos);
+      }
+    };
+
+    // 초기 위치 설정
+    updatePosition();
+
+    // MutationObserver로 위치 변화 감지
+    const observer = new MutationObserver(() => {
+      setTimeout(updatePosition, 50);
+    });
+
+    // DOM 변화 관찰
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['style', 'class'],
+    });
+
+    // 리사이즈 이벤트 리스너
+    const handleResize = () => updatePosition();
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [bottomSheetRef]);
+
   if (!visible) return null;
 
   const handleClick = (e: React.MouseEvent) => {
@@ -36,14 +78,20 @@ export const ManualSearchButton: React.FC<ManualSearchButtonProps> = ({
     onClick();
   };
 
+  // BottomSheet 핸들 바로 위에 위치하도록 계산 (60px 위쪽)
+  const buttonBottom = window.innerHeight - bottomSheetPosition + 60;
+
   return (
     <div
       className={`
-        fixed top-32 left-1/2 -translate-x-1/2 z-10
+        fixed left-1/2 -translate-x-1/2 z-10
         transition-all duration-300 ease-out
         ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'}
         ${className}
       `}
+      style={{
+        bottom: `${buttonBottom}px`,
+      }}
     >
       <button
         onClick={handleClick}

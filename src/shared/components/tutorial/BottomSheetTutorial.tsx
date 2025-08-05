@@ -22,6 +22,20 @@ export const BottomSheetTutorial: React.FC<BottomSheetTutorialProps> = ({
 }) => {
   const [animationData, setAnimationData] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [middleY, setMiddleY] = useState(0);
+  // 동적 높이 계산
+  useEffect(() => {
+    const updateMiddleY = () => {
+      if (typeof window !== 'undefined') {
+        const availableHeight = window.innerHeight;
+        setMiddleY(availableHeight * 0.4);
+      }
+    };
+
+    updateMiddleY();
+    window.addEventListener('resize', updateMiddleY);
+    return () => window.removeEventListener('resize', updateMiddleY);
+  }, []);
 
   // Lottie 애니메이션 데이터 로드
   useEffect(() => {
@@ -61,7 +75,12 @@ export const BottomSheetTutorial: React.FC<BottomSheetTutorialProps> = ({
       />
 
       {/* 바텀시트 핸들러 위치에 Lottie 애니메이션 */}
-      <div className="fixed bottom-[-80px] left-1/2 transform -translate-x-1/2 z-10 pointer-events-auto">
+      <div
+        className="fixed left-1/2 transform -translate-x-1/2 z-10 pointer-events-auto"
+        style={{
+          top: middleY - 300,
+        }}
+      >
         {/* 설명 말풍선 */}
         <div className="relative mb-6">
           <div className="bg-white rounded-2xl p-6 shadow-2xl text-center min-w-[320px]">
@@ -69,7 +88,7 @@ export const BottomSheetTutorial: React.FC<BottomSheetTutorialProps> = ({
               위로 스와이프!
             </h3>
             <p className="text-gray-800 text-base leading-relaxed">
-              지금 가까운 매장과 혜택 확인 리스트를 확인해 보세요!
+              지금 가까운 매장과 혜택을 상세하게 확인해 보세요!
             </p>
           </div>
           {/* 말풍선 꼬리 - 아래쪽을 향함 */}

@@ -51,7 +51,7 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
 
     // 공유지도일 때 중간 바텀시트
     useEffect(() => {
-      if (isShared && bottomSheetRef?.current) {
+      if (bottomSheetRef?.current) {
         setTimeout(() => {
           bottomSheetRef.current?.openMiddle();
         }, 0);

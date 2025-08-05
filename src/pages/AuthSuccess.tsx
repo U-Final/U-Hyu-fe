@@ -7,11 +7,6 @@ import { BeatLoader } from 'react-spinners';
 import { userStore } from '@/shared/store/userStore';
 
 const AuthSuccess = () => {
-  useEffect(() => {
-    setTimeout(() => {
-      window.dispatchEvent(new Event('resize'));
-    }, 200);
-  }, []);
 
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(true);

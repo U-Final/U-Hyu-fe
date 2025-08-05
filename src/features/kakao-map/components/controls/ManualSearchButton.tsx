@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { RefreshCw } from 'lucide-react';
 
-import { useMapUIContext } from '../context/MapUIContext';
+import { useMapUIContext } from '../../context/MapUIContext';
 
 interface ManualSearchButtonProps {
   /** 버튼 표시 여부 */
@@ -32,7 +32,9 @@ export const ManualSearchButton: React.FC<ManualSearchButtonProps> = ({
   radius,
 }) => {
   const { bottomSheetRef } = useMapUIContext();
-  const [bottomSheetPosition, setBottomSheetPosition] = useState<number>(window.innerHeight);
+  const [bottomSheetPosition, setBottomSheetPosition] = useState<number>(
+    window.innerHeight
+  );
 
   // BottomSheet 위치를 실시간으로 추적
   useEffect(() => {

@@ -9,6 +9,8 @@ import { useMapUIContext } from '@kakao-map/context/MapUIContext';
 import useKakaoLoader from '@kakao-map/hooks/useKakaoLoader';
 
 import { useScrollPrevention } from '@/shared/hooks/useScrollPrevention';
+import { useFirstVisit } from '@/shared/hooks/useFirstVisit';
+import { BottomSheetTutorial } from '@/shared/components/tutorial/BottomSheetTutorial';
 
 /**
  * 카카오 맵과 관련된 리소스를 로드하고, 지도 및 UI 컨트롤, 위치 제어, 하단 시트가 포함된 전체 지도 페이지를 렌더링합니다.
@@ -36,6 +38,10 @@ const MapContent = () => {
   const mapCenterSetterRef = useRef<
     ((center: { lat: number; lng: number }) => void) | null
   >(null);
+
+  // 첫 방문 튜토리얼 관리
+  const { isFirstVisit, isLoading, markAsVisited } = useFirstVisit('map-page');
+  const [showTutorial, setShowTutorial] = useState(false);
 
   // 키워드 검색 결과 장소 클릭 핸들러
   const handlePlaceClick = useCallback((place: NormalizedPlace) => {
@@ -112,6 +118,24 @@ const MapContent = () => {
     }
   }, [bottomSheetRef]);
 
+  // 첫 방문시 튜토리얼 표시
+  useEffect(() => {
+    if (!isLoading && isFirstVisit) {
+      // 지도 로딩 후 약간의 지연을 두고 튜토리얼 표시
+      const timer = setTimeout(() => {
+        setShowTutorial(true);
+      }, 1500); // 1.5초 후 표시
+
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading, isFirstVisit]);
+
+  // 튜토리얼 완료 핸들러
+  const handleTutorialComplete = useCallback(() => {
+    setShowTutorial(false);
+    markAsVisited();
+  }, [markAsVisited]);
+
   // 스크롤 방지 적용 (세로 스크롤만 방지, 가로 스크롤 허용)
   useScrollPrevention({
     preventVerticalOnly: true,
@@ -155,6 +179,13 @@ const MapContent = () => {
       </div>
 
       <BottomSheetContainer ref={bottomSheetRef} />
+      
+      {/* 첫 방문시 바텀시트 사용법 튜토리얼 */}
+      <BottomSheetTutorial
+        isVisible={showTutorial}
+        onComplete={handleTutorialComplete}
+        autoCompleteDelay={4000} // 4초 후 자동 완료
+      />
     </div>
   );
 };

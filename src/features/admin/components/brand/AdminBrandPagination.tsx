@@ -20,7 +20,7 @@ export function AdminBrandPagination({ currentPage, totalPages, onPageChange }: 
   };
 
   return (
-    <div className="flex items-center justify-center gap-7">
+    <div className="flex items-center justify-center gap-7 mb-15">
       <button
         onClick={handlePrevClick}
         disabled={currentPage === 1}

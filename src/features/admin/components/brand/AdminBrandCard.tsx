@@ -67,9 +67,9 @@ export function AdminBrandCard({ brand, onEdit, onDelete, isEditing, onCancelEdi
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-4">
         {/* 기본 정보 */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4 flex-1 min-w-0">
-            <div className="w-16 h-16 flex items-center justify-center flex-shrink-0">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center flex-shrink-0">
               <img 
                 src={brand.brandImg} 
                 alt={brand.brandName}
@@ -81,22 +81,22 @@ export function AdminBrandCard({ brand, onEdit, onDelete, isEditing, onCancelEdi
               />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-5">
-                <h3 className="font-semibold text-lg text-gray-900">{brand.brandName}</h3>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-5">
+                <h3 className="font-semibold text-base sm:text-lg text-gray-900 truncate">{brand.brandName}</h3>
                 <span 
-                  className={`px-2 py-0.5 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105 ${getStoreTypeBadgeStyle(brand.storeType)}`}
+                  className={`px-2 py-0.5 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105 w-fit ${getStoreTypeBadgeStyle(brand.storeType)}`}
                 >
                   {getStoreTypeLabel(brand.storeType)}
                 </span>
               </div>
-              <p className="text-sm text-gray-600">{getCategoryName(brand.categoryId)}</p>
+              <p className="text-sm text-gray-600 mt-1">{getCategoryName(brand.categoryId)}</p>
               <div className="flex items-center gap-4 mt-1">
                 <span className="text-xs text-gray-500">사용 제한: {brand.usageLimit}</span>
               </div>
             </div>
           </div>
           
-          <div className="flex items-center gap-2 ml-8 flex-shrink-0">
+          <div className="flex items-center gap-2 sm:ml-8 flex-shrink-0 justify-end sm:justify-start">
             <Button
               variant="outline"
               size="sm"
@@ -131,10 +131,10 @@ export function AdminBrandCard({ brand, onEdit, onDelete, isEditing, onCancelEdi
         {/* 확장된 상세 정보 */}
         {isExpanded && (
           <div className="mt-4 pt-4 border-t border-gray-200">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <div>
                 <h4 className="font-medium text-gray-900 mb-2">사용 방법</h4>
-                <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
+                <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg break-words">
                   {brand.usageMethod}
                 </p>
               </div>
@@ -142,15 +142,15 @@ export function AdminBrandCard({ brand, onEdit, onDelete, isEditing, onCancelEdi
               <div>
                 <h4 className="font-medium text-gray-900 mb-2">브랜드 정보</h4>
                 <div className="space-y-2 text-sm text-gray-600">
-                  <div className="flex justify-between">
+                  <div className="flex flex-col sm:flex-row sm:justify-between">
                     <span>브랜드 ID:</span>
                     <span className="font-medium">{brand.brandId}</span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex flex-col sm:flex-row sm:justify-between">
                     <span>카테고리:</span>
                     <span className="font-medium">{getCategoryName(brand.categoryId)}</span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex flex-col sm:flex-row sm:justify-between">
                     <span>매장 타입:</span>
                     <span className="font-medium">{getStoreTypeLabel(brand.storeType)}</span>
                   </div>
@@ -164,13 +164,13 @@ export function AdminBrandCard({ brand, onEdit, onDelete, isEditing, onCancelEdi
               <div className="space-y-3">
                 {brand.data.map((benefit, index) => (
                   <div key={index} className="bg-blue-50 p-3 rounded-lg border border-blue-200">
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
                       <span className="font-medium text-blue-900">{benefit.grade}</span>
-                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full w-fit">
                         {getBenefitTypeLabel(benefit.benefitType)}
                       </span>
                     </div>
-                    <p className="text-sm text-blue-800">{benefit.description}</p>
+                    <p className="text-sm text-blue-800 break-words">{benefit.description}</p>
                   </div>
                 ))}
               </div>

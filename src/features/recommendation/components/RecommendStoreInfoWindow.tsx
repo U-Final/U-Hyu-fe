@@ -87,7 +87,7 @@ export const RecommendStoreInfoWindow: React.FC<
         </div>
 
         <div
-          className="relative z-10 bg-white rounded-[14px] shadow-lg border border-gray-200 p-4 w-[300px] min-h-[160px] border-b-0 animate-fadeIn"
+          className="relative z-10 bg-white rounded-[14px] shadow-lg border border-gray-200 p-3 sm:p-4 w-[280px] sm:w-[300px] md:w-[320px] lg:w-[340px] max-w-[90vw] min-h-[140px] sm:min-h-[160px] border-b-0 animate-fadeIn"
           onClick={e => {
             e.stopPropagation();
           }}
@@ -107,8 +107,8 @@ export const RecommendStoreInfoWindow: React.FC<
             e.stopPropagation();
           }}
         >
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 mb-3">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex-shrink-0">
               <img
                 src={store.logoImage}
                 alt={`${store.storeName} 로고`}
@@ -120,7 +120,7 @@ export const RecommendStoreInfoWindow: React.FC<
             </div>
 
             <div className="flex-1 min-w-0">
-              <div className="font-bold text-black text-lg">
+              <div className="font-bold text-black text-base sm:text-lg">
                 {shouldShowExpand(
                   store.storeName || '',
                   TEXT_LIMITS.storeName
@@ -141,7 +141,7 @@ export const RecommendStoreInfoWindow: React.FC<
                   store.storeName
                 )}
               </div>
-              <div className="text-sm text-secondary mb-1">
+              <div className="text-xs sm:text-sm text-secondary mb-1">
                 {shouldShowExpand(
                   store.addressDetail || '',
                   TEXT_LIMITS.address
@@ -171,16 +171,16 @@ export const RecommendStoreInfoWindow: React.FC<
           </div>
 
           <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg p-3">
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-1 sm:gap-2 mb-2">
               <span className="text-lg">🎁</span>
-              <span className="font-bold text-yellow-800 text-md">
+              <span className="font-bold text-yellow-800 text-sm sm:text-md">
                 U-HYU 추천
               </span>
-              <span className="font-semibold text-yellow-800 text-sm">
+              <span className="font-semibold text-yellow-800 text-xs sm:text-sm">
                 멤버십 혜택
               </span>
             </div>
-            <div className="text-yellow-900 font-semibold text-sm leading-relaxed mb-2">
+            <div className="text-yellow-900 font-semibold text-xs sm:text-sm leading-relaxed mb-2">
               {shouldShowExpand(store.benefit || '', TEXT_LIMITS.benefit) ? (
                 <>
                   {expandedSections.benefit

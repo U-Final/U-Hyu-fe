@@ -64,7 +64,7 @@ const LoggedInContent = () => {
   return (
     <div className="space-y-4">
       {/* 프로필 카드 */}
-      <div className="rounded-2xl p-4 border border-primary bg-[#f4f8ff]">
+      <div className="rounded-2xl p-4 bg-white">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white shadow-md">
             <img
@@ -76,7 +76,10 @@ const LoggedInContent = () => {
           <div className="flex-1">
             <h3 className="text-lg font-bold">{user?.userName}님</h3>
             <p className="text-sm text-black">
-              안녕하세요! 좋은 하루 보내세요 ✨
+              안녕하세요!
+            </p>
+            <p className="text-sm text-black">
+              좋은 하루 보내세요
             </p>
           </div>
         </div>
@@ -85,14 +88,14 @@ const LoggedInContent = () => {
       {/* 빠른 메뉴 */}
       <div className="space-y-4">
         <div className="space-y-2">
-          <h4 className="text-h4 font-semibold px-1">빠른 메뉴</h4>
+          <h4 className="text-h4 font-bold px-1">바로가기 메뉴</h4>
 
           {menuItems.map((item, index) => (
             <SheetClose key={index} asChild>
               <button
                 onClick={() =>
                   item.type === 'modal'
-                    ? open() // ✅ 전역으로 열기
+                    ? open()
                     : item.path && navigate(item.path)
                 }
                 className="w-full bg-white border border-light-gray rounded-xl p-3 hover:bg-gray-hover hover:shadow-sm active:scale-[0.98] transition-all duration-150"

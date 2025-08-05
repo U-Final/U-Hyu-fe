@@ -55,11 +55,11 @@ export const KakaoLoginButton = forwardRef<
     ref
   ) => {
     const baseClasses =
-      'cursor-pointer inline-flex items-center justify-center gap-3 whitespace-nowrap font-medium transition-all duration-200 ease-out disabled:pointer-events-none rounded-xl transform-gpu hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2';
+      'cursor-pointer inline-flex items-center justify-center gap-3 whitespace-nowrap font-medium transition-all duration-200 ease-out disabled:pointer-events-none rounded-xl transform-gpu hover:scale-105 active:scale-95';
 
     // 카카오 브랜드 컬러 (#FEE500)
     const kakaoStyles =
-      'bg-[#FEE500] text-black hover:bg-[#FDD835] hover:shadow-lg hover:shadow-yellow-400/20 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed disabled:hover:bg-gray-300 disabled:hover:scale-100';
+      'bg-[#FEE500] text-black hover:shadow-lg hover:shadow-yellow-400/20 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed disabled:hover:bg-gray-300 disabled:hover:scale-100';
 
     const finalClassName = twMerge(
       baseClasses,

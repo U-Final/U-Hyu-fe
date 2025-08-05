@@ -20,7 +20,7 @@ const LoggedOutContent = () => {
     {
       icon: HiGift,
       title: 'U+ 멤버십 혜택 보러가기',
-      description: '로그인 없이도 혜택 목록을 볼 수 있어요',
+      description: '제휴처 혜택 목록을 볼 수 있어요',
       path: PATH.BENEFIT,
     },
   ];
@@ -29,14 +29,11 @@ const LoggedOutContent = () => {
     <div className="w-full flex flex-col gap-4">
       {/* 로그인 안내 */}
       <div className="flex flex-col gap-2 text-center">
-        <h2 className="text-xl font-bold text-secondary">안녕하세요! 👋</h2>
-        <p className="text-secondary">U-HYU와 함께 U+ 제휴 혜택을 만나보세요</p>
-        <KakaoLoginButton className="w-full mt-2" />
-        <p className="text-sm">로그인 하고 더 많은 기능을 이용해보세요!</p>
+        <KakaoLoginButton className="w-full" />
       </div>
 
       <div className="space-y-2">
-        <h4 className="text-h4 font-semibold px-1">빠른 메뉴</h4>
+        <h4 className="text-h4 font-bold px-1">바로가기 메뉴</h4>
 
         {menuItems.map((item, index) => (
           <SheetClose key={index} asChild>
@@ -53,7 +50,9 @@ const LoggedOutContent = () => {
                     <p className="font-semibold text-black text-sm">
                       {item.title}
                     </p>
-                    <p className="text-xs">{item.description}</p>
+                    <p className="text-xs break-keep whitespace-normal">
+                      {item.description}
+                    </p>
                   </div>
                 </div>
                 <ChevronRight size={16} className="text-gray" />

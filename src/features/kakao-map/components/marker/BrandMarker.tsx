@@ -1,110 +1,9 @@
-import { type FC, useRef, useState, useEffect, Suspense } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Box, Html } from '@react-three/drei';
-import * as THREE from 'three';
+import { type FC } from 'react';
 
 import { useGA } from '@/shared/hooks/useGA';
 
 import type { Store } from '../../types/store.ts';
 import { getCategoryColorFromFilter } from '../../utils/categoryColorMapping';
-
-//3D 깃발 컴포넌트
-const Flag3D: FC<{ brandImageSrc: string }> = ({ brandImageSrc }) => {
-  const flagRef = useRef<THREE.Mesh>(null);
-  const [geometry] = useState(() => new THREE.PlaneGeometry(3, 2, 30, 20));
-  const [material] = useState(() => new THREE.MeshStandardMaterial({ 
-    color: '#FFD700',
-    metalness: 0.3,
-    roughness: 0.2,
-    transparent: true,
-    opacity: 0.9
-  }));
-
-  const ANIMATION_CONFIG = {
-    WIND_SPEED: 2,
-    WIND_AMPLITUDE: 0.08,
-    WAVE_SPEED: 3,
-    WAVE_AMPLITUDE: 0.04,
-    ROTATION_SPEED: 1.5,
-    ROTATION_AMPLITUDE: 0.4,
-    MAX_Z_OFFSET: 0.3,
-    MIN_Z_OFFSET: 0.01
-  } as const;
-
-  //브랜드 이미지 텍스처 로드
-  const [texture] = useState(() => {
-    const loader = new THREE.TextureLoader();
-    return loader.load(
-      brandImageSrc,
-      undefined,
-      undefined,
-      () => loader.load('/images/brands/default-brand-logo.png')
-    );
-  });
-
-  // Three.js 객체 정리
-  useEffect(() => {
-    return () => {
-      geometry.dispose();
-      material.dispose();
-      texture?.dispose();
-    };
-  }, [geometry, material, texture]);
-
-  useFrame((state) => {
-    if (!flagRef.current || !geometry.attributes.position) return;
-    
-    try {
-      const time = state.clock.elapsedTime;
-      const positions = geometry.attributes.position;
-      
-      for (let i = 0; i < positions.count; i++) {
-        const x = positions.getX(i);
-        const y = positions.getY(i);
-        
-        const distanceFromPole = (x + 1.5) / 3;
-        const windStrength = Math.sin(time * ANIMATION_CONFIG.WIND_SPEED + x * 3) * ANIMATION_CONFIG.WIND_AMPLITUDE * distanceFromPole;
-        const waveEffect = Math.sin(time * ANIMATION_CONFIG.WAVE_SPEED + y * 4) * ANIMATION_CONFIG.WAVE_AMPLITUDE * distanceFromPole;
-       
-        const zOffset = Math.max(ANIMATION_CONFIG.MIN_Z_OFFSET, Math.min(ANIMATION_CONFIG.MAX_Z_OFFSET, windStrength + waveEffect + 0.1));
-        positions.setZ(i, zOffset);
-      }
-      positions.needsUpdate = true;
-      
-      flagRef.current.rotation.y = Math.sin(time * ANIMATION_CONFIG.ROTATION_SPEED) * ANIMATION_CONFIG.ROTATION_AMPLITUDE;
-      flagRef.current.rotation.z = Math.sin(time * 2) * 0.15;
-      flagRef.current.rotation.x = Math.sin(time * 1.8) * 0.1;
-    } catch (error) {
-      console.warn('Flag animation error:', error);
-      if (flagRef.current) {
-        flagRef.current.rotation.set(0, 0, 0);
-      }
-    }
-  });
-
-  return (
-    <group position={[0, 0, 0]}>
-      <Box args={[0.15, 4, 0.15]} position={[-1.8, -1, -0.5]}>
-        <meshStandardMaterial color="#FFD700" metalness={0.5} roughness={0.3} />
-      </Box>
-      <mesh ref={flagRef} geometry={geometry} position={[-0.5, 1, 0.1]}>
-        <meshStandardMaterial 
-          color="#FFD700"
-          metalness={0.3}
-          roughness={0.2}
-          transparent={true}
-          opacity={0.95}
-          map={texture}
-          emissive="#FFA500"
-          emissiveIntensity={0.2}
-        />
-      </mesh>
-      <pointLight position={[1, 1, 3]} intensity={1.2} color="#FFD700" />
-      <pointLight position={[1, 1, -3]} intensity={0.8} color="#FFA500" />
-      <pointLight position={[0, 1, 2]} intensity={0.6} color="#FFFFFF" />
-    </group>
-  );
-};
 
 interface BrandMarkerProps {
   store: Store;
@@ -122,11 +21,8 @@ const BrandMarker: FC<BrandMarkerProps> = ({
   const { trackMapInteraction } = useGA();
   const brandImageSrc = store.logoImage;
 
+  // 항상 매장의 실제 카테고리 색상 사용
   const categoryColor = getCategoryColorFromFilter(store.categoryName);
-
-
-
-
 
   const handleMarkerClick = () => {
     // GA 추적: 마커 클릭
@@ -139,51 +35,50 @@ const BrandMarker: FC<BrandMarkerProps> = ({
   };
 
   return (
-    <div className="relative" onClick={handleMarkerClick}>
-      {isRecommended ? (
-        <div className="relative w-24 h-24">
-          <div className="absolute inset-0" style={{ pointerEvents: 'none' }}>
-            <Canvas
-              camera={{ position: [0, 0, 5], fov: 50 }}
-              style={{ width: '100%', height: '100%' }}
-              onError={(error) => {
-                console.warn('3D Flag Canvas Error:', error);
-              }}
-            >
-              <ambientLight intensity={0.6} />
-              <directionalLight position={[10, 10, 5]} intensity={1} />
-              <Suspense fallback={
-                <Html center>
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-400" />
-                </Html>
-              }>
-                <Flag3D brandImageSrc={brandImageSrc} />
-              </Suspense>
-            </Canvas>
-          </div>
-        </div>
-      ) : (
-        // 기본 마커
+    <div
+      className="relative select-none"
+      onClick={handleMarkerClick}
+      style={{ userSelect: 'none', WebkitUserSelect: 'none' }}
+    >
+      {/* 추천 매장 글로우 효과 */}
+      {isRecommended && (
+        <div
+          className="absolute inset-0 w-16 h-16 -translate-x-2 -translate-y-1 rounded-full opacity-30 animate-pulse"
+          style={{
+            background: `radial-gradient(circle, #fbbf24 0%, transparent 70%)`,
+            filter: 'blur(8px)',
+          }}
+        />
+      )}
+
+      {/* 마커 전체 컨테이너 */}
+      <div className="relative">
+        {/* 메인 마커 몸체 - 원형 */}
         <div
           className={`
             relative 
-            w-12 h-12
-            rounded-full 
-            shadow-md 
+            w-14 h-14
+            rounded-full
+            border-1
+            border-white
             cursor-pointer
             transition-all 
-            duration-200
+            duration-300
+            ease-out
             hover:scale-110
-            hover:shadow-2xl
-            ${isSelected ? 'ring-2 ring-blue-400 ring-offset-2' : ''}
+            hover:shadow-xl
+            transform-gpu
+            ${isSelected ? 'scale-100 shadow-xl' : 'shadow-lg'}
           `}
           style={{
-            backgroundColor: categoryColor,
-            boxShadow: `0 4px 16px -2px ${categoryColor}40, 0 6px 12px -4px rgba(0,0,0,0.1)`,
+            backgroundColor: isRecommended ? '#fbbf24' : categoryColor,
+            boxShadow: isRecommended
+              ? `0 8px 25px -8px ${categoryColor}60, 0 4px 12px -4px rgba(251, 191, 36, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)`
+              : `0 6px 20px -6px ${categoryColor}50, 0 4px 8px -2px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.15)`,
           }}
         >
           {/* 브랜드 로고 */}
-          <div className="absolute inset-1 bg-white rounded-full overflow-hidden">
+          <div className="absolute inset-1 bg-white rounded-full overflow-hidden shadow-inner">
             <img
               src={brandImageSrc}
               alt={`${store.storeName} 마커`}
@@ -194,20 +89,64 @@ const BrandMarker: FC<BrandMarkerProps> = ({
             />
           </div>
 
-          {/* 마커 포인터 */}
+          {/* 추천 매장 미니멀 뱃지 */}
+          {isRecommended && (
+            <div
+              className="absolute -top-1 -right-1 w-5 h-5 rounded-full border-1 border-white shadow-lg flex items-center justify-center"
+              style={{
+                background: 'linear-gradient(135deg, #fde047 0%, #facc15 100%)',
+              }}
+            >
+              <div className="w-1.5 h-1.5 bg-white rounded-full opacity-90"></div>
+            </div>
+          )}
+        </div>
+
+        {/* 마커 꼬리 - 자연스러운 삼각형 */}
+        <div
+          className="absolute top-full left-1/2 transform -translate-x-1/2 -translate-y-1"
+          style={{
+            width: 0,
+            height: 0,
+            borderLeft: '7px solid transparent',
+            borderRight: '7px solid transparent',
+            borderTop: `12px solid ${isRecommended ? '#fbbf24' : categoryColor}`,
+            filter: 'drop-shadow(0 3px 6px rgba(0, 0, 0, 0.15))',
+          }}
+        />
+
+        {/* 꼬리 테두리 효과 */}
+        <div
+          className="absolute top-full left-1/2 transform -translate-x-1/2 -translate-y-1"
+          style={{
+            width: 0,
+            height: 0,
+            borderLeft: '8px solid transparent',
+            borderRight: '8px solid transparent',
+            borderTop: '13px solid white',
+            zIndex: -1,
+          }}
+        />
+      </div>
+
+      {/* 선택 상태 링 효과 */}
+      {isSelected && (
+        <>
           <div
-            className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[6px] border-r-[6px] border-t-[14px] border-transparent border-t-current drop-shadow-md"
+            className="absolute inset-0 w-14 h-14 rounded-full animate-ping"
             style={{
-              borderTopColor: categoryColor,
-              filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))',
+              border: `2px solid ${isRecommended ? '#fbbf24' : '#3b82f6'}`,
+              opacity: 0.6,
             }}
           />
-        </div>
-      )}
-
-      {/* 선택 상태 효과 */}
-      {isSelected && (
-        <div className="absolute inset-0 rounded-full bg-blue-400 opacity-20 animate-ping" />
+          <div
+            className="absolute inset-0 w-14 h-14 rounded-full"
+            style={{
+              border: `3px solid ${isRecommended ? '#fbbf24' : '#3b82f6'}`,
+              opacity: 0.8,
+            }}
+          />
+        </>
       )}
     </div>
   );

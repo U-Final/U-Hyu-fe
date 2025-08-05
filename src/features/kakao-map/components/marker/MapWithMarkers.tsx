@@ -30,6 +30,7 @@ import type { NormalizedPlace } from '../../api/types';
 import { useDistanceBasedSearch } from '../../hooks/useManualSearch';
 import { useToggleFavoriteMutation } from '../../hooks/useMapQueries';
 import type { Store } from '../../types/store';
+import { clusterStyles } from '../../utils/clusterStyles';
 import ManualSearchButton from '../ManualSearchButton';
 import CurrentLocationMarker from '../location/CurrentLocationMarker';
 import BrandMarker from './BrandMarker';
@@ -418,9 +419,11 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         }}
       >
         <MarkerClusterer
-          averageCenter={true} // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
-          minLevel={CLUSTER_MIN_LEVEL} // 클러스터 할 최소 지도 레벨
+          averageCenter
           gridSize={80}
+          minLevel={CLUSTER_MIN_LEVEL} // 예: 6
+          styles={clusterStyles} // ← 방금 만든 배열
+          calculator={[10, 30]} // 0~9 / 10~29 / 30+
         >
           {/* 매장 마커들 */}
           {filteredStoresToRender.map(store => (

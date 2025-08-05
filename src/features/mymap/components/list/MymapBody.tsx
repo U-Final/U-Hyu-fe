@@ -80,7 +80,7 @@ const MyMapBody: FC = () => {
 
       {/* map 리스트 */}
       {isPending ? (
-        <div className="flex flex-col gap-2 mt-4">
+        <div className="flex flex-col gap-2 mt-4 mb-7">
           {[...Array(10)].map((_, i) => (
             <SkeletonMyMapItem key={i} />
           ))}

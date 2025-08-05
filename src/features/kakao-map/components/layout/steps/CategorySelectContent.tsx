@@ -32,7 +32,7 @@ const CategorySelectContent: FC<CategorySelectContentProps> = ({
     <div className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto">
         <div className="p-4">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3 mb-7">
             {categories.map((category: CategoryType) => {
               const isSelected = selectedCategory === category.key;
 

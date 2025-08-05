@@ -1,8 +1,10 @@
 import { useMapUIContext } from '@kakao-map/context/MapUIContext';
 import { useMapStore } from '@kakao-map/store/MapStore';
 import type { Store } from '@kakao-map/types/store';
+import { PATH } from '@paths';
 import ConfirmExcludeModalContent from '@recommendation/components/ConfirmExcludeModalContent';
 import { ThumbsDown } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { BrandCard } from '@/shared/components';
@@ -21,9 +23,16 @@ const RecommendedStoreCard = ({
   const setMapCenter = useMapStore(state => state.setMapCenter);
   const { bottomSheetRef } = useMapUIContext();
   const { openModal } = useModalStore();
+  const navigate = useNavigate();
 
   const handleCardClick = () => {
-    if (!store.addressDetail) return; // 온라인 매장은 클릭 무시
+    if (!store.addressDetail) {
+      if (store.brandName) {
+        const query = encodeURIComponent(store.brandName);
+        navigate(`${PATH.BENEFIT}?brand_name=${query}`);
+      }
+      return;
+    }
 
     // 전역 상태에 선택된 매장 설정 (지도 포커스용)
     selectStore(store);

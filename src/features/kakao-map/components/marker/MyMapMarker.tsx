@@ -17,7 +17,7 @@ const MyMapMarker: FC<MyMapMarkerProps> = ({ isSelected = false, onClick }) => {
   // console.log(`즐겨찾기색: ${markerColorClass}`);
 
   return (
-    <div className="relative" onClick={onClick}>
+    <div className="relative select-none" onClick={onClick} style={{ userSelect: 'none', WebkitUserSelect: 'none' }}>
       <div
         className={`
           text-3xl

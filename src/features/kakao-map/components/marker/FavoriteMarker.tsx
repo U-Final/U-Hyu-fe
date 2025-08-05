@@ -12,7 +12,7 @@ const FavoriteMarker: FC<FavoriteMarkerProps> = ({
   onClick,
 }) => {
   return (
-    <div className="relative" onClick={onClick}>
+    <div className="relative select-none" onClick={onClick} style={{ userSelect: 'none', WebkitUserSelect: 'none' }}>
       <div
         className={`
           text-3xl

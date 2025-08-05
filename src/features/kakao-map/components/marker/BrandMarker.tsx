@@ -35,7 +35,7 @@ const BrandMarker: FC<BrandMarkerProps> = ({
   };
 
   return (
-    <div className="relative" onClick={handleMarkerClick}>
+    <div className="relative select-none" onClick={handleMarkerClick} style={{ userSelect: 'none', WebkitUserSelect: 'none' }}>
       {/* 추천 매장 심플한 효과 */}
       {isRecommended && (
         <>

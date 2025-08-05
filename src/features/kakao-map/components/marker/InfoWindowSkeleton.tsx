@@ -95,23 +95,24 @@ export const SimpleInfoWindowSkeleton: FC<
         </svg>
       </div>
 
-      <div className="relative z-10 bg-white rounded-[14px] shadow-lg border border-gray-200 p-4 w-[280px] h-[140px] border-b-0 animate-pulse">
+      <div className="relative z-10 bg-white rounded-[14px] shadow-lg border border-gray-200 p-4 w-[300px] min-h-[160px] border-b-0 animate-pulse">
         {/* 로고 + 매장 정보 스켈레톤 */}
         <div className="flex items-center gap-3 mb-3">
           {/* 로고 스켈레톤 */}
           <div className="w-12 h-12 bg-gray-300 rounded-full flex-shrink-0"></div>
 
-          {/* 매장명 + 주소 스켈레톤 */}
+          {/* 매장명 + 주소 + 브랜드 정보 스켈레톤 */}
           <div className="flex-1 min-w-0">
             <div className="h-5 bg-gray-300 rounded-md w-3/4 mb-1"></div>
-            <div className="h-3 bg-gray-200 rounded-md w-full"></div>
+            <div className="h-3 bg-gray-200 rounded-md w-full mb-1"></div>
+            <div className="h-3 bg-gray-200 rounded-md w-2/3"></div>
           </div>
         </div>
 
         {/* 추천 혜택 배지 스켈레톤 */}
         <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg p-3">
           {/* 헤더 아이콘 + 텍스트 스켈레톤 */}
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex items-center gap-2 mb-2">
             <div className="w-5 h-5 bg-yellow-200 rounded"></div>
             <div className="h-4 bg-yellow-200 rounded w-20"></div>
             <div className="h-3 bg-yellow-200 rounded w-16"></div>

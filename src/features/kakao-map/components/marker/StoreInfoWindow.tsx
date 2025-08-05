@@ -214,7 +214,7 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
         xAnchor={0.5}
         zIndex={1000}
       >
-        <div className="relative perspective-1000" style={{ padding: '20px' }}>
+        <div className="relative perspective-1000">
           {/* 베이스 그림자 (가장 넓고 흐린 그림자) */}
           <motion.div
             className="absolute inset-0 rounded-2xl"
@@ -305,10 +305,7 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
       xAnchor={0.5}
       zIndex={1000}
     >
-      <div
-        className="relative perspective-1000"
-        style={{ padding: '20px' }}
-      >
+      <div className="relative perspective-1000">
         {/* 베이스 그림자 (가장 넓고 흐린 그림자) */}
         <motion.div
           className="absolute inset-0 rounded-2xl"

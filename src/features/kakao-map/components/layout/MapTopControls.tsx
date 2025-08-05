@@ -1,6 +1,7 @@
 import { type FC, useEffect, useRef } from 'react';
 
 import RegionFilterDropdown from '@kakao-map/components/layout/RegionFilterDropdown';
+import { createPortal } from 'react-dom';
 
 import { FilterTabs } from '@/shared/components';
 
@@ -174,23 +175,25 @@ const MapTopControls: FC<MapTopControlsProps> = ({
       </div>
 
       {/* 검색 결과 리스트 */}
-      {isSearchResultsVisible && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 max-h-80 z-30 backdrop-blur-sm overflow-hidden pointer-events-auto">
-          <SearchResultList
-            results={keywordResults}
-            loading={isSearching}
-            onItemClick={onSearchResultClick || (() => {})}
-            selectedPlaceId={selectedPlace?.id}
-            hasSearched={hasSearched}
-            emptyMessage="검색 결과가 없습니다."
-            className="max-h-80"
-            keyword={searchValue}
-            totalCount={searchMeta?.total_count || keywordResults.length}
-            category={activeCategoryFilter}
-            showSummary={true}
-          />
-        </div>
-      )}
+      {isSearchResultsVisible &&
+        createPortal(
+          <div className="fixed top-[60px] left-2 right-2 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 max-h-80 z-99999 backdrop-blur-sm overflow-hidden pointer-events-auto">
+            <SearchResultList
+              results={keywordResults}
+              loading={isSearching}
+              onItemClick={onSearchResultClick || (() => {})}
+              selectedPlaceId={selectedPlace?.id}
+              hasSearched={hasSearched}
+              emptyMessage="검색 결과가 없습니다."
+              className="max-h-80"
+              keyword={searchValue}
+              totalCount={searchMeta?.total_count || keywordResults.length}
+              category={activeCategoryFilter}
+              showSummary={true}
+            />
+          </div>,
+          document.body
+        )}
     </div>
   );
 };

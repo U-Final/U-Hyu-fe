@@ -269,7 +269,7 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
   }, [selectPlace, selectMarker]);
 
   return (
-    <div className={`relative w-full h-full ${className}`}>
+    <div className={`w-full h-full ${className}`}>
       {/* 검색 입력 */}
       {(displayMode === 'list' || displayMode === 'both') && (
         <div className="absolute top-4 left-4 right-4 z-10">

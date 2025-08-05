@@ -192,11 +192,9 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
 
   // center prop 동기화 및 검색 기준 위치 설정 (인포윈도우 상태 변경 시 의존성 제외)
   useEffect(() => {
-    if (!infoWindowStore && !recommendedInfoWindowStore) {
-      setMapCenter(center);
-      updateSearchPosition(center);
-    }
-  }, [center, updateSearchPosition, recommendedInfoWindowStore]);
+    updateSearchPosition(center);
+    setMapCenter(center);
+  }, [center, updateSearchPosition]);
 
   // 전역 selectedStore 변경 시 해당 매장으로 포커스 (카드 클릭 시)
   useEffect(() => {

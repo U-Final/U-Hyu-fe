@@ -1,3 +1,5 @@
+import { createPortal } from 'react-dom';
+
 import {
   Select,
   SelectContent,
@@ -52,21 +54,24 @@ export default function RegionFilterDropdown({
           />
         </div>
       </SelectTrigger>
-      <SelectContent
-        position="popper"
-        side="bottom"
-        sideOffset={4}
-        className="bg-white border border-gray-200 shadow-2xl rounded-md z-[1000]"
-      >
-        <SelectGroup>
-          <SelectLabel>지역 선택</SelectLabel>
-          {REGIONS.map(region => (
-            <SelectItem key={region.key} value={region.key}>
-              {region.label}
-            </SelectItem>
-          ))}
-        </SelectGroup>
-      </SelectContent>
+      {createPortal(
+        <SelectContent
+          position="popper"
+          side="bottom"
+          sideOffset={4}
+          className="bg-white border border-gray-200 shadow-2xl rounded-md z-[1000]"
+        >
+          <SelectGroup>
+            <SelectLabel>지역 선택</SelectLabel>
+            {REGIONS.map(region => (
+              <SelectItem key={region.key} value={region.key}>
+                {region.label}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>,
+        document.body
+      )}
     </Select>
   );
 }

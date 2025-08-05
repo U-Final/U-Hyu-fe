@@ -39,7 +39,7 @@ export const ManualSearchButton: React.FC<ManualSearchButtonProps> = ({
   return (
     <div
       className={`
-        fixed top-32 left-1/2 -translate-x-1/2 z-20
+        fixed top-32 left-1/2 -translate-x-1/2 z-10
         transition-all duration-300 ease-out
         ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'}
         ${className}

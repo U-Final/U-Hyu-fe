@@ -1,6 +1,6 @@
-import { type FC, useRef, useState } from 'react';
+import { type FC, useRef, useState, useEffect, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Box } from '@react-three/drei';
+import { Box, Html } from '@react-three/drei';
 import * as THREE from 'three';
 
 import { useGA } from '@/shared/hooks/useGA';
@@ -11,8 +11,8 @@ import { getCategoryColorFromFilter } from '../../utils/categoryColorMapping';
 //3D 깃발 컴포넌트
 const Flag3D: FC<{ brandImageSrc: string }> = ({ brandImageSrc }) => {
   const flagRef = useRef<THREE.Mesh>(null);
-  const [flagGeometry] = useState(() => new THREE.PlaneGeometry(3, 2, 30, 20));
-  const [flagMaterial] = useState(() => new THREE.MeshStandardMaterial({ 
+  const [geometry] = useState(() => new THREE.PlaneGeometry(3, 2, 30, 20));
+  const [material] = useState(() => new THREE.MeshStandardMaterial({ 
     color: '#FFD700',
     metalness: 0.3,
     roughness: 0.2,
@@ -20,47 +20,72 @@ const Flag3D: FC<{ brandImageSrc: string }> = ({ brandImageSrc }) => {
     opacity: 0.9
   }));
 
+  const WAVE_CONFIG = {
+    WIND_FREQUENCY: 2,
+    WIND_AMPLITUDE: 0.08,
+    WAVE_FREQUENCY: 3, 
+    WAVE_AMPLITUDE: 0.04,
+    MAX_Z_OFFSET: 0.3,
+    MIN_Z_OFFSET: 0.01
+  } as const;
+
+  // 애니메이션 상수
+  const ANIMATION_CONFIG = {
+    WIND_SPEED: 2,
+    WIND_AMPLITUDE: 0.08,
+    WAVE_SPEED: 3,
+    WAVE_AMPLITUDE: 0.04,
+    ROTATION_SPEED: 1.5,
+    ROTATION_AMPLITUDE: 0.4,
+  } as const;
+
   //브랜드 이미지 텍스처 로드
-  const [brandTexture] = useState(() => {
-    const textureLoader = new THREE.TextureLoader();
-    try {
-      return textureLoader.load(brandImageSrc, undefined, undefined, () => {
-        //로드 실패시 기본 이미지 사용
-        return textureLoader.load('/images/brands/default-brand-logo.png');
-      });
-    } catch {
-      //에러 발생시 기본 이미지 사용
-      return textureLoader.load('/images/brands/default-brand-logo.png');
-    }
+  const [texture] = useState(() => {
+    const loader = new THREE.TextureLoader();
+    return loader.load(
+      brandImageSrc,
+      undefined,
+      undefined,
+      () => loader.load('/images/brands/default-brand-logo.png')
+    );
   });
 
+  // Three.js 객체 정리
+  useEffect(() => {
+    return () => {
+      geometry.dispose();
+      material.dispose();
+      texture.dispose();
+    };
+  }, [geometry, material, texture]);
+
   useFrame((state) => {
-    if (flagRef.current && flagGeometry.attributes.position) {
-      try {
-        const time = state.clock.elapsedTime;
+    if (!flagRef.current || !geometry.attributes.position) return;
+    
+    try {
+      const time = state.clock.elapsedTime;
+      const positions = geometry.attributes.position;
+      
+      for (let i = 0; i < positions.count; i++) {
+        const x = positions.getX(i);
+        const y = positions.getY(i);
         
-        //버텍스 변형
-        const positions = flagGeometry.attributes.position;
-        for (let i = 0; i < positions.count; i++) {
-          const x = positions.getX(i);
-          const y = positions.getY(i);
-          
-          const distanceFromPole = (x + 1.5) / 3;
-          const windStrength = Math.sin(time * 2 + x * 3) * 0.08 * distanceFromPole;
-          const waveEffect = Math.sin(time * 3 + y * 4) * 0.04 * distanceFromPole;
-         
-          const zOffset = Math.max(0.01, Math.min(0.3, windStrength + waveEffect + 0.1));
-          positions.setZ(i, zOffset);
-        }
-        positions.needsUpdate = true;
-        
-        flagRef.current.rotation.y = Math.sin(time * 1.5) * 0.4;
-        flagRef.current.rotation.z = Math.sin(time * 2) * 0.15;
-        flagRef.current.rotation.x = Math.sin(time * 1.8) * 0.1;
-      } catch {
-        if (flagRef.current) {
-          flagRef.current.rotation.set(0, 0, 0);
-        }
+        const distanceFromPole = (x + 1.5) / 3;
+        const windStrength = Math.sin(time * ANIMATION_CONFIG.WIND_SPEED + x * 3) * ANIMATION_CONFIG.WIND_AMPLITUDE * distanceFromPole;
+        const waveEffect = Math.sin(time * ANIMATION_CONFIG.WAVE_SPEED + y * 4) * ANIMATION_CONFIG.WAVE_AMPLITUDE * distanceFromPole;
+       
+        const zOffset = Math.max(WAVE_CONFIG.MIN_Z_OFFSET, Math.min(WAVE_CONFIG.MAX_Z_OFFSET, windStrength + waveEffect + 0.1));
+        positions.setZ(i, zOffset);
+      }
+      positions.needsUpdate = true;
+      
+      flagRef.current.rotation.y = Math.sin(time * ANIMATION_CONFIG.ROTATION_SPEED) * ANIMATION_CONFIG.ROTATION_AMPLITUDE;
+      flagRef.current.rotation.z = Math.sin(time * 2) * 0.15;
+      flagRef.current.rotation.x = Math.sin(time * 1.8) * 0.1;
+    } catch (error) {
+      console.warn('Flag animation error:', error);
+      if (flagRef.current) {
+        flagRef.current.rotation.set(0, 0, 0);
       }
     }
   });
@@ -70,14 +95,14 @@ const Flag3D: FC<{ brandImageSrc: string }> = ({ brandImageSrc }) => {
       <Box args={[0.15, 4, 0.15]} position={[-1.8, -1, -0.5]}>
         <meshStandardMaterial color="#FFD700" metalness={0.5} roughness={0.3} />
       </Box>
-      <mesh ref={flagRef} geometry={flagGeometry} material={flagMaterial} position={[-0.5, 1, 0.1]}>
+      <mesh ref={flagRef} geometry={geometry} material={material} position={[-0.5, 1, 0.1]}>
         <meshStandardMaterial 
           color="#FFD700"
           metalness={0.3}
           roughness={0.2}
           transparent={true}
           opacity={0.95}
-          map={brandTexture}
+          map={texture}
           emissive="#FFA500"
           emissiveIntensity={0.2}
         />
@@ -124,8 +149,8 @@ const BrandMarker: FC<BrandMarkerProps> = ({
   return (
     <div className="relative" onClick={handleMarkerClick}>
       {isRecommended ? (
-        <div className="relative w-25 h-25">
-          <div className="absolute inset-0">
+        <div className="relative w-24 h-24">
+          <div className="absolute inset-0" style={{ pointerEvents: 'none' }}>
             <Canvas
               camera={{ position: [0, 0, 5], fov: 50 }}
               style={{ width: '100%', height: '100%' }}
@@ -135,7 +160,13 @@ const BrandMarker: FC<BrandMarkerProps> = ({
             >
               <ambientLight intensity={0.6} />
               <directionalLight position={[10, 10, 5]} intensity={1} />
-              <Flag3D brandImageSrc={brandImageSrc} />
+              <Suspense fallback={
+                <Html center>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-400" />
+                </Html>
+              }>
+                <Flag3D brandImageSrc={brandImageSrc} />
+              </Suspense>
             </Canvas>
           </div>
         </div>

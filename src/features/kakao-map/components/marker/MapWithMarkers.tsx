@@ -196,12 +196,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
       setMapCenter(center);
       updateSearchPosition(center);
     }
-  }, [
-    center,
-    updateSearchPosition,
-    infoWindowStore,
-    recommendedInfoWindowStore,
-  ]);
+  }, [center, updateSearchPosition, recommendedInfoWindowStore]);
 
   // 전역 selectedStore 변경 시 해당 매장으로 포커스 (카드 클릭 시)
   useEffect(() => {

@@ -370,7 +370,7 @@ export const MapDragBottomSheet = forwardRef<
         {/* 🧾 실제 콘텐츠 스크롤 영역 */}
         <div
           data-scrollable
-          className="flex-1 overflow-y-auto scrollbar-hidden pb-safe"
+          className="flex-1 overflow-y-auto scrollbar-hidden pb-safe pb-8"
           style={{
             overscrollBehavior: 'contain',
             // 거의 닫힌 상태에서 콘텐츠 숨기기

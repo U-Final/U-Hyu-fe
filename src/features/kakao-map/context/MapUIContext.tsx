@@ -6,7 +6,7 @@ import React, {
   useRef,
 } from 'react';
 
-import type { MapDragBottomSheetRef } from '../components/MapDragBottomSheet';
+import type { MapDragBottomSheetRef } from '../components/controls/MapDragBottomSheet';
 
 /**
  * 지도 관련 순수 UI 상태 인터페이스

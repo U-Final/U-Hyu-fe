@@ -20,7 +20,7 @@ import type { Store } from '../types/store';
 import {
   MapDragBottomSheet,
   type MapDragBottomSheetRef,
-} from './MapDragBottomSheet';
+} from './controls/MapDragBottomSheet';
 import StoreListContent from './layout/StoreListContent';
 import BrandSelectContent from './layout/steps/BrandSelectContent';
 import CategorySelectContent from './layout/steps/CategorySelectContent';

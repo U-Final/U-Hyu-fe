@@ -5,7 +5,7 @@ import { CustomOverlayMap } from 'react-kakao-maps-sdk';
 import type { NormalizedPlace } from '../../api/types';
 import { useKeywordSearch } from '../../hooks/useKeywordSearch';
 import { useMapBounds, useSearchMarkers } from '../../hooks/useSearchMarkers';
-import ManualSearchButton from '../ManualSearchButton';
+import ManualSearchButton from '../controls/ManualSearchButton';
 import { KeywordInfoWindow } from '../marker/KeywordInfoWindow';
 import { KeywordMarker } from '../marker/KeywordMarker';
 import { MapSearchInput } from './MapSearchInput';

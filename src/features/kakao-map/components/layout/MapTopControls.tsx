@@ -169,7 +169,7 @@ const MapTopControls: FC<MapTopControlsProps> = ({
     left-0 right-0
     -ml-[48px] -mr-[48px]
     bg-white rounded-xl shadow-2xl border border-gray-100
-    z-50"
+    z-[9999]"
           >
             <SearchResultList
               results={keywordResults}

@@ -31,7 +31,7 @@ import { useDistanceBasedSearch } from '../../hooks/useManualSearch';
 import { useToggleFavoriteMutation } from '../../hooks/useMapQueries';
 import type { Store } from '../../types/store';
 import { clusterStyles } from '../../utils/clusterStyles';
-import ManualSearchButton from '../ManualSearchButton';
+import ManualSearchButton from '../controls/ManualSearchButton';
 import CurrentLocationMarker from '../location/CurrentLocationMarker';
 import BrandMarker from './BrandMarker';
 import FavoriteMarker from './FavoriteMarker';

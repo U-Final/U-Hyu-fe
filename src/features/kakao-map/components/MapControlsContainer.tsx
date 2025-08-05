@@ -263,7 +263,7 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
         hasSearched={hasSearched}
         map={map}
       />
-      <MapButtonsContainer />
+      <MapButtonsContainer hideWhenSearching={keywordResults.length > 0} />
     </div>
   );
 };

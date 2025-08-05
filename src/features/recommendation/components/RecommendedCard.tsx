@@ -65,7 +65,7 @@ const RecommendedStoreCard = ({
         <div className="flex items-center w-full relative">
           <div className="flex-1 flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <h3 className="text-black text-lg font-bold hover:text-blue-600 transition-colors">
+              <h3 className="text-black text-lg font-bold hover:text-primary transition-colors">
                 {store.storeName}
               </h3>
             </div>

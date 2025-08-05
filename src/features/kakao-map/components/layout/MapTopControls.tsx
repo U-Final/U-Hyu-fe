@@ -130,7 +130,7 @@ const MapTopControls: FC<MapTopControlsProps> = ({
   return (
     <div
       ref={containerRef}
-      className="absolute top-4 left-4 right-4 z-10 space-y-2.5"
+      className="absolute top-4 left-4 right-4 z-10 space-y-0.5"
     >
       {/* 바텀시트 토글 버튼 - 오른쪽 고정 위치 */}
       <div className="absolute top-0 right-0 z-20">
@@ -141,7 +141,7 @@ const MapTopControls: FC<MapTopControlsProps> = ({
       </div>
 
       {/* 상단 라인: 검색바 + 지역 필터 */}
-      <div className="flex items-stretch gap-2.5 ml-[52px] mr-[52px]">
+      <div className="flex items-stretch gap-2.5 ml-[48px] mr-[48px]">
         {/* 검색바 - 대부분 공간 사용 */}
         <div className="flex-1 h-[44px]">
           <MapSearchInput

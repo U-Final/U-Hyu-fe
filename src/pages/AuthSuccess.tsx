@@ -8,7 +8,9 @@ import { userStore } from '@/shared/store/userStore';
 
 const AuthSuccess = () => {
   useEffect(() => {
-    // console.log('AuthSuccess mounted', window.location.pathname);
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 200);
   }, []);
 
   const navigate = useNavigate();

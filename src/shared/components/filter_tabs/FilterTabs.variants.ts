@@ -1,24 +1,15 @@
 // CategoryIcon에서 사용하는 아이콘들로 교체
-import {
-  Activity,
-  Coffee,
-  FerrisWheel,
-  Film,
-  GraduationCap,
-  Heart,
-  MapPin,
-  Palette,
-  ShoppingCart,
-  Smartphone,
-  Theater,
-  Train,
-  UtensilsCrossed,
-  Waves,
-} from 'lucide-react';
+import { Activity, Coffee, FerrisWheel, Film, GraduationCap, Heart, MapPin, Palette, ShoppingCart, Smartphone, Theater, Train, UtensilsCrossed, Waves } from 'lucide-react';
 // React Icons (특정 카테고리용 추가 아이콘)
 import { MdLocalConvenienceStore } from 'react-icons/md';
 
+
+
 import type { FilterTabItem } from './FilterTabs.types';
+
+
+
+
 
 /**
  * 기본 필터 탭 목록
@@ -94,13 +85,13 @@ export const BENEFIT_FILTER_TABS: FilterTabItem[] = [
 
 export const filterTabVariants = {
   gray: {
-    base: 'px-3 h-9 flex items-center rounded-xl text-sm font-medium transition-all duration-200 min-w-fit backdrop-blur-sm shadow-sm',
-    active: 'bg-light-gray font-semibold shadow-md border-white/40 scale-110',
-    inactive: 'hover:bg-white/30 shadow-xs',
+    base: 'px-3 h-9 flex items-center rounded-xl text-sm font-medium transition-all duration-200 min-w-fit backdrop-blur-sm',
+    active: 'font-bold border border-white',
+    inactive: 'border border-light-gray hover:bg-white/30',
   },
   white: {
-    base: 'px-3 h-9 flex items-center bg-white/90 rounded-xl text-sm font-medium transition-all duration-200 min-w-fit backdrop-blur-sm shadow-md',
-    active: 'font-semibold shadow-lg bg-white border-gray-300 scale-110',
-    inactive: 'hover:bg-white hover:border-gray-300/70 shadow-sm',
+    base: 'px-3 h-9 flex items-center rounded-xl text-sm font-medium transition-all duration-200 min-w-fit backdrop-blur-sm shadow-md',
+    active: 'font-bold border border-white',
+    inactive: 'bg-white border border-gray-200/50',
   },
 } as const;

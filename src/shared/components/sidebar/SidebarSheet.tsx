@@ -30,13 +30,13 @@ const SidebarSheet = () => {
         containerId="main-content"
       >
         <SheetHeader>
-          <div className="flex justify-center items-center gap-4">
+          <div className="flex justify-center items-center">
             <img
               src="/images/Logo/Logo3D.png"
               alt="U-HYU 로고"
               className="w-10 h-10"
             />
-            <SheetTitle className="text-h3">U-HYU Menu</SheetTitle>
+            <SheetTitle className="text-h3 font-bold mr-2">U-HYU</SheetTitle>
           </div>
         </SheetHeader>
 

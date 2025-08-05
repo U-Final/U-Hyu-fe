@@ -5,8 +5,8 @@ export const SearchInputVariants = cva(
   {
     variants: {
       variant: {
-        gray: 'bg-light-gray shadow-lg hover:shadow-xl focus-within:shadow-xl',
-        white: 'bg-white border border-gray-200 shadow-lg hover:shadow-xl focus-within:shadow-xl',
+        gray: 'bg-light-gray',
+        white: 'bg-white border border-gray-200',
       },
     },
     defaultVariants: {

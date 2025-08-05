@@ -110,7 +110,7 @@ export const BenefitList = () => {
             </div>
           ))
         ) : (
-          <div className="py-16 px-4">
+          <div className="py-4 px-4">
             <div className="flex  flex-col text-center items-center justify-center">
               <img
                 src="/images/empty/empty-state.png"

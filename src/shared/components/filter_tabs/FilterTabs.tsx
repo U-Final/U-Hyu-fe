@@ -24,7 +24,6 @@ const FilterTabs: FC<FilterTabProps> = ({
   const active = value !== undefined ? value : internalActive;
 
   const handleClick = (clickedValue: string) => {
-    // 드래그 중이었다면 클릭 무시
     if (isDragging.current) {
       return;
     }
@@ -34,13 +33,11 @@ const FilterTabs: FC<FilterTabProps> = ({
     }
     onChange?.(clickedValue);
 
-    // 🎯 이게 전부!
     if (clickedValue !== 'all') {
-      trackFilterUsed(clickedValue); // 'shopping' 그대로 전달
+      trackFilterUsed(clickedValue);
     }
   };
 
-  // use-gesture 라이브러리를 사용한 드래그 핸들링
   const bind = useDrag(
     ({ active, delta: [dx], first, last, event }) => {
       if (!scrollContainerRef.current) return;
@@ -51,29 +48,25 @@ const FilterTabs: FC<FilterTabProps> = ({
 
       if (active && Math.abs(dx) > 3) {
         isDragging.current = true;
-        // 페이지 스크롤 방지
         event?.preventDefault();
         event?.stopPropagation();
-        
-        // 드래그 델타값을 직접 사용하여 1:1 비율로 스크롤
+
         const currentScrollLeft = scrollContainerRef.current.scrollLeft;
         scrollContainerRef.current.scrollLeft = currentScrollLeft - dx;
       }
 
       if (last) {
-        // 드래그 종료 후 짧은 지연으로 클릭 방지 해제
         setTimeout(() => {
           isDragging.current = false;
         }, 50);
       }
     },
     {
-      // 드래그 설정
-      threshold: 3, // 3px 이상 움직여야 드래그로 인식
-      axis: 'x', // 수평 드래그만 허용
-      preventScroll: true, // 페이지 스크롤 방지
-      pointer: { touch: true }, // 터치 지원
-      from: () => [scrollContainerRef.current?.scrollLeft || 0, 0], // 현재 스크롤 위치에서 시작
+      threshold: 3,
+      axis: 'x',
+      preventScroll: true,
+      pointer: { touch: true },
+      from: () => [scrollContainerRef.current?.scrollLeft || 0, 0],
     }
   );
 
@@ -82,13 +75,19 @@ const FilterTabs: FC<FilterTabProps> = ({
       ref={scrollContainerRef}
       {...bind()}
       className="flex overflow-x-auto gap-2 py-3 whitespace-nowrap select-none touch-pan-x"
-      style={{
-        width: '100vw',
-        marginLeft: 'calc(-50vw + 50%)',
-        paddingLeft: 'calc(50vw - 50% + 1rem)',
-        paddingRight: 'calc(50vw - 50% + 1rem)',
-        overscrollBehavior: 'contain',
-      }}
+      style={
+        variant === 'white'
+          ? {
+              width: '100vw',
+              marginLeft: 'calc(-50vw + 50%)',
+              paddingLeft: 'calc(50vw - 50% + 1rem)',
+              paddingRight: 'calc(50vw - 50% + 1rem)',
+              overscrollBehavior: 'contain',
+            }
+          : {
+              overscrollBehavior: 'contain',
+            }
+      }
       onWheel={e => {
         // 마우스 휠로 좌우 스크롤 지원
         e.preventDefault();
@@ -122,6 +121,7 @@ const FilterTabs: FC<FilterTabProps> = ({
             active === value && color
               ? {
                   backgroundColor: `${color}15`, // 활성 상태 미묘한 배경
+                  borderColor: `${color}15`,
                 }
               : {}
           }
@@ -134,7 +134,7 @@ const FilterTabs: FC<FilterTabProps> = ({
               }}
             />
           )}
-          <span 
+          <span
             className="whitespace-nowrap"
             style={{
               color: color || '#6b7280', // 항상 카테고리 고유 색상 표시

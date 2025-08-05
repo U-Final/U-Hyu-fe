@@ -60,15 +60,6 @@ const MapContent = () => {
       // 새로운 검색 결과가 있을 때만 persistent markers 업데이트
       if (results.length > 0) {
         setPersistentMarkers(results);
-
-        // 검색 완료 시 첫 번째 결과 위치로 지도 이동
-        if (mapCenterSetterRef.current && results[0]) {
-          const firstResult = results[0];
-          mapCenterSetterRef.current({
-            lat: firstResult.latitude,
-            lng: firstResult.longitude,
-          });
-        }
       }
       setSelectedPlace(null); // 새 검색 시 선택 초기화
     },

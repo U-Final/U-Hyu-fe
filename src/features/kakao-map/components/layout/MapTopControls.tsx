@@ -1,7 +1,6 @@
 import { type FC, useEffect, useRef } from 'react';
 
 import RegionFilterDropdown from '@kakao-map/components/layout/RegionFilterDropdown';
-import { createPortal } from 'react-dom';
 
 import { FilterTabs } from '@/shared/components';
 
@@ -144,7 +143,7 @@ const MapTopControls: FC<MapTopControlsProps> = ({
       {/* 상단 라인: 검색바 + 지역 필터 */}
       <div className="flex items-stretch gap-2.5 ml-[48px] mr-[48px] pointer-events-auto">
         {/* 검색바 - 대부분 공간 사용 */}
-        <div className="flex-1 h-[44px]">
+        <div className="flex-1 h-[44px] relative">
           <MapSearchInput
             value={searchValue}
             onChange={onSearchValueChange}
@@ -153,6 +152,25 @@ const MapTopControls: FC<MapTopControlsProps> = ({
             placeholder="장소 검색"
             variant="white"
           />
+          
+          {/* 검색 결과 리스트 - 검색창 바로 아래 */}
+          {isSearchResultsVisible && (
+            <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl border border-gray-100 max-h-80 backdrop-blur-sm overflow-hidden z-50">
+              <SearchResultList
+                results={keywordResults}
+                loading={isSearching}
+                onItemClick={onSearchResultClick || (() => {})}
+                selectedPlaceId={selectedPlace?.id}
+                hasSearched={hasSearched}
+                emptyMessage="검색 결과가 없습니다."
+                className="max-h-80"
+                keyword={searchValue}
+                totalCount={searchMeta?.total_count || keywordResults.length}
+                category={activeCategoryFilter}
+                showSummary={true}
+              />
+            </div>
+          )}
         </div>
 
         {/* 지역 필터 드롭다운 - 고정 크기 */}
@@ -174,26 +192,6 @@ const MapTopControls: FC<MapTopControlsProps> = ({
         <MapZoomLevelIndicator map={map ?? null} />
       </div>
 
-      {/* 검색 결과 리스트 */}
-      {isSearchResultsVisible &&
-        createPortal(
-          <div className="fixed top-[60px] left-2 right-2 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 max-h-80 z-99999 backdrop-blur-sm overflow-hidden pointer-events-auto">
-            <SearchResultList
-              results={keywordResults}
-              loading={isSearching}
-              onItemClick={onSearchResultClick || (() => {})}
-              selectedPlaceId={selectedPlace?.id}
-              hasSearched={hasSearched}
-              emptyMessage="검색 결과가 없습니다."
-              className="max-h-80"
-              keyword={searchValue}
-              totalCount={searchMeta?.total_count || keywordResults.length}
-              category={activeCategoryFilter}
-              showSummary={true}
-            />
-          </div>,
-          document.body
-        )}
     </div>
   );
 };

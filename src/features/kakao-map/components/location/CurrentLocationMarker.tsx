@@ -36,7 +36,7 @@ const CurrentLocationMarker: FC<CurrentLocationMarkerProps> = ({
   const styles = sizeStyles[size];
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative select-none ${className}`} style={{ userSelect: 'none', WebkitUserSelect: 'none' }}>
       {/* 메인 마커 도트 */}
       <div
         className={`

@@ -210,11 +210,11 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
     return (
       <CustomOverlayMap
         position={position}
-        yAnchor={1.12}
+        yAnchor={1.3}
         xAnchor={0.5}
         zIndex={1000}
       >
-        <div className="relative perspective-1000" style={{ padding: '20px' }}>
+        <div className="relative perspective-1000">
           {/* 베이스 그림자 (가장 넓고 흐린 그림자) */}
           <motion.div
             className="absolute inset-0 rounded-2xl"
@@ -259,7 +259,7 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
               variants={contentVariants}
               initial="hidden"
               animate="visible"
-              className="bg-white rounded-2xl overflow-hidden"
+              className="bg-white rounded-2xl overflow-hidden w-[280px] sm:w-[300px] md:w-[320px] lg:w-[340px] max-w-[90vw] h-[260px] sm:h-[280px]"
               style={{
                 boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.6)',
               }}
@@ -301,14 +301,11 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
   return (
     <CustomOverlayMap
       position={position}
-      yAnchor={1.12}
+      yAnchor={1.3}
       xAnchor={0.5}
       zIndex={1000}
     >
-      <div
-        className="relative perspective-1000"
-        style={{ padding: '20px' }}
-      >
+      <div className="relative perspective-1000">
         {/* 베이스 그림자 (가장 넓고 흐린 그림자) */}
         <motion.div
           className="absolute inset-0 rounded-2xl"
@@ -395,7 +392,7 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="bg-white rounded-2xl overflow-hidden"
+            className="bg-white rounded-2xl overflow-hidden w-[280px] sm:w-[300px] md:w-[320px] lg:w-[340px] max-w-[90vw] min-h-[260px] sm:min-h-[280px]"
             style={{
               boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.6)',
             }}

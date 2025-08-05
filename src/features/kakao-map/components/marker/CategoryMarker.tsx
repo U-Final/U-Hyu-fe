@@ -38,9 +38,10 @@ export const CategoryMarker: React.FC<CategoryMarkerProps> = ({
       onClick={handleClick}
       className={`
         relative cursor-pointer transform transition-all duration-200
-        hover:scale-110 active:scale-95 z-10
+        hover:scale-110 active:scale-95 z-10 select-none
         ${className}
       `}
+      style={{ userSelect: 'none', WebkitUserSelect: 'none' }}
       role="button"
       tabIndex={0}
       onKeyDown={e => {

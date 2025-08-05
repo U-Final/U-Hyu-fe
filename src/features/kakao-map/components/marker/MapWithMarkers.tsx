@@ -15,7 +15,7 @@ import {
   useShowRecommendedStores,
 } from '@kakao-map/store/MapStore';
 import { useSharedMapStore } from '@mymap/store/SharedMapStore';
-import { RecommendStoreInfoWindow } from '@recommendation/components/StoreInfoWindow';
+import { RecommendStoreInfoWindow } from '@recommendation/components/RecommendStoreInfoWindow';
 import {
   CustomOverlayMap,
   Map as KakaoMap,
@@ -430,7 +430,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
             <CustomOverlayMap
               key={store.storeId}
               position={{ lat: store.latitude, lng: store.longitude }}
-              yAnchor={1}
+              yAnchor={1.3}
               xAnchor={0.5}
             >
               {isShared ? (
@@ -455,7 +455,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
               <CustomOverlayMap
                 key={`bookmark-${store.storeId}`}
                 position={{ lat: store.latitude, lng: store.longitude }}
-                yAnchor={1}
+                yAnchor={1.3}
                 xAnchor={0.5}
               >
                 <FavoriteMarker
@@ -495,7 +495,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
                 <CustomOverlayMap
                   key={place.id}
                   position={{ lat: place.latitude, lng: place.longitude }}
-                  yAnchor={1}
+                  yAnchor={1.3}
                   xAnchor={0.5}
                 >
                   <KeywordMarker

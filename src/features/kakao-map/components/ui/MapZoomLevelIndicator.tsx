@@ -8,16 +8,6 @@ import {
   useZoomLevel,
 } from '../../store/MapStore';
 
-// 줌 레벨 → 검색 반경
-export const getSearchRadiusByZoomLevel = (zoomLevel: number): number => {
-  if (zoomLevel <= 4) return 1000;
-  if (zoomLevel <= 5) return 2000;
-  if (zoomLevel <= 6) return 4000;
-  if (zoomLevel <= 7) return 8000;
-  if (zoomLevel <= 8) return 20000;
-  return 20000;
-};
-
 interface MapZoomLevelIndicatorProps {
   map: kakao.maps.Map | null;
 }
@@ -27,6 +17,7 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
   const searchRadius = useSearchRadius();
   const setZoomLevel = useMapStore(state => state.setZoomLevel);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (!map) return;
@@ -53,12 +44,19 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
   };
 
   const handleRadiusClick = () => {
+    if (timeoutId) clearTimeout(timeoutId);
     setShowTooltip(true);
-    setTimeout(() => setShowTooltip(false), 2000);
+    const id = setTimeout(() => setShowTooltip(false), 2000);
+    setTimeoutId(id);
   };
+  useEffect(() => {
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [timeoutId]);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 pointer-events-none">
       {/* 컴팩트한 반경 인디케이터 */}
       <div className="relative">
         <button
@@ -73,6 +71,7 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
             hover:bg-gray-50 
             active:bg-gray-100 
             transition-all duration-200
+            pointer-events-auto
           "
           aria-label={`${(searchRadius / 1000).toFixed(0)}km 반경 매장 검색`}
         >
@@ -129,6 +128,7 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
           rounded-full 
           shadow-sm 
           overflow-hidden
+          pointer-events-auto
         "
         role="group"
         aria-label="지도 확대/축소 컨트롤"

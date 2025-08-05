@@ -25,14 +25,23 @@ export interface ErrorState {
   favorite: string | null;
 }
 
+export interface SearchParams {
+  lat: number;
+  lng: number;
+  radius: number;
+}
+
 export interface MapStoreState {
   // 위치 관련 (LocationStore 통합)
   userLocation: Position | null;
   mapCenter: Position;
   
-  // 줌 레벨 및 검색 반경 관리
+  // 줄 레벨 및 검색 반경 관리
   zoomLevel: number;
   searchRadius: number;
+  
+  // 검색 실행 파라미터 (재검색 버튼 클릭시에만 업데이트)
+  searchParams: SearchParams | null;
   
   // 매장 관련 (StoreListStore + Context 통합)
   stores: Store[];
@@ -71,6 +80,9 @@ export interface MapStoreActions {
   // 줌 레벨 및 검색 반경 관리
   setZoomLevel: (level: number) => void;
   updateSearchRadius: () => void;
+  
+  // 검색 실행 파라미터 관리
+  setSearchParams: (params: SearchParams) => void;
 
   // 즐겨찾기 관련
   setBookmarkMode: (mode: boolean) => void;

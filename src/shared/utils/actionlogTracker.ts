@@ -6,7 +6,8 @@ import type {
 } from '@/shared/types/actionlogTracker.types';
 import { getCategoryIdFromFilterValue } from '@/shared/utils/categoryMapper';
 
-const CLICK_THRESHOLD = 15;
+const MARKER_CLICK_THRESHOLD = 3;
+const FILTER_CLICK_THRESHOLD = 5;
 const STORAGE_KEY = 'Action_log';
 const ENDPOINTS_ACTION_LOG = '/user/action-logs';
 
@@ -56,7 +57,7 @@ class ActionLogCounter {
     const newCount = currentCount + 1;
     this.markerClicks.set(storeId, newCount);
 
-    if (newCount >= CLICK_THRESHOLD) {
+    if (newCount >= MARKER_CLICK_THRESHOLD) {
       // 임계점 도달시
       this.sendMarkerClickData(storeId);
       this.markerClicks.delete(storeId);
@@ -70,7 +71,7 @@ class ActionLogCounter {
     const newCount = currentCount + 1;
     this.filterClicks.set(filterValue, newCount);
 
-    if (newCount >= CLICK_THRESHOLD) {
+    if (newCount >= FILTER_CLICK_THRESHOLD) {
       this.sendFilterClickData(filterValue);
       this.filterClicks.delete(filterValue);
     }

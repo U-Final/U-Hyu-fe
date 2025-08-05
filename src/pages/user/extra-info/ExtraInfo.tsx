@@ -114,7 +114,7 @@ const ExtraInfo: React.FC = () => {
           <div className="flex items-center gap-3 mx-[2rem]">
             <div className="flex-1 bg-gray-200 rounded-full h-2">
               <div
-                className="bg-blue-600 h-2 rounded-full transition-all duration-500 ease-out"
+                className="bg-primary h-2 rounded-full transition-all duration-500 ease-out"
                 style={{
                   width: `${Math.min((currentStep / 4) * 100, 100)}%`,
                 }}

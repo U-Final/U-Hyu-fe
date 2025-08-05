@@ -110,20 +110,13 @@ export const BenefitList = () => {
             </div>
           ))
         ) : (
-          <div className="flex flex-col items-center justify-center py-16 px-4">
-            <div className="text-center space-y-4">
-              <div className="w-20 h-20 mx-auto mb-4 opacity-50">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  className="w-full h-full text-gray-400"
-                >
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="21 21l-4.35-4.35" />
-                  <circle cx="11" cy="11" r="3" />
-                </svg>
-              </div>
+          <div className="py-16 px-4">
+            <div className="flex  flex-col text-center items-center justify-center">
+              <img
+                src="/images/empty/empty-state.png"
+                alt="추천 매장이 없습니다."
+                className="w-40 object-contain"
+              />
               <div className="space-y-2">
                 <h3 className="text-body1 font-semibold text-gray-700">
                   검색된 브랜드가 없습니다

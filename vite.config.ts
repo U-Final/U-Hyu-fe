@@ -29,6 +29,14 @@ export default defineConfig({
       '@barcode': path.resolve(__dirname, 'src/features/barcode'),
     },
   },
+  build: {
+    rollupOptions: {
+      input: {
+        main: './index.html',
+        sw: './sw.js',
+      },
+    },
+  },
   test: {
     projects: [
       {

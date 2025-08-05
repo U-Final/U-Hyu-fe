@@ -81,7 +81,7 @@ export const ManualSearchButton: React.FC<ManualSearchButtonProps> = ({
   };
 
   // BottomSheet 핸들 바로 위에 위치하도록 계산 (60px 위쪽)
-  const buttonBottom = window.innerHeight - bottomSheetPosition + 60;
+  const buttonBottom = window.innerHeight - bottomSheetPosition + 15;
 
   return (
     <div

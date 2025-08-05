@@ -146,7 +146,7 @@ const MyMapUuid = ({ uuid, onStoreClick }: MyMapUuidProps) => {
             <div className="flex  flex-col text-center items-center justify-center">
               <img
                 src="/images/empty/empty-state.png"
-                alt="추천 매장이 없습니다."
+                alt="저징된 매장이 없습니다."
                 className="w-40 object-contain"
               />
               <div className="space-y-2">

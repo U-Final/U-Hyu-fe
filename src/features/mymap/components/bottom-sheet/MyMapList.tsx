@@ -9,6 +9,7 @@ import {
 import { MYMAP_COLOR, type MarkerColor } from '@mymap/constants/mymapColor';
 import { useMyMapListQuery } from '@mymap/hooks';
 import { BsThreeDotsVertical } from 'react-icons/bs';
+import { FiPlusCircle } from 'react-icons/fi';
 import { MdStars } from 'react-icons/md';
 import { MdIosShare } from 'react-icons/md';
 import { PiTrashBold } from 'react-icons/pi';
@@ -98,8 +99,24 @@ const MyMapList: FC = () => {
       ) : isError ? (
         <div className="text-sm text-red-500 mt-4">에러 발생</div>
       ) : !data || data.length === 0 ? (
-        <div className="flex text-sm text-gray-400 mt-4">
-          새 지도를 만들어주세요
+        <div className="flex  flex-col text-center items-center justify-center">
+          <img
+            src="/images/empty/empty-state.png"
+            alt="생성된 지도가 없습니다."
+            className="w-40 object-contain"
+          />
+          <div className="space-y-2">
+            <h3 className="text-body1 font-semibold text-gray-700">
+              생성된 지도가 없습니다.
+            </h3>
+
+            <p className="flex text-caption text-gray-500 leading-relaxed">
+              <span className="flex text-primary font-bold items-center mr-1">
+                <FiPlusCircle className="mr-1" />새 지도 만들기
+              </span>
+              버튼을 눌러주세요
+            </p>
+          </div>
         </div>
       ) : (
         data.map(map => (

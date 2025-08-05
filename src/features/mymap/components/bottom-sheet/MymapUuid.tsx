@@ -9,11 +9,10 @@ import { MdIosShare, MdStars } from 'react-icons/md';
 import { PiTrashBold } from 'react-icons/pi';
 import { useNavigate } from 'react-router-dom';
 
-import { BrandCard } from '@/shared/components';
-import { BackButton } from '@/shared/components';
+import { BackButton, BrandCard } from '@/shared/components';
+import '@/shared/components';
 import { SkeletonMyMapUuidItem } from '@/shared/components/skeleton';
-import { useModalStore } from '@/shared/store';
-import { useIsLoggedIn } from '@/shared/store/userStore';
+import { useIsLoggedIn, useModalStore } from '@/shared/store';
 
 interface MyMapUuidProps {
   uuid: string;
@@ -25,8 +24,6 @@ const MyMapUuid = ({ uuid, onStoreClick }: MyMapUuidProps) => {
   const isLoggedIn = useIsLoggedIn();
   const resultAuth = useMyMapUuidQuery(uuid, isLoggedIn);
   const resultGuest = useMyMapUuidGuestQuery(uuid, !isLoggedIn);
-  // console.log(`로그인상태: ${isLoggedIn}`);
-
   const data = isLoggedIn ? resultAuth.data : resultGuest.data;
   const isPending = isLoggedIn ? resultAuth.isPending : resultGuest.isPending;
   const isError = isLoggedIn ? resultAuth.isError : resultGuest.isError;
@@ -144,6 +141,35 @@ const MyMapUuid = ({ uuid, onStoreClick }: MyMapUuidProps) => {
               </BrandCard>
             </div>
           ))}
+          {/* 매장 없을 때 */}
+          { stores.length === 0 && isMine && (
+            <div className="flex  flex-col text-center items-center justify-center">
+              <img
+                src="/images/empty/empty-state.png"
+                alt="추천 매장이 없습니다."
+                className="w-40 object-contain"
+              />
+              <div className="space-y-2">
+                <h3 className="text-body1 font-semibold text-gray-700">
+                  저장된 매장이 없습니다.
+                </h3>
+                <p className="text-caption text-gray-500 leading-relaxed">
+                  아래 순서대로 매장을 추가할 수 있어요
+                </p>
+                <p className="text-caption text-gray-500 leading-relaxed">
+                  네비게이션바에서 지도 클릭 → 매장 마커 선택 → 별 아이콘 클릭
+                </p>
+                <button
+                  className="bg-primary text-white font-bold py-2 px-4 rounded-lg"
+                  onClick={() => {
+                    navigate('/map');
+                  }}
+                >
+                  매장 추가
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

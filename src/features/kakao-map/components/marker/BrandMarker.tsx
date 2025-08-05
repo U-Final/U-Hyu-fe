@@ -40,13 +40,12 @@ const BrandMarker: FC<BrandMarkerProps> = ({
       onClick={handleMarkerClick}
       style={{ userSelect: 'none', WebkitUserSelect: 'none' }}
     >
-      {/* 추천 매장 글로우 효과 */}
+      {/* 추천 매장 강조 효과 */}
       {isRecommended && (
         <div
-          className="absolute inset-0 w-16 h-16 -translate-x-2 -translate-y-1 rounded-full opacity-30 animate-pulse"
+          className="absolute inset-0 w-16 h-16 -translate-x-1 -translate-y-1 rounded-full border-2 border-yellow-400 opacity-60 animate-pulse"
           style={{
-            background: `radial-gradient(circle, #fbbf24 0%, transparent 70%)`,
-            filter: 'blur(8px)',
+            animationDuration: '2s',
           }}
         />
       )}
@@ -89,15 +88,10 @@ const BrandMarker: FC<BrandMarkerProps> = ({
             />
           </div>
 
-          {/* 추천 매장 미니멀 뱃지 */}
+          {/* 추천 매장 뱃지 - 깔끔한 디자인 */}
           {isRecommended && (
-            <div
-              className="absolute -top-1 -right-1 w-5 h-5 rounded-full border-1 border-white shadow-lg flex items-center justify-center"
-              style={{
-                background: 'linear-gradient(135deg, #fde047 0%, #facc15 100%)',
-              }}
-            >
-              <div className="w-1.5 h-1.5 bg-white rounded-full opacity-90"></div>
+            <div className="absolute -top-1.5 -right-1.5 w-7 h-7 rounded-full border-2 border-white shadow-lg flex items-center justify-center bg-yellow-400 z-100">
+              <div className="w-2 h-2 bg-white rounded-full"></div>
             </div>
           )}
         </div>

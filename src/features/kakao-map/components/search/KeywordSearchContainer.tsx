@@ -66,9 +66,9 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
     clearResults,
     clearError,
     setAutoSearch,
-  } = useKeywordSearch({ 
-    autoSearchEnabled: enableAutoSearch, 
-    debounceDelay 
+  } = useKeywordSearch({
+    autoSearchEnabled: enableAutoSearch,
+    debounceDelay,
   });
 
   const {
@@ -341,7 +341,7 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
               <CustomOverlayMap
                 key={place.id}
                 position={{ lat: place.latitude, lng: place.longitude }}
-                yAnchor={1}
+                yAnchor={1.3}
                 xAnchor={0.5}
               >
                 <KeywordMarker

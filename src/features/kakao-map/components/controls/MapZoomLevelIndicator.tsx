@@ -142,10 +142,7 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
           className="
             w-full h-10
             flex items-center justify-center
-            hover:bg-primary hover:text-white
-            transition-colors
             disabled:opacity-50 disabled:cursor-not-allowed
-            disabled:hover:bg-transparent disabled:hover:text-inherit
             rounded-t-full
           "
         >
@@ -163,10 +160,7 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
           className="
             w-full h-10
             flex items-center justify-center
-            hover:bg-primary hover:text-white
-            transition-colors
             disabled:opacity-50 disabled:cursor-not-allowed
-            disabled:hover:bg-transparent disabled:hover:text-inherit
             rounded-b-full
           "
         >

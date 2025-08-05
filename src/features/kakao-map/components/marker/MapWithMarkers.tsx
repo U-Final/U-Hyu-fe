@@ -15,7 +15,7 @@ import {
   useShowRecommendedStores,
 } from '@kakao-map/store/MapStore';
 import { useSharedMapStore } from '@mymap/store/SharedMapStore';
-import { RecommendStoreInfoWindow } from '@recommendation/components/StoreInfoWindow';
+import { RecommendStoreInfoWindow } from '@recommendation/components/RecommendStoreInfoWindow';
 import {
   CustomOverlayMap,
   Map as KakaoMap,

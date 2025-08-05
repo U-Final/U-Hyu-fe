@@ -63,7 +63,8 @@ export interface RegionInfo {
   daejeon: {
     key: 'daejeon',
     label: '대전',
-    center: { lat: 36.3504, lng: 127.3845 }, // 대전시청 기준
+    center: { lat: 36.3504, lng: 127.3845 },
+    defaultZoom: 11,
   },
 };
 /**

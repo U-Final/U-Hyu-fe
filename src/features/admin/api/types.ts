@@ -1,6 +1,6 @@
 // 기존 통계 관련 타입들
 export interface TotalStats {
-  totalBookmark: number;
+  totalBookmarkMyMap: number;
   totalFiltering: number;
   totalMembershipUsage: number;
 }

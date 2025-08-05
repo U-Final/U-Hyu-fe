@@ -91,7 +91,7 @@ export const RecommendedStoreListLoggedIn = () => {
             className="recommendation-swiper"
             style={
               {
-                '--swiper-pagination-color': '#3B82F6',
+                '--swiper-pagination-color': 'var(--color-primary)',
                 '--swiper-pagination-bullet-inactive-color': '#D1D5DB',
                 '--swiper-pagination-bullet-inactive-opacity': '0.5',
                 '--swiper-pagination-bullet-size': '8px',

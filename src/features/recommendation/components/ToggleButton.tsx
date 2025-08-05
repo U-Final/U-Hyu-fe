@@ -31,7 +31,7 @@ export const RecommendedStoresToggle: React.FC = () => {
         className="flex items-center justify-center"
       >
         {showRecommendedStores ? (
-          <Eye className="w-4 h-4 text-blue-600" />
+          <Eye className="w-4 h-4 text-primary" />
         ) : (
           <EyeOff className="w-4 h-4 text-gray-600" />
         )}

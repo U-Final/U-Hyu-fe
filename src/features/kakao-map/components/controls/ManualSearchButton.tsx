@@ -119,7 +119,7 @@ export const ManualSearchButton: React.FC<ManualSearchButtonProps> = ({
           size={16}
           className={`
             ${loading ? 'animate-spin' : ''}
-            text-blue-600
+            text-primary
           `}
         />
         <span className="whitespace-nowrap">

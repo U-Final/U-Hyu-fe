@@ -45,7 +45,7 @@ const ExpandButton: React.FC<{
         onClick();
       }}
       onTouchEnd={handleTouchEnd}
-      className="inline text-blue-500 hover:text-blue-700 font-medium text-xs ml-1 transition-colors duration-200 touch-manipulation"
+      className="inline text-primary hover:text-primary-dark font-medium text-xs ml-1 transition-colors duration-200 touch-manipulation"
       aria-label={isExpanded ? '접기' : '더보기'}
       style={{ WebkitTapHighlightColor: 'transparent' }}
     >

@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useEffect } from 'react';
+import { forwardRef, useCallback } from 'react';
 
 import { MyMapList, MymapUuid } from '@mymap/components';
 import { FaFilter } from 'react-icons/fa';
@@ -48,15 +48,6 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
     const { uuid } = useParams();
 
     const isShared = !!uuid;
-
-    // 공유지도일 때 중간 바텀시트
-    useEffect(() => {
-      if (bottomSheetRef?.current) {
-        setTimeout(() => {
-          bottomSheetRef.current?.openMiddle();
-        }, 0);
-      }
-    }, [isShared, bottomSheetRef]);
 
     // 브랜드 단계일 때만 브랜드 데이터 조회 (성능 최적화)
     const { brands, isLoading: brandsLoading } = useBrandsByCategoryWhen(

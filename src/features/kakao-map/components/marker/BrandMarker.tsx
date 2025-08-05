@@ -47,11 +47,9 @@ const BrandMarker: FC<BrandMarkerProps> = ({
       <div
         className={`
           relative 
-          w-14 h-14 
+          w-12 h-12
           rounded-full 
-          shadow-xl 
-          border-3 
-          border-white
+          shadow-md 
           cursor-pointer
           transition-all 
           duration-200
@@ -64,11 +62,11 @@ const BrandMarker: FC<BrandMarkerProps> = ({
           boxShadow: isRecommended
             ? `0 8px 25px -5px ${categoryColor}50, 0 10px 10px -5px ${categoryColor}30`
             : `0 8px 25px -5px ${categoryColor}40, 0 10px 10px -5px ${categoryColor}30`,
-          border: isRecommended ? '3px solid #fbbf24' : '3px solid white',
+          border: isRecommended ? '3px solid #fbbf24' : 'none',
         }}
       >
         {/* 브랜드 로고 */}
-        <div className="absolute inset-2 bg-white rounded-full overflow-hidden">
+        <div className="absolute inset-1 bg-white rounded-full overflow-hidden">
           <img
             src={brandImageSrc}
             alt={`${store.storeName} 마커`}
@@ -97,7 +95,7 @@ const BrandMarker: FC<BrandMarkerProps> = ({
             w-0 h-0
             border-l-[6px]
             border-r-[6px]
-            border-t-[10px]
+            border-t-[14px]
             border-transparent
             border-t-current
             drop-shadow-md

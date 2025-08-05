@@ -22,8 +22,20 @@ export const BottomSheetTutorial: React.FC<BottomSheetTutorialProps> = ({
 }) => {
   const [animationData, setAnimationData] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const availableHeight = window.innerHeight;
-  const middleY = availableHeight * 0.4;
+  const [middleY, setMiddleY] = useState(0);
+  // 동적 높이 계산
+  useEffect(() => {
+    const updateMiddleY = () => {
+      if (typeof window !== 'undefined') {
+        const availableHeight = window.innerHeight;
+        setMiddleY(availableHeight * 0.4);
+      }
+    };
+
+    updateMiddleY();
+    window.addEventListener('resize', updateMiddleY);
+    return () => window.removeEventListener('resize', updateMiddleY);
+  }, []);
 
   // Lottie 애니메이션 데이터 로드
   useEffect(() => {

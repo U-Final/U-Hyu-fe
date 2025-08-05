@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 /**
  * 스크롤 방지 관련 유틸리티 함수들
  */
@@ -17,7 +19,7 @@ interface ScrollPreventionOptions {
 const DEFAULT_SCROLLABLE_SELECTORS = [
   '[data-scrollable="true"]',
   '.overflow-x-auto',
-  '.overflow-y-auto', 
+  '.overflow-y-auto',
   '.overflow-auto',
   '.scrollbar-hide',
   '[class*="overflow-x"]',
@@ -57,14 +59,14 @@ export function enableScrollPrevention(options: ScrollPreventionOptions = {}) {
 
   // 스크롤 방지 스타일 적용
   htmlElement.style.overflow = 'hidden';
-  
+
   if (preventAll) {
     bodyElement.style.overflow = 'hidden';
   } else if (preventVerticalOnly) {
     bodyElement.style.overflowY = 'hidden';
     bodyElement.style.overflowX = 'visible';
   }
-  
+
   bodyElement.style.position = 'fixed';
   bodyElement.style.width = '100%';
   bodyElement.style.height = '100%';
@@ -89,22 +91,27 @@ export function enableScrollPrevention(options: ScrollPreventionOptions = {}) {
 
   const handleTouchMove = (e: TouchEvent) => {
     const target = e.target as HTMLElement;
-    
+
     // 스크롤 가능한 영역인지 확인 (더 정확한 검사)
     const isScrollableArea = scrollableSelectors.some(selector => {
       try {
         const element = target.closest(selector);
         if (!element) return false;
-        
+
         // 실제로 스크롤 가능한지 확인
         const computedStyle = window.getComputedStyle(element);
         const hasVerticalScroll = element.scrollHeight > element.clientHeight;
         const hasHorizontalScroll = element.scrollWidth > element.clientWidth;
-        
+
         return (
-          (computedStyle.overflowY === 'auto' || computedStyle.overflowY === 'scroll') && hasVerticalScroll ||
-          (computedStyle.overflowX === 'auto' || computedStyle.overflowX === 'scroll') && hasHorizontalScroll ||
-          computedStyle.overflow === 'auto' || computedStyle.overflow === 'scroll'
+          ((computedStyle.overflowY === 'auto' ||
+            computedStyle.overflowY === 'scroll') &&
+            hasVerticalScroll) ||
+          ((computedStyle.overflowX === 'auto' ||
+            computedStyle.overflowX === 'scroll') &&
+            hasHorizontalScroll) ||
+          computedStyle.overflow === 'auto' ||
+          computedStyle.overflow === 'scroll'
         );
       } catch {
         return false;
@@ -130,7 +137,8 @@ export function enableScrollPrevention(options: ScrollPreventionOptions = {}) {
         const timeElapsed = Date.now() - touchState.startTime;
 
         // 더 정확한 방향 감지
-        if (timeElapsed > 50) { // 50ms 이후에만 검사
+        if (timeElapsed > 50) {
+          // 50ms 이후에만 검사
           const isVerticalSwipe = deltaY > deltaX && deltaY > 15; // 임계값 증가
           const isHorizontalSwipe = deltaX > deltaY && deltaX > 15;
 
@@ -146,18 +154,21 @@ export function enableScrollPrevention(options: ScrollPreventionOptions = {}) {
   // Wheel 이벤트 처리 (마우스 휠)
   const handleWheel = (e: WheelEvent) => {
     const target = e.target as HTMLElement;
-    
+
     const isScrollableArea = scrollableSelectors.some(selector => {
       try {
         const element = target.closest(selector);
         if (!element) return false;
-        
+
         const computedStyle = window.getComputedStyle(element);
         const hasVerticalScroll = element.scrollHeight > element.clientHeight;
-        
+
         return (
-          (computedStyle.overflowY === 'auto' || computedStyle.overflowY === 'scroll') && hasVerticalScroll ||
-          computedStyle.overflow === 'auto' || computedStyle.overflow === 'scroll'
+          ((computedStyle.overflowY === 'auto' ||
+            computedStyle.overflowY === 'scroll') &&
+            hasVerticalScroll) ||
+          (computedStyle.overflow === 'auto' ||
+            computedStyle.overflow === 'scroll')
         );
       } catch {
         return false;
@@ -165,7 +176,10 @@ export function enableScrollPrevention(options: ScrollPreventionOptions = {}) {
     });
 
     if (!isScrollableArea) {
-      if (preventAll || (preventVerticalOnly && Math.abs(e.deltaY) > Math.abs(e.deltaX))) {
+      if (
+        preventAll ||
+        (preventVerticalOnly && Math.abs(e.deltaY) > Math.abs(e.deltaX))
+      ) {
         e.preventDefault();
       }
     }
@@ -243,12 +257,14 @@ export function useScrollPrevention(
     }
   };
 
-  // 초기 설정
-  if (enabled && !cleanupRef.current) {
-    enable();
-  } else if (!enabled && cleanupRef.current) {
-    disable();
-  }
+  useEffect(() => {
+    // 초기 설정
+    if (enabled && !cleanupRef.current) {
+      enable();
+    } else if (!enabled && cleanupRef.current) {
+      disable();
+    }
+  }, [enabled, enable, disable]);
 
   return { enable, disable };
 }

@@ -1,10 +1,12 @@
+import { motion } from 'framer-motion';
+import { Eye, EyeOff } from 'lucide-react';
+
 import {
   useMapStore,
   useRecommendedStores,
   useShowRecommendedStores,
 } from '@kakao-map/store/MapStore';
 
-//TODO 추후 추천 마커 토글 버튼 UI 개선 필요
 export const RecommendedStoresToggle: React.FC = () => {
   const showRecommendedStores = useShowRecommendedStores();
   const toggleRecommendedStores = useMapStore(
@@ -15,22 +17,29 @@ export const RecommendedStoresToggle: React.FC = () => {
   return (
     <button
       onClick={toggleRecommendedStores}
-      className={`
-        flex items-center gap-2 px-3 py-2 rounded-lg
-        transition-all duration-200 text-sm font-medium cursor-pointer
-        ${
-          showRecommendedStores
-            ? 'bg-yellow text-yellow-700 border border-yellow-100'
-            : 'bg-gray-100 text-gray-600 border border-gray-300'
-        }
-        hover:shadow-sm active:scale-95
-      `}
+      className="flex items-center justify-center w-[44px] h-[44px] bg-white border border-gray-200 rounded-md shadow-lg hover:shadow-xl hover:bg-gray-50 transition-all duration-200"
       aria-label={`추천 매장 ${showRecommendedStores ? '숨기기' : '보기'}`}
     >
-      <span className="text-lg">★</span>
-      <span>추천 매장</span>
+      <motion.div
+        animate={{
+          scale: showRecommendedStores ? 1.1 : 1,
+        }}
+        transition={{
+          duration: 0.2,
+          ease: 'easeInOut',
+        }}
+        className="flex items-center justify-center"
+      >
+        {showRecommendedStores ? (
+          <Eye className="w-4 h-4 text-blue-600" />
+        ) : (
+          <EyeOff className="w-4 h-4 text-gray-600" />
+        )}
+      </motion.div>
+      
+      {/* 추천 매장 개수 표시 */}
       {recommendedStores.length > 0 && (
-        <span className="text-xs bg-white px-1.5 py-0.5 rounded-full">
+        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
           {recommendedStores.length}
         </span>
       )}

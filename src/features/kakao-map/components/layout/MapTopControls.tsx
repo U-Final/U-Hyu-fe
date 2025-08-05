@@ -8,9 +8,9 @@ import type {
   KakaoKeywordSearchResponse,
   NormalizedPlace,
 } from '../../api/types';
+import { MapZoomLevelIndicator } from '../controls/MapZoomLevelIndicator';
 import { MapSearchInput } from '../search/MapSearchInput';
 import { SearchResultList } from '../search/SearchResultList';
-import { MapZoomLevelIndicator } from '../ui/MapZoomLevelIndicator';
 import BottomSheetToggleButton from './BottomSheetToggleButton';
 
 /**

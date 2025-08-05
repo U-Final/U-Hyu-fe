@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 
 import { useMapStore } from '@kakao-map/store/MapStore';
 import RecommendedStoreCard from '@recommendation/components/RecommendedCard';
-import { RecommendedStoresToggle } from '@recommendation/components/ToggleButton';
 import { useRecommendedStoresQuery } from '@recommendation/hooks/useRecommendQuery';
 import { BeatLoader } from 'react-spinners';
 import 'swiper/css';
@@ -20,9 +19,6 @@ export const RecommendedStoreListLoggedIn = () => {
 
   // 전역상태에서 추천 매장 관련 상태와 액션 가져오기
   const setRecommendedStores = useMapStore(state => state.setRecommendedStores);
-  const showRecommendedStores = useMapStore(
-    state => state.showRecommendedStores
-  );
 
   // React Query로 데이터 가져오기 (기존 방식 유지)
   const {
@@ -61,36 +57,47 @@ export const RecommendedStoreListLoggedIn = () => {
   }
 
   return (
-    <div>
-      <div className="flex items-center justify-between px-4 py-2">
-        <p className="text-black font-semibold text-lg">
-          <span className="text-primary text-h3">{user?.userName}</span> 님
-          안녕하세요,
-          <br />
-          오늘 이런 혜택 어떠세요?
-        </p>
-        {/* 토글 버튼 추가 */}
-        <RecommendedStoresToggle />
+    <div className="space-y-4">
+      {/* 헤더 섹션 */}
+      <div className="flex items-start justify-between px-4 py-3">
+        <div className="flex-1">
+          <h2 className="text-black font-semibold text-lg leading-tight">
+            <span className="text-primary text-xl font-bold">
+              {user?.userName}
+            </span>{' '}
+            님 안녕하세요,
+          </h2>
+          <p className="text-gray-600 text-sm mt-1">오늘 이런 혜택 어떠세요?</p>
+        </div>
       </div>
 
-      {/* 토글 상태에 따라 조건부 렌더링 */}
-      {showRecommendedStores && (
-        <div className="pl-4">
+      {/* 추천 매장 리스트 */}
+      <div>
+        <div className="px-4">
           <Swiper
             modules={[Pagination, Autoplay]}
-            spaceBetween={8}
+            spaceBetween={12}
             slidesPerView={1}
             centeredSlides={true}
             grabCursor
             pagination={{
               clickable: true,
-              dynamicBullets: true,
             }}
             autoplay={{
-              delay: 2500,
+              delay: 3000,
               disableOnInteraction: false,
+              pauseOnMouseEnter: true,
             }}
-            style={{ paddingRight: '1rem' }}
+            className="recommendation-swiper"
+            style={
+              {
+                '--swiper-pagination-color': '#3B82F6',
+                '--swiper-pagination-bullet-inactive-color': '#D1D5DB',
+                '--swiper-pagination-bullet-inactive-opacity': '0.5',
+                '--swiper-pagination-bullet-size': '8px',
+                '--swiper-pagination-bullet-horizontal-gap': '4px',
+              } as React.CSSProperties
+            }
           >
             {stores?.map(store => (
               <SwiperSlide key={store.storeId}>
@@ -102,7 +109,27 @@ export const RecommendedStoreListLoggedIn = () => {
             ))}
           </Swiper>
         </div>
-      )}
+
+        <style>{`
+            .recommendation-swiper .swiper-pagination {
+              position: relative !important;
+              bottom: auto !important;
+              left: 50% !important;
+              transform: translateX(-50%) !important;
+              width: auto !important;
+              margin-top: 20px !important;
+              text-align: center !important;
+            }
+            
+            .recommendation-swiper .swiper-pagination-bullet {
+              transition: all 0.3s ease !important;
+            }
+            
+            .recommendation-swiper .swiper-pagination-bullet-active {
+              transform: scale(1.2) !important;
+            }
+          `}</style>
+      </div>
     </div>
   );
 };

@@ -131,7 +131,7 @@ export function AdminBrandList() {
 
   return (
     <>
-      <Card>
+      <Card className="mb-10">
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             <span>브랜드 관리</span>

@@ -9,10 +9,10 @@ import type { StatsSummaryCardsProps } from '@admin/types';
 export function StatsSummaryCards({ totalStats }: StatsSummaryCardsProps) {
   const cards = [
     {
-      title: '총 즐겨찾기',
+      title: '총 저장된 매장',
       value: totalStats.totalBookmark,
       icon: BookmarkIcon,
-      description: '전체 즐겨찾기 수',
+      description: '즐겨찾기 및 마이맵에 저장된 매장 수',
       color: 'var(--admin-bookmark)',
     },
     {

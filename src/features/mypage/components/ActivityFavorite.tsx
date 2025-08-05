@@ -1,11 +1,17 @@
-import { useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
-import { useBookmarkListInfiniteQuery } from '@mypage/hooks/useActivityQuery';
-import { BrandWithFavoriteCard } from '@/shared/components/cards/BrandWithFavoriteCard';
+import { useEffect, useRef } from 'react';
+
 import { deleteBookmark } from '@mypage/api/mypageApi';
 import type { Bookmark } from '@mypage/api/types';
+import { useBookmarkListInfiniteQuery } from '@mypage/hooks/useActivityQuery';
+import { useQueryClient } from '@tanstack/react-query';
 import { Heart, MapPin, Star } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
+import { BrandWithFavoriteCard } from '@/shared/components/cards/BrandWithFavoriteCard';
+import {
+  ActivityFavoriteListSkeleton,
+  ActivityFavoriteSkeleton,
+} from '@/shared/components/skeleton';
 
 interface Props {
   enabled: boolean;
@@ -14,20 +20,15 @@ interface Props {
 const ActivityFavorite = ({ enabled }: Props) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading,
-  } = useBookmarkListInfiniteQuery(enabled);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    useBookmarkListInfiniteQuery(enabled);
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!hasNextPage || !enabled) return;
     const currentLoader = loaderRef.current;
     const observer = new window.IntersectionObserver(
-      (entries) => {
+      entries => {
         if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
           fetchNextPage();
         }
@@ -43,39 +44,44 @@ const ActivityFavorite = ({ enabled }: Props) => {
   // enabled가 false일 때는 아무것도 렌더링하지 않음
   if (!enabled) return null;
 
-  if (isLoading) return <div>로딩중...</div>;
- 
+  if (isLoading) return <ActivityFavoriteSkeleton />;
+
   const bookmarks = (data?.pages.flat() as Bookmark[]) || [];
 
   const handleFavoriteClick = async (bookmarkId: number) => {
     const previousData = queryClient.getQueryData(['bookmarkList']);
-    
+
     // Optimistic Update: 즉시 UI에서 제거
-    queryClient.setQueryData(['bookmarkList'], (old: { pages: Bookmark[][] } | undefined) => {
-      if (!old?.pages) return old;
-      
-      return {
-        ...old,
-        pages: old.pages.map((page: Bookmark[]) => 
-          page.filter((bookmark: Bookmark) => bookmark.bookmarkId !== bookmarkId)
-        )
-      };
-    });
+    queryClient.setQueryData(
+      ['bookmarkList'],
+      (old: { pages: Bookmark[][] } | undefined) => {
+        if (!old?.pages) return old;
+
+        return {
+          ...old,
+          pages: old.pages.map((page: Bookmark[]) =>
+            page.filter(
+              (bookmark: Bookmark) => bookmark.bookmarkId !== bookmarkId
+            )
+          ),
+        };
+      }
+    );
 
     try {
       const result = await deleteBookmark(bookmarkId);
-      
+
       if (result.statusCode === 0) {
         await queryClient.invalidateQueries({ queryKey: ['bookmarkList'] });
       }
     } catch (error) {
       console.error('즐겨찾기 삭제 실패:', error);
-      
+
       // 실패 시 이전 상태로 롤백
       if (previousData) {
         queryClient.setQueryData(['bookmarkList'], previousData);
       }
-    
+
       return;
     }
   };
@@ -83,10 +89,7 @@ const ActivityFavorite = ({ enabled }: Props) => {
   return (
     <div className="space-y-[1rem]">
       {bookmarks.map((store: Bookmark) => (
-        <div
-          key={store.bookmarkId}
-          className="transition-all duration-300"
-        >
+        <div key={store.bookmarkId} className="transition-all duration-300">
           <BrandWithFavoriteCard
             logoUrl={store.logoImage}
             isStarFilled={true}
@@ -96,7 +99,9 @@ const ActivityFavorite = ({ enabled }: Props) => {
             <div>
               <h3 className="font-semibold text-[0.9rem]">{store.storeName}</h3>
               <p className="text-sm text-gray">{store.addressDetail}</p>
-              {store.benefit && <p className="text-xs text-gray mt-1">{store.benefit}</p>}
+              {store.benefit && (
+                <p className="text-xs text-gray mt-1">{store.benefit}</p>
+              )}
             </div>
           </BrandWithFavoriteCard>
         </div>
@@ -112,18 +117,19 @@ const ActivityFavorite = ({ enabled }: Props) => {
               <Star className="w-4 h-4 text-yellow-500" />
             </div>
           </div>
-          
+
           {/* 메인 메시지 */}
           <h3 className="text-lg font-semibold text-gray-800 mb-2">
             아직 즐겨찾기한 매장이 없어요
           </h3>
-          
+
           {/* 설명 메시지 */}
           <p className="text-sm text-gray-500 text-center mb-6 max-w-xs">
-            지도에서 마음에 드는 매장을 찾아서<br />
+            지도에서 마음에 드는 매장을 찾아서
+            <br />
             즐겨찾기에 추가해보세요!
           </p>
-          
+
           {/* 액션 버튼 */}
           <button
             onClick={() => navigate('/map')}
@@ -135,9 +141,11 @@ const ActivityFavorite = ({ enabled }: Props) => {
         </div>
       )}
       <div ref={loaderRef} style={{ height: '4rem' }} />
-      {isFetchingNextPage && <div className="text-center py-2 text-gray">불러오는 중...</div>}
+      {isFetchingNextPage && <ActivityFavoriteListSkeleton />}
       {!hasNextPage && bookmarks.length > 0 && !isFetchingNextPage && (
-        <div className="text-center py-2 text-gray">모든 즐겨찾기를 다 불러왔습니다.</div>
+        <div className="text-center py-2 text-gray">
+          모든 즐겨찾기를 다 불러왔습니다.
+        </div>
       )}
     </div>
   );

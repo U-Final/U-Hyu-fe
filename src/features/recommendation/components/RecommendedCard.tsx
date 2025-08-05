@@ -1,12 +1,11 @@
-import { useState } from 'react';
-
 import { useMapUIContext } from '@kakao-map/context/MapUIContext';
 import { useMapStore } from '@kakao-map/store/MapStore';
 import type { Store } from '@kakao-map/types/store';
-import { useRecommendExcludeMutation } from '@recommendation/hooks/useRecommendMutation';
+import ConfirmExcludeModalContent from '@recommendation/components/ConfirmExcludeModalContent';
 import { ThumbsDown } from 'lucide-react';
 
 import { BrandCard } from '@/shared/components';
+import { useModalStore } from '@/shared/store';
 
 export interface RecommendedStoreCardProps {
   store: Store;
@@ -20,8 +19,7 @@ const RecommendedStoreCard = ({
   const selectStore = useMapStore(state => state.selectStore);
   const setMapCenter = useMapStore(state => state.setMapCenter);
   const { bottomSheetRef } = useMapUIContext();
-  const [isExcluding, setIsExcluding] = useState(false);
-  const { mutate: excludeStore } = useRecommendExcludeMutation();
+  const { openModal } = useModalStore();
 
   const handleCardClick = () => {
     if (!store.addressDetail) return; // 온라인 매장은 클릭 무시
@@ -41,12 +39,17 @@ const RecommendedStoreCard = ({
 
   const handleDislikeClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!isExcluding && store.brandId !== undefined) {
-      setIsExcluding(true);
-      excludeStore(store.brandId, {
-        onSettled: () => setIsExcluding(false),
-      });
-    }
+    if (!store.brandId) return;
+
+    openModal('base', {
+      title: '앞으로 이 브랜드는 추천에서 제외 됩니다.',
+      children: (
+        <ConfirmExcludeModalContent
+          brandId={store.brandId}
+          brandName={store.brandName}
+        />
+      ),
+    });
   };
 
   return (
@@ -86,7 +89,6 @@ const RecommendedStoreCard = ({
         <button
           onClick={handleDislikeClick}
           className="absolute top-2 right-2 p-1 mr-3 rounded-full bg-white hover:bg-gray-100"
-          disabled={isExcluding}
         >
           <ThumbsDown
             className="w-4 h-4 text-secondary hover:text-red-500"

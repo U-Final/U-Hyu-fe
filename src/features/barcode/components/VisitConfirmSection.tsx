@@ -20,7 +20,6 @@ const VisitConfirmSection = ({ store, onConfirm, onReject }: StoreProps) => {
 
     confirmVisit(store.storeId, {
       onSuccess: () => {
-        console.log(`${store.storeName} 방문 처리 완료`);
         onConfirm();
       },
       onError: () => {

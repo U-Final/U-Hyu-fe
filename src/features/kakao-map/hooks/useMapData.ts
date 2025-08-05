@@ -7,6 +7,7 @@ import {
   useBookmarkMode,
   useMapStore,
   useRecommendedStores,
+  useSearchRadius,
   useShowRecommendedStores,
 } from '../store/MapStore';
 import {
@@ -15,11 +16,6 @@ import {
   useStoreListQuery,
   useToggleFavoriteMutation,
 } from './useMapQueries';
-
-/**
- * 기본 검색 반경 (미터 단위)
- */
-const DEFAULT_RADIUS = Number(import.meta.env.VITE_DEFAULT_RADIUS) || 5000;
 
 /**
  * 지도 관련 데이터 관리를 위한 메인 훅
@@ -39,6 +35,9 @@ export const useMapData = () => {
   // 추천 매장 상태 추가
   const recommendedStores = useRecommendedStores();
   const showRecommendedStores = useShowRecommendedStores();
+
+  // 줌 레벨 기반 동적 검색 반경
+  const dynamicSearchRadius = useSearchRadius();
 
   // 액션 함수들을 개별적으로 구독
   const setStoresFromQuery = useMapStore(state => state.setStoresFromQuery);
@@ -106,15 +105,19 @@ export const useMapData = () => {
     []
   );
 
+  // 검색 실행을 위한 별도 상태 (재검색 버튼 클릭시에만 업데이트)
+  const searchParams = useMapStore(state => state.searchParams);
+  const setSearchParams = useMapStore(state => state.setSearchParams);
+
   /**
    * 백엔드 API 호출을 위한 쿼리 파라미터 생성
-   * 지도 중심점, 필터 상태, 검색어를 종합하여 파라미터 구성
+   * 재검색 버튼 클릭시에만 업데이트되는 searchParams 사용
    */
   const storeListParams: GetNearbyStoresParams = useMemo(() => {
     const baseParams: GetNearbyStoresParams = {
-      lat: mapCenter.lat,
-      lon: mapCenter.lng,
-      radius: DEFAULT_RADIUS,
+      lat: searchParams?.lat ?? mapCenter.lat,
+      lon: searchParams?.lng ?? mapCenter.lng,
+      radius: searchParams?.radius ?? dynamicSearchRadius,
     };
 
     // 카테고리 필터 파라미터 추가 (값이 있을 때만)
@@ -130,8 +133,12 @@ export const useMapData = () => {
 
     return baseParams;
   }, [
+    searchParams?.lat,
+    searchParams?.lng, 
+    searchParams?.radius,
     mapCenter.lat,
     mapCenter.lng,
+    dynamicSearchRadius,
     uiState.activeCategoryFilter,
     uiState.selectedBrand,
     mapCategoryToBackend,
@@ -169,7 +176,7 @@ export const useMapData = () => {
   }, [storeDetailQuery.data, storeDetailQuery.isLoading, setStoreDetail]);
 
   /**
-   * 앱 최초 실행시 현재 위치 가져오기
+   * 앱 최초 실행시 현재 위치 가져오기 및 초기 검색 파라미터 설정
    * 위치가 설정되면 React Query가 자동으로 추천 매장 로딩
    * HTTP 개발 환경에서는 위치 정보 요청 비활성화
    */
@@ -180,7 +187,16 @@ export const useMapData = () => {
     }
 
     const initializeLocation = async () => {
-      const { userLocation, mapCenter } = useMapStore.getState();
+      const { userLocation, mapCenter, searchParams } = useMapStore.getState();
+
+      // 초기 검색 파라미터가 없으면 설정
+      if (!searchParams) {
+        setSearchParams({
+          lat: mapCenter.lat,
+          lng: mapCenter.lng,
+          radius: dynamicSearchRadius,
+        });
+      }
 
       // 이미 사용자 위치가 있으면 스킵
       if (userLocation) {
@@ -202,6 +218,15 @@ export const useMapData = () => {
       if (isDefaultLocation) {
         try {
           await getCurrentLocation();
+          // 위치를 가져온 후 검색 파라미터 업데이트
+          const newState = useMapStore.getState();
+          if (newState.userLocation) {
+            setSearchParams({
+              lat: newState.userLocation.lat,
+              lng: newState.userLocation.lng,
+              radius: dynamicSearchRadius,
+            });
+          }
         } catch {
           // 위치 권한 실패시에도 지도는 기본 위치로 정상 동작
         }
@@ -210,7 +235,7 @@ export const useMapData = () => {
 
     // 컴포넌트 마운트시 한 번만 실행
     initializeLocation();
-  }, [getCurrentLocation]); // getCurrentLocation 의존성 추가
+  }, [getCurrentLocation, setSearchParams, dynamicSearchRadius]); // 의존성 추가
 
   /**
    * 지도 중심점 변경 시 주변 매장 새로고침

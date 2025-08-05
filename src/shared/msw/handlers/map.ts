@@ -110,7 +110,7 @@ export const mapHandlers = [
     }
 
     // 개발 환경에서 디버깅 정보 출력
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.MODE === 'development') {
       console.log('🔍 MSW Store Filter Applied:', {
         originalQuery: {
           lat,
@@ -208,9 +208,11 @@ export const mapHandlers = [
    * GET /category/:categoryId
    */
   http.get('*/category/:categoryId', ({ params, request }) => {
-    console.log('🏷️ 카테고리 브랜드 MSW 핸들러 호출:', request.url);
+    if (import.meta.env.MODE === 'development') {
+      console.log('🏷️ 카테고리 브랜드 MSW 핸들러 호출:', request.url);
+      console.log('📂 카테고리 ID:', params.categoryId);
+    }
     const categoryId = Number(params.categoryId);
-    console.log('📂 카테고리 ID:', categoryId);
 
     // categoryId 파라미터 유효성 검증
     if (isNaN(categoryId) || categoryId <= 0) {

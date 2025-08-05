@@ -1,25 +1,32 @@
-import { type FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  type FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
-
-
-import { useMapStore, useRecommendedStores, useRefreshBookmarkStores, useShowRecommendedStores } from '@kakao-map/store/MapStore';
+import { useZoomSearchTrigger } from '@kakao-map/hooks/useZoomSearchTrigger';
+import {
+  useMapStore,
+  useRecommendedStores,
+  useRefreshBookmarkStores,
+  useShowRecommendedStores,
+} from '@kakao-map/store/MapStore';
 import { useSharedMapStore } from '@mymap/store/SharedMapStore';
 import { RecommendStoreInfoWindow } from '@recommendation/components/StoreInfoWindow';
 import { CustomOverlayMap, Map as KakaoMap } from 'react-kakao-maps-sdk';
 import { useParams } from 'react-router-dom';
 
-
-
 import { useAuthCheckModal } from '@/shared/hooks/useAuthCheckModal';
 import { trackMarkerClick } from '@/shared/utils/actionlogTracker';
-
-
 
 import type { NormalizedPlace } from '../../api/types';
 import { useDistanceBasedSearch } from '../../hooks/useManualSearch';
 import { useToggleFavoriteMutation } from '../../hooks/useMapQueries';
 import type { Store } from '../../types/store';
-import ResponsiveManualSearchButton from '../ManualSearchButton';
+import ManualSearchButton from '../ManualSearchButton';
 import CurrentLocationMarker from '../location/CurrentLocationMarker';
 import BrandMarker from './BrandMarker';
 import FavoriteMarker from './FavoriteMarker';
@@ -28,17 +35,13 @@ import { KeywordMarker } from './KeywordMarker';
 import MyMapMarker from './MyMapMarker';
 import StoreInfoWindow from './StoreInfoWindow';
 
-
-
-
-
 interface MapWithMarkersProps {
   center: { lat: number; lng: number };
   stores: Store[];
   keywordResults?: NormalizedPlace[];
   selectedPlace?: NormalizedPlace | null;
   currentLocation?: { lat: number; lng: number } | null;
-  level?: number;
+  level?: number; // 초기값으로만 사용하고, 비제어로 전환
   className?: string;
   onStoreClick?: (store: Store) => void;
   onPlaceClick?: (place: NormalizedPlace) => void;
@@ -48,6 +51,10 @@ interface MapWithMarkersProps {
   isSearching?: boolean;
   /** 외부에서 제어하는 선택된 매장 ID */
   selectedStoreId?: number | null;
+  /** 지도 생성 콜백 */
+  onMapCreate?: (map: kakao.maps.Map) => void;
+  /** 지도 인스턴스 */
+  map?: kakao.maps.Map | null;
 }
 
 const MapWithMarkers: FC<MapWithMarkersProps> = ({
@@ -56,7 +63,6 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   keywordResults = [],
   selectedPlace,
   currentLocation,
-  level = 4,
   className = 'w-full h-full',
   onStoreClick,
   onPlaceClick,
@@ -64,6 +70,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   onCenterChange,
   isSearching = false,
   selectedStoreId: externalSelectedStoreId,
+  onMapCreate,
 }) => {
   const [internalSelectedStoreId, setInternalSelectedStoreId] = useState<
     number | null
@@ -76,6 +83,7 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   const [isPanto, setIsPanto] = useState(false);
   const mapRef = useRef<kakao.maps.Map | null>(null);
   const pantoTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const didInitZoomSyncRef = useRef(false);
   const refreshBookmarkStores = useRefreshBookmarkStores();
 
   // 내부 상태 정의(mymap)
@@ -93,23 +101,17 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
 
   const { bookmarkMode, bookmarkStores, selectStore } = useMapStore();
 
-  // 마커에 사용할 store 배열 결정(mymap)
-  // const storesToRender = isShared ? sharedStores : stores;
   // 마커에 사용할 store 배열 결정 (일반 매장 + 추천 매장)
   const storesToRender = useMemo(() => {
     if (isShared) return sharedStores;
 
-    // 일반 매장과 추천 매장을 합치되, 중복 제거
     const allStores = [...stores];
-
     if (showRecommendedStores && recommendedStores.length > 0) {
       recommendedStores.forEach(recommendedStore => {
         const exists = allStores.some(
           store => store.storeId === recommendedStore.storeId
         );
-        if (!exists) {
-          allStores.push(recommendedStore);
-        }
+        if (!exists) allStores.push(recommendedStore);
       });
     }
     return allStores;
@@ -133,15 +135,59 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   // 인증 확인 및 로그인 모달 관리
   const { checkAuthAndExecuteModal } = useAuthCheckModal();
 
+  const setZoomLevel = useMapStore(state => state.setZoomLevel);
+
+  const handleZoomChanged = useCallback(
+    (map: kakao.maps.Map) => {
+      const lv = map.getLevel();
+      setZoomLevel(lv); // MapStore가 searchRadius도 함께 업데이트
+    },
+    [setZoomLevel]
+  );
+
+  // 줌 기반 버튼 표시 훅
+  const { visibleByZoom, currentZoomLevel, currentRadius, markSearched } =
+    useZoomSearchTrigger({ levelDeltaThreshold: 1 });
+
+  // 검색 파라미터 업데이트 액션 가져오기
+  const setSearchParams = useMapStore(state => state.setSearchParams);
+
+  // 재검색 버튼 클릭 (거리 + 줌 기준 동시 갱신)
+  const handleSearchClick = useCallback(() => {
+    if (!onCenterChange || !mapRef.current) return;
+    const c = mapRef.current.getCenter();
+    if (!c) return;
+
+    const pos = { lat: c.getLat(), lng: c.getLng() };
+
+    // 검색 파라미터 업데이트 (API 호출 트리거)
+    setSearchParams({
+      lat: pos.lat,
+      lng: pos.lng,
+      radius: currentRadius,
+    });
+
+    // 거리 기반 기준 갱신
+    handleSearch();
+    updateSearchPosition(pos);
+    onCenterChange(pos);
+
+    // 줌 기준 갱신
+    markSearched();
+  }, [onCenterChange, handleSearch, updateSearchPosition, markSearched, setSearchParams, currentRadius]);
+
   // center prop 동기화 및 검색 기준 위치 설정 (인포윈도우 상태 변경 시 의존성 제외)
-  useEffect(() => {
-    // 인포윈도우가 열려있지 않을 때만 center prop 동기화
-    if (!infoWindowStore && !recommendedInfoWindowStore) {
-      setMapCenter(center);
-      // 새로운 center가 설정될 때 검색 기준 위치도 업데이트
-      updateSearchPosition(center);
-    }
-  }, [center, updateSearchPosition]);
+  // useEffect(() => {
+  //   if (!infoWindowStore && !recommendedInfoWindowStore) {
+  //     setMapCenter(center);
+  //     updateSearchPosition(center);
+  //   }
+  // }, [
+  //   center,
+  //   updateSearchPosition,
+  //   infoWindowStore,
+  //   recommendedInfoWindowStore,
+  // ]);
 
   // 전역 selectedStore 변경 시 해당 매장으로 포커스 (카드 클릭 시)
   useEffect(() => {
@@ -150,41 +196,26 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
       const targetStore = storesToRender.find(
         store => store.storeId === globalSelectedStore.storeId
       );
-
       if (targetStore) {
-        // 기존 인포윈도우들 닫기
         setInfoWindowStore(null);
         setRecommendedInfoWindowStore(null);
 
-        // 추천 매장인지 확인하여 적절한 인포윈도우 표시
         const isRecommended = recommendedStores.some(
           store => store.storeId === targetStore.storeId
         );
+        if (isRecommended) setRecommendedInfoWindowStore(targetStore);
+        else setInfoWindowStore(targetStore);
 
-        if (isRecommended) {
-          setRecommendedInfoWindowStore(targetStore);
-        } else {
-          setInfoWindowStore(targetStore);
-        }
-
-        // 지도 중심을 해당 매장으로 이동
         const offset = 0.0017;
-        const targetLat = targetStore.latitude + offset;
-        const targetLng = targetStore.longitude;
-        const targetCenter = { lat: targetLat, lng: targetLng };
+        const targetCenter = {
+          lat: targetStore.latitude + offset,
+          lng: targetStore.longitude,
+        };
 
         setIsPanto(true);
         setMapCenter(targetCenter);
 
-        // 지도 레벨을 4로 변경 (바텀시트에서 매장 선택시)
-        if (mapRef.current) {
-          mapRef.current.setLevel(4);
-        }
-
-        if (pantoTimeoutRef.current) {
-          clearTimeout(pantoTimeoutRef.current);
-        }
-
+        if (pantoTimeoutRef.current) clearTimeout(pantoTimeoutRef.current);
         pantoTimeoutRef.current = setTimeout(() => {
           setIsPanto(false);
           pantoTimeoutRef.current = null;
@@ -200,41 +231,25 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         store => store.storeId === externalSelectedStoreId
       );
       if (selectedStore) {
-        // 추천 매장인지 확인
         const isRecommended = recommendedStores.some(
           store => store.storeId === selectedStore.storeId
         );
-        // 기존 인포윈도우들 닫기
+
         setInfoWindowStore(null);
         setRecommendedInfoWindowStore(null);
+        if (isRecommended) setRecommendedInfoWindowStore(selectedStore);
+        else setInfoWindowStore(selectedStore);
 
-        // 해당 스토어 인포윈도우 표시
-        if (isRecommended) {
-          setRecommendedInfoWindowStore(selectedStore);
-        } else {
-          setInfoWindowStore(selectedStore);
-        }
-
-        // 지도 중심을 해당 매장으로 이동
         const offset = 0.0017;
-        const targetLat = selectedStore.latitude + offset;
-        const targetLng = selectedStore.longitude;
-        const targetCenter = { lat: targetLat, lng: targetLng };
+        const targetCenter = {
+          lat: selectedStore.latitude + offset,
+          lng: selectedStore.longitude,
+        };
 
         setIsPanto(true);
         setMapCenter(targetCenter);
 
-        // 지도 레벨을 4로 변경
-        if (mapRef.current) {
-          mapRef.current.setLevel(4);
-        }
-
-        // 기존 timeout이 있다면 정리
-        if (pantoTimeoutRef.current) {
-          clearTimeout(pantoTimeoutRef.current);
-        }
-
-        // 애니메이션 완료 후 isPanto 리셋
+        if (pantoTimeoutRef.current) clearTimeout(pantoTimeoutRef.current);
         pantoTimeoutRef.current = setTimeout(() => {
           setIsPanto(false);
           pantoTimeoutRef.current = null;
@@ -246,65 +261,48 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   // 컴포넌트 언마운트 시 setTimeout cleanup
   useEffect(() => {
     return () => {
-      if (pantoTimeoutRef.current) {
-        clearTimeout(pantoTimeoutRef.current);
-      }
+      if (pantoTimeoutRef.current) clearTimeout(pantoTimeoutRef.current);
     };
   }, []);
 
   const handleMarkerClick = useCallback(
     (store: Store) => {
-      // 로그인 상태 확인 후 인포윈도우 표시
       checkAuthAndExecuteModal(() => {
         setInternalSelectedStoreId(store.storeId);
         setInfoWindowStore(store);
 
-        // 추천 매장인지 확인
         const isRecommended = recommendedStores.some(
           s => s.storeId === store.storeId
         );
-        if (isRecommended) {
-          setRecommendedInfoWindowStore(store);
-        } else {
-          setInfoWindowStore(store);
-        }
+        if (isRecommended) setRecommendedInfoWindowStore(store);
+        else setInfoWindowStore(store);
 
         trackMarkerClick(store.storeId);
 
-        // 인포 윈도우가 화면 중앙에 오도록 오프셋 적용
         const offset = 0.0017;
-        const targetLat = store.latitude + offset;
-        const targetLng = store.longitude;
-        const targetCenter = { lat: targetLat, lng: targetLng };
+        const targetCenter = {
+          lat: store.latitude + offset,
+          lng: store.longitude,
+        };
 
-        // KakaoMap의 isPanto를 사용한 부드러운 이동
         setIsPanto(true);
         setMapCenter(targetCenter);
-
-        // 지도 레벨을 4로 변경
         if (mapRef.current) {
-          mapRef.current.setLevel(4);
+          mapRef.current.setLevel(3);
         }
 
-        // 기존 timeout이 있다면 정리
-        if (pantoTimeoutRef.current) {
-          clearTimeout(pantoTimeoutRef.current);
-        }
-
-        // 애니메이션 완료 후 isPanto 리셋
+        if (pantoTimeoutRef.current) clearTimeout(pantoTimeoutRef.current);
         pantoTimeoutRef.current = setTimeout(() => {
           setIsPanto(false);
           pantoTimeoutRef.current = null;
-        }, 500); // 애니메이션 시간을 500ms로 증가
+        }, 500);
 
-        // 외부에서 전달받은 onStoreClick 콜백도 호출
         onStoreClick?.(store);
       });
     },
     [onStoreClick, recommendedStores, checkAuthAndExecuteModal]
   );
 
-  // 추천 매장인지 확인하는 함수
   const isRecommendedStore = useCallback(
     (storeId: number) => {
       return recommendedStores.some(store => store.storeId === storeId);
@@ -313,35 +311,28 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
   );
 
   const handleInfoWindowClose = useCallback(() => {
+    selectStore(null);
     setInternalSelectedStoreId(null);
     setInfoWindowStore(null);
     setRecommendedInfoWindowStore(null);
-    // 전역 상태 초기화 시 지도 중심점 이동 방지
-    selectStore(null);
-  }, []);
+  }, [selectStore]);
 
   const toggleFavoriteMutation = useToggleFavoriteMutation();
 
   const handleToggleFavorite = useCallback(
     async (event?: React.MouseEvent) => {
-      // 이벤트 전파 차단 (추가 보호)
       if (event) {
         event.stopPropagation();
         event.preventDefault();
       }
-
       if (!infoWindowStore) return;
 
-      // 로그인 상태 확인 후 즐겨찾기 토글 실행
       checkAuthAndExecuteModal(async () => {
         try {
           await toggleFavoriteMutation.mutateAsync({
             storeId: infoWindowStore.storeId,
           });
-
-          if (bookmarkMode) {
-            refreshBookmarkStores();
-          }
+          if (bookmarkMode) refreshBookmarkStores();
         } catch (error) {
           console.error('즐겨찾기 토글 실패:', error);
         }
@@ -365,36 +356,19 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
         lat: newCenter.getLat(),
         lng: newCenter.getLng(),
       };
-
-      // 거리 기반 재검색 상태 업데이트만 실행 (자동 검색 로직 제거)
       handleMapMove(currentPosition);
     },
     [handleMapMove]
   );
 
-  /**
-   * 재검색 버튼 클릭 핸들러
-   */
-  const handleSearchClick = useCallback(() => {
-    if (!onCenterChange || !mapRef.current) return;
+  // 최초 1회: onCreate 이후 현재 줌 레벨을 스토어와 동기화 (무한 루프 방지)
+  useEffect(() => {
+    if (!mapRef.current || didInitZoomSyncRef.current) return;
+    didInitZoomSyncRef.current = true;
+    setZoomLevel(mapRef.current.getLevel());
+  }, [setZoomLevel]);
 
-    const currentCenter = mapRef.current.getCenter();
-    if (!currentCenter) return;
-
-    const currentPosition = {
-      lat: currentCenter.getLat(),
-      lng: currentCenter.getLng(),
-    };
-
-    // 검색 상태 업데이트 (버튼 숨김 및 새로운 기준점 설정)
-    handleSearch();
-    updateSearchPosition(currentPosition);
-
-    // API 요청 실행
-    onCenterChange(currentPosition);
-  }, [onCenterChange, handleSearch, updateSearchPosition]);
-
-  // 중복 제거: 즐겨찾기 모드일 때 일반 마커에서 즐겨찾기 매장은 제외
+  // 즐겨찾기 모드일 때 일반 마커에서 즐겨찾기 매장은 제외
   const filteredStoresToRender = useMemo(() => {
     if (bookmarkMode) {
       const bookmarkIds = new Set(bookmarkStores.map(s => s.storeId));
@@ -403,26 +377,31 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
     return storesToRender;
   }, [storesToRender, bookmarkMode, bookmarkStores]);
 
+  const showManualButton = showButton || visibleByZoom;
+
   return (
     <>
-      {/* 거리 기반 재검색 버튼 */}
-      <ResponsiveManualSearchButton
-        visible={showButton}
+      {/* 거리/줌 기반 재검색 버튼 */}
+      <ManualSearchButton
+        visible={showManualButton}
         loading={isSearching}
         onClick={handleSearchClick}
         distance={distanceFromLastSearch}
+        zoomLevel={currentZoomLevel}
+        radius={currentRadius}
       />
 
       <KakaoMap
         id="map"
         center={mapCenter}
         className={className}
-        level={level}
         isPanto={isPanto}
         onDragEnd={handleDragEnd}
-        onClick={handleInfoWindowClose} // 지도 클릭 시 인포윈도우 닫기
+        onClick={handleInfoWindowClose}
+        onZoomChanged={handleZoomChanged}
         onCreate={map => {
           mapRef.current = map;
+          onMapCreate?.(map);
         }}
       >
         {/* 매장 마커들 */}
@@ -501,18 +480,14 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
                 <KeywordMarker
                   place={place}
                   onClick={clickedPlace => {
-                    // 마커 클릭 시 지도 이동 애니메이션 적용
                     if (mapRef.current) {
                       const offset = 0.0017;
                       const targetLat = clickedPlace.latitude + offset;
                       const targetLng = clickedPlace.longitude;
-
-                      // 부드러운 이동을 위해 panTo 사용
                       mapRef.current.panTo(
                         new kakao.maps.LatLng(targetLat, targetLng)
                       );
                     }
-
                     onPlaceClick?.(clickedPlace);
                   }}
                   isSelected={selectedPlace?.id === place.id}

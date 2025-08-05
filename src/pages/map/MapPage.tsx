@@ -8,6 +8,10 @@ import { MapUIProvider } from '@kakao-map/context/MapUIContext';
 import { useMapUIContext } from '@kakao-map/context/MapUIContext';
 import useKakaoLoader from '@kakao-map/hooks/useKakaoLoader';
 
+import { useScrollPrevention } from '@/shared/hooks/useScrollPrevention';
+import { useFirstVisit } from '@/shared/hooks/useFirstVisit';
+import { BottomSheetTutorial } from '@/shared/components/tutorial/BottomSheetTutorial';
+
 /**
  * 카카오 맵과 관련된 리소스를 로드하고, 지도 및 UI 컨트롤, 위치 제어, 하단 시트가 포함된 전체 지도 페이지를 렌더링합니다.
  *
@@ -28,11 +32,16 @@ const MapContent = () => {
   );
   const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number }>({
     lat: 37.570028,
-    lng: 126.977266
+    lng: 126.977266,
   });
+  const [map, setMap] = useState<kakao.maps.Map | null>(null);
   const mapCenterSetterRef = useRef<
     ((center: { lat: number; lng: number }) => void) | null
   >(null);
+
+  // 첫 방문 튜토리얼 관리
+  const { isFirstVisit, isLoading, markAsVisited } = useFirstVisit('map-page');
+  const [showTutorial, setShowTutorial] = useState(false);
 
   // 키워드 검색 결과 장소 클릭 핸들러
   const handlePlaceClick = useCallback((place: NormalizedPlace) => {
@@ -59,7 +68,6 @@ const MapContent = () => {
             lat: firstResult.latitude,
             lng: firstResult.longitude,
           });
-
         }
       }
       setSelectedPlace(null); // 새 검색 시 선택 초기화
@@ -86,14 +94,21 @@ const MapContent = () => {
     []
   );
 
-  // 지도 중심 좌표 변경 핸들러
-  const handleMapCenterChange = useCallback((center: { lat: number; lng: number }) => {
-    setMapCenter(center);
+  // MapContainer에서 지도 인스턴스를 받는 핸들러
+  const handleMapCreate = useCallback((mapInstance: kakao.maps.Map) => {
+    setMap(mapInstance);
   }, []);
 
+  // 지도 중심 좌표 변경 핸들러
+  const handleMapCenterChange = useCallback(
+    (center: { lat: number; lng: number }) => {
+      setMapCenter(center);
+    },
+    []
+  );
+
   // selectedPlace 상태 변화 디버깅
-  useEffect(() => {
-  }, [selectedPlace]);
+  useEffect(() => {}, [selectedPlace]);
 
   // 바텀시트 초기화 - 닫힌 상태로 시작
   useEffect(() => {
@@ -103,61 +118,41 @@ const MapContent = () => {
     }
   }, [bottomSheetRef]);
 
-  // 모바일에서 세로 스크롤만 방지 (가로 스크롤은 허용)
+  // 첫 방문시 튜토리얼 표시
   useEffect(() => {
-    // body 세로 스크롤만 방지
-    document.body.style.overflowY = 'hidden';
-    document.body.style.overflowX = 'auto';
-    document.body.style.position = 'fixed';
-    document.body.style.width = '100%';
+    if (!isLoading && isFirstVisit) {
+      // 지도 로딩 후 약간의 지연을 두고 튜토리얼 표시
+      const timer = setTimeout(() => {
+        setShowTutorial(true);
+      }, 1500); // 1.5초 후 표시
 
-    // 세로 터치 스크롤만 방지 (가로는 허용)
-    const preventVerticalTouchMove = (e: TouchEvent) => {
-      const target = e.target as HTMLElement;
-      
-      // 스크롤 가능한 영역이나 가로 스크롤 영역은 허용
-      const isScrollableArea = target.closest('[data-scrollable="true"]') || 
-                              target.closest('.overflow-x-auto') ||
-                              target.closest('.scrollbar-hide') ||
-                              target.closest('[class*="overflow-x"]');
-      
-      if (!isScrollableArea) {
-        // 터치 이동이 주로 세로 방향인지 확인
-        const touch = e.touches[0];
-        if (touch) {
-          const deltaX = Math.abs(touch.clientX - (touch.target as any).startX || 0);
-          const deltaY = Math.abs(touch.clientY - (touch.target as any).startY || 0);
-          
-          // 세로 이동이 가로 이동보다 클 때만 방지
-          if (deltaY > deltaX) {
-            e.preventDefault();
-          }
-        }
-      }
-    };
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading, isFirstVisit]);
 
-    // 터치 시작 지점 저장
-    const saveTouchStart = (e: TouchEvent) => {
-      const touch = e.touches[0];
-      if (touch && touch.target) {
-        (touch.target as any).startX = touch.clientX;
-        (touch.target as any).startY = touch.clientY;
-      }
-    };
+  // 튜토리얼 완료 핸들러
+  const handleTutorialComplete = useCallback(() => {
+    setShowTutorial(false);
+    markAsVisited();
+  }, [markAsVisited]);
 
-    document.addEventListener('touchstart', saveTouchStart, { passive: true });
-    document.addEventListener('touchmove', preventVerticalTouchMove, { passive: false });
-
-    // 클린업
-    return () => {
-      document.body.style.overflowY = '';
-      document.body.style.overflowX = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.removeEventListener('touchstart', saveTouchStart);
-      document.removeEventListener('touchmove', preventVerticalTouchMove);
-    };
-  }, []);
+  // 스크롤 방지 적용 (세로 스크롤만 방지, 가로 스크롤 허용)
+  useScrollPrevention({
+    preventVerticalOnly: true,
+    scrollableSelectors: [
+      '[data-scrollable="true"]',
+      '.overflow-x-auto',
+      '.overflow-y-auto',
+      '.overflow-auto',
+      '.scrollbar-hide',
+      '[class*="overflow-x"]',
+      '[class*="overflow-y"]',
+      '.bottom-sheet-content',
+      '.modal-content',
+      '.swiper-container',
+      '.swiper-wrapper',
+    ],
+  });
 
   return (
     <div className="h-screen relative overflow-hidden">
@@ -169,6 +164,7 @@ const MapContent = () => {
           onPlaceInfoClose={handlePlaceInfoClose}
           onMapCenterUpdate={handleMapCenterUpdate}
           onMapCenterChange={handleMapCenterChange}
+          onMapCreate={handleMapCreate}
         />
         <MapControlsContainer
           onKeywordSearchResults={handleKeywordSearchResults}
@@ -178,10 +174,18 @@ const MapContent = () => {
           mapCenterSetter={mapCenterSetterRef.current}
           onPlaceClick={handlePlaceClick}
           mapCenter={mapCenter}
+          map={map}
         />
       </div>
 
       <BottomSheetContainer ref={bottomSheetRef} />
+      
+      {/* 첫 방문시 바텀시트 사용법 튜토리얼 */}
+      <BottomSheetTutorial
+        isVisible={showTutorial}
+        onComplete={handleTutorialComplete}
+        autoCompleteDelay={4000} // 4초 후 자동 완료
+      />
     </div>
   );
 };

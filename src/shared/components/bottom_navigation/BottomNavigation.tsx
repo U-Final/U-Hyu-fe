@@ -77,8 +77,8 @@ const BottomNavigation = () => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-1001 desktop-padding">
-      <nav className="h-12 text-[0.625rem] shadow-nav flex relative justify-around bg-white gap-5 px-[1.5rem] py-[0.5rem]">
+    <div className="fixed bottom-0 left-0 right-0 z-[1002] desktop-padding">
+      <nav className="h-12 text-[0.625rem] shadow-nav flex relative justify-around bg-white gap-5 px-[1.5rem] py-[0.5rem] z-[1003]">
         <NavLink to={PATH.MAP} className="flex gap-4">
           <NavItem
             label="지도"
@@ -123,7 +123,7 @@ const BottomNavigation = () => {
         </NavLink>
         {isLoggedIn ? (
           <NavLink
-            to={user?.role === 'ADMIN' ? PATH.ADMIN : PATH.MYPAGE}
+            to={user?.role === 'ADMIN' ? PATH.ADMIN : PATH.MYPAGE_ACTIVITY}
             className="flex gap-4"
           >
             <NavItem

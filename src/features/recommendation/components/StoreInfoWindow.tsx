@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react';
+
+import { SimpleInfoWindowSkeleton } from '@kakao-map/components/marker/InfoWindowSkeleton';
 import type { Store } from '@kakao-map/types/store';
 import { CustomOverlayMap } from 'react-kakao-maps-sdk';
-import { useState, useEffect } from 'react';
-import { SimpleInfoWindowSkeleton } from '@kakao-map/components/marker/InfoWindowSkeleton';
 
 interface RecommendedStoreInfoWindowProps {
   store: Store;
@@ -62,6 +63,15 @@ export const RecommendStoreInfoWindow: React.FC<
             e.stopPropagation();
           }}
           onMouseUp={e => {
+            e.stopPropagation();
+          }}
+          onTouchStart={e => {
+            e.stopPropagation();
+          }}
+          onTouchEnd={e => {
+            e.stopPropagation();
+          }}
+          onTouchMove={e => {
             e.stopPropagation();
           }}
         >

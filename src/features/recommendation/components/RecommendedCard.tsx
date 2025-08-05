@@ -55,88 +55,42 @@ const RecommendedStoreCard = ({
   return (
     <div
       onClick={handleCardClick}
-      className="cursor-pointer hover:shadow-lg group pb-8"
+      className="cursor-pointer hover:shadow-lg transition-shadow duration-200"
     >
       <BrandCard logoUrl={store.logoImage}>
-        <div className="flex space-around items-center w-full">
+        <div className="flex items-center w-full relative">
           <div className="flex-1 flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <p className="text-black text-lg font-bold group-hover:text-blue-600 transition-colors">
+              <h3 className="text-black text-lg font-bold hover:text-blue-600 transition-colors">
                 {store.storeName}
-              </p>
+              </h3>
             </div>
 
             {store.addressDetail && (
-              <p className="text-gray-600 text-sm group-hover:text-gray-700 transition-colors leading-relaxed flex items-start gap-2">
+              <p className="text-gray-600 text-sm leading-relaxed flex items-start gap-2">
                 <span className="w-1 h-1 bg-gray-400 rounded-full mt-2 flex-shrink-0"></span>
                 <span>{store.addressDetail}</span>
               </p>
             )}
 
-            <div className="relative bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-md p-2 group-hover:shadow-sm transition-shadow w-full overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-yellow-100/30 via-orange-100/40 to-yellow-100/30 animate-pulse"></div>
-              <div className="absolute inset-0 bg-gradient-to-br from-transparent via-yellow-200/20 to-transparent animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-              <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-orange-200/15 to-transparent animate-pulse" style={{ animationDelay: '1s' }}></div>
-             
-              <div className="absolute inset-0 overflow-hidden rounded-md">
-                <div
-                  className="absolute top-1 left-2 w-1.5 h-1.5 bg-yellow-400 rounded-full animate-bounce"
-                  style={{ animationDelay: '0s', animationDuration: '1s' }}
-                ></div>
-                <div
-                  className="absolute top-2 right-3 w-1 h-1 bg-orange-400 rounded-full animate-bounce"
-                  style={{ animationDelay: '0.2s', animationDuration: '1.2s' }}
-                ></div>
-                <div
-                  className="absolute top-1 right-1 w-0.5 h-0.5 bg-yellow-300 rounded-full animate-bounce"
-                  style={{ animationDelay: '0.4s', animationDuration: '0.8s' }}
-                ></div>
-                <div
-                  className="absolute top-3 left-1 w-1 h-1 bg-orange-300 rounded-full animate-bounce"
-                  style={{ animationDelay: '0.6s', animationDuration: '1.1s' }}
-                ></div>
-                <div
-                  className="absolute top-1 left-4 w-0.5 h-0.5 bg-yellow-500 rounded-full animate-bounce"
-                  style={{ animationDelay: '0.8s', animationDuration: '0.9s' }}
-                ></div>
-                <div
-                  className="absolute top-2 left-6 w-1 h-1 bg-orange-500 rounded-full animate-bounce"
-                  style={{ animationDelay: '1s', animationDuration: '1.3s' }}
-                ></div>
-                <div
-                  className="absolute top-3 right-2 w-0.5 h-0.5 bg-yellow-400 rounded-full animate-bounce"
-                  style={{ animationDelay: '1.2s', animationDuration: '1s' }}
-                ></div>
-                <div
-                  className="absolute top-1 right-4 w-1 h-1 bg-orange-400 rounded-full animate-bounce"
-                  style={{ animationDelay: '1.4s', animationDuration: '1.1s' }}
-                ></div>
-                <div
-                  className="absolute top-2 left-3 w-0.5 h-0.5 bg-yellow-300 rounded-full animate-bounce"
-                  style={{ animationDelay: '1.6s', animationDuration: '0.8s' }}
-                ></div>
-                <div
-                  className="absolute top-3 right-5 w-1 h-1 bg-orange-300 rounded-full animate-bounce"
-                  style={{ animationDelay: '1.8s', animationDuration: '1.2s' }}
-                ></div>
-              </div>
-              
-              <p className="text-yellow-900 font-semibold text-sm flex items-center gap-1 relative z-10">
-                <span className="animate-pulse">🎁</span>
+            <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg p-3">
+              <p className="text-yellow-800 font-semibold text-sm flex items-center gap-2">
+                <span className="text-lg">🎁</span>
                 <span>{store.benefit}</span>
               </p>
             </div>
           </div>
+
+          <button
+            onClick={handleDislikeClick}
+            className="absolute top-0 right-0 p-1.5 rounded-full bg-white/80 hover:bg-white shadow-sm hover:shadow-md transition-all duration-200"
+          >
+            <ThumbsDown
+              className="w-4 h-4 text-gray-500 hover:text-red-500 transition-colors"
+              aria-label="추천 제외"
+            />
+          </button>
         </div>
-        <button
-          onClick={handleDislikeClick}
-          className="absolute top-3 right-3 p-1.5 rounded-full bg-white/80 hover:bg-white shadow-sm hover:shadow-md transition-all duration-200"
-        >
-          <ThumbsDown
-            className="w-4 h-4 text-gray-500 hover:text-red-500 transition-colors"
-            aria-label="추천 제외"
-          />
-        </button>
       </BrandCard>
     </div>
   );

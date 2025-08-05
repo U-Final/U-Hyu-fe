@@ -56,7 +56,7 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
   }, [timeoutId]);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 pointer-events-none">
       {/* 컴팩트한 반경 인디케이터 */}
       <div className="relative">
         <button
@@ -71,6 +71,7 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
             hover:bg-gray-50 
             active:bg-gray-100 
             transition-all duration-200
+            pointer-events-auto
           "
           aria-label={`${(searchRadius / 1000).toFixed(0)}km 반경 매장 검색`}
         >
@@ -127,6 +128,7 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
           rounded-full 
           shadow-sm 
           overflow-hidden
+          pointer-events-auto
         "
         role="group"
         aria-label="지도 확대/축소 컨트롤"

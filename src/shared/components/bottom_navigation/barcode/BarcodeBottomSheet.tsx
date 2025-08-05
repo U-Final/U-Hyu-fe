@@ -63,13 +63,9 @@ export const BarcodeBottomSheet: FC = () => {
             marginBottom: 'calc(48px + env(safe-area-inset-bottom, 0px))',
           }}
         >
-          {/* 핸들 */}
-          <div className="flex justify-center py-3 flex-shrink-0">
-            <div className="w-12 h-1.5 bg-gray-300 rounded-full" />
-          </div>
 
           {/* 헤더 */}
-          <header className="flex justify-center items-center px-6 pb-4 flex-shrink-0">
+          <header className="flex justify-center items-center px-6 py-4 flex-shrink-0">
             <h2 className="text-lg font-semibold">
               {user
                 ? `${user.userName} ${user.grade} 멤버십 바코드`

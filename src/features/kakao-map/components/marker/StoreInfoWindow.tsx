@@ -379,12 +379,6 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
           onClick={e => {
             e.stopPropagation();
           }}
-          onMouseDown={e => {
-            e.stopPropagation();
-          }}
-          onMouseUp={e => {
-            e.stopPropagation();
-          }}
         >
           {/* 내용 컨테이너 */}
           <motion.div

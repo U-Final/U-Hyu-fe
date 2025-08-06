@@ -74,7 +74,7 @@ const FilterTabs: FC<FilterTabProps> = ({
     <div
       ref={scrollContainerRef}
       {...bind()}
-      className="flex overflow-x-auto gap-2 py-3 whitespace-nowrap select-none touch-pan-x"
+      className="flex overflow-x-auto gap-2 py-1 whitespace-nowrap select-none touch-pan-x"
       style={
         variant === 'white'
           ? {

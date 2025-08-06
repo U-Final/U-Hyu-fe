@@ -194,7 +194,7 @@ const MapTopControls: FC<MapTopControlsProps> = ({
       </div>
 
       {/* 줌 레벨 표시 UI - 필터탭 아래에 위치 */}
-      <div className="flex justify-start pointer-events-none ml-0">
+      <div className="flex justify-start pointer-events-none -ml-16 pl-4">
         <MapZoomLevelIndicator map={map ?? null} />
       </div>
     </div>

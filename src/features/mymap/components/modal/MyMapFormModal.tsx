@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { MYMAP_COLOR, type MarkerColor } from '@mymap/constants/mymapColor';
+import { MARKER_COLOR_IMAGE, type MarkerColor } from '@mymap/constants/mymapColor';
 import { useAddMyMapMutation, useUpdateMyMapMutation } from '@mymap/hooks';
 import { toast } from 'sonner';
 
@@ -15,12 +15,36 @@ interface MyMapFormProps {
 }
 
 const MAX_LENGTH = 10;
-const COLOR_OPTIONS: MarkerColor[] = [
-  'RED',
-  'ORANGE',
-  'YELLOW',
-  'GREEN',
-  'PURPLE',
+const CATEGORY_OPTIONS: {
+  color: MarkerColor;
+  label: string;
+  description: string;
+}[] = [
+  {
+    color: 'RED',
+    label: '데이트 / 여가',
+    description: '연인, 가족, 친구와 특별한 시간',
+  },
+  {
+    color: 'PURPLE',
+    label: '친목 / 소셜',
+    description: '지인들과 소통하고 즐기는 공간',
+  },
+  {
+    color: 'GREEN',
+    label: '생활 / 실속',
+    description: '일상 속 자주 가는 실용적인 제휴처',
+  },
+  {
+    color: 'ORANGE',
+    label: '여행 / 이동',
+    description: '여행, 나들이, 교통 관련 장소',
+  },
+  {
+    color: 'YELLOW',
+    label: '기타',
+    description: '위 테마에 포함되지 않는 다양한 제휴처',
+  },
 ];
 
 export const MyMapFormModal = ({
@@ -95,22 +119,31 @@ export const MyMapFormModal = ({
         </div>
       </div>
 
-      {/* 색상 선택 */}
+      {/* 테마 선택 */}
       <div>
-        <p className="text-body1 text-black font-semibold mb-2">색상 선택</p>
-        <div className="flex justify-between items-center px-2">
-          {COLOR_OPTIONS.map(c => (
+        <p className="text-body1 text-black font-semibold mb-2">테마 선택</p>
+        <div className="flex flex-col gap-3">
+          {CATEGORY_OPTIONS.map(({ color: c, label, description }) => (
             <button
               key={c}
               onClick={() => setColor(c)}
               className={`
-        w-6 h-6 rounded-full 
-        ${MYMAP_COLOR[c]}
-        ${color === c ? 'scale-125 ring-2 ring-primary' : 'scale-100'} 
-        transition-transform duration-200 ease-in-out
-      `}
-              style={{ backgroundColor: 'currentColor' }}
-            />
+                flex items-center justify-between border-2 border-gray-50 px-4 py-3 rounded-xl
+                ${color === c ? 'border-primary ring-primary' : 'border-gray'}
+              `}
+            >
+              <div className="flex items-center gap-3">
+                <img
+                  src={MARKER_COLOR_IMAGE[c]}
+                  alt={`${label} 아이콘`}
+                  className="w-7 h-7 object-cover"
+                />
+                <div className="text-left">
+                  <p className="text-sm font-semibold text-black">{label}</p>
+                  <p className="text-xs text-gray-500">{description}</p>
+                </div>
+              </div>
+            </button>
           ))}
         </div>
       </div>

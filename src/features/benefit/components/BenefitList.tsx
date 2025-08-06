@@ -67,6 +67,7 @@ export const BenefitList = () => {
         <div className="overflow-x-auto px-0">
           <FilterTabs
             tabs={BENEFIT_FILTER_TABS}
+            value={params.category ?? 'all'}
             onChange={handleFilterChange}
           />
         </div>

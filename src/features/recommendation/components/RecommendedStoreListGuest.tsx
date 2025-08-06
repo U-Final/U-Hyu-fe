@@ -6,8 +6,19 @@ import 'swiper/css/pagination';
 import { Autoplay, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
+import { LoginModal } from '@/shared/components';
+import { useModalStore } from '@/shared/store';
+
 export const RecommendedStoreListGuest = () => {
   const { data: brands, isPending, error } = useRecommendedGuestQuery();
+  const openModal = useModalStore(state => state.openModal);
+
+  const handleOpenLogin = () => {
+    openModal('base', {
+      title: '',
+      children: <LoginModal />,
+    });
+  };
 
   if (isPending) return <p>불러오는 중 ...</p>;
   if (error) return <p>{error.message}</p>;
@@ -29,7 +40,12 @@ export const RecommendedStoreListGuest = () => {
       </div>
 
       <div className="flex items-center justify-center pb-2">
-        <p className="text-secondary">로그인하고 나에게 맞는 혜택 추천 받기</p>
+        <button
+          onClick={handleOpenLogin}
+          className="text-sm text-black font-bold hover:text-white hover:bg-primary-hover rounded-3xl cursor-pointer p-3"
+        >
+          로그인하고 나에게 맞는 혜택 추천 받기
+        </button>
       </div>
 
       <Swiper

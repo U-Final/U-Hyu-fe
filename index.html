@@ -90,32 +90,5 @@
       integrity="..."
       crossorigin="anonymous"
     ></script>
-    <script>
-      function fixViewport() {
-        const viewport = document.querySelector('meta[name="viewport"]');
-        if (viewport) {
-          viewport.content =
-            'width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1,viewport-fit=cover';
-        }
-      }
-
-      // 여러 시점에서 viewport 수정
-      document.addEventListener('DOMContentLoaded', fixViewport);
-      document.addEventListener('visibilitychange', () => {
-        if (!document.hidden) {
-          setTimeout(fixViewport, 100);
-        }
-      });
-
-      // React 앱 로드 후에도 실행 (추가)
-      window.addEventListener('load', () => {
-        setTimeout(fixViewport, 200);
-      });
-
-      // 포커스 이벤트 추가 (웹앱 재진입 시)
-      window.addEventListener('focus', () => {
-        setTimeout(fixViewport, 100);
-      });
-    </script>
   </body>
 </html>

@@ -2,9 +2,9 @@ import { MymapBody, MymapHeader } from '@mymap/components';
 
 const MymapPage = () => {
   return (
-    <div className="flex flex-col gap-4 pb-10">
-      <MymapHeader />
-      <MymapBody />
+    <div className="min-h-screen flex flex-col gap-3">
+        <MymapHeader />
+        <MymapBody />
     </div>
   );
 };

@@ -12,12 +12,15 @@ interface MyMapMarkerProps {
 
 const MyMapMarker: FC<MyMapMarkerProps> = ({ isSelected = false, onClick }) => {
   const markerColor = useSharedMapStore(state => state.markerColor);
-  const markerColorClass =
+  const backgroundColor =
     MYMAP_COLOR_BG[markerColor as MarkerColor] ?? MYMAP_COLOR_BG.RED;
-  // console.log(`즐겨찾기색: ${markerColorClass}`);
 
   return (
-    <div className="relative select-none" onClick={onClick} style={{ userSelect: 'none', WebkitUserSelect: 'none' }}>
+    <div
+      className="relative select-none"
+      onClick={onClick}
+      style={{ userSelect: 'none', WebkitUserSelect: 'none' }}
+    >
       <div
         className={`
           text-3xl
@@ -29,7 +32,8 @@ const MyMapMarker: FC<MyMapMarkerProps> = ({ isSelected = false, onClick }) => {
         `}
       >
         <div
-          className={`w-6 h-6 rounded-full ${markerColorClass} flex items-center justify-center shadow-md`}
+          className={`${backgroundColor} w-6 h-6 rounded-full flex items-center justify-center shadow-md`}
+          style={{ backgroundColor }}
         >
           <MdStar className="w-4 h-4 text-white" />
         </div>

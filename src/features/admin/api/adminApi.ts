@@ -86,7 +86,7 @@ export const adminApi = {
   },
 
   updateAdminBrand: async (brandId: number, brandData: AdminBrandUpdateRequest): Promise<AdminBrandUpdateResponse> => {
-    const res = await client.put<ApiResponse<AdminBrandUpdateResponse>>(ADMIN_ENDPOINTS.BRAND_UPDATE(brandId), brandData);
+    const res = await client.patch<ApiResponse<AdminBrandUpdateResponse>>(ADMIN_ENDPOINTS.BRAND_UPDATE(brandId), brandData);
     
     if (!res.data.data) {
       throw new Error('Invalid API response: missing data');

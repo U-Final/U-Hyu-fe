@@ -70,16 +70,16 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
   useEffect(() => {
     if (editingBrand) {
       setFormData({
-        brandName: editingBrand.brandName,
-        brandImg: editingBrand.brandImg,
-        categoryId: editingBrand.categoryId,
-        usageLimit: editingBrand.usageLimit,
-        usageMethod: editingBrand.usageMethod,
-        storeType: editingBrand.storeType,
-        data: editingBrand.data,
+        brandName: editingBrand.brandName || '',
+        brandImg: editingBrand.brandImg || '',
+        categoryId: editingBrand.categoryId || 1,
+        usageLimit: editingBrand.usageLimit || '',
+        usageMethod: editingBrand.usageMethod || '',
+        storeType: editingBrand.storeType || 'OFFLINE',
+        data: editingBrand.data && editingBrand.data.length > 0 ? editingBrand.data : [INITIAL_BENEFIT],
       });
-      setPreviewUrl(editingBrand.brandImg);
-      setSelectedFile(null); // 편집 모드에서는 새 파일 선택을 위해 초기화
+      setPreviewUrl(editingBrand.brandImg || '');
+      setSelectedFile(null); //새 파일 선택을 위해 초기화 (기존 이미지는 formData.brandImg에 유지됨)
     } else {
       setFormData({
         brandName: '',
@@ -130,6 +130,7 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
       let finalImageUrl = formData.brandImg;
       
       // 새로 선택된 파일이 있으면 Base64로 변환
+      // selectedFile이 null이면 기존 이미지 URL을 그대로 사용
       if (selectedFile) {
         finalImageUrl = await convertFileToBase64(selectedFile);
       }
@@ -141,7 +142,39 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
       };
       
       if (editingBrand) {
-        await updateMutation.mutateAsync({ brandId: editingBrand.brandId, data: finalData });
+        // PATCH 메소드에 맞게 변경된 필드만 전송
+        const changedFields: AdminBrandUpdateRequest = {};
+        
+        // 각 필드가 변경되었는지 확인하고 변경된 필드만 포함
+        if (finalData.brandName !== editingBrand.brandName) {
+          changedFields.brandName = finalData.brandName;
+        }
+        // 이미지 변경 감지: 새 파일이 선택되었거나 기존 이미지 URL이 변경된 경우
+        if (selectedFile || finalData.brandImg !== editingBrand.brandImg) {
+          changedFields.brandImg = finalData.brandImg;
+        }
+        if (finalData.categoryId !== editingBrand.categoryId) {
+          changedFields.categoryId = finalData.categoryId;
+        }
+        if (finalData.usageLimit !== editingBrand.usageLimit) {
+          changedFields.usageLimit = finalData.usageLimit;
+        }
+        if (finalData.usageMethod !== editingBrand.usageMethod) {
+          changedFields.usageMethod = finalData.usageMethod;
+        }
+        if (finalData.storeType !== editingBrand.storeType) {
+          changedFields.storeType = finalData.storeType;
+        }
+        if (JSON.stringify(finalData.data) !== JSON.stringify(editingBrand.data)) {
+          changedFields.data = finalData.data;
+        }
+        
+        // 변경된 필드가 있으면 업데이트 실행
+        if (Object.keys(changedFields).length > 0) {
+          await updateMutation.mutateAsync({ brandId: editingBrand.brandId, data: changedFields });
+        } else {
+          toast.info('변경된 내용이 없습니다.');
+        }
       } else {
         await createMutation.mutateAsync(finalData);
       }
@@ -212,16 +245,16 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
                       key={category.id}
                       type="button"
                       onClick={() => setFormData(prev => ({ ...prev, categoryId: category.id }))}
-                      className={`px-3 py-2 rounded-lg border text-sm font-medium transition-all duration-200 flex items-center justify-center ${
+                      className={`px-2 sm:px-3 py-2 rounded-lg border text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-center ${
                         formData.categoryId === category.id
                           ? `${CATEGORY_STYLES[category.id]?.selected} border-2 border-current shadow-md`
                           : `${CATEGORY_STYLES[category.id]?.unselected} bg-white text-gray-600 border-gray-300`
                       }`}
                     >
                       {formData.categoryId === category.id && (
-                        <CheckIcon className="h-4 w-4 mr-1" />
+                        <CheckIcon className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                       )}
-                      {category.name}
+                      <span className="truncate">{category.name}</span>
                     </button>
                   ))}
                 </div>
@@ -236,18 +269,18 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
           <div>
             <Label>브랜드 이미지 *</Label>
             <div className="mt-2 space-y-3">
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <Input
                   type="file"
                   accept={FILE_UPLOAD_CONFIG.accept}
                   onChange={handleFileChange}
-                  className="flex-1"
+                  className="flex-1 w-full"
                 />
                 {previewUrl && (
                   <img 
                     src={previewUrl} 
                     alt="미리보기" 
-                    className="w-16 h-16 rounded-lg object-cover border border-gray-200"
+                    className="w-16 h-16 rounded-lg object-cover border border-gray-200 flex-shrink-0"
                   />
                 )}
               </div>
@@ -298,14 +331,15 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
               placeholder={FORM_PLACEHOLDERS.usageMethod}
               required
               rows={3}
+              className="min-h-[80px]"
             />
           </div>
 
           {/* 혜택 정보 */}
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-3">
               <Label className="text-base font-medium">혜택 정보 *</Label>
-              <Button type="button" onClick={addBenefit} variant="outline" size="sm">
+              <Button type="button" onClick={addBenefit} variant="outline" size="sm" className="flex-shrink-0">
                 <PlusIcon className="h-4 w-4 mr-1" />
                 혜택 추가
               </Button>
@@ -313,33 +347,32 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
             
             <div className="space-y-4">
               {formData.data.map((benefit, index) => (
-                <div key={index} className="border rounded-lg p-4 bg-gray-50">
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="font-medium">혜택 {index + 1}</h4>
+                <div key={index} className="border rounded-lg p-4 md:p-6 bg-gray-50">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="font-medium text-base">혜택 {index + 1}</h4>
                     {formData.data.length > 1 && (
                       <Button
                         type="button"
                         onClick={() => removeBenefit(index)}
                         variant="outline"
                         size="sm"
-                        className="text-red-600 hover:text-red-700"
+                        className="text-red-600 hover:text-red-700 flex-shrink-0"
                       >
                         <TrashIcon className="h-4 w-4" />
                       </Button>
                     )}
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {/* 등급 선택 (뱃지 형태) */}
-                    <div>
+                  <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-4">
+                    <div className="lg:col-span-1 md:col-span-2">
                       <Label className="block mb-2">등급 *</Label>
-                      <div className="flex gap-2">
+                      <div className="flex flex-wrap gap-2">
                         {GRADE_BADGES.map((badge) => (
                           <button
                             key={badge.value}
                             type="button"
                             onClick={() => updateBenefit(index, 'grade', badge.value)}
-                            className={`px-3 py-1 rounded-full border text-sm font-medium transition-colors ${
+                            className={`px-3 py-1 rounded-full border text-sm font-medium transition-colors whitespace-nowrap ${
                               benefit.grade === badge.value
                                 ? badge.color
                                 : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
@@ -355,7 +388,7 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
                     </div>
                     
                     {/* 혜택 타입 */}
-                    <div>
+                    <div className="lg:col-span-1 md:col-span-1">
                       <Label>혜택 타입 *</Label>
                       <Select
                         value={benefit.benefitType}
@@ -375,7 +408,7 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
                     </div>
                     
                     {/* 설명 */}
-                    <div>
+                    <div className="lg:col-span-1 md:col-span-1">
                       <Label>설명 *</Label>
                       <Input
                         value={benefit.description}

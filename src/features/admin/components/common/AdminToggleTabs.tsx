@@ -32,7 +32,7 @@ const AdminToggleTabs = ({ activeTab, setActiveTab }: Props) => {
   const [isFixed, setIsFixed] = useState(false);
 
   useEffect(() => {
-    if (!sentinelRef.current) return;
+    if (!sentinelRef.current || typeof window === 'undefined' || !('IntersectionObserver' in window)) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {

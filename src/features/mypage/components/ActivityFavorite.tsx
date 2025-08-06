@@ -27,6 +27,9 @@ const ActivityFavorite = ({ enabled }: Props) => {
   useEffect(() => {
     if (!hasNextPage || !enabled) return;
     const currentLoader = loaderRef.current;
+    
+    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) return;
+    
     const observer = new window.IntersectionObserver(
       entries => {
         if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {

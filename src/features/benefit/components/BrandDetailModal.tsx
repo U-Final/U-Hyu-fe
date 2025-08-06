@@ -10,7 +10,7 @@ const BrandDetailModal = ({ brandId }: { brandId: number }) => {
 
   const gradeStyles: Record<string, { bg: string; text: string }> = {
     GOOD: { bg: 'bg-yellow', text: 'text-brown' },
-    VIP: { bg: 'bg-blue', text: 'text-primary' },
+    VIP: { bg: 'bg-blue', text: 'text-blue-500' },
     VVIP: { bg: 'bg-purple', text: 'text-purple' },
   };
 
@@ -25,31 +25,39 @@ const BrandDetailModal = ({ brandId }: { brandId: number }) => {
   return isPending ? (
     <BrandDetailSkeleton />
   ) : isError || !brand ? (
-        <div className="text-sm text-red mt-4">에러 발생</div>
-      ) :  (
+    <div className="text-sm text-red mt-4">에러 발생</div>
+  ) : (
     <div className="flex flex-col gap-4 text-black text-caption">
       <h1 className="text-body1 font-bold">{brand.brandName}</h1>
 
       <div className="flex flex-col gap-1">
         <h3 className="font-bold">등급별 혜택</h3>
         <div className="flex flex-col gap-1">
-          {brand.benefitRes.map(benefit => {
-            const { bg, text } = getGradeStyle(benefit.grade);
-            return (
-              <div
-                key={benefit.grade}
-                className={clsx(
-                  'flex justify-between items-center px-3 py-2 rounded-md',
-                  bg
-                )}
-              >
-                <span className={clsx('font-bold shrink-0 w-10', text)}>
-                  {formatGrade(benefit.grade)}
-                </span>
-                <span>{formatNewlines(benefit.description)}</span>
-              </div>
+          {(() => {
+            const gradeOrder = ['VVIP', 'VIP', 'GOOD'];
+            const sortedBenefitRes = [...brand.benefitRes].sort(
+              (a, b) =>
+                gradeOrder.indexOf(a.grade) - gradeOrder.indexOf(b.grade)
             );
-          })}
+
+            return sortedBenefitRes.map(benefit => {
+              const { bg, text } = getGradeStyle(benefit.grade);
+              return (
+                <div
+                  key={benefit.grade}
+                  className={clsx(
+                    'flex justify-between items-center px-3 py-2 rounded-md',
+                    bg
+                  )}
+                >
+                  <span className={clsx('font-bold shrink-0 w-10', text)}>
+                    {formatGrade(benefit.grade)}
+                  </span>
+                  <span>{formatNewlines(benefit.description)}</span>
+                </div>
+              );
+            });
+          })()}
         </div>
       </div>
 

@@ -24,6 +24,7 @@ import {
 import StoreListContent from './layout/StoreListContent';
 import BrandSelectContent from './layout/steps/BrandSelectContent';
 import CategorySelectContent from './layout/steps/CategorySelectContent';
+import { MdStar } from 'react-icons/md';
 
 export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
   (_, ref) => {
@@ -211,7 +212,8 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
                       onClick={handleMyMapClick}
                       aria-label="MyMap으로 이동"
                     >
-                      <span>My Map</span>
+                      <MdStar className="w-5 h-5"/>
+                      <span>저장</span>
                     </button>
                   </div>
                   {/* 개선된 필터 버튼 */}

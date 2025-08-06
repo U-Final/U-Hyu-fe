@@ -9,7 +9,7 @@ const BarcodeItem = ({
 }: NavItemProps) => {
   return (
     <div
-      className={`w-12 h-12 z-[1004] absolute bottom-4 shadow-nav flex flex-col items-center justify-center text-white font- rounded-full cursor-pointer transition-all duration-300 pointer-events-auto
+      className={`w-12 h-12 z-[1004] absolute bottom-7 shadow-nav flex flex-col items-center justify-center text-white font- rounded-full cursor-pointer transition-all duration-300 pointer-events-auto
         ${isActive ? 'bg-black' : 'bg-gray'} 
         ${disabled ? 'opacity-50 pointer-events-none' : 'hover:bg-black hover:text-white'}`}
       onClick={onClick}

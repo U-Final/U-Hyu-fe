@@ -35,7 +35,7 @@ const StoreListContent: FC<StoreListContentProps> = ({
             <div className="text-gray-400">주변에 매장이 없습니다</div>
           </div>
         ) : (
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-gray-100 mb-7">
             {stores.map(store => (
               <div
                 key={store.storeId}

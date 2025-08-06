@@ -75,7 +75,7 @@ const BrandSelectContent: FC<BrandSelectContentProps> = ({
    */
   const renderBrandList = () => (
     <div className="flex-1 overflow-y-auto">
-      <div className="p-6 space-y-3">
+      <div className="p-6 space-y-3 mb-7">
         {brands.map(brand => {
           const isSelected = selectedBrand === brand;
 

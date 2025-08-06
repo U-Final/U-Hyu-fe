@@ -11,27 +11,33 @@ import type {
 export const MOCK_MYMAP_LIST: MyMapListRes[] = [
   {
     myMapListId: 1,
-    title: 'test1',
+    title: '친구들과 액티비티',
     markerColor: 'PURPLE',
     uuid: 'fff50aaf-b367-4ca7-bffa-601302892117',
   },
   {
     myMapListId: 2,
-    title: 'test2',
+    title: '여름 휴가 코스',
     markerColor: 'ORANGE',
     uuid: '3c1e80ba-5e1e-4a42-8d7c-1c4d8dbf03b5',
   },
   {
     myMapListId: 3,
-    title: 'test2',
+    title: '주말 데이트 코스',
     markerColor: 'RED',
     uuid: '3f7a2e6e-2b4a-4f41-9f79-96fc3e1d2d9b',
   },
   {
     myMapListId: 4,
-    title: 'test4',
+    title: '우리 동네 제휴처',
     markerColor: 'GREEN',
     uuid: 'a2e8b12f-9381-4dbf-b792-1b1a7c8c0dbf',
+  },
+  {
+    myMapListId: 5,
+    title: '이번주 영화 모임 코스',
+    markerColor: 'YELLOW',
+    uuid: 'a2e8b12f-9381-4dbf-b792-1b1a7c8c0dbk',
   },
 ];
 

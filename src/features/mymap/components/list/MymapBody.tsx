@@ -1,36 +1,32 @@
 import type { FC } from 'react';
 
 import {
-  AddMyMapButton,
   MyMapFormModal,
   MymapDeleteModal,
   ShareModal,
 } from '@mymap/components';
-import { MYMAP_COLOR, type MarkerColor } from '@mymap/constants/mymapColor';
+import { type MarkerColor } from '@mymap/constants/mymapColor';
 import { useMyMapListQuery } from '@mymap/hooks';
-import { BsThreeDotsVertical } from 'react-icons/bs';
-import { FiPlusCircle } from 'react-icons/fi';
-import { MdStars } from 'react-icons/md';
-import { MdIosShare } from 'react-icons/md';
-import { PiTrashBold } from 'react-icons/pi';
-import { RiPencilFill } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/shared/components/shadcn/ui/dropdown-menu';
+import { GhostButton } from '@/shared/components';
 import { SkeletonMyMapItem } from '@/shared/components/skeleton';
 import { useModalStore } from '@/shared/store';
 
+import { MymapCard } from './MymapCard';
+
 const MyMapBody: FC = () => {
+  const navigate = useNavigate();
   const { data, isPending, isError } = useMyMapListQuery();
   const openModal = useModalStore(state => state.openModal);
-  const navigate = useNavigate();
 
-  // 삭제 모달
+  const handleCreate = () => {
+    openModal('base', {
+      title: '새 지도 만들기',
+      children: <MyMapFormModal mode="create" />,
+    });
+  };
+
   const handleDelete = (mapId: number) => {
     openModal('base', {
       title: 'My Map 삭제',
@@ -38,7 +34,6 @@ const MyMapBody: FC = () => {
     });
   };
 
-  // 공유 모달
   const handleShare = (uuid: string) => {
     openModal('base', {
       title: 'My Map 공유',
@@ -46,7 +41,6 @@ const MyMapBody: FC = () => {
     });
   };
 
-  // 수정 모달
   const handleUpdate = (
     myMapListId: number,
     myMapTitle: string,
@@ -65,20 +59,15 @@ const MyMapBody: FC = () => {
     });
   };
 
-  // 생성 모달
-  const handleCreate = () => {
-    openModal('base', {
-      title: '새 지도 만들기',
-      children: <MyMapFormModal mode="create" />,
-    });
+  const handleNavigateToMap = () => {
+    navigate('/map');
   };
 
-  return (
-    <div className="flex flex-col w-full mx-auto divide-y divide-gray-200">
-      {/* 새 지도 만들기 */}
-      <AddMyMapButton onCreateNewMap={handleCreate} />
+  const myMapList = data ?? [];
+  const showEmptyCard = myMapList.length === 0;
 
-      {/* map 리스트 */}
+  return (
+    <div className="flex flex-col w-full mx-auto">
       {isPending ? (
         <div className="flex flex-col gap-2 mt-4 mb-7">
           {[...Array(10)].map((_, i) => (
@@ -87,86 +76,50 @@ const MyMapBody: FC = () => {
         </div>
       ) : isError ? (
         <div className="text-sm text-red-500 mt-4">에러 발생</div>
-      ) : !data || data.length === 0 ? (
-        <div className="flex flex-col text-center items-center justify-center h-[60vh]">
-          <img
-            src="/images/empty/empty-state-map.png"
-            alt="생성된 지도가 없습니다."
-            className="w-40 object-contain"
-          />
-          <div className="space-y-2">
-            <h3 className="text-body1 font-semibold text-gray-700">
-              생성된 지도가 없습니다.
-            </h3>
-
-            <p className="flex text-caption text-gray-500 leading-relaxed">
-              <span className="flex text-primary font-bold items-center mr-1">
-                <FiPlusCircle className="mr-1" />새 지도 만들기
-              </span>
-              버튼을 눌러주세요
-            </p>
-          </div>
-        </div>
       ) : (
-        data.map(map => (
-          <div
-            key={map.myMapListId}
-            className="flex items-center justify-between py-3 cursor-pointer hover:bg-light-gray-hover rounded "
-          >
+        <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-3">
             <div
-              className="flex flex-9 items-center"
-              onClick={() => navigate(`/map/${map.uuid}`)}
+              className={`${
+                showEmptyCard
+                  ? 'flex justify-center'
+                  : 'flex overflow-x-auto scroll-smooth'
+              } gap-4 px-4 py-4 items-center`}
             >
-              <MdStars
-                className={`w-5 h-5 ${MYMAP_COLOR[map.markerColor as MarkerColor] || MYMAP_COLOR.RED}`}
-              />
-              <span className="ml-2 text-body2 font-semibold">{map.title}</span>
-            </div>
-
-            {/* 수정, 삭제, 공유 드롭다운 버튼 */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <BsThreeDotsVertical className="flex-1 w-4 h-4 cursor-pointer" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="end"
-                className="w-36 divide-gray-200 bg-white border-none"
+              {myMapList.map(map => (
+                <MymapCard
+                  key={map.myMapListId}
+                  title={map.title}
+                  uuid={map.uuid}
+                  markerColor={map.markerColor as MarkerColor}
+                  onUpdate={() =>
+                    handleUpdate(map.myMapListId, map.title, map.markerColor)
+                  }
+                  onDelete={() => handleDelete(map.myMapListId)}
+                  onShare={() => handleShare(map.uuid)}
+                />
+              ))}
+              <div
+                onClick={handleCreate}
+                className="w-[216px] h-[296px] rounded-4xl bg-white border border-dashed border-gray-300 flex items-center justify-center text-gray-400 text-sm font-semibold cursor-pointer shrink-0"
               >
-                <DropdownMenuItem
-                  onClick={() => {
-                    handleUpdate(map.myMapListId, map.title, map.markerColor);
-                  }}
-                  className="flex justify-between font-medium cursor-pointer "
-                >
-                  수정
-                  <RiPencilFill className="mr-2 h-4 w-4" />
-                </DropdownMenuItem>
-                <hr />
-                <DropdownMenuItem
-                  onClick={e => {
-                    e.stopPropagation();
-                    handleShare(map.uuid);
-                  }}
-                  className="flex justify-between font-medium cursor-pointer "
-                >
-                  공유
-                  <MdIosShare className="mr-2 h-4 w-4" />
-                </DropdownMenuItem>
-                <hr />
-                <DropdownMenuItem
-                  onClick={e => {
-                    e.stopPropagation();
-                    handleDelete(map.myMapListId);
-                  }}
-                  className="flex justify-between font-medium cursor-pointer "
-                >
-                  삭제
-                  <PiTrashBold className="mr-2 h-4 w-4" />
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                + 새 폴더 만들기
+              </div>
+            </div>
+            {!showEmptyCard && (
+              <p className="flex text-gray justify-center text-sm">
+                아이콘을 누르면 해당 My Map 폴더로 이동해요
+              </p>
+            )}
           </div>
-        ))
+
+          <GhostButton size="lg" onClick={handleCreate}>
+            폴더 생성하기
+          </GhostButton>
+          <GhostButton size="lg" onClick={handleNavigateToMap}>
+            폴더에 매장 추가하러가기
+          </GhostButton>
+        </div>
       )}
     </div>
   );

@@ -30,11 +30,11 @@ export default function RegionFilterDropdown({
   return (
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger
-        className="w-20 min-w-20 max-w-20 h-[44px] bg-white border border-gray-200 rounded-md text-sm font-semibold shadow-lg hover:shadow-xl focus:shadow-xl transition-all duration-200 flex-shrink-0"
+        className="w-16 min-w-16 max-w-16 h-[36px] bg-white border border-gray-200 rounded-md text-xs font-medium shadow-md hover:shadow-lg focus:shadow-lg transition-all duration-200 flex-shrink-0"
         style={{
-          width: '80px',
-          minWidth: '80px',
-          maxWidth: '112px',
+          width: '64px',
+          minWidth: '64px',
+          maxWidth: '90px',
           flexShrink: 0,
         }}
       >

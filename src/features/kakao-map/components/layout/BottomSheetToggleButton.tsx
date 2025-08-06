@@ -37,10 +37,10 @@ const BottomSheetToggleButton: FC<BottomSheetToggleButtonProps> = ({
   onToggle,
 }) => {
   return (
-    <div className="flex-shrink-0 h-[44px]">
+    <div className="flex-shrink-0 h-[36px]">
       <button
         onClick={onToggle}
-        className="flex items-center justify-center w-[44px] h-full bg-white border border-gray-200 rounded-md shadow-lg hover:shadow-xl hover:bg-gray-50 transition-all duration-200"
+        className="flex items-center justify-center w-[36px] h-full bg-white border border-gray-200 rounded-md shadow-md hover:shadow-lg hover:bg-gray-50 transition-all duration-200"
         aria-label={isOpen ? '매장 목록 닫기' : '매장 목록 열기'}
       >
         <motion.div
@@ -55,7 +55,7 @@ const BottomSheetToggleButton: FC<BottomSheetToggleButtonProps> = ({
           className="flex items-center justify-center"
         >
           <svg
-            className="w-4 h-4 text-gray-600"
+            className="w-3.5 h-3.5 text-gray-600"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"

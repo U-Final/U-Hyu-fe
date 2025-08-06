@@ -12,15 +12,15 @@ interface MapControlsContainerProps {
  * 지도 우측 하단의 컨트롤 버튼들을 관리하는 컨테이너 컴포넌트
  * BookmarkButton과 LocationButton의 위치를 일관되게 관리
  */
-export const MapControlsContainer: FC<MapControlsContainerProps> = ({ 
-  hideWhenSearching = false 
+export const MapControlsContainer: FC<MapControlsContainerProps> = ({
+  hideWhenSearching = false,
 }) => {
   if (hideWhenSearching) {
     return null;
   }
 
   return (
-    <div className="absolute right-4 top-[8rem] z-[5] flex flex-col gap-3 md:right-6">
+    <div className="absolute right-4 top-[6rem] z-[5] flex flex-col gap-2 md:right-6">
       {/* 북마크 버튼 (상단) */}
       <BookmarkControlContainer />
 

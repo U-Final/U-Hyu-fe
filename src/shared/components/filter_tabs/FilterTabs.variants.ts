@@ -85,12 +85,12 @@ export const BENEFIT_FILTER_TABS: FilterTabItem[] = [
 
 export const filterTabVariants = {
   gray: {
-    base: 'px-3 h-9 flex items-center rounded-xl text-sm font-medium transition-all duration-200 min-w-fit backdrop-blur-sm',
+    base: 'px-2.5 h-8 flex items-center rounded-lg text-xs font-medium transition-all duration-200 min-w-fit backdrop-blur-sm',
     active: 'font-bold border border-white',
     inactive: 'border border-light-gray hover:bg-white/30',
   },
   white: {
-    base: 'px-3 h-9 flex items-center rounded-xl text-sm font-medium transition-all duration-200 min-w-fit backdrop-blur-sm shadow-md',
+    base: 'px-2.5 h-8 flex items-center rounded-lg text-xs font-medium transition-all duration-200 min-w-fit backdrop-blur-sm shadow-sm',
     active: 'font-bold border border-white',
     inactive: 'bg-white border border-gray-200/50',
   },

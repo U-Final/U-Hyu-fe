@@ -112,7 +112,7 @@ const FilterTabs: FC<FilterTabProps> = ({
           onClick={() => handleClick(value)}
           className={clsx(
             filterTabVariants[variant].base,
-            'filter-tab-button cursor-pointer gap-1.5',
+            'filter-tab-button cursor-pointer gap-1',
             active === value
               ? filterTabVariants[variant].active
               : filterTabVariants[variant].inactive
@@ -128,7 +128,7 @@ const FilterTabs: FC<FilterTabProps> = ({
         >
           {IconComponent && (
             <IconComponent
-              className="w-4 h-4 flex-shrink-0"
+              className="w-3.5 h-3.5 flex-shrink-0"
               style={{
                 color: color || '#6b7280', // 항상 카테고리 고유 색상 표시
               }}

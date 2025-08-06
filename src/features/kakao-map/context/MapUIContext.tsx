@@ -9,7 +9,7 @@ import React, {
 import type { MapDragBottomSheetRef } from '../components/controls/MapDragBottomSheet';
 
 /**
- * 지도 관련 순수 UI 상태 인터페이스
+ * 지도 관련 순수 UI 상태 인터페이스 (단 바텀 관련 상태는 ref로만 제어)
  * 비즈니스 로직과 분리된 UI 상태만 관리
  */
 interface MapUIState {
@@ -19,8 +19,6 @@ interface MapUIState {
 
   // 바텀시트 네비게이션 상태
   currentBottomSheetStep: 'list' | 'category' | 'brand' | 'mymap';
-
-  // 바텀시트 상태 제거 - ref로만 제어
 
   // 필터 UI 상태
   selectedCategory: string;
@@ -51,8 +49,6 @@ type MapUIAction =
       type: 'SET_BOTTOM_SHEET_STEP';
       payload: 'list' | 'category' | 'brand' | 'mymap';
     }
-  | { type: 'SET_BOTTOM_SHEET_EXPANDED'; payload: boolean }
-  | { type: 'TOGGLE_BOTTOM_SHEET' }
 
   // 필터 관련 액션
   | { type: 'SET_SELECTED_CATEGORY'; payload: string }
@@ -220,16 +216,6 @@ export const MapUIProvider: React.FC<{ children: React.ReactNode }> = ({
       },
       []
     ),
-
-    setBottomSheetExpanded: useCallback((expanded: boolean) => {
-      dispatch({ type: 'SET_BOTTOM_SHEET_EXPANDED', payload: expanded });
-    }, []),
-
-    toggleBottomSheet: useCallback(() => {
-      dispatch({ type: 'TOGGLE_BOTTOM_SHEET' });
-    }, []),
-
-    // 바텀시트 통합 제어 액션 제거 - ref로만 제어
 
     // 필터 관련 액션
     setSelectedCategory: useCallback((category: string) => {

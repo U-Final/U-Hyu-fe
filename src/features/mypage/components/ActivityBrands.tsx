@@ -64,7 +64,7 @@ const ActivityBrands = () => {
            <div className="relative w-full h-48 sm:h-64 md:h-80 overflow-hidden">
              <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-800 to-gray-700 rounded-t-3xl shadow-2xl"></div>
              
-             <div className="relative h-full flex items-end justify-center gap-1 sm:gap-2 md:gap-4 lg:gap-6 xl:gap-8 px-2 sm:px-4 md:px-6 lg:px-8 pb-2 sm:pb-4 md:pb-6 lg:pb-8">
+             <div className="relative h-full flex items-end justify-center gap-1 sm:gap-2 md:gap-4 lg:gap-6 xl:gap-8 px-2 sm:px-4 md:px-6 lg:px-8">
            
                {data.bestBrandList[2] && (
                  <div className="relative flex flex-col items-center flex-shrink-0">
@@ -79,9 +79,15 @@ const ActivityBrands = () => {
                      />
                    </div>
                    
-                   <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-bold text-white whitespace-nowrap mb-1 sm:mb-2 md:mb-3 lg:mb-4 xl:mb-4 bg-black/30 px-1 sm:px-2 md:px-3 lg:px-4 xl:px-4 py-0.5 sm:py-1 md:py-1 lg:py-1.5 xl:py-1.5 rounded-full backdrop-blur-sm">
-                     {data.bestBrandList[2].bestBrandName}
-                   </p>
+                                       <p 
+                      className="font-bold text-white text-center mb-1 sm:mb-2 md:mb-3 lg:mb-4 xl:mb-4 max-w-[70px] sm:max-w-[85px] md:max-w-[100px] lg:max-w-[115px] xl:max-w-[130px] break-words"
+                      style={{
+                        fontSize: `clamp(${Math.max(6, 14 - data.bestBrandList[2].bestBrandName.length * 0.6)}px, ${Math.max(8, 16 - data.bestBrandList[2].bestBrandName.length * 0.5)}px, ${Math.max(10, 18 - data.bestBrandList[2].bestBrandName.length * 0.4)}px)`,
+                        lineHeight: '1.2'
+                      }}
+                    >
+                      {data.bestBrandList[2].bestBrandName}
+                    </p>
                    
                    <div className="absolute -top-0 -right-0 sm:-top-2.5 sm:-right-2.5 md:-top-3 md:-right-3 lg:-top-3 lg:-right-3 xl:-top-4 xl:-right-4 w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 bg-amber-500 rounded-full flex items-center justify-center shadow-lg border border-white">
                      <span className="text-[8px] sm:text-[8px] md:text-xs lg:text-sm xl:text-sm font-bold text-white">3</span>
@@ -106,9 +112,15 @@ const ActivityBrands = () => {
                    </div>
                    
                   
-                   <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-bold text-white whitespace-nowrap mb-1 sm:mb-2 md:mb-3 lg:mb-4 xl:mb-4 bg-black/30 px-1 sm:px-2 md:px-3 lg:px-4 xl:px-4 py-0.5 sm:py-1 md:py-1 lg:py-1.5 xl:py-1.5 rounded-full backdrop-blur-sm">
-                     {data.bestBrandList[0].bestBrandName}
-                   </p>
+                                       <p 
+                      className="font-bold text-white text-center mb-1 sm:mb-2 md:mb-3 lg:mb-4 xl:mb-4 max-w-[70px] sm:max-w-[85px] md:max-w-[100px] lg:max-w-[115px] xl:max-w-[130px] break-words"
+                      style={{
+                        fontSize: `clamp(${Math.max(6, 14 - data.bestBrandList[0].bestBrandName.length * 0.6)}px, ${Math.max(8, 16 - data.bestBrandList[0].bestBrandName.length * 0.5)}px, ${Math.max(10, 18 - data.bestBrandList[0].bestBrandName.length * 0.4)}px)`,
+                        lineHeight: '1.2'
+                      }}
+                    >
+                      {data.bestBrandList[0].bestBrandName}
+                    </p>
                    
               
                    <div className="absolute -top-0 -right-[-5px] sm:-top-2.5 sm:-right-2.5 md:-top-3 md:-right-3 lg:-top-3 lg:-right-3 xl:-top-4 xl:-right-4 w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg border border-white">
@@ -133,9 +145,15 @@ const ActivityBrands = () => {
                      />
                    </div>
                    
-                   <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-bold text-white whitespace-nowrap mb-1 sm:mb-2 md:mb-3 lg:mb-4 xl:mb-4 bg-black/30 px-1 sm:px-2 md:px-3 lg:px-4 xl:px-4 py-0.5 sm:py-1 md:py-1 lg:py-1.5 xl:py-1.5 rounded-full backdrop-blur-sm">
-                     {data.bestBrandList[1].bestBrandName}
-                   </p>
+                                       <p 
+                      className="font-bold text-white text-center mb-1 sm:mb-2 md:mb-3 lg:mb-4 xl:mb-4 max-w-[70px] sm:max-w-[85px] md:max-w-[100px] lg:max-w-[115px] xl:max-w-[130px] break-words"
+                      style={{
+                        fontSize: `clamp(${Math.max(6, 14 - data.bestBrandList[1].bestBrandName.length * 0.6)}px, ${Math.max(8, 16 - data.bestBrandList[1].bestBrandName.length * 0.5)}px, ${Math.max(10, 18 - data.bestBrandList[1].bestBrandName.length * 0.4)}px)`,
+                        lineHeight: '1.2'
+                      }}
+                    >
+                      {data.bestBrandList[1].bestBrandName}
+                    </p>
                   
                    <div className="absolute -top-0 -right-[-4px] sm:-top-2.5 sm:-right-2.5 md:-top-3 md:-right-3 lg:-top-3 lg:-right-3 xl:-top-4 xl:-right-4 w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 bg-gray-300 rounded-full flex items-center justify-center shadow-lg border border-white">
                      <span className="text-[8px] sm:text-[8px] md:text-xs lg:text-sm xl:text-sm font-bold text-white">2</span>

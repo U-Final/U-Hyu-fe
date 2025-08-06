@@ -55,7 +55,7 @@ const ActivityTabs = ({ activeTab, setActiveTab }: Props) => {
   const tabContent = (
     <div
       className={`relative flex items-center justify-between bg-gray-100 rounded-[1rem] px-[0.25rem] transition-all duration-500 ease-out ${
-        isFixed ? 'h-[44px] shadow-md' : 'h-[3rem]'
+        isFixed ? 'h-[38px] shadow-md' : 'h-[3rem]'
       }`}
       role="tablist"
       aria-label="활동 내역 및 즐겨찾기 탭"

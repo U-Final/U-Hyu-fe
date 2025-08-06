@@ -34,9 +34,9 @@ const MyPageMembership = ({
     icon: React.ReactNode;
     label: string;
   }[] = [
-    { grade: 'VVIP', icon: <Crown className="w-5 h-5" />, label: 'VVIP' },
-    { grade: 'VIP', icon: <Star className="w-5 h-5" />, label: 'VIP' },
-    { grade: 'GOOD', icon: <User2 className="w-5 h-5" />, label: '우수' },
+    { grade: 'VVIP', icon: <Crown className="w-4 h-4 sm:w-5 sm:h-5" />, label: 'VVIP' },
+    { grade: 'VIP', icon: <Star className="w-4 h-4 sm:w-5 sm:h-5" />, label: 'VIP' },
+    { grade: 'GOOD', icon: <User2 className="w-4 h-4 sm:w-5 sm:h-5" />, label: '우수' },
   ];
 
   // 현재 선택된 등급 (pendingChanges 우선, 없으면 user.grade)
@@ -58,7 +58,7 @@ const MyPageMembership = ({
               key={grade}
               onClick={() => handleGradeChange(grade)}
               disabled={!isEditMode || currentGrade === grade}
-              className={`flex flex-col items-center gap-[0.25rem] p-[0.75rem] rounded-[0.5rem] text-[0.875rem] font-medium transition-all ${
+              className={`flex flex-col items-center justify-center gap-[0.25rem] p-[0.5rem] sm:p-[0.75rem] rounded-[0.5rem] text-[0.75rem] sm:text-[0.875rem] font-medium transition-all min-h-[3rem] sm:min-h-[4rem] ${
                 currentGrade === grade
                   ? 'bg-primary text-white shadow-md'
                   : isEditMode
@@ -66,9 +66,9 @@ const MyPageMembership = ({
                     : 'bg-light-gray text-gray opacity-50 cursor-not-allowed'
               }`}
             >
-              <div className="flex items-center gap-[0.25rem]">
+              <div className="flex flex-col items-center gap-[0.25rem]">
                 {icon}
-                <span>{label}</span>
+                <span className="text-center whitespace-nowrap">{label}</span>
               </div>
             </button>
           ))}

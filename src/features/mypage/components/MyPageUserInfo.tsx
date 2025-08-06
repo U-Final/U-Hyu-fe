@@ -112,22 +112,22 @@ const MyPageUserInfo = ({
               key={key}
               className="flex items-center justify-between p-[1rem] bg-white rounded-[0.75rem] border border-gray"
             >
-              <div className="flex items-center gap-[0.75rem]">
+              <div className="flex items-center gap-[0.75rem] min-w-0 flex-shrink-0">
                 {icon}
-                <span className="text-[0.875rem] text-gray">{label}</span>
+                <span className="text-[0.875rem] text-gray whitespace-nowrap">{label}</span>
               </div>
-              <div className="flex items-center gap-[0.5rem]">
+              <div className="flex items-center gap-[0.5rem] min-w-0 flex-1 justify-end">
                 {isEditable ? (
                   <input
                     type="text"
                     value={String(value || '')}
                     onChange={e => handleChange(key, e.target.value)}
                     onKeyDown={handleKeyDown}
-                    className="text-right text-[0.875rem] text-black bg-transparent border-none outline-none"
+                    className="text-right text-[0.875rem] text-black bg-transparent border-none outline-none w-full max-w-[8rem] sm:max-w-none"
                     placeholder="닉네임을 입력하세요"
                   />
                 ) : (
-                  <span className="text-[0.875rem] text-black">
+                  <span className="text-[0.875rem] text-black truncate max-w-[8rem] sm:max-w-none">
                     {key === 'gender'
                       ? value === 'MALE'
                         ? '남성'

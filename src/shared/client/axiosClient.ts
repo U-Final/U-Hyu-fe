@@ -1,7 +1,6 @@
+import { userStore } from '@user/store/userStore';
 import axios, { type AxiosInstance } from 'axios';
 import { toast } from 'sonner';
-
-import { userStore } from '@/shared/store/userStore';
 
 const IS_MOCKING = import.meta.env.VITE_USE_MSW === 'true';
 

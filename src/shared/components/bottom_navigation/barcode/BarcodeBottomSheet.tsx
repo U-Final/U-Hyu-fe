@@ -1,11 +1,12 @@
 import { type FC, useEffect } from 'react';
 
+import { useIsLoggedIn, useUser } from '@user/store/userStore';
+
 import {
   GuestBarcodeContent,
   LoggedInBarcodeContent,
 } from '@/shared/components/bottom_navigation/barcode/contents';
 import { useBarcodeStore } from '@/shared/store/barcodeStore';
-import { useIsLoggedIn, useUser } from '@/shared/store/userStore';
 
 export const BarcodeBottomSheet: FC = () => {
   const isLoggedIn = useIsLoggedIn();
@@ -63,7 +64,6 @@ export const BarcodeBottomSheet: FC = () => {
             marginBottom: 'calc(48px + env(safe-area-inset-bottom, 0px))',
           }}
         >
-
           {/* 헤더 */}
           <header className="flex justify-center items-center px-6 py-4 flex-shrink-0">
             <h2 className="text-lg font-semibold">

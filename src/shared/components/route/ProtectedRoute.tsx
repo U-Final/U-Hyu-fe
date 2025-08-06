@@ -1,10 +1,10 @@
 import { type ReactElement, useEffect, useState } from 'react';
 
 import { PATH } from '@paths';
+import { useAuthState } from '@user/store/userStore';
 import { useNavigate } from 'react-router-dom';
 
 import { useModalStore } from '@/shared/store';
-import { useAuthState } from '@/shared/store/userStore';
 
 interface ProtectedRouteProps {
   children: ReactElement;

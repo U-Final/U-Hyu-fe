@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
 
 import { PATH } from '@paths';
+import { userStore } from '@user/store/userStore';
 import { useNavigate } from 'react-router-dom';
 import { BeatLoader } from 'react-spinners';
 
-import { userStore } from '@/shared/store/userStore';
-
 const AuthSuccess = () => {
-
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(true);
 

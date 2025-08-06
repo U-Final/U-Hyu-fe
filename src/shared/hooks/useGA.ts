@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 
+import { useAuthState } from '@user/store/userStore';
 import { useLocation } from 'react-router-dom';
 
-import { useAuthState } from '@/shared/store/userStore';
 import {
   initGA,
   trackCustomEvent,
@@ -13,7 +13,7 @@ import {
 export const useGA = () => {
   const location = useLocation();
   const { isLoggedIn } = useAuthState();
-  
+
   useEffect(() => {
     initGA();
   }, []);

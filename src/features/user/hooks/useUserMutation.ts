@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { userApi } from '@user/api/userApi';
+import { userStore } from '@user/store/userStore';
 import { toast } from 'sonner';
-
-import { userStore } from '@/shared/store/userStore';
 
 import { userKeys } from './useUserQuery';
 

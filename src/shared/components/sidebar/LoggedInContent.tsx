@@ -1,5 +1,6 @@
 import { PATH } from '@paths';
 import { LogoutButton } from '@user/components/LogoutButton';
+import { useUser } from '@user/store/userStore';
 import { ChevronRight } from 'lucide-react';
 import { FaMap, FaMapMarkerAlt, FaUser } from 'react-icons/fa';
 import { HiGift } from 'react-icons/hi';
@@ -8,7 +9,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { SheetClose } from '@/shared/components/shadcn/ui/sheet';
 import { useBarcodeStore } from '@/shared/store/barcodeStore';
-import { useUser } from '@/shared/store/userStore';
 
 // 메뉴 아이템 타입 정의
 interface MenuItem {
@@ -75,12 +75,8 @@ const LoggedInContent = () => {
           </div>
           <div className="flex-1">
             <h3 className="text-lg font-bold">{user?.userName}님</h3>
-            <p className="text-sm text-black">
-              안녕하세요!
-            </p>
-            <p className="text-sm text-black">
-              좋은 하루 보내세요
-            </p>
+            <p className="text-sm text-black">안녕하세요!</p>
+            <p className="text-sm text-black">좋은 하루 보내세요</p>
           </div>
         </div>
       </div>

@@ -2,8 +2,7 @@ import {
   RecommendedStoreListGuest,
   RecommendedStoreListLoggedIn,
 } from '@recommendation/components';
-
-import { useAuthState } from '@/shared/store/userStore';
+import { useAuthState } from '@user/store/userStore';
 
 export const RecommendedStoreListWrapper = () => {
   const { isAuthChecked } = useAuthState();

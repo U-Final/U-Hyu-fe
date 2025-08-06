@@ -1,13 +1,14 @@
 import { forwardRef, useCallback } from 'react';
 
 import { MyMapList, MymapUuid } from '@mymap/components';
+import { useIsLoggedIn } from '@user/store/userStore';
 import { FaFilter } from 'react-icons/fa';
+import { MdStar } from 'react-icons/md';
 import { useParams } from 'react-router-dom';
 
 import { BackButton } from '@/shared/components';
 import { useAuthCheckModal } from '@/shared/hooks/useAuthCheckModal';
 import { useModalStore } from '@/shared/store';
-import { useIsLoggedIn } from '@/shared/store/userStore';
 
 import { useMapUIContext } from '../context/MapUIContext';
 import { useBrandsByCategoryWhen } from '../hooks/useBrandsByCategory';
@@ -24,7 +25,6 @@ import {
 import StoreListContent from './layout/StoreListContent';
 import BrandSelectContent from './layout/steps/BrandSelectContent';
 import CategorySelectContent from './layout/steps/CategorySelectContent';
-import { MdStar } from 'react-icons/md';
 
 export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
   (_, ref) => {
@@ -212,7 +212,7 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
                       onClick={handleMyMapClick}
                       aria-label="MyMap으로 이동"
                     >
-                      <MdStar className="w-5 h-5"/>
+                      <MdStar className="w-5 h-5" />
                       <span>저장</span>
                     </button>
                   </div>

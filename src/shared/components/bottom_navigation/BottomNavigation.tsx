@@ -1,4 +1,5 @@
 import { PATH } from '@paths';
+import { useUser } from '@user/store/userStore';
 import { X } from 'lucide-react';
 import { FaMap, FaMapMarkerAlt } from 'react-icons/fa';
 import { FaUser } from 'react-icons/fa6';
@@ -11,7 +12,6 @@ import NavItem from '@/shared/components/bottom_navigation/NavItem';
 import { useAuthCheckModal } from '@/shared/hooks/useAuthCheckModal';
 import { useGA } from '@/shared/hooks/useGA';
 import { useBarcodeStore } from '@/shared/store/barcodeStore';
-import { useUser } from '@/shared/store/userStore';
 
 import { BarcodeBottomSheet } from './barcode/BarcodeBottomSheet';
 

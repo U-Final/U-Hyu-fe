@@ -112,7 +112,7 @@ const MyPageHeader = ({ user }: MyPageHeaderProps) => {
             />
             */}
           </div>
-          <div className="flex flex-col justify-center gap-1 -mt-5">
+          <div className="flex flex-col justify-center gap-2 -mt-5">
             {user.grade && (
               <span className={`inline-flex items-center justify-center px-3 py-0.5 rounded-full text-[10px] font-bold w-fit max-w-[3rem] ${getGradeBadgeStyle(user.grade)}`}>
                 {convertGrade(user.grade)}
@@ -125,12 +125,12 @@ const MyPageHeader = ({ user }: MyPageHeaderProps) => {
         </div>
         <button
           onClick={() => navigate(nextPath)}
-          className="group flex items-center gap-2 px-3 py-2 text-sm font-medium text-primary hover:bg-primary-hover hover:text-white rounded-lg transition-all duration-200 ease-in-out transform hover:scale-[1.02] active:scale-[0.98]"
+          className="group flex items-center gap-1 sm:gap-2 lg:gap-2 px-2 sm:px-3 lg:px-4 py-2 text-xs sm:text-sm lg:text-base font-medium text-primary hover:bg-primary-hover hover:text-white rounded-lg transition-all duration-200 ease-in-out transform hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap"
         >
           <span className="transition-colors duration-200">
             {isActivity ? '마이페이지' : '활동 내역'}
           </span>
-          <ChevronRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+          <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 transition-transform duration-200 group-hover:translate-x-0.5" />
         </button>
       </div>
     </div>

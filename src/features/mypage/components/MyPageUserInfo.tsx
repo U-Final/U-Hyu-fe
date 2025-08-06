@@ -123,8 +123,12 @@ const MyPageUserInfo = ({
                     value={String(value || '')}
                     onChange={e => handleChange(key, e.target.value)}
                     onKeyDown={handleKeyDown}
-                    className="text-right text-[0.875rem] text-black bg-transparent border-none outline-none w-full max-w-[8rem] sm:max-w-none"
+                    className="text-right text-[0.875rem] text-black bg-transparent border-none outline-none w-auto min-w-[2rem] max-w-[8rem] sm:max-w-none"
                     placeholder="닉네임을 입력하세요"
+                    style={{ 
+                      width: `${Math.max(2, String(value || '').length + 2)}ch`,
+                      textAlign: 'right'
+                    }}
                   />
                 ) : (
                   <span className="text-[0.875rem] text-black truncate max-w-[8rem] sm:max-w-none">

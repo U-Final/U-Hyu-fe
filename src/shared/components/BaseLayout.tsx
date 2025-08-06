@@ -10,7 +10,7 @@ const BaseLayout = ({ children, isMap = false }: BaseLayoutProps) => {
       className={
         isMap
           ? 'flex-1 bg-white w-full h-full min-w-0 desktop-padding'
-          : 'flex-1 bg-white px-4 pt-[60px] pb-[50px] w-full h-full overflow-y-auto desktop-padding'
+          : 'flex-1 bg-white px-4 pt-[60px] pb-[50px] w-full h-full overflow-y-auto desktop-padding-non-map'
       }
     >
       {children}

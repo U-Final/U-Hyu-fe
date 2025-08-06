@@ -88,9 +88,9 @@ const MyMapBody: FC = () => {
       ) : isError ? (
         <div className="text-sm text-red-500 mt-4">에러 발생</div>
       ) : !data || data.length === 0 ? (
-        <div className="flex  flex-col text-center items-center justify-center">
+        <div className="flex flex-col text-center items-center justify-center h-[60vh]">
           <img
-            src="/images/empty/empty-state.png"
+            src="/images/empty/empty-state-map.png"
             alt="생성된 지도가 없습니다."
             className="w-40 object-contain"
           />

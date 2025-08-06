@@ -101,7 +101,7 @@ const MyMapList: FC = () => {
       ) : !data || data.length === 0 ? (
         <div className="flex  flex-col text-center items-center justify-center">
           <img
-            src="/images/empty/empty-state.png"
+            src="/images/empty/empty-state-map.png"
             alt="생성된 지도가 없습니다."
             className="w-40 object-contain"
           />

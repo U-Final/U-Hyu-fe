@@ -242,7 +242,7 @@ export const BottomSheetContainer = forwardRef<MapDragBottomSheetRef>(
             <div onClick={e => e.stopPropagation()}>
               <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
                 <div className="flex-1">
-                  <h2 className="text-lg font-bold text-gray-900">My Map</h2>
+                  <h2 className="text-lg font-bold text-gray-900">저장 폴더</h2>
                 </div>
                 <BackButton onClick={handleBackToList} />
               </div>

@@ -5,7 +5,7 @@ import { MYPAGE_PATHS } from '@mypage/constants/paths';
 import type { UserInfoData } from '@mypage/api/types';
 import { ChevronRight } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { formatUpdatedAt } from '@mypage/utils/dateUtils';
+// import { formatUpdatedAt } from '@mypage/utils/dateUtils';
 // import { updateUserInfo, updateUserProfileImage } from '@mypage/api/mypageApi';
 
 interface MyPageHeaderProps {
@@ -74,6 +74,19 @@ const MyPageHeader = ({ user }: MyPageHeaderProps) => {
   const isActivity = location.pathname === MYPAGE_PATHS.ACTIVITY;
   const nextPath = isActivity ? MYPAGE_PATHS.MAIN : MYPAGE_PATHS.ACTIVITY;
 
+  const getGradeBadgeStyle = (grade: string) => {
+    switch (grade) {
+      case 'VVIP':
+        return 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg';
+      case 'VIP':
+        return 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-white shadow-lg';
+      case 'GOOD':
+        return 'bg-gradient-to-r from-gray-400 to-gray-500 text-white shadow-lg';
+      default:
+        return 'bg-gray-300 text-gray-600';
+    }
+  };
+
   return (
     <div className="space-y-[1rem]">
       <h2 className="font-bold text-[1.125rem] text-black">
@@ -99,15 +112,14 @@ const MyPageHeader = ({ user }: MyPageHeaderProps) => {
             />
             */}
           </div>
-          <div className="flex flex-col justify-center">
+          <div className="flex flex-col justify-center gap-1 -mt-5">
+            {user.grade && (
+              <span className={`inline-flex items-center justify-center px-3 py-0.5 rounded-full text-[10px] font-bold w-fit max-w-[3rem] ${getGradeBadgeStyle(user.grade)}`}>
+                {convertGrade(user.grade)}
+              </span>
+            )}
             <span className="font-bold text-[1rem] text-black leading-none">
               {user.nickName || user.userName}
-            </span>
-            <span className="text-[0.875rem] text-gray leading-none">
-              {user.grade ? convertGrade(user.grade) : '등급 없음'}
-            </span>
-            <span className="text-[0.75rem] text-gray leading-none">
-              {formatUpdatedAt(user.updatedAt)}
             </span>
           </div>
         </div>

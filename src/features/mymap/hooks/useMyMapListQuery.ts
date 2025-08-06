@@ -10,5 +10,7 @@ export const useMyMapListQuery = () => {
   return useQuery<MyMapListRes[]>({
     queryKey: ['mymaplist'],
     queryFn: getMyMapList,
+    staleTime: 0,
+    refetchOnMount: 'always',
   });
 };

@@ -1,4 +1,12 @@
 {
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.u-hyu.site" }],
+      "destination": "https://u-hyu.site/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/assets/(.*)", "destination": "/assets/$1" },

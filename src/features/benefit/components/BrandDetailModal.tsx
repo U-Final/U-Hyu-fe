@@ -27,12 +27,11 @@ const BrandDetailModal = ({ brandId }: { brandId: number }) => {
   ) : isError || !brand ? (
     <div className="text-sm text-red mt-4">에러 발생</div>
   ) : (
-    <div className="flex flex-col gap-4 text-black text-caption">
+    <div className="flex flex-col gap-4 text-black text-caption max-h-[80vh] overflow-y-auto">
       <h1 className="text-body1 font-bold">{brand.brandName}</h1>
-
-      <div className="flex flex-col gap-1">
-        <h3 className="font-bold">등급별 혜택</h3>
-        <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1 text-body2">
+        <h3 className=" font-bold">등급별 혜택</h3>
+        <div className="flex flex-col gap-1 text-black">
           {(() => {
             const gradeOrder = ['VVIP', 'VIP', 'GOOD'];
             const sortedBenefitRes = [...brand.benefitRes].sort(
@@ -46,7 +45,7 @@ const BrandDetailModal = ({ brandId }: { brandId: number }) => {
                 <div
                   key={benefit.grade}
                   className={clsx(
-                    'flex justify-between items-center px-3 py-2 rounded-md',
+                    'flex justify-between items-center px-3 py-2 rounded-md gap-2',
                     bg
                   )}
                 >
@@ -61,12 +60,12 @@ const BrandDetailModal = ({ brandId }: { brandId: number }) => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1 text-body2">
         <h3 className="font-bold">제공 횟수</h3>
-        <p className="text-black">{brand.usageLimit}</p>
+        <p className="text-black">{formatNewlines(brand.usageLimit)}</p>
       </div>
 
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1 text-body2">
         <h3 className="font-bold">이용방법</h3>
         <div
           className="text-black overflow-y-auto"

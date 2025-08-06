@@ -79,13 +79,13 @@ export interface AdminBrandCreateRequest {
 }
 
 export interface AdminBrandUpdateRequest {
-  brandName: string;
-  brandImg: string;
-  data: AdminBrandBenefit[];
-  categoryId: number;
-  usageLimit: string;
-  usageMethod: string;
-  storeType: 'ONLINE' | 'OFFLINE';
+  brandName?: string;
+  brandImg?: string;
+  data?: AdminBrandBenefit[];
+  categoryId?: number;
+  usageLimit?: string;
+  usageMethod?: string;
+  storeType?: 'ONLINE' | 'OFFLINE';
 }
 
 export interface AdminBrandCreateResponse {

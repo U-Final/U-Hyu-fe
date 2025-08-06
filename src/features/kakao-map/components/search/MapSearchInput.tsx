@@ -167,8 +167,8 @@ export const MapSearchInput: React.FC<{
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         className={`
-          w-full h-[44px] px-[25px] text-base md:text-sm font-semibold text-black placeholder-text-teritary rounded-md pr-10 transition-all duration-200
-          ${variant === 'white' ? 'bg-white border border-gray-200 shadow-lg hover:shadow-xl focus:shadow-xl' : 'bg-light-gray shadow-lg hover:shadow-xl focus:shadow-xl'}
+          w-full h-[36px] px-[20px] text-sm font-medium text-black placeholder-text-teritary rounded-md pr-8 transition-all duration-200
+          ${variant === 'white' ? 'bg-white border border-gray-200 shadow-md hover:shadow-lg focus:shadow-lg' : 'bg-light-gray shadow-md hover:shadow-lg focus:shadow-lg'}
         `}
         aria-label="장소 검색"
       />
@@ -180,7 +180,7 @@ export const MapSearchInput: React.FC<{
           className="absolute right-1.5 top-1/2 -translate-y-1/2 p-1 text-text-teritary hover:text-gray-700 hover:bg-gray-100 rounded-full transition-all duration-150"
           aria-label="검색어 지우기"
         >
-          <XMarkIcon className="w-3.5 h-3.5" />
+          <XMarkIcon className="w-3 h-3" />
         </button>
       )}
     </div>

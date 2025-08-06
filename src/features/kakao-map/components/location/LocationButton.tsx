@@ -21,15 +21,15 @@ const LocationButton: FC<LocationButtonProps> = ({
         disabled={isLoading}
         className={`
           relative
-          w-12 h-12 
+          w-10 h-10 
           bg-white 
           rounded-full
-          shadow-lg 
+          shadow-md 
           border border-gray-200
           flex items-center justify-center 
           hover:bg-primary/5
           hover:border-primary/20
-          hover:shadow-xl
+          hover:shadow-lg
           active:bg-primary/10
           active:scale-95
           disabled:opacity-50 
@@ -46,9 +46,9 @@ const LocationButton: FC<LocationButtonProps> = ({
         {/* 아이콘 또는 로딩 */}
         <div className="relative z-10">
           {isLoading ? (
-            <BeatLoader size={6} color="#e6007e" />
+            <BeatLoader size={5} color="#e6007e" />
           ) : (
-            <FaLocationArrow className="w-4 h-4 text-primary group-hover:text-primary/80 transition-colors duration-200" />
+            <FaLocationArrow className="w-3.5 h-3.5 text-primary group-hover:text-primary/80 transition-colors duration-200" />
           )}
         </div>
 

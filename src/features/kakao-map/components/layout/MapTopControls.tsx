@@ -130,7 +130,7 @@ const MapTopControls: FC<MapTopControlsProps> = ({
   return (
     <div
       ref={containerRef}
-      className="absolute top-4 left-4 right-4 z-10 space-y-0.5 pointer-events-none"
+      className="absolute top-4 left-14 right-4 z-10 space-y-0.5 pointer-events-none"
     >
       {/* 바텀시트 토글 버튼 - 오른쪽 고정 위치 */}
       <div className="absolute top-0 right-0 z-20 pointer-events-auto">
@@ -141,9 +141,9 @@ const MapTopControls: FC<MapTopControlsProps> = ({
       </div>
 
       {/* 상단 라인: 검색바 + 지역 필터 */}
-      <div className="flex items-stretch gap-2.5 ml-[48px] mr-[48px] pointer-events-auto relative">
+      <div className="flex items-stretch gap-1 ml-0 mr-[40px] pointer-events-auto relative">
         {/* 검색바 - 대부분 공간 사용 */}
-        <div className="flex-1 h-[44px]">
+        <div className="flex-1 h-[36px]">
           <MapSearchInput
             value={searchValue}
             onChange={onSearchValueChange}
@@ -155,7 +155,7 @@ const MapTopControls: FC<MapTopControlsProps> = ({
         </div>
 
         {/* 지역 필터 드롭다운 - 고정 크기 */}
-        <div className="flex-shrink-0 h-[44px]">
+        <div className="flex-shrink-0 h-[36px]">
           <RegionFilterDropdown
             value={activeRegionFilter}
             onChange={onRegionFilterChange}
@@ -167,7 +167,7 @@ const MapTopControls: FC<MapTopControlsProps> = ({
           <div
             className="absolute top-full mt-2
     left-0 right-0
-    -ml-[48px] -mr-[48px]
+    -ml-0 -mr-[40px]
     bg-white rounded-xl shadow-2xl border border-gray-100
     z-[9999]"
           >
@@ -189,12 +189,12 @@ const MapTopControls: FC<MapTopControlsProps> = ({
       </div>
 
       {/* 하단 라인: 카테고리 필터탭 전체 너비 사용 */}
-      <div className="-mx-4 overflow-x-auto pointer-events-auto">
+      <div className="-ml-14 -mr-4 overflow-x-auto pointer-events-auto">
         <FilterTabs variant="white" onChange={onCategoryFilterChange} />
       </div>
 
       {/* 줌 레벨 표시 UI - 필터탭 아래에 위치 */}
-      <div className="flex justify-start pointer-events-none">
+      <div className="flex justify-start pointer-events-none -ml-14 pl-4">
         <MapZoomLevelIndicator map={map ?? null} />
       </div>
     </div>

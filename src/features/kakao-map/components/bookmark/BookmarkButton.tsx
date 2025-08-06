@@ -18,10 +18,10 @@ const BookmarkButton: FC<BookmarkButtonProps> = ({
       <button
         onClick={onClick}
         className={`
-          w-12 h-12 
+          w-10 h-10 
           bg-white 
           rounded-full 
-          shadow-lg 
+          shadow-md 
           flex items-center justify-center 
           hover:bg-gray-50 
           active:bg-gray-100 
@@ -33,9 +33,9 @@ const BookmarkButton: FC<BookmarkButtonProps> = ({
         aria-label="즐겨찾기 필터"
       >
         {isActive ? (
-          <MdStar className="w-6 h-6 text-primary" />
+          <MdStar className="w-5 h-5 text-primary" />
         ) : (
-          <MdStar className="w-6 h-6 text-gray" />
+          <MdStar className="w-5 h-5 text-gray" />
         )}
       </button>
 

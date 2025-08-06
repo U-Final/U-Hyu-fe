@@ -62,7 +62,7 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
         <button
           onClick={handleRadiusClick}
           className="
-            w-12 h-12 
+            w-10 h-10 
             bg-white/95 backdrop-blur-sm 
             border border-light-gray
             rounded-full 
@@ -122,7 +122,7 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
       {/* 컴팩트한 줌 컨트롤 */}
       <div
         className="
-          w-12
+          w-10
           bg-white/95 backdrop-blur-sm 
           border border-light-gray
           rounded-full 
@@ -140,13 +140,13 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
           disabled={zoomLevel <= 1}
           aria-label="지도 확대"
           className="
-            w-full h-10
+            w-full h-8
             flex items-center justify-center
             disabled:opacity-50 disabled:cursor-not-allowed
             rounded-t-full
           "
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="w-3.5 h-3.5" />
         </button>
 
         <div className="h-px bg-light-gray" />
@@ -158,13 +158,13 @@ export const MapZoomLevelIndicator = ({ map }: MapZoomLevelIndicatorProps) => {
           disabled={zoomLevel >= 14}
           aria-label="지도 축소"
           className="
-            w-full h-10
+            w-full h-8
             flex items-center justify-center
             disabled:opacity-50 disabled:cursor-not-allowed
             rounded-b-full
           "
         >
-          <Minus className="w-4 h-4" />
+          <Minus className="w-3.5 h-3.5" />
         </button>
       </div>
     </div>

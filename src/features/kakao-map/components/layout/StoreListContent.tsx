@@ -22,9 +22,9 @@ const StoreListContent: FC<StoreListContentProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full border-0">
       {/* 필터 헤더 - 고정 */}
-      <div className="flex-shrink-0 py-3 rounded-[1px] bg-[#f4f8ff]">
+      <div className="flex-shrink-0 py-0">
         <RecommendedStoreListWrapper />
       </div>
 

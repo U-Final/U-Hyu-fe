@@ -18,8 +18,7 @@ export const MOCK_STORES: StoreSummary[] = [
     categoryName: '문화/여가',
     addressDetail:
       '서울 강남구 강남대로 123 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 ',
-    benefit:
-      'CGV 골드클래스 할인 CGV 골드클래스 할인CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 CGV 골드클래스 할인 ',
+    benefit: 'CGV 골드클래스 할인',
     logoImage: '/images/brands/CGV.png',
     brandName: 'CGV',
     latitude: 37.503320984596634,

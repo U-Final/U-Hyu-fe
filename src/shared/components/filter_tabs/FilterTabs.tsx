@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 import { useDrag } from '@use-gesture/react';
 import clsx from 'clsx';
@@ -70,6 +70,25 @@ const FilterTabs: FC<FilterTabProps> = ({
     }
   );
 
+  // 마우스 휠 이벤트를 passive가 아닌 모드로 처리
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      scrollContainer.scrollLeft += e.deltaY;
+    };
+
+    // passive: false로 설정하여 preventDefault가 작동하도록 함
+    scrollContainer.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      scrollContainer.removeEventListener('wheel', handleWheel);
+    };
+  }, []);
+
   return (
     <div
       ref={scrollContainerRef}
@@ -88,12 +107,7 @@ const FilterTabs: FC<FilterTabProps> = ({
               overscrollBehavior: 'contain',
             }
       }
-      onWheel={e => {
-        // 마우스 휠로 좌우 스크롤 지원
-        e.preventDefault();
-        e.stopPropagation();
-        e.currentTarget.scrollLeft += e.deltaY;
-      }}
+
       onTouchStart={e => {
         // 터치 시작 시 페이지 스크롤 방지 준비
         e.stopPropagation();

@@ -38,7 +38,9 @@ const responseInterceptor = (instance: AxiosInstance) => {
 
       // ✅ 2. 서버에서 내려준 에러 응답 처리
       if (res?.data?.statusCode && res?.data?.message) {
-        toast.error(res.data.message);
+        if (res.data.statusCode !== 4103) {
+          toast.error(res.data.message);
+        }
         return Promise.reject({
           statusCode: res.data.statusCode,
           message: res.data.message,

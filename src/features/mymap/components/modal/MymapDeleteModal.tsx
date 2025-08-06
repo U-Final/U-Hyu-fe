@@ -1,14 +1,8 @@
 import { useDeleteMyMapMutation } from '@mymap/hooks';
 import { toast } from 'sonner';
 
-
-
 import { BaseModal, PrimaryButton } from '@/shared/components';
 import { useModalStore } from '@/shared/store';
-
-
-
-
 
 interface MymapDeleteModalProps {
   mapId: number;

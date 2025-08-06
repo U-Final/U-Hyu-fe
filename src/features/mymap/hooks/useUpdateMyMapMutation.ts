@@ -10,7 +10,7 @@ export const useUpdateMyMapMutation = () => {
   return useMutation({
     mutationFn: updateMyMap,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['mymaplist'] });
+      queryClient.refetchQueries({ queryKey: ['mymaplist'] });
     },
   });
 };

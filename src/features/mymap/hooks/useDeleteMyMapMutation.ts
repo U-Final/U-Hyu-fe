@@ -9,7 +9,7 @@ export const useDeleteMyMapMutation = () => {
   return useMutation({
     mutationFn: deleteMyMap,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['mymaplist'] });
+      queryClient.refetchQueries({ queryKey: ['mymaplist'] });
     },
     onError: error => {
       console.error('지도 삭제 중 오류가 발생했습니다:', error);

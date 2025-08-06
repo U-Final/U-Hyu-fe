@@ -9,11 +9,15 @@ export const formatUsageText = (text: string | null): string => {
   // 1. HTML entity 디코딩 (&nbsp; &gt; &#39; 등)
   let decoded = he.decode(text);
 
-  // 2. \n 혹은 \\n 등 제거 → 줄바꿈 의도는 기호로 통일
-  decoded = decoded.replace(/\\n|\n/g, ' ');
+  // 2. \n, \\n, <br\s*\/?>등 제거 → 줄바꿈 의도는 기호로 통일
+  decoded = decoded.replace(/(\\n|\n|<br\s*\/?>)/g, '');
 
   // 3. 보기 좋게 줄바꿈 처리 (기호 앞에 줄바꿈 추가)
-  decoded = decoded.replace(/\s*■\s*/g, '\n■ ').replace(/\s*▶\s*/g, '\n▶ ');
+  decoded = decoded
+    .replace(/\s*■\s*/g, '\n■ ')
+    .replace(/\s*▶\s*/g, '\n▶ ')
+    .replace(/\s*\*\s*/g, '\n* ')
+    .replace(/(?<!\d)\s*-\s*/g, '\n- ');
 
   // 4. 여러 연속 공백 정리
   decoded = decoded.replace(/\s{2,}/g, ' ');

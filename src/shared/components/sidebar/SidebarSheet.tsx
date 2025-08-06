@@ -1,3 +1,4 @@
+import { useIsLoggedIn } from '@user/store/userStore';
 import { Menu } from 'lucide-react';
 
 import {
@@ -9,7 +10,6 @@ import {
 } from '@/shared/components/shadcn/ui/sheet';
 import LoggedInContent from '@/shared/components/sidebar/LoggedInContent';
 import LoggedOutContent from '@/shared/components/sidebar/LoggedOutContent';
-import { useIsLoggedIn } from '@/shared/store/userStore';
 
 const SidebarSheet = () => {
   const isLoggedIn = useIsLoggedIn();

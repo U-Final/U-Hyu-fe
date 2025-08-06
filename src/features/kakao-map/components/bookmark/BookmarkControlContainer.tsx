@@ -1,7 +1,8 @@
 import type { FC } from 'react';
 
+import { useIsLoggedIn } from '@user/store/userStore';
+
 import { useModalStore } from '@/shared/store';
-import { useIsLoggedIn } from '@/shared/store/userStore';
 
 import { useMapData } from '../../hooks/useMapData';
 import BookmarkButton from './BookmarkButton';
@@ -20,7 +21,5 @@ export const BookmarkControlContainer: FC = () => {
     toggleBookmarkMode();
   };
 
-  return (
-    <BookmarkButton isActive={isBookmarkMode} onClick={handleClick} />
-  );
+  return <BookmarkButton isActive={isBookmarkMode} onClick={handleClick} />;
 };

@@ -12,7 +12,8 @@ import { useNavigate } from 'react-router-dom';
 import { BackButton, BrandCard } from '@/shared/components';
 import '@/shared/components';
 import { SkeletonMyMapUuidItem } from '@/shared/components/skeleton';
-import { useIsLoggedIn, useModalStore } from '@/shared/store';
+import { useModalStore } from '@/shared/store';
+import { useIsLoggedIn } from '@user/store/userStore';
 
 interface MyMapUuidProps {
   uuid: string;

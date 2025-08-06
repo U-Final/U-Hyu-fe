@@ -24,17 +24,24 @@ const FilterTabs: FC<FilterTabProps> = ({
   const active = value !== undefined ? value : internalActive;
 
   const handleClick = (clickedValue: string) => {
-    if (isDragging.current) {
-      return;
+    if (isDragging.current) return;
+
+    const currentValue = value !== undefined ? value : internalActive;
+
+    let nextValue = clickedValue;
+
+    if (clickedValue === currentValue) {
+      nextValue = 'all';
     }
 
     if (value === undefined) {
-      setInternalActive(clickedValue);
+      setInternalActive(nextValue);
     }
-    onChange?.(clickedValue);
 
-    if (clickedValue !== 'all') {
-      trackFilterUsed(clickedValue);
+    onChange?.(nextValue);
+
+    if (nextValue !== 'all') {
+      trackFilterUsed(nextValue);
     }
   };
 

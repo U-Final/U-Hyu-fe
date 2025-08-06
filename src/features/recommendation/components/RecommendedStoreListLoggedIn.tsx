@@ -3,14 +3,13 @@ import { useEffect } from 'react';
 import { useMapStore } from '@kakao-map/store/MapStore';
 import RecommendedStoreCard from '@recommendation/components/RecommendedCard';
 import { useRecommendedStoresQuery } from '@recommendation/hooks/useRecommendQuery';
+import { useUser } from '@user/store/userStore';
 import { BeatLoader } from 'react-spinners';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Autoplay, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-
-import { useUser } from '@/shared/store/userStore';
 
 export const RecommendedStoreListLoggedIn = () => {
   const { userLocation } = useMapStore();

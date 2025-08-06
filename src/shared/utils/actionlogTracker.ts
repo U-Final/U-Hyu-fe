@@ -1,5 +1,6 @@
+import { userStore } from '@user/store/userStore';
+
 import { client } from '@/shared/client';
-import { userStore } from '@/shared/store/userStore';
 import type {
   CounterData,
   UserAction,

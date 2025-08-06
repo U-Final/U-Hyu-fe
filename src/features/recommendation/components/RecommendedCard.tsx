@@ -1,10 +1,11 @@
 import { useState } from 'react';
+
 import { useMapUIContext } from '@kakao-map/context/MapUIContext';
 import { useMapStore } from '@kakao-map/store/MapStore';
 import type { Store } from '@kakao-map/types/store';
 import { PATH } from '@paths';
 import ConfirmExcludeModalContent from '@recommendation/components/ConfirmExcludeModalContent';
-import { Gift, Star, ThumbsDown, Info, X } from 'lucide-react';
+import { Gift, Info, Star, ThumbsDown, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -63,12 +64,19 @@ const RecommendedStoreCard = ({
   };
 
   const handleInfoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
+    e.nativeEvent.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
     setShowInfo(!showInfo);
   };
 
   const handleDislikeClick = (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
+    e.nativeEvent.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+
     if (!store.brandId) {
       toast.error('추천 매장을 찾을 수 없습니다.');
       return;
@@ -89,21 +97,29 @@ const RecommendedStoreCard = ({
   return (
     <div
       onClick={handleCardClick}
-      className="cursor-pointer hover:shadow-lg transition-all duration-200 transform hover:scale-[1.02]"
+      className="cursor-pointer hover:shadow-lg transition-all duration-200 transform hover:scale-[1.02] rounded-xl"
     >
-      <div className="relative">
+      <div className="relative pt-2 pb-0">
         {/* 추천 배지 */}
-        <div className="absolute -top-2 -right-2 z-10">
+        <div className="absolute -top-1 right-4 z-10">
           <div className="bg-gradient-to-r from-amber-400 to-orange-400 text-white px-2 py-1 rounded-full shadow-md flex items-center gap-1">
             <Star className="w-3 h-3 fill-current" />
             <span className="text-xs font-bold">추천</span>
           </div>
         </div>
-        
+
         {/* 정보 표시 오버레이 */}
         {showInfo && (
-          <div className="absolute inset-0 bg-black/10 rounded-lg z-20 flex items-center justify-center">
-            <div className="bg-white/95 backdrop-blur-sm rounded-lg p-3 mx-4 border border-gray-200 shadow-lg">
+          <div
+            className="absolute inset-0 bg-black/10 rounded-xl z-20 flex items-center justify-center mt-2"
+            onClick={e => {
+              e.preventDefault();
+              e.stopPropagation();
+              e.nativeEvent.stopPropagation();
+              e.nativeEvent.stopImmediatePropagation();
+            }}
+          >
+            <div className="bg-white/95 backdrop-blur-sm rounded-xl p-3 mx-4 border border-gray-200 shadow-lg">
               <p className="text-sm text-gray-700 text-center mb-2">
                 이 매장을 추천에서 제외하시겠습니까?
               </p>
@@ -136,7 +152,7 @@ const RecommendedStoreCard = ({
               )} */}
 
               {/* 혜택 정보 - StoreDetailCard 스타일과 일관성 */}
-              <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+              <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
                 {/* 혜택 헤더 */}
                 <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-200 px-3 py-2">
                   <div className="flex items-center gap-2">
@@ -159,7 +175,16 @@ const RecommendedStoreCard = ({
             {/* 정보 버튼 */}
             <button
               onClick={handleInfoClick}
-              className="absolute top-0 right-0 p-1.5 rounded-full bg-white/90 hover:bg-white shadow-sm hover:shadow-md transition-all duration-200 flex-shrink-0 border border-gray-200"
+              onTouchEnd={e => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (e.nativeEvent) {
+                  e.nativeEvent.stopPropagation();
+                  e.nativeEvent.stopImmediatePropagation();
+                }
+                setShowInfo(!showInfo);
+              }}
+              className="absolute -top-0 right-2 p-1.5 rounded-full bg-white/90 hover:bg-white shadow-sm hover:shadow-md transition-all duration-200 flex-shrink-0 border border-gray-200 z-30"
             >
               {showInfo ? (
                 <X className="w-4 h-4 text-gray-500 hover:text-gray-700 transition-colors" />
@@ -172,7 +197,30 @@ const RecommendedStoreCard = ({
             {showInfo && (
               <button
                 onClick={handleDislikeClick}
-                className="absolute top-0 right-10 p-1.5 rounded-full bg-red-50 hover:bg-red-100 shadow-sm hover:shadow-md transition-all duration-200 flex-shrink-0 border border-red-200"
+                onTouchEnd={e => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (e.nativeEvent) {
+                    e.nativeEvent.stopPropagation();
+                    e.nativeEvent.stopImmediatePropagation();
+                  }
+                  if (!store.brandId) {
+                    toast.error('추천 매장을 찾을 수 없습니다.');
+                    return;
+                  }
+                  openModal('base', {
+                    title: '앞으로 이 브랜드는 추천에서 제외 됩니다.',
+                    children: (
+                      <ConfirmExcludeModalContent
+                        brandId={store.brandId}
+                        brandName={store.brandName}
+                      />
+                    ),
+                  });
+                  setShowInfo(false);
+                }}
+                className="absolute -top-0 right-11 p-1.5 rounded-full bg-red-50 hover:bg-red-100 shadow-sm hover:shadow-md transition-all duration-200 flex-shrink-0 border border-red-200 z-30"
+                style={{ WebkitTapHighlightColor: 'transparent' }}
               >
                 <ThumbsDown
                   className="w-4 h-4 text-red-500 hover:text-red-600 transition-colors"

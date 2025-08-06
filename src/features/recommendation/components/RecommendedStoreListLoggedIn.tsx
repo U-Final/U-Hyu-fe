@@ -81,7 +81,7 @@ export const RecommendedStoreListLoggedIn = () => {
   }
 
   return (
-    <div className="bg-white shadow-sm border-0 overflow-hidden">
+    <div className="bg-white shadow-sm border-0 overflow-hidden mb-0">
       {/* 헤더 섹션 */}
       <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-100">
         <div className="flex items-start justify-between px-6 py-4">
@@ -101,7 +101,7 @@ export const RecommendedStoreListLoggedIn = () => {
       </div>
 
       {/* 추천 매장 리스트 */}
-      <div className="p-4">
+      <div className="px-4 pt-4 pb-6">
         <Swiper
           modules={[Pagination, Autoplay]}
           spaceBetween={16}
@@ -129,7 +129,7 @@ export const RecommendedStoreListLoggedIn = () => {
         >
           {stores?.map(store => (
             <SwiperSlide key={store.storeId}>
-              <div className="px-1">
+              <div className="px-1 overflow-visible">
                 <RecommendedStoreCard
                   store={store}
                   autoCloseBottomSheet={true}
@@ -141,7 +141,17 @@ export const RecommendedStoreListLoggedIn = () => {
 
         <style>{`
             .recommendation-swiper {
-              padding-bottom: 16px;
+              padding-top: 0px;
+              padding-bottom: 0px;
+              overflow: visible;
+            }
+            
+            .recommendation-swiper .swiper-wrapper {
+              overflow: visible;
+            }
+            
+            .recommendation-swiper .swiper-slide {
+              overflow: visible;
             }
             
             .recommendation-swiper .swiper-pagination {
@@ -150,18 +160,18 @@ export const RecommendedStoreListLoggedIn = () => {
               left: 50% !important;
               transform: translateX(-50%) !important;
               width: auto !important;
-              margin-top: 24px !important;
+              margin-top: 12px !important;
               text-align: center !important;
             }
             
             .recommendation-swiper .swiper-pagination-bullet {
               transition: all 0.3s ease !important;
-              box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+              box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
             }
             
             .recommendation-swiper .swiper-pagination-bullet-active {
-              transform: scale(1.3) !important;
-              box-shadow: 0 4px 8px rgba(0,0,0,0.15) !important;
+              transform: scale(1.2) !important;
+              !important;
             }
           `}</style>
       </div>

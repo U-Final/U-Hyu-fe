@@ -1,5 +1,6 @@
-import { Loader2 } from 'lucide-react';
 import { forwardRef } from 'react';
+
+import { Loader2 } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
 type ButtonVariant = 'primary' | 'nav' | 'ghost';
@@ -27,7 +28,6 @@ const sizeStyles = {
   lg: 'h-[44px] px-[25px] text-lg',
 };
 
-// 비활성화 상태 스타일
 const disabledStyles =
   'disabled:bg-gray-300 disabled:text-gray-500 disabled:border-gray-300 disabled:cursor-not-allowed disabled:hover:bg-gray-300';
 
@@ -44,7 +44,6 @@ export const ButtonBase = forwardRef<HTMLButtonElement, ButtonBaseProps>(
     },
     ref
   ) => {
-    // 로딩 중이거나 disabled가 true면 비활성화
 
     const baseClasses =
       'cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap font-semibold transition-colors disabled:pointer-events-none rounded-md';

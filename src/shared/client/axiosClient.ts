@@ -1,22 +1,57 @@
+import { userStore } from '@user/store/userStore';
 import axios, { type AxiosInstance } from 'axios';
+import { toast } from 'sonner';
+
+const IS_MOCKING = import.meta.env.VITE_USE_MSW === 'true';
 
 const API_CONFIG = {
-  BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:8080',
+  BASE_URL: IS_MOCKING ? '' : import.meta.env.VITE_API_URL,
   TIMEOUT: 10000,
 } as const;
 
-// 인증이 필요하지 않은 요청용 클라이언트
-export const client: AxiosInstance = axios.create({
-  baseURL: API_CONFIG.BASE_URL,
-  timeout: API_CONFIG.TIMEOUT,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  withCredentials: false,
-});
+// 공통 응답 인터셉터
+const responseInterceptor = (instance: AxiosInstance) => {
+  instance.interceptors.response.use(
+    response => response,
+    error => {
+      const res = error.response;
 
-// 인증이 필요한 요청용 클라이언트 (쿠키 자동 포함)
-export const authClient: AxiosInstance = axios.create({
+      if (res?.status === 401 || res?.status === 403) {
+        userStore.getState().clearUser();
+
+        if (res?.status === 401) {
+          toast.error('로그인이 만료되었습니다. 다시 로그인해주세요.');
+        } else if (res?.status === 403) {
+          // 403은 조용히 처리 (토스트 없음)
+        }
+
+        return Promise.reject({
+          statusCode: res?.status,
+          message:
+            res?.status === 401 ? '인증이 만료되었습니다.' : '권한이 없습니다.',
+        });
+      }
+
+      if (res?.data?.statusCode && res?.data?.message) {
+        if (res.data.statusCode !== 4103) {
+          toast.error(res.data.message);
+        }
+        return Promise.reject({
+          statusCode: res.data.statusCode,
+          message: res.data.message,
+        });
+      }
+
+      toast.error('서버와의 연결에 실패했습니다.');
+      return Promise.reject({
+        statusCode: 500,
+        message: '서버와의 연결에 실패했습니다.',
+      });
+    }
+  );
+};
+
+export const client: AxiosInstance = axios.create({
   baseURL: API_CONFIG.BASE_URL,
   timeout: API_CONFIG.TIMEOUT,
   headers: {
@@ -24,3 +59,4 @@ export const authClient: AxiosInstance = axios.create({
   },
   withCredentials: true,
 });
+responseInterceptor(client);

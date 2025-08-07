@@ -1,76 +1,90 @@
-import { PrimaryButton } from '@components/buttons/PrimaryButton';
-import { useModalStore } from '@shared/store/modalStore';
-import { X } from 'lucide-react';
-import { useRef, type FC } from 'react';
-import { useImageCropStore } from '../../../store/useImageCropStore';
-import { BarcodeCropModal } from './BarcodeCropModal';
-import { CroppedImg } from './CroppedImg';
+import { type FC, useEffect } from 'react';
 
-interface BarcodeBottomSheetProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+import { useIsLoggedIn, useUser } from '@user/store/userStore';
 
-export const BarcodeBottomSheet: FC<BarcodeBottomSheetProps> = ({
-  isOpen,
-  onClose,
-}) => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const { croppedImage, setImageSrc } = useImageCropStore();
+import {
+  GuestBarcodeContent,
+  LoggedInBarcodeContent,
+} from '@/shared/components/bottom_navigation/barcode/contents';
+import { useBarcodeStore } from '@/shared/store/barcodeStore';
 
-  const openModal = useModalStore(state => state.openModal);
+export const BarcodeBottomSheet: FC = () => {
+  const isLoggedIn = useIsLoggedIn();
+  const user = useUser();
+  const { isOpen, close } = useBarcodeStore();
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && close();
+    window.addEventListener('keydown', onKey);
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      setImageSrc(reader.result as string);
-      openModal('base', {
-        title: '바코드 자르기',
-        children: <BarcodeCropModal />,
-      });
+    if (isOpen) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        window.removeEventListener('keydown', onKey);
+        document.body.style.overflow = prev;
+      };
+    }
+    return () => {
+      window.removeEventListener('keydown', onKey);
     };
-    reader.readAsDataURL(file);
-  };
+  }, [isOpen, close]);
 
   if (!isOpen) return null;
 
   return (
-    <div
-      role="dialog"
-      aria-label="바코드 업로드 바텀시트"
-      className="fixed bottom-12 w-full z-10"
-    >
-      <div className="bg-white rounded-t-2xl shadow-2xl z-50 flex flex-col border border-light-gray p-4">
-        <header className="flex justify-between items-center mb-4">
-          <h2 className="text-sm font-semibold">OOO님 멤버십</h2>
-          <button
-            onClick={onClose}
-            aria-label="닫기"
-            className="cursor-pointer hover:bg-gray-200 rounded-md"
+    <>
+      <div
+        onClick={close}
+        role="presentation"
+        className="fixed top-0 left-0 right-0 bg-black/40 z-[998]"
+        style={{
+          bottom: 'calc(48px + env(safe-area-inset-bottom, 0px))',
+        }}
+      />
+
+      <div
+        role="dialog"
+        aria-label="바코드 바텀시트"
+        className="fixed left-0 right-0 bottom-0 z-[999] desktop-padding"
+      >
+        <div
+          className="
+            bg-white rounded-t-2xl border border-light-gray
+            flex flex-col shadow-lg
+          "
+          style={{
+            maxHeight:
+              'calc(100vh - 48px - env(safe-area-inset-bottom, 0px) - 20px)',
+            marginBottom: 'calc(48px + env(safe-area-inset-bottom, 0px))',
+          }}
+        >
+          <header className="flex justify-center items-center px-6 py-4 flex-shrink-0">
+            <h2 className="text-lg font-semibold">
+              {user
+                ? `${user.userName} ${user.grade} 멤버십 바코드`
+                : '멤버십 바코드'}
+            </h2>
+          </header>
+
+          <div className="px-6 pb-4">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <p className="text-sm text-blue-800 leading-relaxed">
+                실제 U+ 멤버십에서 사용하는 바코드를 등록 후 사용해주세요!{' '}
+                <br className="hidden sm:block" />
+                U-HYU가 방문처리 및 추천을 더 정확하게 해드릴게요!
+              </p>
+            </div>
+          </div>
+
+          <div
+            className="flex-1 overflow-y-auto px-6 pb-6 min-h-0"
+            data-scrollable="true"
           >
-            <X size={20} />
-          </button>
-        </header>
-        <div className="flex flex-col gap-4">
-          {croppedImage && <CroppedImg image={croppedImage} />}
-          <PrimaryButton
-            className="w-full"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            바코드 업로드 하기
-          </PrimaryButton>
-          <input
-            type="file"
-            accept="image/*"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            hidden
-          />
+            {isLoggedIn ? <LoggedInBarcodeContent /> : <GuestBarcodeContent />}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };

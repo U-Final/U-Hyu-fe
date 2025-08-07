@@ -1,6 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
-import { DragBottomSheet } from '../DragBottomSheet'; // 경로는 실제 위치에 맞게 수정
+
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+import { DragBottomSheet } from '../DragBottomSheet';
 
 const meta: Meta<typeof DragBottomSheet> = {
   title: 'Components/BottomSheet/DragBottomSheet',
@@ -11,7 +13,6 @@ const meta: Meta<typeof DragBottomSheet> = {
 export default meta;
 type Story = StoryObj<typeof DragBottomSheet>;
 
-/** 공통 콘텐츠 */
 const BottomSheetContent = () => (
   <div className="flex flex-col items-center justify-center h-full p-4">
     <h1 className="text-2xl font-bold mb-4">드래그 가능한 바텀 시트</h1>

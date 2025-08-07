@@ -12,8 +12,8 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
     onClick={onClick}
     disabled={disabled}
     className={`
-      w-full h-12 bg-blue-600 text-white font-medium rounded-md
-      hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed
+      w-full h-12 bg-primary text-white font-medium rounded-md
+      hover:bg-primary-hover disabled:bg-gray-300 disabled:cursor-not-allowed
       transition-colors duration-200 ${className}
     `}
     whileHover={{ scale: disabled ? 1 : 1.02 }}

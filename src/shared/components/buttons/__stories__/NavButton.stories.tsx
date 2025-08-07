@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { BrowserRouter } from 'react-router-dom';
+
 import { NavButton } from '../NavButton';
 
 const meta: Meta<typeof NavButton> = {

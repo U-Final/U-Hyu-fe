@@ -1,8 +1,8 @@
-import { type Brand } from '@components/brand_grid/brand.type';
+import { type Brand } from '@/shared/components/brand_grid/brand.type';
 
 export const BRANDS: Brand[] = [
   {
-    id: 'cgv',
+    id: 1,
     name: 'CGV',
     color: '#E53E3E',
     bgColor: 'bg-red-500',
@@ -10,7 +10,7 @@ export const BRANDS: Brand[] = [
     imagePath: '/images/brands/CGV.png',
   },
   {
-    id: 'baskin',
+    id: 2,
     name: '베스킨라빈스',
     color: '#ED64A6',
     bgColor: 'bg-pink-500',
@@ -18,7 +18,7 @@ export const BRANDS: Brand[] = [
     imagePath: '/images/brands/베스킨라빈스.png',
   },
   {
-    id: 'paris',
+    id: 3,
     name: '파리바게뜨',
     color: '#1B3B6F',
     bgColor: 'bg-blue-900',
@@ -26,7 +26,7 @@ export const BRANDS: Brand[] = [
     imagePath: '/images/brands/파리바게뜨.png',
   },
   {
-    id: 'gs25',
+    id: 4,
     name: 'GS25',
     color: '#3182CE',
     bgColor: 'bg-blue-500',
@@ -34,7 +34,7 @@ export const BRANDS: Brand[] = [
     imagePath: '/images/brands/GS25.png',
   },
   {
-    id: 'lotte',
+    id: 5,
     name: '롯데시네마',
     color: '#E53E3E',
     bgColor: 'bg-red-600',
@@ -42,7 +42,7 @@ export const BRANDS: Brand[] = [
     imagePath: '/images/brands/롯데시네마.png',
   },
   {
-    id: 'goobne',
+    id: 6,
     name: '굽네치킨',
     color: '#8B4513',
     bgColor: 'bg-amber-800',
@@ -50,7 +50,7 @@ export const BRANDS: Brand[] = [
     imagePath: '/images/brands/굽네치킨.png',
   },
   {
-    id: 'touslesjours',
+    id: 7,
     name: '뚜레쥬르',
     color: '#2E4B3C',
     bgColor: 'bg-green-900',
@@ -58,7 +58,7 @@ export const BRANDS: Brand[] = [
     imagePath: '/images/brands/뚜레쥬르.png',
   },
   {
-    id: 'wonderpark',
+    id: 8,
     name: '원더파크',
     color: '#BCAAA4',
     bgColor: 'bg-gray-300',

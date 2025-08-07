@@ -1,6 +1,7 @@
+import { createElement, useState } from 'react';
+
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { createElement, useState } from 'react';
 import SearchInput from '../SearchInput';
 
 const meta: Meta<typeof SearchInput> = {
@@ -50,7 +51,7 @@ type Story = StoryObj<typeof SearchInput>;
 export const Default: Story = {
   args: {
     value: '',
-    onChange: val => console.log('changed:', val),
+    onChange: () => {},
   },
   parameters: {
     docs: {
@@ -101,8 +102,10 @@ export const Variants: Story = {
 export const Cancel: Story = {
   args: {
     value: 'GS25',
-    onChange: val => console.log('changed:', val),
-    onCancel: () => console.log('canceled'),
+    onChange: () => {
+    },
+    onCancel: () => {
+    },
     placeholder: '브랜드 검색',
     variant: 'gray',
   },

@@ -1,7 +1,10 @@
-import { PrimaryButton } from '@components/buttons/PrimaryButton';
+import React from 'react';
+
 import { motion } from 'framer-motion';
 import { Check, ChevronRight } from 'lucide-react';
-import React from 'react';
+
+import { PrimaryButton } from '@/shared/components';
+
 import { BaseBottomSheet } from './BaseBottomSheet';
 import type {
   SelectionBottomSheetProps,
@@ -31,7 +34,6 @@ export const SelectionBottomSheet: React.FC<SelectionBottomSheetProps> = ({
   };
 
   const renderBrandIcon = (item: SelectionItem) => {
-    // 브랜드 로고 렌더링 함수
     const getSizeClasses = (size: string = 'medium') => {
       switch (size) {
         case 'small':

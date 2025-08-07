@@ -1,7 +1,9 @@
-import { IconButton } from '@components/buttons/IconButton';
-import { useModalStore } from '@shared/store/modalStore';
-import { X } from 'lucide-react';
 import { useEffect } from 'react';
+
+import { X } from 'lucide-react';
+
+import { IconButton } from '@/shared/components/buttons/IconButton';
+import { useModalStore } from '@/shared/store';
 
 interface BaseModalProps {
   title?: React.ReactNode;
@@ -21,7 +23,7 @@ const BaseModal = ({ title, children }: BaseModalProps) => {
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, []);
+  });
 
   return (
     <div
@@ -29,9 +31,9 @@ const BaseModal = ({ title, children }: BaseModalProps) => {
       aria-modal="true"
       aria-labelledby={title ? 'modal-title' : undefined}
       onClick={handleBackdropClick}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40"
     >
-      <section className="bg-white rounded-[16px] w-full px-[20px] py-[20px] min-w-[300px] max-w-lg mx-8 flex flex-col gap-[10px]">
+      <section className="bg-white rounded-[16px] w-full px-[20px] py-[20px] min-w-[300px] max-w-lg mx-8 flex flex-col gap-[10px] shadow-2xl">
         <header className="flex justify-between items-center">
           {title && (
             <h3
@@ -43,11 +45,17 @@ const BaseModal = ({ title, children }: BaseModalProps) => {
           )}
           <IconButton
             icon={
-              <X className="h-4" onClick={closeModal} aria-label="모달 닫기" />
+              <X
+                className="h-4"
+                onClick={closeModal}
+                aria-label="모달 닫기"
+              />
             }
           />
         </header>
-        <main className="break-word flex flex-col">{children}</main>
+        <main className="break-word flex flex-col">
+          {children}
+        </main>
       </section>
     </div>
   );

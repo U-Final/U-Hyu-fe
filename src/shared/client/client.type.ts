@@ -1,14 +1,10 @@
-export interface ApiResponse<T> {
-  data: T;
+export interface ApiResponse<T = unknown> {
+  statusCode: number;
   message: string;
-  status: number;
-  timestamp: string;
+  data?: T;
 }
 
 export interface ApiError {
   message: string;
-  status: number;
-  code: string;
-  timestamp: string;
-  path: string;
+  statusCode: number;
 }

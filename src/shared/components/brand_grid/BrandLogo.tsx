@@ -1,7 +1,9 @@
-import { type BrandLogoProps } from '@components/brand_grid/brand.type';
+import React from 'react';
+
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
-import React from 'react';
+
+import { type BrandLogoProps } from '@/shared/components/brand_grid/brand.type';
 
 export const BrandLogo: React.FC<BrandLogoProps> = ({
   brand,
@@ -26,7 +28,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
           ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-xl'}
           ${
             isSelected
-              ? 'ring-4 ring-blue-500 ring-opacity-50'
+              ? 'border-2 border-primary'
               : 'hover:scale-105 border-2 border-gray-200'
           }
         `}
@@ -58,7 +60,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="absolute top-0 right-0 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center z-20"
+          className="absolute top-0 right-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center z-20"
         >
           <Check className="w-3 h-3 text-white" />
         </motion.div>

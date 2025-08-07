@@ -1,0 +1,148 @@
+import { useEffect, useRef } from 'react';
+
+import { deleteBookmark } from '@mypage/api/mypageApi';
+import type { Bookmark } from '@mypage/api/types';
+import { useBookmarkListInfiniteQuery } from '@mypage/hooks/useActivityQuery';
+import { useQueryClient } from '@tanstack/react-query';
+import { Heart, MapPin, Star } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
+import { BrandWithFavoriteCard } from '@/shared/components/cards/BrandWithFavoriteCard';
+import {
+  ActivityFavoriteListSkeleton,
+  ActivityFavoriteSkeleton,
+} from '@/shared/components/skeleton';
+
+interface Props {
+  enabled: boolean;
+}
+
+const ActivityFavorite = ({ enabled }: Props) => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    useBookmarkListInfiniteQuery(enabled);
+  const loaderRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!hasNextPage || !enabled) return;
+    const currentLoader = loaderRef.current;
+    
+    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) return;
+    
+    const observer = new window.IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    if (currentLoader) observer.observe(currentLoader);
+    return () => {
+      if (currentLoader) observer.unobserve(currentLoader);
+    };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage, enabled]);
+
+  if (!enabled) return null;
+
+  if (isLoading) return <ActivityFavoriteSkeleton />;
+
+  const bookmarks = (data?.pages.flat() as Bookmark[]) || [];
+
+  const handleFavoriteClick = async (bookmarkId: number) => {
+    const previousData = queryClient.getQueryData(['bookmarkList']);
+
+    queryClient.setQueryData(
+      ['bookmarkList'],
+      (old: { pages: Bookmark[][] } | undefined) => {
+        if (!old?.pages) return old;
+
+        return {
+          ...old,
+          pages: old.pages.map((page: Bookmark[]) =>
+            page.filter(
+              (bookmark: Bookmark) => bookmark.bookmarkId !== bookmarkId
+            )
+          ),
+        };
+      }
+    );
+
+    try {
+      const result = await deleteBookmark(bookmarkId);
+
+      if (result.statusCode === 0) {
+        await queryClient.invalidateQueries({ queryKey: ['bookmarkList'] });
+      }
+    } catch {
+      if (previousData) {
+        queryClient.setQueryData(['bookmarkList'], previousData);
+      }
+
+      return;
+    }
+  };
+
+  return (
+    <div className="space-y-[1rem]">
+      {bookmarks.map((store: Bookmark) => (
+        <div key={store.bookmarkId} className="transition-all duration-300">
+          <BrandWithFavoriteCard
+            logoUrl={store.logoImage}
+            isStarFilled={true}
+            onFavoriteClick={() => handleFavoriteClick(store.bookmarkId)}
+            className="border border-gray-200 rounded-[1rem] p-4"
+          >
+            <div>
+              <h3 className="font-semibold text-[0.9rem]">{store.storeName}</h3>
+              <p className="text-sm text-gray">{store.addressDetail}</p>
+              {store.benefit && (
+                <p className="text-xs text-gray mt-1">{store.benefit}</p>
+              )}
+            </div>
+          </BrandWithFavoriteCard>
+        </div>
+      ))}
+      {!isLoading && bookmarks.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-12 px-4">
+          <div className="relative mb-6">
+            <div className="w-20 h-20 bg-gradient-to-br from-pink-100 to-red-100 rounded-full flex items-center justify-center">
+              <Heart className="w-10 h-10 text-pink-400" />
+            </div>
+            <div className="absolute -top-1 -right-1 w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+              <Star className="w-4 h-4 text-yellow-500" />
+            </div>
+          </div>
+
+          <h3 className="text-lg font-semibold text-gray-800 mb-2">
+            아직 즐겨찾기한 매장이 없어요
+          </h3>
+
+          <p className="text-sm text-gray-500 text-center mb-6 max-w-xs">
+            지도에서 마음에 드는 매장을 찾아서
+            <br />
+            즐겨찾기에 추가해보세요!
+          </p>
+
+          <button
+            onClick={() => navigate('/map')}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full text-blue-600 hover:bg-blue-100 transition-colors duration-200"
+          >
+            <MapPin className="w-4 h-4" />
+            <span className="text-sm font-medium">지도로 가기</span>
+          </button>
+        </div>
+      )}
+      <div ref={loaderRef} style={{ height: '4rem' }} />
+      {isFetchingNextPage && <ActivityFavoriteListSkeleton />}
+      {!hasNextPage && bookmarks.length > 0 && !isFetchingNextPage && (
+        <div className="text-center py-2 text-gray">
+          모든 즐겨찾기를 다 불러왔습니다.
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ActivityFavorite;

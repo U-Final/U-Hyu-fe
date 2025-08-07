@@ -1,56 +1,103 @@
-import BaseLayout from '@components/BaseLayout';
-import BottomNavigation from '@components/bottom_navigation/BottomNavigation';
-import ModalRoot from '@components/modals/ModalRoot';
-import HomePage from '@pages/HomePage';
-import BenefitPage from '@pages/benefit/BenefitPage';
-import ExtraInfo from '@pages/user/extra-info/ExtraInfo';
-import { PATH } from '@paths';
 import {
-  BrowserRouter,
-  Outlet,
-  Route,
-  Routes,
-  useLocation,
-} from 'react-router-dom';
+  AdminPage,
+  AuthSuccess,
+  BenefitPage,
+  ExtraInfo,
+  MapPage,
+  MyPage,
+  MyPageActivity,
+  MymapPage,
+} from '@/pages';
+import { PATH } from '@paths';
+import { Outlet, Route, Routes, useLocation } from 'react-router-dom';
+
+import {
+  AdminRoute,
+  AuthRoute,
+  BaseLayout,
+  BottomNavigation,
+  ModalRoot,
+} from '@/shared/components';
+import AppInitializer from '@/shared/components/AppInitializer';
+import SidebarSheet from '@/shared/components/sidebar/SidebarSheet';
 
 const Layout = () => {
   const { pathname } = useLocation();
-  const visibleBottomNavRoutes = [
-    PATH.HOME,
-    PATH.BENEFIT,
-    PATH.MAP,
-    PATH.MYPAGE,
-  ] as const;
 
-  const showBottomNav = visibleBottomNavRoutes.includes(
-    pathname as (typeof visibleBottomNavRoutes)[number]
-  );
+  const showBottomNav =
+    pathname === PATH.HOME ||
+    pathname === PATH.MYMAP ||
+    pathname === PATH.BENEFIT ||
+    pathname.startsWith(PATH.MAP) ||
+    pathname === PATH.MYPAGE ||
+    pathname === PATH.MYPAGE_ACTIVITY ||
+    pathname === PATH.ADMIN;
+
+  const isMap = pathname === '/' || pathname.startsWith(PATH.MAP);
+  const isOnboarding = pathname === PATH.EXTRA_INFO;
 
   return (
-    <div className="w-full h-full flex flex-col">
-      <BaseLayout>
+    <div
+      id="main-content"
+      className={`w-full h-screen flex flex-col relative ${isMap ? 'items-stretch justify-start' : ''}`}
+      style={isMap ? { minWidth: 0 } : undefined}
+    >
+      <BaseLayout isMap={isMap}>
+        {!isOnboarding && <SidebarSheet />}
         <Outlet />
+        {showBottomNav && <BottomNavigation />}
       </BaseLayout>
-      {showBottomNav && <BottomNavigation />}
     </div>
   );
 };
 
 export const AppRoutes = () => {
   return (
-    <BrowserRouter>
+    <>
+      <AppInitializer />
       <Routes>
+        <Route path={PATH.AUTH_SUCCESS} element={<AuthSuccess />} />
         <Route element={<Layout />}>
-          <Route path={PATH.HOME} element={<HomePage />} />
-          <Route path={PATH.MAP} element={<div>mapPage</div>} />
+          <Route path={PATH.HOME} element={<MapPage />} />
           <Route path={PATH.BENEFIT} element={<BenefitPage />} />
-          <Route path={PATH.MYPAGE} element={<div>myPage</div>} />
+          <Route
+            path={PATH.MYPAGE}
+            element={
+              <AuthRoute>
+                <MyPage />
+              </AuthRoute>
+            }
+          />
+          <Route
+            path={PATH.MYPAGE_ACTIVITY}
+            element={
+              <AuthRoute>
+                <MyPageActivity />
+              </AuthRoute>
+            }
+          />
           <Route path={PATH.EXTRA_INFO} element={<ExtraInfo />} />
-          <Route path={PATH.LOGIN} element={<div>loginPage</div>} />
+          <Route path={PATH.MAP} element={<MapPage />} />
+          <Route path="/map/:uuid" element={<MapPage />} />
+          <Route
+            path={PATH.ADMIN}
+            element={
+              <AdminRoute>
+                <AdminPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path={PATH.MYMAP}
+            element={
+              <AuthRoute>
+                <MymapPage />
+              </AuthRoute>
+            }
+          />
         </Route>
       </Routes>
-
       <ModalRoot />
-    </BrowserRouter>
+    </>
   );
 };

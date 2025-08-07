@@ -1,7 +1,10 @@
+import { useState } from 'react';
+
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Check, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
+
 import { NavigationBottomSheet } from '../NavigationBottomSheet';
+
 const meta: Meta<typeof NavigationBottomSheet> = {
   title: 'Components/BottomSheet/NavigationBottomSheet',
   component: NavigationBottomSheet,
@@ -178,7 +181,6 @@ const NavigationBottomSheetWrapper = (
         renderStepContent={renderStepContent}
         onApply={data => {
           setAppliedFilters(data.selections);
-          console.log('Applied filters:', data);
         }}
       />
     </div>

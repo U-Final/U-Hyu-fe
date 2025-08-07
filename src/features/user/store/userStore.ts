@@ -6,7 +6,6 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 import type { ApiError } from '@/shared/client/client.type';
 import type { SimpleUserInfo } from '@/shared/types';
-import { mockUserInfoData } from '@mypage/api/mockData';
 
 interface UserState {
   user: SimpleUserInfo | null;
@@ -29,10 +28,10 @@ export const userStore = create<UserState>()(
         // 환경변수로 개발용 유저 활성화 체크
         if (import.meta.env.VITE_DEV_USER_ENABLED === 'true') {
           const mockUser: SimpleUserInfo = {
-            userName: mockUserInfoData.userName,
-            grade: mockUserInfoData.grade,
-            profileImage: mockUserInfoData.profileImage,
-            role: mockUserInfoData.role,
+            userName: '테스트 유저',
+            grade: 'VIP',
+            profileImage: '/images/default-profile.png',
+            role: 'USER',
           };
           console.log('🛠️ 환경변수 기반 개발용 유저 활성화:', mockUser);
           set({ user: mockUser, isAuthChecked: true });
@@ -185,10 +184,10 @@ export const useUser = () => {
   // 환경변수로 개발용 유저가 활성화된 경우, 스토어에 유저가 없으면 기본값 반환
   if (import.meta.env.VITE_DEV_USER_ENABLED === 'true' && !user) {
     return {
-      userName: mockUserInfoData.userName,
-      grade: mockUserInfoData.grade,
-      profileImage: mockUserInfoData.profileImage,
-      role: mockUserInfoData.role,
+      userName: '테스트 유저',
+      grade: 'VIP',
+      profileImage: '/images/default-profile.png',
+      role: 'USER',
     };
   }
 

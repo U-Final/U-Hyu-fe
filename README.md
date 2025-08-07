@@ -225,6 +225,9 @@
 - [프론트엔드 컨벤션](https://github.com/U-Final/U-Hyu-fe/wiki/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-%EC%BB%A8%EB%B2%A4%EC%85%98)
 - [Git 컨벤션](https://github.com/U-Final/U-Hyu-fe/wiki/Git-%EC%BB%A8%EB%B2%A4%EC%85%98)
 
+## QA
+- [MyMap 기능 리팩토링](https://github.com/U-Final/U-Hyu-fe/wiki/MyMap-%EA%B8%B0%EB%8A%A5-%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81)
+
 <br/>
 
 ## 프로젝트 구조

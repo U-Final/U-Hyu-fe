@@ -34,8 +34,8 @@ class ActionLogCounter {
         );
         this.filterClicks = new Map(Object.entries(data.filterClicks || {}));
       }
-    } catch (error) {
-      console.error('스토리지 카운터 로드 실패', error);
+    } catch {
+      // 스토리지 로드 실패 시 무시
     }
   }
 
@@ -47,8 +47,8 @@ class ActionLogCounter {
         filterClicks: Object.fromEntries(this.filterClicks),
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    } catch (error) {
-      console.error('스토리지에 카운터 데이터 저장 실패', error);
+    } catch {
+      // 스토리지 저장 실패 시 무시
     }
   }
 
@@ -134,8 +134,8 @@ class ActionLogCounter {
     try {
       await client.post(ENDPOINTS_ACTION_LOG, action);
       this.saveToStorage();
-    } catch (error) {
-      console.error('Failed to send action:', error);
+    } catch {
+      // 액션 전송 실패 시 무시
     }
   }
 
@@ -173,8 +173,8 @@ class ActionLogCounter {
         this.markerClicks.clear();
         this.filterClicks.clear();
         this.saveToStorage();
-      } catch (error) {
-        console.error('❌ Force flush failed:', error);
+      } catch {
+        // 강제 플러시 실패 시 무시
       }
     }
   }

@@ -77,9 +77,7 @@ const ActivityFavorite = ({ enabled }: Props) => {
       if (result.statusCode === 0) {
         await queryClient.invalidateQueries({ queryKey: ['bookmarkList'] });
       }
-    } catch (error) {
-      console.error('즐겨찾기 삭제 실패:', error);
-
+    } catch {
       // 실패 시 이전 상태로 롤백
       if (previousData) {
         queryClient.setQueryData(['bookmarkList'], previousData);

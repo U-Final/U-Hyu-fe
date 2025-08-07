@@ -25,8 +25,7 @@ export function useFirstVisit(key: string) {
       }
       
       setIsLoading(false);
-    } catch (error) {
-      console.warn('localStorage access failed:', error);
+    } catch {
       setIsLoading(false);
     }
   }, [key]);
@@ -37,8 +36,8 @@ export function useFirstVisit(key: string) {
     try {
       localStorage.setItem(storageKey, 'true');
       setIsFirstVisit(false);
-    } catch (error) {
-      console.warn('localStorage write failed:', error);
+    } catch {
+      // localStorage 쓰기 실패 시 조용히 처리
     }
   };
 
@@ -48,8 +47,8 @@ export function useFirstVisit(key: string) {
     try {
       localStorage.removeItem(storageKey);
       setIsFirstVisit(true);
-    } catch (error) {
-      console.warn('localStorage remove failed:', error);
+    } catch {
+      // localStorage 삭제 실패 시 조용히 처리
     }
   };
 

@@ -41,8 +41,8 @@ export const useKeywordSearchIntegration = () => {
           // 일반 검색
           await searchKeyword(keyword);
         }
-      } catch (error) {
-        console.error('키워드 검색 실패:', error);
+      } catch {
+        // 에러는 상위 컴포넌트에서 처리됨
       }
     },
     [searchKeyword, clearResults]

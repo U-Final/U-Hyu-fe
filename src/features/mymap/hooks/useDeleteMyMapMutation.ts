@@ -11,8 +11,8 @@ export const useDeleteMyMapMutation = () => {
     onSuccess: () => {
       queryClient.refetchQueries({ queryKey: ['mymaplist'] });
     },
-    onError: error => {
-      console.error('지도 삭제 중 오류가 발생했습니다:', error);
+    onError: () => {
+      // 에러는 상위 컴포넌트에서 처리됨
     },
   });
 };

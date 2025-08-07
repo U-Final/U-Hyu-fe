@@ -131,20 +131,7 @@ export const useBrandsCategoryDebug = (categoryKey: StoreCategory | null) => {
       isEmpty: result.isEmpty,
     },
     logState: () => {
-      // console.group(`🏷️ Brands by Category Debug: ${categoryKey}`);
-      // console.log('Category Key:', categoryKey);
-      // console.log(
-      //   'Category ID:',
-      //   categoryKey ? getCategoryId(categoryKey) : null
-      // );
-      // console.log('Brand Count:', result.brandCount);
-      // console.log('Brands:', result.brands);
-      // console.log('Loading:', result.isLoading);
-      // console.log('Error:', result.isError);
-      // console.log('Error Message:', result.errorMessage);
-      // console.log('Is Empty:', result.isEmpty);
-      // console.log('Raw Data:', result.rawData);
-      // console.groupEnd();
+      // 디버깅 로그는 제거됨
     },
   };
 };

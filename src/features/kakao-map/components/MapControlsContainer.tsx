@@ -136,21 +136,9 @@ export const MapControlsContainer: React.FC<MapControlsContainerProps> = ({
   const handleSearch = async (value: string) => {
     if (value.trim()) {
       try {
-        if (import.meta.env.MODE === 'development') {
-          console.log('검색 시작:', value.trim());
-        }
         await search(value.trim());
-        if (import.meta.env.MODE === 'development') {
-          console.log('검색 완료:', value);
-        }
-      } catch (error) {
-        if (import.meta.env.MODE === 'development') {
-          console.error('검색 실패:', error);
-        }
-      }
-    } else {
-      if (import.meta.env.MODE === 'development') {
-        console.log('검색어가 비어있음');
+      } catch {
+        // 에러는 상위 컴포넌트에서 처리됨
       }
     }
   };

@@ -13,8 +13,8 @@ export const useCheckEmailMutation = () => {
     { email: string }
   >({
     mutationFn: userApi.checkEmail,
-    onError: error => {
-      console.error('이메일 중복확인 실패:', error);
+    onError: () => {
+      // 에러는 상위 컴포넌트에서 처리됨
     },
   });
 };
@@ -29,8 +29,8 @@ export const useSubmitExtraInfo = () => {
       // 추가 정보 입력 성공 시 사용자 정보 캐시 무효화
       queryClient.invalidateQueries({ queryKey: userKeys.info() });
     },
-    onError: (error: Error) => {
-      console.error('추가 정보 입력 실패:', error);
+    onError: () => {
+      // 에러는 상위 컴포넌트에서 처리됨
     },
   });
 };
@@ -45,8 +45,7 @@ export const useLogout = () => {
       queryClient.removeQueries({ queryKey: userKeys.all });
       window.location.href = '/';
     },
-    onError: (error: Error) => {
-      console.error('❌ 로그아웃 실패:', error);
+    onError: () => {
       toast.error('로그아웃에 실패했습니다. 다시 시도해주세요.');
     },
   });

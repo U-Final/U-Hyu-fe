@@ -165,9 +165,6 @@ export const mymapHandlers = [
   // My Map 지도 조회 (UUID 기반, 비회원)
   http.get(MYMAP_ENDPOINTS.MYMAP.GUEST_VIEW_MSW(), async ({ params }) => {
     const uuid = params.uuid;
-    if (import.meta.env.MODE === 'development') {
-      console.log(params.uuid);
-    }
 
     if (!uuid) {
       return createErrorResponse('UUID가 없습니다.', 400);

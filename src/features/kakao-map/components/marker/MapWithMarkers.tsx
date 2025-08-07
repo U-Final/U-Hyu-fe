@@ -342,8 +342,8 @@ const MapWithMarkers: FC<MapWithMarkersProps> = ({
             storeId: infoWindowStore.storeId,
           });
           if (bookmarkMode) refreshBookmarkStores();
-        } catch (error) {
-          console.error('즐겨찾기 토글 실패:', error);
+        } catch {
+          // 에러는 mutation에서 자동으로 처리됨
         }
       });
     },

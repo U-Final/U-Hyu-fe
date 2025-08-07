@@ -6,6 +6,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 import type { ApiError } from '@/shared/client/client.type';
 import type { SimpleUserInfo } from '@/shared/types';
+import { mockUserInfoData } from '@mypage/api/mockData';
 
 interface UserState {
   user: SimpleUserInfo | null;
@@ -28,12 +29,11 @@ export const userStore = create<UserState>()(
         // 환경변수로 개발용 유저 활성화 체크
         if (import.meta.env.VITE_DEV_USER_ENABLED === 'true') {
           const mockUser: SimpleUserInfo = {
-            userName: '테스트 유저',
-            grade: 'VIP',
-            profileImage: '/images/default-profile.png',
-            role: 'USER',
+            userName: mockUserInfoData.userName,
+            grade: mockUserInfoData.grade,
+            profileImage: mockUserInfoData.profileImage,
+            role: mockUserInfoData.role,
           };
-
           set({ user: mockUser, isAuthChecked: true });
           return;
         }
@@ -42,15 +42,12 @@ export const userStore = create<UserState>()(
           // sessionStorage에 사용자 정보가 있으면 서버에서 검증
           const storedUser = get().user;
           if (storedUser) {
-
             await get().userInfo();
           } else {
             // HttpOnly 쿠키는 체크할 수 없으므로 바로 서버에 요청
-
             await get().userInfo();
           }
         } catch {
-
           // userInfo에서 이미 에러 처리됨
         }
       },
@@ -69,14 +66,13 @@ export const userStore = create<UserState>()(
           get().clearUser(); // clearUser 호출로 sessionStorage도 함께 정리
           toast.info(res.message);
         } catch {
-          // 에러는 상위 컴포넌트에서 처리됨
+          // 로그아웃 실패 시 무시
         }
       },
 
       userInfo: async () => {
         try {
           const res = await userApi.getUserInfo();
-
 
           if ((res.statusCode === 200 || res.statusCode === 0) && res.data) {
             const { userName, grade, profileImage, role } = res.data;
@@ -163,10 +159,10 @@ export const useUser = () => {
   // 환경변수로 개발용 유저가 활성화된 경우, 스토어에 유저가 없으면 기본값 반환
   if (import.meta.env.VITE_DEV_USER_ENABLED === 'true' && !user) {
     return {
-      userName: '테스트 유저',
-      grade: 'VIP',
-      profileImage: '/images/default-profile.png',
-      role: 'USER',
+      userName: mockUserInfoData.userName,
+      grade: mockUserInfoData.grade,
+      profileImage: mockUserInfoData.profileImage,
+      role: mockUserInfoData.role,
     };
   }
 

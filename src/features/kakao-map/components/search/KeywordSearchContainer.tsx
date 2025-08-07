@@ -171,8 +171,8 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
           .then(() => {
             setLastSearchCenter(center);
           })
-          .catch(error => {
-            console.error('자동 재검색 실패:', error);
+          .catch(() => {
+            // 에러는 상위 컴포넌트에서 처리됨
           });
       }
     }
@@ -211,8 +211,8 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
         await searchByLocation(searchKeyword, center, searchRadius);
         setLastSearchCenter(center);
         setShowManualSearchButton(false);
-      } catch (error) {
-        console.error('키워드 검색 실패:', error);
+      } catch {
+        // 에러는 상위 컴포넌트에서 처리됨
       }
     },
     [searchByLocation, center, searchRadius, clearError]
@@ -227,8 +227,8 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
         setLastSearchCenter(center);
         setShowManualSearchButton(false);
       })
-      .catch(error => {
-        console.error('위치 기반 재검색 실패:', error);
+      .catch(() => {
+        // 에러는 상위 컴포넌트에서 처리됨
       })
       .finally(() => {
         setManualSearchLoading(false);

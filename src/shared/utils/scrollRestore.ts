@@ -24,9 +24,8 @@ export function saveScrollPosition(): void {
   
   try {
     sessionStorage.setItem(SCROLL_RESTORE_KEY, JSON.stringify(position));
-    
-  } catch (error) {
-    console.warn('Failed to save scroll position:', error);
+  } catch {
+    // 스크롤 위치 저장 실패 시 무시
   }
 }
 
@@ -55,8 +54,7 @@ export function restoreScrollPosition(): boolean {
     
     
     return true;
-  } catch (error) {
-    console.warn('Failed to restore scroll position:', error);
+  } catch {
     return false;
   }
 }
@@ -67,9 +65,8 @@ export function restoreScrollPosition(): boolean {
 export function clearScrollPosition(): void {
   try {
     sessionStorage.removeItem(SCROLL_RESTORE_KEY);
-    
-  } catch (error) {
-    console.warn('Failed to clear scroll position:', error);
+  } catch {
+    // 스크롤 위치 정리 실패 시 무시
   }
 }
 

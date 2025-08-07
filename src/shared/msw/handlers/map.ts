@@ -109,35 +109,7 @@ export const mapHandlers = [
       );
     }
 
-    // 개발 환경에서 디버깅 정보 출력
-    if (import.meta.env.MODE === 'development') {
-      console.log('🔍 MSW Store Filter Applied:', {
-        originalQuery: {
-          lat,
-          lon,
-          radius,
-          category,
-          brand,
-          search,
-        },
-        filteringSteps: {
-          totalStores: MOCK_STORES.length,
-          afterRadiusFilter: MOCK_STORES.filter(store => {
-            const distance =
-              Math.sqrt(
-                Math.pow(store.latitude - lat, 2) +
-                  Math.pow(store.longitude - lon, 2)
-              ) * 111000;
-            return distance <= radius;
-          }).length,
-          afterCategoryFilter: category ? 'applied' : 'skipped',
-          afterBrandFilter: brand ? 'applied' : 'skipped',
-          afterSearchFilter: search ? 'applied' : 'skipped',
-          finalCount: filteredStores.length,
-        },
-        appliedFilters: { category, brand, search },
-      });
-    }
+
 
     // 성공 응답 반환
     const response: StoreListResponse =
@@ -207,11 +179,7 @@ export const mapHandlers = [
    * 카테고리별 브랜드 목록 조회 API 핸들러
    * GET /category/:categoryId
    */
-  http.get('*/category/:categoryId', ({ params, request }) => {
-    if (import.meta.env.MODE === 'development') {
-      console.log('🏷️ 카테고리 브랜드 MSW 핸들러 호출:', request.url);
-      console.log('📂 카테고리 ID:', params.categoryId);
-    }
+  http.get('*/category/:categoryId', ({ params }) => {
     const categoryId = Number(params.categoryId);
 
     // categoryId 파라미터 유효성 검증

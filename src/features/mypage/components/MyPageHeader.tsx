@@ -63,10 +63,8 @@ const MyPageHeader = ({ user }: MyPageHeaderProps) => {
       if (onProfileImageChange) onProfileImageChange(uploadedUrl);
       // PATCH로 profileImage도 동기화
       await updateUserInfo({ updatedProfileImage: uploadedUrl });
-      console.log('프로필 이미지 업로드 및 PATCH 성공:', uploadedUrl);
-    } catch (err) {
+    } catch {
       alert('프로필 이미지 변경 실패');
-      console.error(err);
     }
   };
   */

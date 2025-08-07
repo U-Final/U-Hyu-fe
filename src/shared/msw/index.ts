@@ -9,6 +9,5 @@ export const startMSW = async () => {
     await worker.start({
       onUnhandledRequest: 'bypass', // 처리되지 않은 요청은 실제 서버로 전달
     });
-    console.log('MSW 활성화');
   }
 };

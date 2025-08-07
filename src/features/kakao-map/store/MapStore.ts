@@ -162,8 +162,8 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
         try {
           const stores = await mapApi.getBookmark();
           set({ bookmarkStores: stores });
-        } catch (e) {
-          console.error('즐겨찾기 매장 조회 실패:', e);
+        } catch {
+          // 에러는 상위 컴포넌트에서 처리됨
         }
       },
 
@@ -171,8 +171,8 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
         try {
           const stores = await mapApi.getBookmark();
           set({ bookmarkStores: stores });
-        } catch (e) {
-          console.error('즐겨찾기 매장 새로고침 실패:', e);
+        } catch {
+          // 에러는 상위 컴포넌트에서 처리됨
         }
       },
 

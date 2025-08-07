@@ -155,13 +155,6 @@ export const useMapData = () => {
    */
   useEffect(() => {
     if (storeListQuery.data) {
-      if (import.meta.env.MODE === 'development') {
-        console.log('🏪 Store data updated from API:', {
-          storesCount: storeListQuery.data.data?.length || 0,
-          queryParams: storeListParams,
-          data: storeListQuery.data.data,
-        });
-      }
       setStoresFromQuery(storeListQuery.data);
     }
   }, [storeListQuery.data, setStoresFromQuery, storeListParams]);
@@ -259,8 +252,7 @@ export const useMapData = () => {
     async (storeId: number) => {
       try {
         await toggleFavoriteMutation.mutateAsync({ storeId });
-      } catch (error) {
-        console.error('즐겨찾기 토글 실패:', error);
+      } catch {
         // 에러는 mutation에서 이미 처리됨 (롤백 포함)
       }
     },

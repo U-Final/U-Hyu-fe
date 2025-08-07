@@ -40,10 +40,8 @@ const MyPage = () => {
 
       setPendingChanges({});
       setisEditMode(false);
-      // console.log('통합 수정 요청 성공:', pendingChanges);
-    } catch (err) {
+    } catch {
       alert('수정 실패');
-      console.error(err);
     }
   };
 

@@ -181,7 +181,6 @@ const NavigationBottomSheetWrapper = (
         renderStepContent={renderStepContent}
         onApply={data => {
           setAppliedFilters(data.selections);
-          console.log('Applied filters:', data);
         }}
       />
     </div>

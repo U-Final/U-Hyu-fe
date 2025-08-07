@@ -64,7 +64,6 @@ const SelectionBottomSheetWrapper = (
         selectedItems={selectedItems}
         onItemSelect={handleItemSelect}
         onApply={() => {
-          console.log('Applied:', selectedItems);
           setIsOpen(false);
         }}
       />

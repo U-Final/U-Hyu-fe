@@ -90,9 +90,8 @@ const AddStoreModal: FC<AddStoreProps> = ({ storeId }) => {
         queryClient.invalidateQueries({
           queryKey: STORE_BOOKMARK_STATUS_QUERY_KEY(storeId),
         });
-      } catch (error) {
+      } catch {
         toast.error('즐겨찾기 변경 중 오류가 발생했습니다.');
-        console.error('즐겨찾기 토글 실패:', error);
       }
     }
 

@@ -94,8 +94,7 @@ export const userHandlers = [
         '회원가입 추가정보가 성공적으로 저장되었습니다',
         200
       );
-    } catch (error) {
-      console.error('❌ MSW: Extra info submission error:', error);
+    } catch {
       return createErrorResponse('서버 내부 오류가 발생했습니다', 500);
     }
   }),

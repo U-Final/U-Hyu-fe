@@ -24,11 +24,6 @@ export const mypageHandlers = [
   http.patch(MYPAGE_ENDPOINTS.UPDATE_USER, async ({ request }) => {
     const body = (await request.json()) as Partial<UpdateUserRequest>;
 
-    if (import.meta.env.MODE === 'development') {
-      console.log('🔧 MSW PATCH 요청 받음:', body);
-      console.log('🔧 현재 mockUserInfoData:', mockUserInfoData);
-    }
-
     // 에러 케이스: 잘못된 등급
     if (
       body.updatedGrade &&
@@ -60,30 +55,17 @@ export const mypageHandlers = [
     const updatedData = { ...mockUserInfoData };
     if (body.updatedNickName) {
       updatedData.nickName = body.updatedNickName;
-      if (import.meta.env.MODE === 'development') {
-        console.log('✅ 닉네임 업데이트:', body.updatedNickName);
-      }
     }
     if (body.updatedGrade) {
       updatedData.grade = body.updatedGrade;
-      if (import.meta.env.MODE === 'development') {
-        console.log('✅ 등급 업데이트:', body.updatedGrade);
-      }
     }
     if (body.updatedBrandIdList) {
       updatedData.interestedBrandList = body.updatedBrandIdList;
-      if (import.meta.env.MODE === 'development') {
-        console.log('✅ 브랜드 업데이트:', body.updatedBrandIdList);
-      }
     }
     updatedData.updatedAt = new Date().toISOString();
 
     // 전역 mock 데이터 업데이트
     Object.assign(mockUserInfoData, updatedData);
-
-    if (import.meta.env.MODE === 'development') {
-      console.log('🔧 업데이트 후 mockUserInfoData:', mockUserInfoData);
-    }
 
     await delay(300);
     return HttpResponse.json(
@@ -93,9 +75,6 @@ export const mypageHandlers = [
 
   // 개인정보 조회
   http.get(MYPAGE_ENDPOINTS.USER_INFO, () => {
-    if (import.meta.env.MODE === 'development') {
-      console.log('🔧 MSW GET 요청 - 현재 mockUserInfoData:', mockUserInfoData);
-    }
     return HttpResponse.json(
       createResponse(mockUserInfoData, '정상 처리 되었습니다.')
     );

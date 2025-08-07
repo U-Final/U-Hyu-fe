@@ -54,7 +54,9 @@ export const Default: Story = {
   args: {
     brand: BRANDS[0], // CGV
     isSelected: false,
-    onClick: () => console.log('brand-clicked'),
+    onClick: () => {
+      // 브랜드 클릭 처리
+    },
     delay: 0,
     disabled: false,
   },
@@ -65,7 +67,9 @@ export const Selected: Story = {
   args: {
     brand: BRANDS[1], // 베스킨라빈스
     isSelected: true,
-    onClick: () => console.log('brand-clicked'),
+    onClick: () => {
+      // 브랜드 클릭 처리
+    },
     delay: 0,
     disabled: false,
   },
@@ -84,7 +88,9 @@ export const Disabled: Story = {
   args: {
     brand: BRANDS[2], // 파리바게뜨
     isSelected: false,
-    onClick: () => console.log('brand-clicked'),
+    onClick: () => {
+      // 브랜드 클릭 처리
+    },
     delay: 0,
     disabled: true,
   },
@@ -103,7 +109,9 @@ export const SelectedDisabled: Story = {
   args: {
     brand: BRANDS[3], // GS25
     isSelected: true,
-    onClick: () => console.log('brand-clicked'),
+    onClick: () => {
+      // 브랜드 클릭 처리
+    },
     delay: 0,
     disabled: true,
   },
@@ -121,7 +129,9 @@ export const WithDelay: Story = {
   args: {
     brand: BRANDS[4], // 롯데시네마
     isSelected: false,
-    onClick: () => console.log('brand-clicked'),
+    onClick: () => {
+      // 브랜드 클릭 처리
+    },
     delay: 0.5,
     disabled: false,
   },
@@ -170,7 +180,9 @@ export const AllBrands: Story = {
           key={brand.id}
           brand={brand}
           isSelected={index % 3 === 0} // 일부만 선택된 상태로 표시
-          onClick={() => console.log(`${brand.name}-clicked`)}
+          onClick={() => {
+            // 브랜드 클릭 처리
+          }}
           delay={index * 0.1}
           disabled={false}
         />
@@ -200,7 +212,9 @@ export const ImageLoadError: Story = {
       imagePath: '/non-existent-image.png', // 존재하지 않는 이미지
     },
     isSelected: false,
-    onClick: () => console.log('brand-clicked'),
+    onClick: () => {
+      // 브랜드 클릭 처리
+    },
     delay: 0,
     disabled: false,
   },
@@ -225,7 +239,9 @@ export const LongBrandName: Story = {
       imagePath: '/images/brands/CGV.png',
     },
     isSelected: false,
-    onClick: () => console.log('brand-clicked'),
+    onClick: () => {
+      // 브랜드 클릭 처리
+    },
     delay: 0,
     disabled: false,
   },
@@ -254,7 +270,9 @@ export const StateComparison: Story = {
         <BrandLogo
           brand={BRANDS[0]}
           isSelected={false}
-          onClick={() => console.log('default-clicked')}
+          onClick={() => {
+            // 기본 상태 클릭 처리
+          }}
           delay={0}
           disabled={false}
         />
@@ -264,7 +282,9 @@ export const StateComparison: Story = {
         <BrandLogo
           brand={BRANDS[0]}
           isSelected={true}
-          onClick={() => console.log('selected-clicked')}
+          onClick={() => {
+            // 선택된 상태 클릭 처리
+          }}
           delay={0}
           disabled={false}
         />
@@ -274,7 +294,9 @@ export const StateComparison: Story = {
         <BrandLogo
           brand={BRANDS[0]}
           isSelected={false}
-          onClick={() => console.log('disabled-clicked')}
+          onClick={() => {
+            // 비활성화 상태 클릭 처리
+          }}
           delay={0}
           disabled={true}
         />
@@ -284,7 +306,9 @@ export const StateComparison: Story = {
         <BrandLogo
           brand={BRANDS[0]}
           isSelected={true}
-          onClick={() => console.log('selected-disabled-clicked')}
+          onClick={() => {
+            // 선택됨 + 비활성화 상태 클릭 처리
+          }}
           delay={0}
           disabled={true}
         />

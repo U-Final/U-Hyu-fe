@@ -47,8 +47,6 @@ const ExtraInfo: React.FC = () => {
           navigate(PATH.AUTH_SUCCESS, { replace: true });
         }, 1500);
       } catch (error) {
-        console.error('회원가입 실패:', error);
-
         // 에러 처리 - 토스트 알림
         const errorMessage =
           error instanceof Error

@@ -20,8 +20,6 @@ const BrandGridWrapper = (args: BrandGridProps) => {
         ? prev.filter(id => id !== numericBrandId)
         : [...prev, numericBrandId];
 
-      // 콘솔에서 확인 가능
-      console.log('onBrandToggle:', numericBrandId, newSelection);
       return newSelection;
     });
   };

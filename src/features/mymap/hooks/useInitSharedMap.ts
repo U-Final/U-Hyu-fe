@@ -25,8 +25,7 @@ export const useInitSharedMap = (uuid?: string) => {
           stores: data.storeList,
           title: data.title,
         });
-      } catch (error) {
-        console.error('공유 지도 불러오기 실패:', error);
+      } catch {
         clearSharedMap();
       }
     };

@@ -24,9 +24,6 @@ const responseInterceptor = (instance: AxiosInstance) => {
           toast.error('로그인이 만료되었습니다. 다시 로그인해주세요.');
         } else if (res?.status === 403) {
           // 403은 조용히 처리 (토스트 없음)
-          if (import.meta.env.DEV) {
-            console.log('🔐 권한 없음 - 비로그인 상태로 처리');
-          }
         }
 
         return Promise.reject({

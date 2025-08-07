@@ -214,7 +214,7 @@ export const useToggleFavoriteMutation = () => {
     },
 
     // 실패 시: 이전 상태로 롤백
-    onError: (error, variables, context) => {
+    onError: (_, variables, context) => {
       const { storeId } = variables;
 
       if (context?.previousStoreDetail) {
@@ -223,8 +223,6 @@ export const useToggleFavoriteMutation = () => {
           context.previousStoreDetail
         );
       }
-
-      console.error('즐겨찾기 업데이트 실패:', error);
     },
   });
 };
@@ -328,14 +326,7 @@ export const useQueryDebugInfo = () => {
      * 모든 활성 쿼리를 콘솔에 테이블 형태로 출력
      */
     logActiveQueries: () => {
-      const queries = queryClient.getQueryCache().getAll();
-      console.table(
-        queries.map(q => ({
-          key: q.queryKey.join(' > '),
-          state: q.state.status,
-          dataUpdatedAt: new Date(q.state.dataUpdatedAt).toLocaleTimeString(),
-        }))
-      );
+      // 디버깅 로그는 제거됨
     },
   };
 };

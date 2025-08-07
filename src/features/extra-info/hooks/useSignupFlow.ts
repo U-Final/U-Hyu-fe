@@ -120,8 +120,6 @@ export const useSignupFlow = (
         // 성공 콜백 호출
         onComplete?.(true, '회원가입이 성공적으로 완료되었습니다!');
       } catch (error) {
-        console.error('회원가입 실패:', error);
-
         // 에러 처리 - 콜백으로 에러 메시지 전달
         const errorMessage =
           error instanceof Error

@@ -66,7 +66,9 @@ export const WithBackButton: Story = {
     title: '뒤로가기 버튼 포함',
     subtitle: '이 시트는 뒤로가기 버튼이 있습니다',
     showBackButton: true,
-    onBack: () => console.log('Back clicked'),
+    onBack: () => {
+      // 뒤로가기 버튼 클릭 처리
+    },
     children: (
       <div className="space-y-4">
         <p>이 바텀시트는 헤더에 뒤로가기 버튼이 포함되어 있습니다.</p>

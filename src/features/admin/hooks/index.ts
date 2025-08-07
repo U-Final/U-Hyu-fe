@@ -1,4 +1,3 @@
-// 통계 관련 hooks
 export {
   useAdminTotalStatsQuery,
   useAdminBookmarkStatsQuery,
@@ -7,7 +6,6 @@ export {
   useAdminMembershipStatsQuery,
 } from './useAdminStatsQuery';
 
-// 브랜드 관련 hooks
 export { useAdminBrandListQuery } from './useAdminBrandQuery';
 export { 
   useCreateAdminBrandMutation,

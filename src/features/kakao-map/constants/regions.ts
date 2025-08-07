@@ -21,25 +21,25 @@ export interface RegionInfo {
   all: {
     key: 'all',
     label: '지역',
-    center: { lat: 37.54699, lng: 127.09598 }, // 서울 강남역 (기본값)
+    center: { lat: 37.54699, lng: 127.09598 },
     defaultZoom: 10,
   },
   seoul: {
     key: 'seoul',
     label: '서울',
-    center: { lat: 37.5663, lng: 126.9779 }, // 서울시청 기준
+    center: { lat: 37.5663, lng: 126.9779 },
     defaultZoom: 11,
   },
   busan: {
     key: 'busan',
     label: '부산',
-    center: { lat: 35.1796, lng: 129.0756 }, // 부산시청 기준
+    center: { lat: 35.1796, lng: 129.0756 },
     defaultZoom: 11,
   },
   incheon: {
     key: 'incheon',
     label: '인천',
-    center: { lat: 37.4563, lng: 126.7052 }, // 인천시청 기준
+    center: { lat: 37.4563, lng: 126.7052 },
     defaultZoom: 11,
   },
   ulsan: {

@@ -7,33 +7,21 @@ import SearchResultItem from './SearchResultItem';
 import SearchResultSkeleton from './SearchResultSkeleton';
 import { SearchResultSummary } from './SearchResultSummary';
 
-// Re-export components for backward compatibility
 export { SearchResultSummary } from './SearchResultSummary';
 export { SearchResultItem } from './SearchResultItem';
 export { SearchResultSkeleton } from './SearchResultSkeleton';
 
 interface SearchResultListProps {
-  /** 검색 결과 목록 */
   results: NormalizedPlace[];
-  /** 로딩 상태 */
   loading?: boolean;
-  /** 결과 아이템 클릭 핸들러 */
   onItemClick: (place: NormalizedPlace) => void;
-  /** 선택된 장소 ID */
   selectedPlaceId?: string;
-  /** 추가 CSS 클래스 */
   className?: string;
-  /** 빈 결과일 때 표시할 메시지 */
   emptyMessage?: string;
-  /** 검색 키워드 */
   keyword?: string;
-  /** 총 결과 수 */
   totalCount?: number;
-  /** 현재 카테고리 */
   category?: string;
-  /** 요약 정보 표시 여부 */
   showSummary?: boolean;
-  /** 검색이 완료되었는지 여부 (빈 상태 표시 조건) */
   hasSearched?: boolean;
 }
 
@@ -63,7 +51,6 @@ const SearchResultList: React.FC<SearchResultListProps> = ({
     );
   }
 
-  // 검색이 완료되었고 결과가 없을 때만 빈 상태 표시
   if (hasSearched && results.length === 0) {
     return (
       <div
@@ -84,7 +71,6 @@ const SearchResultList: React.FC<SearchResultListProps> = ({
     );
   }
 
-  // 검색이 완료되지 않았거나 로딩 중이 아닌 경우 아무것도 렌더링하지 않음
   if (!hasSearched || results.length === 0) {
     return null;
   }

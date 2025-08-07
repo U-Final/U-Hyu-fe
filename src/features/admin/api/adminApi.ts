@@ -18,7 +18,6 @@ import type {
 } from './types';
 
 export const adminApi = {
-  // 통계 관련 API
   getTotalStats: async (): Promise<TotalStats> => {
     const res = await client.get<ApiResponse<TotalStats>>(ADMIN_ENDPOINTS.TOTAL_STATS);
     
@@ -64,9 +63,6 @@ export const adminApi = {
     return res.data.data;
   },
 
-
-
-  // 브랜드 관리 API
   getAdminBrandList: async (params?: AdminBrandListParams): Promise<AdminBrandListResponse> => {
     const res = await client.get<ApiResponse<AdminBrandListResponse>>(ADMIN_ENDPOINTS.BRAND_LIST, { params });
     

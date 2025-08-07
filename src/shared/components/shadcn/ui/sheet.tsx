@@ -84,7 +84,6 @@ function SheetContent({
         setContainer(element);
         setIsContained(true);
 
-        // Ensure the container has relative positioning
         const computedStyle = window.getComputedStyle(element);
         if (computedStyle.position === 'static') {
           element.style.position = 'relative';
@@ -95,9 +94,7 @@ function SheetContent({
       return false;
     };
 
-    // Try to find the container immediately
     if (!findContainer()) {
-      // If not found, set up a MutationObserver to watch for it
       const observer = new MutationObserver(() => {
         if (findContainer()) {
           observer.disconnect();
@@ -109,7 +106,6 @@ function SheetContent({
         subtree: true,
       });
 
-      // Cleanup observer on unmount
       return () => observer.disconnect();
     }
   }, [containerId]);
@@ -119,7 +115,6 @@ function SheetContent({
       'data-[state=open]:animate-in data-[state=closed]:animate-out z-1000 flex flex-col gap-4 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500 bg-light-gray border-none';
 
     if (isContained) {
-      // Use absolute positioning when contained
       const containedClasses = {
         right:
           'data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right absolute top-0 right-0 h-full w-3/4 border-l sm:max-w-sm',
@@ -130,7 +125,6 @@ function SheetContent({
       };
       return cn(baseClasses, containedClasses[side]);
     } else {
-      // Use fixed positioning when not contained (default behavior)
       const fixedClasses = {
         right:
           'data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right fixed inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-sm',

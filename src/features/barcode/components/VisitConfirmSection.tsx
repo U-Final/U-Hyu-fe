@@ -15,7 +15,6 @@ const VisitConfirmSection = ({ store, onConfirm, onReject }: StoreProps) => {
   const { trackBarcodeInteraction } = useGA();
 
   const handleVisitConfirm = () => {
-    // GA 추적: 방문 확인
     trackBarcodeInteraction('visit_confirmed', store.storeId);
 
     confirmVisit(store.storeId, {
@@ -29,7 +28,6 @@ const VisitConfirmSection = ({ store, onConfirm, onReject }: StoreProps) => {
   };
 
   const handleReject = () => {
-    // GA 추적: 방문 거부
     trackBarcodeInteraction('visit_rejected', store.storeId);
     onReject();
   };

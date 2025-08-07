@@ -12,20 +12,17 @@ import { useCategoryBrandsQuery } from './useMapQueries';
  * @returns 브랜드 목록, 로딩 상태, 에러 정보
  */
 export const useBrandsByCategory = (categoryKey: StoreCategory | null) => {
-  // 카테고리 키를 백엔드 카테고리 ID로 변환
   const categoryId = useMemo(() => {
     if (!categoryKey || categoryKey === 'all') {
-      return 0; // 전체 카테고리이거나 null인 경우 0으로 처리
+      return 0;
     }
     return getCategoryId(categoryKey);
   }, [categoryKey]);
 
-  // 카테고리별 브랜드 조회 쿼리 실행
   const { data, isLoading, error, isError, refetch } = useCategoryBrandsQuery({
     categoryId,
   });
 
-  // 브랜드 목록을 문자열 배열로 변환
   const brands = useMemo(() => {
     if (!data?.data || !Array.isArray(data.data)) {
       return [];
@@ -33,11 +30,9 @@ export const useBrandsByCategory = (categoryKey: StoreCategory | null) => {
     return data.data.map(brand => brand.brandName);
   }, [data]);
 
-  // 에러 상태 분석
   const errorMessage = useMemo(() => {
     if (!isError || !error) return null;
 
-    // Axios 에러인 경우
     if (
       'response' in error &&
       error.response &&
@@ -57,7 +52,6 @@ export const useBrandsByCategory = (categoryKey: StoreCategory | null) => {
       }
     }
 
-    // 네트워크 에러인 경우
     if ('code' in error && error.code === 'NETWORK_ERROR') {
       return '네트워크 연결을 확인해 주세요.';
     }
@@ -66,21 +60,13 @@ export const useBrandsByCategory = (categoryKey: StoreCategory | null) => {
   }, [isError, error]);
 
   return {
-    /** 브랜드 이름 목록 */
     brands,
-    /** 브랜드 개수 */
     brandCount: brands.length,
-    /** 로딩 상태 */
     isLoading,
-    /** 에러 발생 여부 */
     isError,
-    /** 에러 메시지 */
     errorMessage,
-    /** 데이터가 비어있는지 여부 */
     isEmpty: !isLoading && brands.length === 0,
-    /** 쿼리 재실행 함수 */
     refetch,
-    /** 원본 응답 데이터 (디버깅용) */
     rawData: data,
   };
 };
@@ -131,20 +117,6 @@ export const useBrandsCategoryDebug = (categoryKey: StoreCategory | null) => {
       isEmpty: result.isEmpty,
     },
     logState: () => {
-      // console.group(`🏷️ Brands by Category Debug: ${categoryKey}`);
-      // console.log('Category Key:', categoryKey);
-      // console.log(
-      //   'Category ID:',
-      //   categoryKey ? getCategoryId(categoryKey) : null
-      // );
-      // console.log('Brand Count:', result.brandCount);
-      // console.log('Brands:', result.brands);
-      // console.log('Loading:', result.isLoading);
-      // console.log('Error:', result.isError);
-      // console.log('Error Message:', result.errorMessage);
-      // console.log('Is Empty:', result.isEmpty);
-      // console.log('Raw Data:', result.rawData);
-      // console.groupEnd();
     },
   };
 };

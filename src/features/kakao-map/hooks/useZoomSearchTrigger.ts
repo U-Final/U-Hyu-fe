@@ -1,4 +1,3 @@
-// features/kakao-map/hooks/useZoomSearchTrigger.ts
 import { useEffect, useRef, useState } from 'react';
 
 import { useSearchRadius, useZoomLevel } from '../store/MapStore';
@@ -21,21 +20,18 @@ export function useZoomSearchTrigger(opts: Options = {}) {
   const lastSearchZoomRef = useRef<number | null>(null);
   const [visibleByZoom, setVisibleByZoom] = useState(false);
 
-  // 최초 기준값 세팅
   useEffect(() => {
     if (lastSearchZoomRef.current === null && typeof zoomLevel === 'number') {
       lastSearchZoomRef.current = zoomLevel;
     }
   }, [zoomLevel]);
 
-  // 현재 줌과 마지막 검색 줌 비교
   useEffect(() => {
     if (lastSearchZoomRef.current === null) return;
     const diff = Math.abs(zoomLevel - lastSearchZoomRef.current);
     setVisibleByZoom(diff >= levelDeltaThreshold);
   }, [zoomLevel, levelDeltaThreshold]);
 
-  // 검색 수행 후 기준 갱신 (버튼 숨김)
   const markSearched = () => {
     lastSearchZoomRef.current = zoomLevel;
     setVisibleByZoom(false);

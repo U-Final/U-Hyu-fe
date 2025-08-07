@@ -22,7 +22,6 @@ const CategorySelectContent: FC<CategorySelectContentProps> = ({
   const handleCategoryClick = (categoryKey: StoreCategory) => {
     onCategorySelect(categoryKey);
 
-    // 행동 추적 추가
     if (categoryKey !== 'all') {
       trackFilterUsed(categoryKey);
     }

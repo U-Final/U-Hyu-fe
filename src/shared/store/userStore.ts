@@ -6,6 +6,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 import type { ApiError } from '@/shared/client/client.type';
 import type { SimpleUserInfo } from '@/shared/types';
+import { mockUserInfoData } from '@mypage/api/mockData';
 
 interface UserState {
   user: SimpleUserInfo | null;
@@ -26,12 +27,11 @@ export const userStore = create<UserState>()(
       initAuthState: async () => {
         if (import.meta.env.VITE_DEV_USER_ENABLED === 'true') {
           const mockUser: SimpleUserInfo = {
-            userName: '테스트 유저',
-            grade: 'VIP',
-            profileImage: '/images/default-profile.png',
-            role: 'USER',
+            userName: mockUserInfoData.userName,
+            grade: mockUserInfoData.grade,
+            profileImage: mockUserInfoData.profileImage,
+            role: mockUserInfoData.role,
           };
-
           set({ user: mockUser, isAuthChecked: true });
           return;
         }
@@ -39,7 +39,6 @@ export const userStore = create<UserState>()(
         try {
           const storedUser = get().user;
           if (storedUser) {
-
             await get().userInfo();
           } else {
             await get().userInfo();
@@ -62,14 +61,13 @@ export const userStore = create<UserState>()(
           get().clearUser();
           toast.info(res.message);
         } catch {
-          // 에러는 상위 컴포넌트에서 처리됨
+          // 로그아웃 실패 시 무시
         }
       },
 
       userInfo: async () => {
         try {
           const res = await userApi.getUserInfo();
-
 
           if ((res.statusCode === 200 || res.statusCode === 0) && res.data) {
             const { userName, grade, profileImage, role } = res.data;
@@ -146,10 +144,10 @@ export const useUser = () => {
 
   if (import.meta.env.VITE_DEV_USER_ENABLED === 'true' && !user) {
     return {
-      userName: '테스트 유저',
-      grade: 'VIP',
-      profileImage: '/images/default-profile.png',
-      role: 'USER',
+      userName: mockUserInfoData.userName,
+      grade: mockUserInfoData.grade,
+      profileImage: mockUserInfoData.profileImage,
+      role: mockUserInfoData.role,
     };
   }
 

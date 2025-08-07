@@ -1,4 +1,3 @@
-// 순환 의존성 방지: 컴포넌트 단일 경로로 직접 import
 import React, { useEffect } from 'react';
 
 import { AnimatePresence, motion } from 'framer-motion';
@@ -22,10 +21,8 @@ export const BaseBottomSheet: React.FC<BaseBottomSheetProps> = ({
   showHandle = true,
   showCloseButton = true,
 }) => {
-  // body 스크롤 제어
   useEffect(() => {
     if (isOpen) {
-      // 현재 스크롤 위치 저장
       const scrollY = window.scrollY;
       document.body.style.position = 'fixed';
       document.body.style.top = `-${scrollY}px`;
@@ -33,7 +30,6 @@ export const BaseBottomSheet: React.FC<BaseBottomSheetProps> = ({
       document.body.style.overflow = 'hidden';
 
       return () => {
-        // cleanup: 스크롤 위치 복원
         document.body.style.position = '';
         document.body.style.top = '';
         document.body.style.width = '';

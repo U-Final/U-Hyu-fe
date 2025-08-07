@@ -8,19 +8,16 @@ import { filterDataByCategory } from '@admin/utils/categoryMapping';
 import { ChartEmptyState } from '@admin/components/common';
 
 export function BookmarkChart({ data, selectedCategory = 'all' }: BookmarkChartProps) {
-  // 카테고리 필터링 적용
   const filteredData = filterDataByCategory(data, selectedCategory);
-
-  // 차트 데이터 준비
   const lineData = selectedCategory === 'all' 
-    ? // 전체 선택시: 카테고리별 데이터
+    ? 
       [...filteredData]
         .sort((a, b) => (b.sumStatisticsBookmarksByCategory || 0) - (a.sumStatisticsBookmarksByCategory || 0))
         .map((category) => ({
           name: category.categoryName,
           '저장된 매장': category.sumStatisticsBookmarksByCategory || 0,
         }))
-    : // 특정 카테고리 선택시: 해당 카테고리의 브랜드별 데이터만
+    : 
       filteredData.flatMap(category => 
         category.bookmarksByBrandList?.map(brand => ({
           name: brand.brandName,
@@ -28,7 +25,6 @@ export function BookmarkChart({ data, selectedCategory = 'all' }: BookmarkChartP
         })) || []
       ).sort((a, b) => b['저장된 매장'] - a['저장된 매장']);
 
-  // 데이터가 없거나 모든 값이 0인 경우
   const hasData = lineData.length > 0 && lineData.some(item => item['저장된 매장'] > 0);
 
   return (
@@ -41,7 +37,6 @@ export function BookmarkChart({ data, selectedCategory = 'all' }: BookmarkChartP
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
-          {/* 라인 차트 */}
           <div>
             <h4 className="text-sm font-medium mb-8">
               {selectedCategory === 'all' ? '저장된 매장 트렌드' : `${getCategoryDisplayName(selectedCategory)} 상세`}
@@ -74,7 +69,6 @@ export function BookmarkChart({ data, selectedCategory = 'all' }: BookmarkChartP
             )}
           </div>
 
-          {/* 상세 데이터 */}
           {hasData && (
             <div>
               <h4 className="text-sm font-medium mb-4">
@@ -82,7 +76,6 @@ export function BookmarkChart({ data, selectedCategory = 'all' }: BookmarkChartP
               </h4>
               <div className="space-y-2">
                 {selectedCategory === 'all' ? (
-                  // 전체 선택시: 모든 카테고리 표시
                   [...filteredData]
                     .sort((a, b) => (b.sumStatisticsBookmarksByCategory || 0) - (a.sumStatisticsBookmarksByCategory || 0))
                     .map((category, index) => (
@@ -106,18 +99,14 @@ export function BookmarkChart({ data, selectedCategory = 'all' }: BookmarkChartP
                       </div>
                     ))
                 ) : (
-                  // 특정 카테고리 선택시: 카테고리 이름을 크게 하고 브랜드들을 들여쓰기
                   filteredData.map((category, index) => (
                     <div key={`bookmark-selected-${category.categoryId}-${index}`} className="space-y-3">
-                      {/* 카테고리 헤더 */}
                       <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border-l-4" style={{ borderLeftColor: 'var(--admin-bookmark)' }}>
                         <span className="font-semibold text-lg text-gray-800">{category.categoryName}</span>
                         <span className="text-sm text-muted-foreground font-medium">
                           총 {category.sumStatisticsBookmarksByCategory || 0}개
                         </span>
                       </div>
-                      
-                      {/* 브랜드 목록 */}
                       {category.bookmarksByBrandList && category.bookmarksByBrandList.length > 0 && (
                         <div className="ml-6 space-y-2">
                           {category.bookmarksByBrandList

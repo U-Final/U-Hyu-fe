@@ -14,8 +14,7 @@ const AuthSuccess = () => {
       try {
         await userStore.getState().userInfo();
         navigate(PATH.HOME, { replace: true });
-      } catch (error) {
-        console.error('로그인 처리 실패:', error);
+      } catch {
         navigate(PATH.HOME, { replace: true });
       } finally {
         setIsProcessing(false);

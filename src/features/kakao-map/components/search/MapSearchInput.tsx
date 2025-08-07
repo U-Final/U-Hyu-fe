@@ -44,7 +44,6 @@ export const KeywordSearchInput: React.FC<KeywordSearchInputProps> = ({
     if (e.key === 'Enter') {
       e.preventDefault();
       if (value.trim() && !loading) {
-        // GA 추적: 검색 실행
         trackSearchInteraction('search_performed', value.trim());
         onSearch(value.trim());
         inputRef.current?.blur();
@@ -53,7 +52,6 @@ export const KeywordSearchInput: React.FC<KeywordSearchInputProps> = ({
   };
 
   const handleClear = () => {
-    // GA 추적: 검색 취소
     trackSearchInteraction('search_cancelled', value);
     onChange('');
     onCancel?.();
@@ -63,12 +61,9 @@ export const KeywordSearchInput: React.FC<KeywordSearchInputProps> = ({
   return (
     <div className={`relative ${className}`}>
       <div className="relative flex items-center h-[36px] bg-white border border-gray-200 rounded-md shadow-lg hover:shadow-xl focus-within:shadow-xl transition-all duration-200 pr-8">
-        {/* 검색 아이콘 */}
         <div className="flex-shrink-0 pl-3">
           <MagnifyingGlassIcon className="w-3.5 h-3.5 text-gray-600" />
         </div>
-
-        {/* 입력 필드 */}
         <input
           ref={inputRef}
           type="text"
@@ -87,7 +82,6 @@ export const KeywordSearchInput: React.FC<KeywordSearchInputProps> = ({
           aria-label="장소 검색"
         />
 
-        {/* 입력 내용 지우기 / 로딩 */}
         <div className="absolute right-1.5 top-1/2 -translate-y-1/2">
           {loading ? (
             <div className="w-3.5 h-3.5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
@@ -143,14 +137,12 @@ export const MapSearchInput: React.FC<{
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      // GA 추적: 검색 실행
       trackSearchInteraction('search_performed', value);
       onSearch?.(value);
     }
   };
 
   const handleCancel = () => {
-    // GA 추적: 검색 취소
     trackSearchInteraction('search_cancelled', value);
     onChange('');
     onCancel?.();
@@ -172,7 +164,6 @@ export const MapSearchInput: React.FC<{
         `}
         aria-label="장소 검색"
       />
-      {/* 입력 내용 지우기 버튼 */}
       {value && (
         <button
           type="button"

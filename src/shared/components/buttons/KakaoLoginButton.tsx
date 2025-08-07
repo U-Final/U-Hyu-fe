@@ -20,7 +20,6 @@ const sizeStyles = {
   lg: 'h-[52px] px-[24px] text-lg',
 };
 
-// 카카오 심볼 SVG 컴포넌트
 const KakaoSymbol = ({ className }: { className?: string }) => (
   <svg
     width="18"
@@ -57,7 +56,6 @@ export const KakaoLoginButton = forwardRef<
     const baseClasses =
       'cursor-pointer inline-flex items-center justify-center gap-3 whitespace-nowrap font-medium transition-all duration-200 ease-out disabled:pointer-events-none rounded-xl transform-gpu hover:scale-105 active:scale-95';
 
-    // 카카오 브랜드 컬러 (#FEE500)
     const kakaoStyles =
       'bg-[#FEE500] text-black hover:shadow-lg hover:shadow-yellow-400/20 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed disabled:hover:bg-gray-300 disabled:hover:scale-100';
 

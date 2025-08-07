@@ -8,12 +8,10 @@ export const userHandlers = [
     const body = (await request.json()) as { email: string };
     const email = body.email;
 
-    // 에러 시나리오: 잘못된 이메일 형식
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return createErrorResponse('올바른 이메일 형식이 아닙니다', 400);
     }
 
-    // 테스트용: 특정 이메일들을 이미 사용중으로 처리
     const usedEmails = ['test@example.com', 'used@email.com'];
     const isAvailable = email ? !usedEmails.includes(email) : false;
 
@@ -37,7 +35,6 @@ export const userHandlers = [
         interestedBrands?: number[];
       };
 
-      // 에러 시나리오: 필수 필드 누락 검증
       const missingFields = [];
       if (!body.age || body.age <= 0) missingFields.push('age');
       if (!body.gender) missingFields.push('gender');
@@ -54,7 +51,6 @@ export const userHandlers = [
         );
       }
 
-      // 유효성 검사: 나이 범위
       if (body.age! < 10 || body.age! > 100) {
         return createErrorResponse(
           '나이는 10세 이상 100세 이하여야 합니다',
@@ -62,17 +58,14 @@ export const userHandlers = [
         );
       }
 
-      // 유효성 검사: 성별 값
       if (!['MALE', 'FEMALE', 'OTHER'].includes(body.gender!)) {
         return createErrorResponse('올바른 성별 값이 아닙니다', 400);
       }
 
-      // 유효성 검사: 등급 값
       if (!['GOOD', 'VIP', 'VVIP'].includes(body.grade!)) {
         return createErrorResponse('올바른 등급 값이 아닙니다', 400);
       }
 
-      // 유효성 검사: 브랜드 ID 배열
       if (
         !Array.isArray(body.recentBrands) ||
         !Array.isArray(body.interestedBrands)
@@ -80,10 +73,9 @@ export const userHandlers = [
         return createErrorResponse('브랜드 정보는 배열 형태여야 합니다', 400);
       }
 
-      // 성공 응답
       return createResponse(
         {
-          userId: 1, // MSW에서는 인증된 사용자 ID로 고정
+          userId: 1,
           age: body.age,
           gender: body.gender,
           grade: body.grade,
@@ -94,8 +86,7 @@ export const userHandlers = [
         '회원가입 추가정보가 성공적으로 저장되었습니다',
         200
       );
-    } catch (error) {
-      console.error('❌ MSW: Extra info submission error:', error);
+    } catch {
       return createErrorResponse('서버 내부 오류가 발생했습니다', 500);
     }
   }),

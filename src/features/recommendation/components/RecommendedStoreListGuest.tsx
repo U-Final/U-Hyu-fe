@@ -60,7 +60,7 @@ export const RecommendedStoreListGuest = () => {
           dynamicBullets: true,
         }}
         autoplay={{
-          delay: 2000, // 2초마다 자동 이동
+          delay: 2000,
           disableOnInteraction: false,
         }}
         style={{ height: '100px' }}

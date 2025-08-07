@@ -67,7 +67,6 @@ export const MyMapFormModal = ({
     if (!title.trim()) return;
 
     if (mode === 'edit' && !myMapListId) {
-      console.error('Edit mode requires myMapListId');
       return;
     }
 

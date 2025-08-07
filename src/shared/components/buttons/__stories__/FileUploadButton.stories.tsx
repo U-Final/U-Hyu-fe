@@ -19,7 +19,8 @@ type Story = StoryObj<typeof FileUploadButton>;
 export const Default: Story = {
   args: {
     children: '파일 업로드',
-    onFileSelect: (file: File) => console.log('선택된 파일:', file),
+    onFileSelect: () => {
+    },
   },
   parameters: {
     docs: {

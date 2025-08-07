@@ -30,17 +30,14 @@ export const mapHandlers = [
   http.get('*/map/stores', ({ request }) => {
     const url = new URL(request.url);
 
-    // 필수 파라미터 추출
     const lat = Number(url.searchParams.get('lat'));
     const lon = Number(url.searchParams.get('lon'));
     const radius = Number(url.searchParams.get('radius'));
 
-    // 필터 파라미터 추출
     const category = url.searchParams.get('category');
     const brand = url.searchParams.get('brand');
     const search = url.searchParams.get('search');
 
-    // 기본 파라미터 유효성 검증
     if (isNaN(lat) || isNaN(lon) || isNaN(radius) || radius <= 0) {
       return HttpResponse.json(
         {
@@ -54,26 +51,21 @@ export const mapHandlers = [
       );
     }
 
-    // 1단계: 반경 내 매장 필터링 (위치 기반)
     let filteredStores = MOCK_STORES.filter(store => {
       const distance =
         Math.sqrt(
           Math.pow(store.latitude - lat, 2) + Math.pow(store.longitude - lon, 2)
-        ) * 111000; // 대략적인 미터 단위 변환 (1도 ≈ 111km)
+        ) * 111000;
 
       return distance <= radius;
     });
 
-    // 2단계: 카테고리 필터 적용
     if (category && category !== 'all') {
       filteredStores = filteredStores.filter(store => {
-        // 백엔드에서 처리할 카테고리 매핑 로직
-        // 단순 매핑
         if (store.categoryName === category) {
           return true;
         }
 
-        // 복합 카테고리 매핑 (프론트엔드 카테고리가 여러 백엔드 카테고리를 포함)
         if (category === 'convenience') {
           return store.categoryName === 'convenience';
         }
@@ -90,7 +82,6 @@ export const mapHandlers = [
       });
     }
 
-    // 3단계: 브랜드 필터 적용
     if (brand && brand.trim() !== '') {
       const brandTerm = brand.toLowerCase().trim();
       filteredStores = filteredStores.filter(store =>
@@ -98,7 +89,6 @@ export const mapHandlers = [
       );
     }
 
-    // 4단계: 검색어 필터 적용 (매장명, 브랜드명, 주소에서 검색)
     if (search && search.trim() !== '') {
       const searchTerm = search.toLowerCase().trim();
       filteredStores = filteredStores.filter(
@@ -109,37 +99,8 @@ export const mapHandlers = [
       );
     }
 
-    // 개발 환경에서 디버깅 정보 출력
-    if (import.meta.env.MODE === 'development') {
-      console.log('🔍 MSW Store Filter Applied:', {
-        originalQuery: {
-          lat,
-          lon,
-          radius,
-          category,
-          brand,
-          search,
-        },
-        filteringSteps: {
-          totalStores: MOCK_STORES.length,
-          afterRadiusFilter: MOCK_STORES.filter(store => {
-            const distance =
-              Math.sqrt(
-                Math.pow(store.latitude - lat, 2) +
-                  Math.pow(store.longitude - lon, 2)
-              ) * 111000;
-            return distance <= radius;
-          }).length,
-          afterCategoryFilter: category ? 'applied' : 'skipped',
-          afterBrandFilter: brand ? 'applied' : 'skipped',
-          afterSearchFilter: search ? 'applied' : 'skipped',
-          finalCount: filteredStores.length,
-        },
-        appliedFilters: { category, brand, search },
-      });
-    }
 
-    // 성공 응답 반환
+
     const response: StoreListResponse =
       createMockStoreListResponse(filteredStores);
     return HttpResponse.json(response, { status: 200 });
@@ -152,7 +113,6 @@ export const mapHandlers = [
   http.get('*/map/detail/stores/:storeId', ({ params }) => {
     const storeId = Number(params.storeId);
 
-    // storeId 파라미터 유효성 검증
     if (isNaN(storeId) || storeId <= 0) {
       return HttpResponse.json(
         {
@@ -186,7 +146,6 @@ export const mapHandlers = [
   http.post('*/map/:storeId', ({ params }) => {
     const storeId = Number(params.storeId);
 
-    // storeId 파라미터 유효성 검증
     if (isNaN(storeId) || storeId <= 0) {
       return HttpResponse.json(
         {
@@ -207,14 +166,9 @@ export const mapHandlers = [
    * 카테고리별 브랜드 목록 조회 API 핸들러
    * GET /category/:categoryId
    */
-  http.get('*/category/:categoryId', ({ params, request }) => {
-    if (import.meta.env.MODE === 'development') {
-      console.log('🏷️ 카테고리 브랜드 MSW 핸들러 호출:', request.url);
-      console.log('📂 카테고리 ID:', params.categoryId);
-    }
+  http.get('*/category/:categoryId', ({ params }) => {
     const categoryId = Number(params.categoryId);
 
-    // categoryId 파라미터 유효성 검증
     if (isNaN(categoryId) || categoryId <= 0) {
       return HttpResponse.json(
         {
@@ -229,7 +183,6 @@ export const mapHandlers = [
     const response: CategoryBrandsResponse =
       createMockCategoryBrandsResponse(categoryId);
 
-    // 404 처리 (해당 카테고리에 브랜드가 없는 경우)
     if (response.statusCode === 404) {
       return HttpResponse.json(response, { status: 404 });
     }
@@ -244,15 +197,13 @@ export const mapHandlers = [
   http.get(MAP_ENDPOINTS.GET_BOOKMARK, () => {
     const shouldFail = false;
     if (shouldFail) {
-      //실패시
       return createErrorResponse('로그인된 유저가 아닙니다.', 404);
     }
-    // 즐겨찾기 storeId만 추출
     const favoriteStoreIds = Object.keys(MOCK_FAVORITES)
       .map(Number)
       .filter(id => MOCK_FAVORITES[id]);
 
-    // MOCK_STORES 중 즐겨찾기된 store만 필터링
+
     const result = MOCK_STORES.filter(store =>
       favoriteStoreIds.includes(store.storeId)
     );

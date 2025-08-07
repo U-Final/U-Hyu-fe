@@ -16,11 +16,8 @@ export const RecommendedStoreListLoggedIn = () => {
   const { userLocation } = useMapStore();
   const user = useUser();
   const RADIUS = Number(import.meta.env.VITE_RECOMMEND_RADIUS);
-
-  // 전역상태에서 추천 매장 관련 상태와 액션 가져오기
   const setRecommendedStores = useMapStore(state => state.setRecommendedStores);
 
-  // React Query로 데이터 가져오기 (기존 방식 유지)
   const {
     data: stores,
     isPending,
@@ -31,7 +28,6 @@ export const RecommendedStoreListLoggedIn = () => {
     radius: RADIUS,
   });
 
-  // React Query 결과를 전역상태에 동기화
   useEffect(() => {
     if (stores && stores.length > 0) {
       setRecommendedStores(stores);
@@ -82,7 +78,6 @@ export const RecommendedStoreListLoggedIn = () => {
 
   return (
     <div className="bg-white shadow-sm border-0 overflow-hidden mb-0">
-      {/* 헤더 섹션 */}
       <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-100">
         <div className="flex items-start justify-between px-6 py-4">
           <div className="flex-1">
@@ -100,7 +95,6 @@ export const RecommendedStoreListLoggedIn = () => {
         </div>
       </div>
 
-      {/* 추천 매장 리스트 */}
       <div className="px-4 pt-4 pb-6">
         <Swiper
           modules={[Pagination, Autoplay]}

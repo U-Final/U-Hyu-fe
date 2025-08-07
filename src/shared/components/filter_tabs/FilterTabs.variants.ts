@@ -1,23 +1,10 @@
-// CategoryIcon에서 사용하는 아이콘들로 교체
 import { Activity, Coffee, FerrisWheel, Film, GraduationCap, Heart, MapPin, Palette, ShoppingCart, Smartphone, Theater, Train, UtensilsCrossed, Waves } from 'lucide-react';
-// React Icons (특정 카테고리용 추가 아이콘)
 import { MdLocalConvenienceStore } from 'react-icons/md';
 
 
 
 import type { FilterTabItem } from './FilterTabs.types';
 
-
-
-
-
-/**
- * 기본 필터 탭 목록
- * - label: 사용자에게 보여질 텍스트
- * - value: 내부에서 선택 상태를 구분할 값
- * - icon: 카테고리를 나타내는 아이콘 컴포넌트
- * - color: 활성 상태 시 사용할 색상
- */
 export const FILTER_TABS: FilterTabItem[] = [
   { label: '전체', value: 'all', icon: MapPin, color: '#e6007e' },
   { label: '음식점', value: '음식점', icon: UtensilsCrossed, color: '#f59e0b' },

@@ -1,4 +1,3 @@
-// stories/BrandGrid.stories.tsx
 import { useState } from 'react';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -9,7 +8,6 @@ import {
   type BrandGridProps,
 } from '@/shared/components/brand_grid';
 
-// 인터랙티브한 스토리를 위한 래퍼 컴포넌트
 const BrandGridWrapper = (args: BrandGridProps) => {
   const [selectedBrands, setSelectedBrands] = useState<number[]>([]);
 
@@ -20,8 +18,6 @@ const BrandGridWrapper = (args: BrandGridProps) => {
         ? prev.filter(id => id !== numericBrandId)
         : [...prev, numericBrandId];
 
-      // 콘솔에서 확인 가능
-      console.log('onBrandToggle:', numericBrandId, newSelection);
       return newSelection;
     });
   };
@@ -78,7 +74,6 @@ const meta: Meta<typeof BrandGrid> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// 기본 스토리
 export const Default: Story = {
   render: BrandGridWrapper,
   args: {
@@ -88,11 +83,10 @@ export const Default: Story = {
   },
 };
 
-// 일부 선택된 상태
 export const WithSelectedBrands: Story = {
   render: BrandGridWrapper,
   args: {
-    selectedBrands: [1, 2, 3], // 실제 브랜드 id 숫자 리스트로 변경
+    selectedBrands: [1, 2, 3],
     title: '최근 이용한 브랜드를 선택해주세요',
     disabled: false,
   },
@@ -105,7 +99,6 @@ export const WithSelectedBrands: Story = {
   },
 };
 
-// 모든 브랜드 선택된 상태
 export const AllSelected: Story = {
   render: BrandGridWrapper,
   args: {
@@ -122,11 +115,10 @@ export const AllSelected: Story = {
   },
 };
 
-// 비활성화된 상태
 export const Disabled: Story = {
   render: BrandGridWrapper,
   args: {
-    selectedBrands: [1, 2], // 'cgv', 'lotte'에 해당하는 실제 id로 변경
+    selectedBrands: [1, 2],
     title: '선택이 완료되었습니다',
     disabled: true,
   },
@@ -140,12 +132,11 @@ export const Disabled: Story = {
   },
 };
 
-// 클릭 불가능한 상태 (읽기 전용)
 export const ReadOnly: Story = {
   args: {
-    selectedBrands: [3, 4, 5], // 예시
+    selectedBrands: [3, 4, 5],
     title: '선택된 브랜드 (읽기 전용)',
-    onBrandToggle: undefined, // 클릭 핸들러 없음
+    onBrandToggle: undefined,
     disabled: false,
   },
   parameters: {
@@ -158,7 +149,6 @@ export const ReadOnly: Story = {
   },
 };
 
-// 긴 제목 테스트
 export const LongTitle: Story = {
   render: BrandGridWrapper,
   args: {
@@ -176,11 +166,10 @@ export const LongTitle: Story = {
   },
 };
 
-// 제목 없는 경우
 export const WithoutTitle: Story = {
   render: BrandGridWrapper,
   args: {
-    selectedBrands: [1], // 예시
+    selectedBrands: [1],
     title: '',
     disabled: false,
   },
@@ -193,11 +182,10 @@ export const WithoutTitle: Story = {
   },
 };
 
-// 반응형 테스트를 위한 와이드 레이아웃
 export const WideLayout: Story = {
   render: BrandGridWrapper,
   args: {
-    selectedBrands: [6, 7], // 예시
+    selectedBrands: [6, 7],
     title: '와이드 레이아웃에서의 브랜드 그리드',
     disabled: false,
   },
@@ -228,7 +216,6 @@ export const WideLayout: Story = {
   ],
 };
 
-// 애니메이션 확인용 (페이지 로드 시뮬레이션)
 export const AnimationDemo: Story = {
   render: args => {
     const [key, setKey] = useState(0);

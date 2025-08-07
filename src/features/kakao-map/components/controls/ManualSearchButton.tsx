@@ -16,7 +16,7 @@ interface ManualSearchButtonProps {
   /** 추가 CSS 클래스 */
   className?: string;
   zoomLevel?: number;
-  radius?: number; // meter
+  radius?: number;
 }
 
 /**
@@ -35,8 +35,6 @@ export const ManualSearchButton: React.FC<ManualSearchButtonProps> = ({
   const [bottomSheetPosition, setBottomSheetPosition] = useState<number>(
     window.innerHeight
   );
-
-  // BottomSheet 위치를 실시간으로 추적
   useEffect(() => {
     if (!bottomSheetRef?.current) return;
 
@@ -47,23 +45,16 @@ export const ManualSearchButton: React.FC<ManualSearchButtonProps> = ({
       }
     };
 
-    // 초기 위치 설정
     updatePosition();
-
-    // MutationObserver로 위치 변화 감지
     const observer = new MutationObserver(() => {
       setTimeout(updatePosition, 50);
     });
-
-    // DOM 변화 관찰
     observer.observe(document.body, {
       childList: true,
       subtree: true,
       attributes: true,
       attributeFilter: ['style', 'class'],
     });
-
-    // 리사이즈 이벤트 리스너
     const handleResize = () => updatePosition();
     window.addEventListener('resize', handleResize);
 
@@ -76,11 +67,9 @@ export const ManualSearchButton: React.FC<ManualSearchButtonProps> = ({
   if (!visible) return null;
 
   const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // 지도 클릭 이벤트와 분리
+    e.stopPropagation();
     onClick();
   };
-
-  // BottomSheet 핸들 바로 위에 위치하도록 계산 (60px 위쪽)
   const buttonBottom = window.innerHeight - bottomSheetPosition + 15;
 
   return (
@@ -125,12 +114,6 @@ export const ManualSearchButton: React.FC<ManualSearchButtonProps> = ({
         <span className="whitespace-nowrap">
           {loading ? '검색 중...' : '이 지역에서 재검색'}
         </span>
-        {/* // 이동 거리 표시
-        {typeof distance === 'number' && distance > 0 && (
-          <span className="text-xs text-gray-500 ml-1">
-            ({Math.round(distance)}m)
-          </span>
-        )} */}
         {(typeof zoomLevel === 'number' || typeof radius === 'number') && (
           <span className="text-xs text-gray-500 ml-2 whitespace-nowrap">
             {typeof zoomLevel === 'number'}
@@ -140,8 +123,6 @@ export const ManualSearchButton: React.FC<ManualSearchButtonProps> = ({
           </span>
         )}
       </button>
-
-      {/* 버튼 아래 작은 화살표 (지도를 가리키는 효과) */}
       <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1">
         <div className="w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-200 drop-shadow-sm" />
       </div>

@@ -5,10 +5,9 @@ import { useCallback, useRef, useState } from 'react';
  * 검색 위치에서 특정 거리 이상 이동 시 재검색 버튼 표시
  */
 
-// 재검색 버튼이 표시되는 최소 이동 거리 (미터)
 const SHOW_BUTTON_DISTANCE = import.meta.env.VITE_SEARCH_DISTANCE_THRESHOLD 
   ? parseInt(import.meta.env.VITE_SEARCH_DISTANCE_THRESHOLD) 
-  : 5000; // 기본값: 5km
+  : 5000;
 
 export interface SearchState {
   /** 재검색 버튼 표시 여부 */
@@ -37,10 +36,8 @@ export const useDistanceBasedSearch = () => {
     distanceFromLastSearch: 0,
   });
 
-  // 최신 검색 위치를 항상 참조하기 위한 ref
   const lastSearchPositionRef = useRef<{ lat: number; lng: number } | null>(null);
   
-  // 거리 계산 결과 캐싱을 위한 ref
   const lastCalculatedDistance = useRef<{
     from: { lat: number; lng: number };
     to: { lat: number; lng: number };
@@ -53,7 +50,6 @@ export const useDistanceBasedSearch = () => {
    */
   const calculateDistance = useCallback(
     (pos1: { lat: number; lng: number }, pos2: { lat: number; lng: number }) => {
-      // 캐싱된 결과가 있고 동일한 좌표라면 재사용
       if (
         lastCalculatedDistance.current &&
         lastCalculatedDistance.current.from.lat === pos1.lat &&
@@ -64,7 +60,7 @@ export const useDistanceBasedSearch = () => {
         return lastCalculatedDistance.current.distance;
       }
 
-      const R = 6371e3; // 지구 반지름 (미터)
+      const R = 6371e3;
       const φ1 = (pos1.lat * Math.PI) / 180;
       const φ2 = (pos2.lat * Math.PI) / 180;
       const Δφ = ((pos2.lat - pos1.lat) * Math.PI) / 180;
@@ -76,7 +72,6 @@ export const useDistanceBasedSearch = () => {
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       const distance = R * c;
 
-      // 결과 캐싱
       lastCalculatedDistance.current = {
         from: pos1,
         to: pos2,
@@ -94,7 +89,6 @@ export const useDistanceBasedSearch = () => {
   const handleMapMove = useCallback(
     (newPosition: { lat: number; lng: number }) => {
       if (!lastSearchPositionRef.current) {
-        // 첫 번째 이동이면 현재 위치를 기준 위치로 설정
         lastSearchPositionRef.current = newPosition;
         setState(prev => ({
           ...prev,
@@ -142,7 +136,6 @@ export const useDistanceBasedSearch = () => {
       distanceFromLastSearch: 0,
     }));
 
-    // 캐시 초기화
     lastCalculatedDistance.current = null;
 
   }, []);
@@ -172,7 +165,6 @@ export const useDistanceBasedSearch = () => {
     ...state,
     ...actions,
     
-    // 상수 노출 (테스트 및 디버깅용)
     constants: {
       SHOW_BUTTON_DISTANCE,
     },

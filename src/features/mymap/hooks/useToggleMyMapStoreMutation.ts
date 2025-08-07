@@ -25,8 +25,8 @@ export const useToggleMyMapStoreMutation = (uuid?: string) => {
       }
     },
 
-    onError: error => {
-      console.error('MyMap store toggle failed:', error.message);
+    onError: () => {
+      // 에러는 상위 컴포넌트에서 처리됨
     },
   });
 };

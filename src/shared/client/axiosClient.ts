@@ -16,7 +16,6 @@ const responseInterceptor = (instance: AxiosInstance) => {
     error => {
       const res = error.response;
 
-      // ✅ 1. 인증 관련 에러 처리 (401, 403)
       if (res?.status === 401 || res?.status === 403) {
         userStore.getState().clearUser();
 
@@ -24,9 +23,6 @@ const responseInterceptor = (instance: AxiosInstance) => {
           toast.error('로그인이 만료되었습니다. 다시 로그인해주세요.');
         } else if (res?.status === 403) {
           // 403은 조용히 처리 (토스트 없음)
-          if (import.meta.env.DEV) {
-            console.log('🔐 권한 없음 - 비로그인 상태로 처리');
-          }
         }
 
         return Promise.reject({
@@ -36,7 +32,6 @@ const responseInterceptor = (instance: AxiosInstance) => {
         });
       }
 
-      // ✅ 2. 서버에서 내려준 에러 응답 처리
       if (res?.data?.statusCode && res?.data?.message) {
         if (res.data.statusCode !== 4103) {
           toast.error(res.data.message);
@@ -47,7 +42,6 @@ const responseInterceptor = (instance: AxiosInstance) => {
         });
       }
 
-      // ✅ 3. 예외 케이스 (네트워크 등)
       toast.error('서버와의 연결에 실패했습니다.');
       return Promise.reject({
         statusCode: 500,

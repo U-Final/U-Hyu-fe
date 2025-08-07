@@ -77,7 +77,6 @@ const FilterTabs: FC<FilterTabProps> = ({
     }
   );
 
-  // 마우스 휠 이벤트를 passive가 아닌 모드로 처리
   useEffect(() => {
     const scrollContainer = scrollContainerRef.current;
     if (!scrollContainer) return;
@@ -88,7 +87,6 @@ const FilterTabs: FC<FilterTabProps> = ({
       scrollContainer.scrollLeft += e.deltaY;
     };
 
-    // passive: false로 설정하여 preventDefault가 작동하도록 함
     scrollContainer.addEventListener('wheel', handleWheel, { passive: false });
 
     return () => {
@@ -116,11 +114,9 @@ const FilterTabs: FC<FilterTabProps> = ({
       }
 
       onTouchStart={e => {
-        // 터치 시작 시 페이지 스크롤 방지 준비
         e.stopPropagation();
       }}
       onTouchMove={e => {
-        // 터치 이동 시 페이지 스크롤 방지
         if (isDragging.current) {
           e.preventDefault();
           e.stopPropagation();
@@ -141,7 +137,7 @@ const FilterTabs: FC<FilterTabProps> = ({
           style={
             active === value && color
               ? {
-                  backgroundColor: `${color}15`, // 활성 상태 미묘한 배경
+                  backgroundColor: `${color}15`,
                   borderColor: `${color}15`,
                 }
               : {}
@@ -151,14 +147,14 @@ const FilterTabs: FC<FilterTabProps> = ({
             <IconComponent
               className="w-3.5 h-3.5 flex-shrink-0"
               style={{
-                color: color || '#6b7280', // 항상 카테고리 고유 색상 표시
+                color: color || '#6b7280',
               }}
             />
           )}
           <span
             className="whitespace-nowrap"
             style={{
-              color: color || '#6b7280', // 항상 카테고리 고유 색상 표시
+              color: color || '#6b7280',
             }}
           >
             {label}

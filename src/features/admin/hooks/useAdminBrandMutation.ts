@@ -4,7 +4,6 @@ import type {
   AdminBrandUpdateRequest,
 } from '@admin/api/types';
 
-// 브랜드 생성
 export const useCreateAdminBrandMutation = () => {
   const queryClient = useQueryClient();
   
@@ -16,7 +15,6 @@ export const useCreateAdminBrandMutation = () => {
   });
 };
 
-// 브랜드 수정
 export const useUpdateAdminBrandMutation = () => {
   const queryClient = useQueryClient();
   
@@ -29,7 +27,6 @@ export const useUpdateAdminBrandMutation = () => {
   });
 };
 
-// 브랜드 삭제
 export const useDeleteAdminBrandMutation = () => {
   const queryClient = useQueryClient();
   

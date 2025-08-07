@@ -44,7 +44,6 @@ const ActivityFavorite = ({ enabled }: Props) => {
     };
   }, [hasNextPage, isFetchingNextPage, fetchNextPage, enabled]);
 
-  // enabled가 false일 때는 아무것도 렌더링하지 않음
   if (!enabled) return null;
 
   if (isLoading) return <ActivityFavoriteSkeleton />;
@@ -54,7 +53,6 @@ const ActivityFavorite = ({ enabled }: Props) => {
   const handleFavoriteClick = async (bookmarkId: number) => {
     const previousData = queryClient.getQueryData(['bookmarkList']);
 
-    // Optimistic Update: 즉시 UI에서 제거
     queryClient.setQueryData(
       ['bookmarkList'],
       (old: { pages: Bookmark[][] } | undefined) => {
@@ -77,10 +75,7 @@ const ActivityFavorite = ({ enabled }: Props) => {
       if (result.statusCode === 0) {
         await queryClient.invalidateQueries({ queryKey: ['bookmarkList'] });
       }
-    } catch (error) {
-      console.error('즐겨찾기 삭제 실패:', error);
-
-      // 실패 시 이전 상태로 롤백
+    } catch {
       if (previousData) {
         queryClient.setQueryData(['bookmarkList'], previousData);
       }
@@ -111,7 +106,6 @@ const ActivityFavorite = ({ enabled }: Props) => {
       ))}
       {!isLoading && bookmarks.length === 0 && (
         <div className="flex flex-col items-center justify-center py-12 px-4">
-          {/* 빈 상태 아이콘 */}
           <div className="relative mb-6">
             <div className="w-20 h-20 bg-gradient-to-br from-pink-100 to-red-100 rounded-full flex items-center justify-center">
               <Heart className="w-10 h-10 text-pink-400" />
@@ -121,19 +115,16 @@ const ActivityFavorite = ({ enabled }: Props) => {
             </div>
           </div>
 
-          {/* 메인 메시지 */}
           <h3 className="text-lg font-semibold text-gray-800 mb-2">
             아직 즐겨찾기한 매장이 없어요
           </h3>
 
-          {/* 설명 메시지 */}
           <p className="text-sm text-gray-500 text-center mb-6 max-w-xs">
             지도에서 마음에 드는 매장을 찾아서
             <br />
             즐겨찾기에 추가해보세요!
           </p>
 
-          {/* 액션 버튼 */}
           <button
             onClick={() => navigate('/map')}
             className="flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full text-blue-600 hover:bg-blue-100 transition-colors duration-200"

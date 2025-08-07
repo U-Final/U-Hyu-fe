@@ -17,14 +17,11 @@ const ExtraInfo: React.FC = () => {
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  // API 상태 관리
   const submitExtraInfo = useSubmitExtraInfo();
 
-  // 회원가입 완료 처리 함수
   const handleComplete = useCallback(
     async (data: SignupData) => {
       try {
-        // API 요청 데이터 준비
         const apiData = {
           age: data.age,
           gender: data.gender as UserGender,
@@ -33,23 +30,17 @@ const ExtraInfo: React.FC = () => {
           interestedBrands: data.selectedBrands,
         };
 
-        // API 요청 실행
         await submitExtraInfo.mutateAsync(apiData);
 
-        // 성공 처리 - 토스트 알림
         toast.success('🎉 회원가입이 완료되었습니다!', {
           description: '환영합니다! 홈페이지로 이동합니다.',
           duration: 2000,
         });
 
-        // 성공 후 로그인 성공 페이지로 리다이렉트
         setTimeout(() => {
           navigate(PATH.AUTH_SUCCESS, { replace: true });
         }, 1500);
       } catch (error) {
-        console.error('회원가입 실패:', error);
-
-        // 에러 처리 - 토스트 알림
         const errorMessage =
           error instanceof Error
             ? error.message
@@ -64,7 +55,6 @@ const ExtraInfo: React.FC = () => {
     [submitExtraInfo, navigate]
   );
 
-  // useSignupFlow 훅 사용 (콜백은 제거하고 직접 처리)
   const {
     data,
     currentStep,
@@ -77,13 +67,10 @@ const ExtraInfo: React.FC = () => {
     isStepValid,
   } = useSignupFlow();
 
-  // 커스텀 goToNextStep 함수
   const handleNext = useCallback(async () => {
     if (currentStep === 4) {
-      // 마지막 단계에서는 API 호출
       await handleComplete(data);
     } else {
-      // 일반 스텝 진행
       await originalGoToNextStep();
     }
   }, [currentStep, data, handleComplete, originalGoToNextStep]);
@@ -94,16 +81,13 @@ const ExtraInfo: React.FC = () => {
     }
   }, [currentStep]);
 
-  // 전체 플로우 리셋 함수
   const handleReset = useCallback(() => {
     resetFlow();
-    submitExtraInfo.reset(); // mutation 상태도 리셋
+    submitExtraInfo.reset();
   }, [resetFlow, submitExtraInfo]);
 
-  // 현재 스텝 유효성 확인
   const currentStepValid = isStepValid(currentStep);
 
-  // 제출 상태들
   const isSubmitting = submitExtraInfo.isPending;
   const submitError = submitExtraInfo.error;
 
@@ -127,7 +111,6 @@ const ExtraInfo: React.FC = () => {
         </div>
       </div>
 
-      {/* 메인 콘텐츠 */}
       <div ref={containerRef} className="h-[calc(100vh-64px)] overflow-y-auto">
         <LayoutGroup>
           <CurrentStep

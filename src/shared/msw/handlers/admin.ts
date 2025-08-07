@@ -28,7 +28,6 @@ const createErrorResponse = (message: string, statusCode: number = 400) =>
   );
 
 export const adminHandlers = [
-  // 통계
   http.get(ADMIN_ENDPOINTS.TOTAL_STATS, () => {
     return createResponse(mockTotalStats, '전체 통계 조회 성공');
   }),
@@ -49,11 +48,7 @@ export const adminHandlers = [
     return createResponse(mockMembershipStats, '멤버십 통계 조회 성공');
   }),
 
-  // 브랜드 목록 (페이지네이션 + 필터/검색)
   http.get(ADMIN_ENDPOINTS.BRAND_LIST, ({ request }) => {
-    if (import.meta.env.MODE === 'development') {
-      console.log('🔧 MSW GET 브랜드 목록 조회 요청');
-    }
 
     const url = new URL(request.url);
     const page = Number(url.searchParams.get('page') ?? '0');
@@ -61,13 +56,10 @@ export const adminHandlers = [
     const category = url.searchParams.get('category');
     const brandName = url.searchParams.get('brand_name');
 
-    if (import.meta.env.MODE === 'development') {
-      console.log('🔧 API 파라미터:', { page, size, category, brandName });
-    }
+
 
     let filteredBrands = [...mockAdminBrandListResponse.brandList];
 
-    // 카테고리 필터링 (문자 → ID 매핑)
     if (category && category !== 'all') {
       const categoryMapping: Record<string, number> = {
         음식점: 9,
@@ -91,38 +83,16 @@ export const adminHandlers = [
         filteredBrands = filteredBrands.filter(
           b => b.categoryId === categoryId
         );
-        if (import.meta.env.MODE === 'development') {
-          console.log(
-            '🔧 카테고리 필터링:',
-            category,
-            '→',
-            categoryId,
-            '결과:',
-            filteredBrands.length
-          );
-        }
-      } else if (import.meta.env.MODE === 'development') {
-        console.log('🔧 알 수 없는 카테고리:', category);
       }
     }
 
-    // 브랜드명 부분 검색
     if (brandName) {
       const kw = brandName.toLowerCase();
       filteredBrands = filteredBrands.filter(b =>
         b.brandName.toLowerCase().includes(kw)
       );
-      if (import.meta.env.MODE === 'development') {
-        console.log(
-          '🔧 브랜드명 검색:',
-          brandName,
-          '결과:',
-          filteredBrands.length
-        );
-      }
     }
 
-    // 페이지네이션
     const totalItems = filteredBrands.length;
     const totalPages = Math.max(1, Math.ceil(totalItems / Math.max(1, size)));
     const currentPage = Math.max(0, Math.min(page, totalPages - 1));
@@ -137,26 +107,10 @@ export const adminHandlers = [
       currentPage,
     };
 
-    if (import.meta.env.MODE === 'development') {
-      console.log('🔧 페이지네이션:', {
-        totalItems,
-        totalPages,
-        currentPage,
-        startIndex,
-        endIndex,
-        currentPageBrandsCount: currentPageBrands.length,
-        hasNext: response.hasNext,
-      });
-    }
-
     return createResponse(response, '브랜드 목록 조회 성공');
   }),
 
-  // 브랜드 생성 (중복명 검증)
   http.post(ADMIN_ENDPOINTS.BRAND_CREATE, async ({ request }) => {
-    if (import.meta.env.MODE === 'development') {
-      console.log('🔧 MSW POST 브랜드 생성 요청');
-    }
 
     type CreateBody = {
       brandName: string;
@@ -170,7 +124,6 @@ export const adminHandlers = [
 
     const body = (await request.json()) as CreateBody;
 
-    // 중복 브랜드명 검증
     const existing = mockAdminBrandListResponse.brandList.find(
       b => b.brandName === body.brandName
     );
@@ -181,12 +134,8 @@ export const adminHandlers = [
     return createResponse({ brandId: 999 }, '브랜드 생성 성공');
   }),
 
-  // 브랜드 수정 (자기 자신 제외 중복명 검증)
   http.put('/admin/brands/:brandId', async ({ params, request }) => {
     const { brandId } = params;
-    if (import.meta.env.MODE === 'development') {
-      console.log('🔧 MSW PUT 브랜드 수정 요청 - brandId:', brandId);
-    }
 
     type UpdateBody = {
       brandName: string;
@@ -211,14 +160,9 @@ export const adminHandlers = [
     return createResponse({ brandId: currentBrandId }, '브랜드 수정 성공');
   }),
 
-  // 브랜드 삭제 (존재 여부 검증)
   http.delete('/admin/brands/:brandId', ({ params }) => {
     const { brandId } = params;
     const currentBrandId = Number(brandId);
-
-    if (import.meta.env.MODE === 'development') {
-      console.log('🔧 MSW DELETE 브랜드 삭제 요청 - brandId:', brandId);
-    }
 
     const existing = mockAdminBrandListResponse.brandList.find(
       b => b.brandId === currentBrandId

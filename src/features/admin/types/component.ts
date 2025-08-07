@@ -7,7 +7,6 @@ import type {
   TotalStats
 } from '../api/types';
 
-// === Stats 관련 컴포넌트 Props ===
 export interface BookmarkChartProps {
   data: BookmarkStat[];
   selectedCategory?: string;
@@ -32,7 +31,6 @@ export interface StatsSummaryCardsProps {
   totalStats: TotalStats;
 }
 
-// === Brand 관련 컴포넌트 Props ===
 export interface AdminBrandCardProps {
   brand: AdminBrand;
 }
@@ -52,9 +50,6 @@ export interface BrandFormProps {
   onCancel?: () => void;
 }
 
-
-
-// === Common 컴포넌트 Props ===
 export interface CategoryFilterProps {
   selectedCategory: import('../constants/categories').CategoryId;
   onCategoryChange: (category: import('../constants/categories').CategoryId) => void;

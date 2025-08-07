@@ -17,13 +17,11 @@ class ActionLogCounter {
   private filterClicks: Map<string, number> = new Map();
 
   constructor() {
-    //클래스가 처음 생성될 때 실행되는 초기화 함수
-    this.loadFromStorage(); //로컬 스토리지에 저장된 데이터를 불러옴.
-    this.setupPageUnloadHandler(); //페이지를 닫거나 새로고침할 때 데이터를 저장하는 이벤트 등록
+    this.loadFromStorage();
+    this.setupPageUnloadHandler();
   }
 
   private loadFromStorage() {
-    // 로컬 스토리지에서 카운터 데이터 로드
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
@@ -34,32 +32,29 @@ class ActionLogCounter {
         );
         this.filterClicks = new Map(Object.entries(data.filterClicks || {}));
       }
-    } catch (error) {
-      console.error('스토리지 카운터 로드 실패', error);
+    } catch {
+      // 스토리지 로드 실패 시 무시
     }
   }
 
   private saveToStorage() {
-    // 로컬 스토리지에 카운터 데이터 저장
     try {
       const data: CounterData = {
         markerClicks: Object.fromEntries(this.markerClicks),
         filterClicks: Object.fromEntries(this.filterClicks),
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    } catch (error) {
-      console.error('스토리지에 카운터 데이터 저장 실패', error);
+    } catch {
+      // 스토리지 저장 실패 시 무시
     }
   }
 
   addMarkerClick(storeId: number) {
-    //마커 클릭 추가
     const currentCount = this.markerClicks.get(storeId) || 0;
     const newCount = currentCount + 1;
     this.markerClicks.set(storeId, newCount);
 
     if (newCount >= MARKER_CLICK_THRESHOLD) {
-      // 임계점 도달시
       this.sendMarkerClickData(storeId);
       this.markerClicks.delete(storeId);
     }
@@ -80,7 +75,6 @@ class ActionLogCounter {
     this.saveToStorage();
   }
 
-  // 마커 클릭 데이터 전송
   private async sendMarkerClickData(storeId: number) {
     const actionData: UserAction = {
       actionType: 'MARKER_CLICK',
@@ -134,15 +128,14 @@ class ActionLogCounter {
     try {
       await client.post(ENDPOINTS_ACTION_LOG, action);
       this.saveToStorage();
-    } catch (error) {
-      console.error('Failed to send action:', error);
+    } catch {
+      // 액션 전송 실패 시 무시
     }
   }
 
   async forceFlush() {
     const promises: Promise<void>[] = [];
 
-    // 마커 클릭들을 각각 개별 전송
     for (const [storeId, count] of this.markerClicks.entries()) {
       if (count > 0) {
         const actionData: UserAction = {
@@ -154,7 +147,6 @@ class ActionLogCounter {
       }
     }
 
-    // 필터 클릭들을 각각 개별 전송
     for (const [filterValue, count] of this.filterClicks.entries()) {
       if (count > 0) {
         const categoryId = getCategoryIdFromFilterValue(filterValue);
@@ -173,13 +165,12 @@ class ActionLogCounter {
         this.markerClicks.clear();
         this.filterClicks.clear();
         this.saveToStorage();
-      } catch (error) {
-        console.error('❌ Force flush failed:', error);
+      } catch {
+        // 강제 플러시 실패 시 무시
       }
     }
   }
 
-  // 카운터 초기화
   reset() {
     this.markerClicks.clear();
     this.filterClicks.clear();

@@ -6,7 +6,7 @@ export const LocationControlContainer: React.FC = () => {
   const { getCurrentLocation, loading } = useMapData();
 
   const handleLocationClick = () => {
-    getCurrentLocation(true); // force: true로 강제 실행
+    getCurrentLocation(true);
   };
 
   return (

@@ -22,7 +22,6 @@ const MyPageMembership = ({
   const handleGradeChange = (grade: UserGrade) => {
     if (!isEditMode) return;
 
-    // pendingChanges에 추가
     setPendingChanges(prev => ({
       ...prev,
       updatedGrade: grade,
@@ -39,7 +38,6 @@ const MyPageMembership = ({
     { grade: 'GOOD', icon: <User2 className="w-4 h-4 sm:w-5 sm:h-5" />, label: '우수' },
   ];
 
-  // 현재 선택된 등급 (pendingChanges 우선, 없으면 user.grade)
   const currentGrade = pendingChanges.updatedGrade || user.grade;
 
   return (

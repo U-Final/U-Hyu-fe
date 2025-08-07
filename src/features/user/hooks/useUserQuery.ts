@@ -9,25 +9,21 @@ export const userKeys = {
     [...userKeys.all, 'email-check', email] as const,
 } as const;
 
-// 이메일 중복 확인 훅 (Query)
 export const useCheckEmail = (email: string, enabled: boolean = false) => {
   return useQuery({
     queryKey: userKeys.emailCheck(email),
     queryFn: () => userApi.checkEmail({ email }),
     enabled: enabled && email.length > 0,
-    staleTime: 10 * 60 * 1000, // 10분간 fresh 상태 유지
-    gcTime: 30 * 60 * 1000, // 30분간 캐시 유지
+    staleTime: 10 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
   });
 };
 
-// 사용자 정보 조회 훅 (Query)
 export const useUserInfo = (enabled: boolean = true) => {
   return useQuery({
     queryKey: ['userMe'],
     queryFn: userApi.getUserInfo,
     retry: (failureCount, error) => {
-      // 401, 403 에러는 재시도하지 않음 (예상된 에러)
-      // 타입 가드로 AxiosError인지 확인
       if (error && typeof error === 'object' && 'response' in error) {
         const axiosError = error as AxiosError;
         if (

@@ -31,7 +31,6 @@ export const BenefitList = () => {
   const handleBrandClick = async (brandId: number) => {
     if (!brandId) return;
 
-    // GA 추적: 브랜드 상세보기
     const brand = data?.brandList.find(b => b.brandId === brandId);
     trackBenefitInteraction(
       'brand_detail_viewed',
@@ -50,14 +49,12 @@ export const BenefitList = () => {
 
     if (value !== 'all' && value !== '전체') {
       trackFilterUsed(value);
-      // GA 추적: 필터 사용
       trackBenefitInteraction('filter_used', undefined, value);
     }
   };
 
   return (
     <div>
-      {/* 필터링 */}
       <div className="flex flex-col gap-3">
         <SearchInput
           value={searchTerm}
@@ -86,7 +83,6 @@ export const BenefitList = () => {
         />
       </div>
 
-      {/* 리스트 */}
       <div className="divide-y divide-gray-200 mt-4">
         {isPending ? (
           Array.from({ length: 5 }).map((_, idx) => (
@@ -132,7 +128,6 @@ export const BenefitList = () => {
         )}
       </div>
 
-      {/* 페이지네이션 */}
       {data && data.brandList.length > 0 && data.totalPages > 1 && (
         <div className="mt-6 pb-20 sm:pb-6">
           <Pagination

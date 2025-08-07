@@ -7,14 +7,12 @@ import type {
   AdminBrandListResponse,
 } from './types';
 
-// 전체 통계 목 데이터
 export const mockTotalStats: TotalStats = {
   totalBookmarkMyMap: 156,
   totalFiltering: 89,
   totalMembershipUsage: 234,
 };
 
-// 즐겨찾기 통계 목 데이터
 export const mockBookmarkStats: BookmarkStat[] = [
   {
     categoryId: 2,
@@ -55,7 +53,6 @@ export const mockBookmarkStats: BookmarkStat[] = [
   },
 ];
 
-// 필터링 통계 목 데이터
 export const mockFilteringStats: FilteringStat[] = [
   {
     categoryId: 6,
@@ -84,7 +81,6 @@ export const mockFilteringStats: FilteringStat[] = [
   },
 ];
 
-// 추천 통계 목 데이터
 export const mockRecommendStats: RecommendStat[] = [
   {
     categoryId: 6,
@@ -134,7 +130,6 @@ export const mockRecommendStats: RecommendStat[] = [
   },
 ];
 
-// 멤버십 통계 목 데이터
 export const mockMembershipStats: MembershipStat[] = [
   {
     categoryId: 11,
@@ -165,7 +160,6 @@ export const mockMembershipStats: MembershipStat[] = [
   },
 ];
 
-// 브랜드 목록 목 데이터
 export const mockAdminBrandListResponse: AdminBrandListResponse = {
   brandList: [
     {

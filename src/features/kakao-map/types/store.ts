@@ -1,14 +1,14 @@
 export interface Store {
-  storeId: number; // 매장 고유 식별자 (숫자)
-  storeName: string; // 매장 이름
-  categoryName: string; // 카테고리 이름 (백엔드에서 정규화됨)
-  addressDetail: string; // 매장 상세 주소
-  benefit: string; // 매장 혜택 정보
-  logoImage: string; // 브랜드 로고 이미지 URL
-  brandName: string; // 브랜드 이름 (백엔드에서 정규화됨)
+  storeId: number;
+  storeName: string;
+  categoryName: string;
+  addressDetail: string;
+  benefit: string;
+  logoImage: string;
+  brandName: string;
   brandId?: number;
-  latitude: number; // 위도
-  longitude: number; // 경도
+  latitude: number;
+  longitude: number;
 }
 export interface FilterOption {
   key: string;

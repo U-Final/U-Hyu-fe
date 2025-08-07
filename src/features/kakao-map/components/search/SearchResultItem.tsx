@@ -38,7 +38,6 @@ export const SearchResultItem: React.FC<SearchResultItemProps> = ({
   };
 
   const formatCategory = (category: string) => {
-    // 카테고리 문자열에서 마지막 부분만 추출 (예: "음식점 > 한식 > 삼겹살" → "삼겹살")
     const parts = category.split(' > ');
     return parts[parts.length - 1] || category;
   };
@@ -81,7 +80,6 @@ export const SearchResultItem: React.FC<SearchResultItemProps> = ({
         backgroundColor: { duration: 0.2, ease: 'easeInOut' },
       }}
     >
-      {/* 선택 표시 */}
       {isSelected && (
         <>
           <motion.div
@@ -98,8 +96,6 @@ export const SearchResultItem: React.FC<SearchResultItemProps> = ({
           />
         </>
       )}
-
-      {/* 카테고리별 아이콘 */}
       <div className="flex-shrink-0 mr-3">
         <CategoryIconContainer
           category={place.category}
@@ -110,7 +106,6 @@ export const SearchResultItem: React.FC<SearchResultItemProps> = ({
         />
       </div>
 
-      {/* 장소 정보 */}
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0">
@@ -130,7 +125,6 @@ export const SearchResultItem: React.FC<SearchResultItemProps> = ({
             </p>
           </div>
 
-          {/* 거리 표시 */}
           {showDistance && place.distance && (
             <div className="flex-shrink-0 ml-3">
               <span

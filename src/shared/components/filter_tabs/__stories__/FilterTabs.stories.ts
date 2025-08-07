@@ -69,7 +69,8 @@ export const Variants: Story = {
         createElement(FilterTabs, {
           tabs: FILTER_TABS,
           variant: 'gray',
-          onChange: val => console.log('gray variant 선택:', val),
+          onChange: () => {
+          },
         })
       ),
       createElement(
@@ -83,7 +84,8 @@ export const Variants: Story = {
         createElement(FilterTabs, {
           tabs: FILTER_TABS,
           variant: 'white',
-          onChange: val => console.log('White variant 선택:', val),
+          onChange: () => {
+          },
         })
       )
     );

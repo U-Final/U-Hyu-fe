@@ -12,25 +12,21 @@ export interface StoreDetailCardProps {
   handleToggleFavorite?: () => void;
 }
 
-// 텍스트 길이 제한 상수
 const TEXT_LIMITS = {
   benefits: 50,
   usageLimit: 30,
   usageMethod: 40,
 };
 
-// 텍스트가 제한을 초과하는지 확인하는 헬퍼 함수
 const shouldShowExpand = (text: string, limit: number): boolean => {
   return text.length > limit;
 };
 
-// 축약된 텍스트를 반환하는 헬퍼 함수
 const getTruncatedText = (text: string, limit: number): string => {
   if (text.length <= limit) return text;
   return text.substring(0, limit) + '...';
 };
 
-// 더보기 버튼 컴포넌트
 const ExpandButton: React.FC<{
   isExpanded: boolean;
   onClick: () => void;
@@ -67,14 +63,11 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
   usageMethod,
   handleToggleFavorite,
 }) => {
-  // 각 섹션의 확장 상태 관리
   const [expandedSections, setExpandedSections] = useState({
     benefits: false,
     usageLimit: false,
     usageMethod: false,
   });
-
-  // 섹션 확장/축소 토글 함수
   const toggleSection = (section: keyof typeof expandedSections): void => {
     setExpandedSections(prev => ({
       ...prev,
@@ -125,15 +118,12 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
       }}
     >
       <div className="p-4 sm:p-6 pt-4 sm:pt-5 pb-6 sm:pb-8">
-        {/* 말풍선 꼬리 */}
         <div className="absolute left-1/2 -bottom-4 -translate-x-1/2 w-8 h-8 z-10">
           <svg width="2rem" height="2rem" viewBox="0 0 32 32">
             <polygon points="16,32 0,0 32,0" fill="white" />
           </svg>
         </div>
-        {/* 상단: 매장명, 즐겨찾기 */}
         <div className="relative z-10 mb-4">
-          {/* 매장명 + 즐겨찾기 */}
           <div className="flex items-center justify-between mb-3">
             <span
               className="text-xl font-bold text-left leading-7"
@@ -199,7 +189,6 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
               </span>
             </div>
           </div>
-          {/* 등급별 혜택 제목 */}
           <div
             className="text-sm font-semibold text-gray-700 mb-2"
             onTouchEnd={e => {
@@ -213,7 +202,6 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
           >
             등급별 혜택
           </div>
-          {/* 혜택 정보 (등급+혜택) */}
           <div
             className="flex flex-col w-full"
             onTouchEnd={e => {
@@ -283,7 +271,6 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
             </div>
           </div>
         </div>
-        {/* 제공 횟수 */}
         <div className="mb-4 relative z-10">
           <div
             className="text-sm font-semibold text-gray-700 mb-2"
@@ -332,7 +319,6 @@ const StoreDetailCard: React.FC<StoreDetailCardProps> = ({
             )}
           </div>
         </div>
-        {/* 이용방법 */}
         <div className="relative z-10">
           <div
             className="text-sm font-semibold text-gray-700 mb-2"

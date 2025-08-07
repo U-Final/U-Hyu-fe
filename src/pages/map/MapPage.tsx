@@ -18,7 +18,7 @@ import { useScrollPrevention } from '@/shared/hooks/useScrollPrevention';
  *
  * @returns 지도와 관련된 UI가 포함된 React 요소
  */
-// MapUIProvider 내부 컴포넌트
+
 const MapContent = () => {
   const { bottomSheetRef } = useMapUIContext();
   const [keywordResults, setKeywordResults] = useState<NormalizedPlace[]>([]);
@@ -37,41 +37,34 @@ const MapContent = () => {
     ((center: { lat: number; lng: number }) => void) | null
   >(null);
 
-  // 키워드 검색 결과 장소 클릭 핸들러
   const handlePlaceClick = useCallback((place: NormalizedPlace) => {
     setSelectedPlace(place);
   }, []);
 
-  // 키워드 검색 결과 인포윈도우 닫기 핸들러
   const handlePlaceInfoClose = useCallback(() => {
     setSelectedPlace(null);
   }, []);
 
-  // MapControlsContainer에서 검색 결과를 받는 핸들러
   const handleKeywordSearchResults = useCallback(
     (results: NormalizedPlace[]) => {
       setKeywordResults(results);
-      // 새로운 검색 결과가 있을 때만 persistent markers 업데이트
       if (results.length > 0) {
         setPersistentMarkers(results);
       }
-      setSelectedPlace(null); // 새 검색 시 선택 초기화
+      setSelectedPlace(null);
     },
     []
   );
 
-  // 마커를 완전히 지우는 핸들러 (새 검색 시)
   const handleClearMarkers = useCallback(() => {
     setPersistentMarkers([]);
     setSelectedPlace(null);
   }, []);
 
-  // 검색 결과 리스트만 닫는 핸들러 (마커는 유지)
   const handleCloseSearchResults = useCallback(() => {
     setKeywordResults([]);
   }, []);
 
-  // MapContainer에서 setMapCenter 함수를 받는 핸들러
   const handleMapCenterUpdate = useCallback(
     (setMapCenterFn: (center: { lat: number; lng: number }) => void) => {
       mapCenterSetterRef.current = setMapCenterFn;
@@ -79,12 +72,10 @@ const MapContent = () => {
     []
   );
 
-  // MapContainer에서 지도 인스턴스를 받는 핸들러
   const handleMapCreate = useCallback((mapInstance: kakao.maps.Map) => {
     setMap(mapInstance);
   }, []);
 
-  // 지도 중심 좌표 변경 핸들러
   const handleMapCenterChange = useCallback(
     (center: { lat: number; lng: number }) => {
       setMapCenter(center);
@@ -92,18 +83,14 @@ const MapContent = () => {
     []
   );
 
-  // selectedPlace 상태 변화 디버깅
   useEffect(() => {}, [selectedPlace]);
 
-  // 바텀시트 초기화 - 중간 열린 상태
   useEffect(() => {
     if (bottomSheetRef.current) {
-      // 페이지 로드 시 바텀시트를 중간 열린 상태로 시작
       bottomSheetRef.current.openMiddle();
     }
   }, [bottomSheetRef]);
 
-  // 스크롤 방지 적용 (세로 스크롤만 방지, 가로 스크롤 허용)
   useScrollPrevention({
     preventVerticalOnly: true,
     scrollableSelectors: [

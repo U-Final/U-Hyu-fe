@@ -10,7 +10,6 @@ const AddMyMapButton: React.FC<AddMyMapButtonProps> = ({ onCreateNewMap }) => {
   const { trackMyMapInteraction } = useGA();
 
   const handleCreateNewMap = () => {
-    // GA 추적: 새 지도 만들기 버튼 클릭
     trackMyMapInteraction('create_map_button_clicked');
     onCreateNewMap();
   };

@@ -11,7 +11,6 @@ export function useFirstVisit(key: string) {
     const storageKey = `first-visit-${key}`;
     
     try {
-      // 개발 환경에서는 항상 첫 방문으로 처리
       if (process.env.NODE_ENV === 'development') {
         setIsFirstVisit(true);
         setIsLoading(false);
@@ -25,8 +24,7 @@ export function useFirstVisit(key: string) {
       }
       
       setIsLoading(false);
-    } catch (error) {
-      console.warn('localStorage access failed:', error);
+    } catch {
       setIsLoading(false);
     }
   }, [key]);
@@ -37,8 +35,8 @@ export function useFirstVisit(key: string) {
     try {
       localStorage.setItem(storageKey, 'true');
       setIsFirstVisit(false);
-    } catch (error) {
-      console.warn('localStorage write failed:', error);
+    } catch {
+      // localStorage 쓰기 실패 시 조용히 처리
     }
   };
 
@@ -48,8 +46,8 @@ export function useFirstVisit(key: string) {
     try {
       localStorage.removeItem(storageKey);
       setIsFirstVisit(true);
-    } catch (error) {
-      console.warn('localStorage remove failed:', error);
+    } catch {
+      // localStorage 삭제 실패 시 조용히 처리
     }
   };
 

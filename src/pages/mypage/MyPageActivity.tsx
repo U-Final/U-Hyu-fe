@@ -18,18 +18,14 @@ const MyPageActivity = () => {
   const [activeTab, setActiveTab] = useState<MyPageTab>(MYPAGE_TABS[0]);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  // 각 탭별 refetch 함수 준비
   const { refetch: refetchStatistics } = useActivityStatisticsQuery();
   const { refetch: refetchBookmarks } = useBookmarkListInfiniteQuery(activeTab === MYPAGE_TABS[1]);
 
-  // 페이지 이동(경로 변경) 시 유저 정보와 통계만 refetch
   useEffect(() => {
     refetchUserInfo();
     refetchStatistics();
-    // 북마크는 즐겨찾기 탭이 활성화될 때만 요청
   }, [location.pathname, refetchUserInfo, refetchStatistics]);
 
-  // 탭 클릭 시 해당 refetch 호출
   const handleTabClick = useCallback((tab: MyPageTab) => {
     setActiveTab(tab);
     if (tab === MYPAGE_TABS[0]) {

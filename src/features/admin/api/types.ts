@@ -1,4 +1,3 @@
-// 기존 통계 관련 타입들
 export interface TotalStats {
   totalBookmarkMyMap: number;
   totalFiltering: number;
@@ -100,7 +99,6 @@ export interface AdminBrandDeleteResponse {
   brandId: number;
 }
 
-// 브랜드 목록 조회 API 파라미터
 export interface AdminBrandListParams {
   page?: number;
   size?: number;

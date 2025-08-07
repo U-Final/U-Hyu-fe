@@ -8,7 +8,7 @@ import { http } from "msw";
 export const homeHandlers = [
   http.get(HOME_ENDPOINTS.HOME.USER_INFO, () => {
     const shouldFail = false;
-    if (shouldFail) { //실패시
+    if (shouldFail) {
       return createErrorResponse('로그인된 유저가 아닙니다.', 404);
     }
 
@@ -24,21 +24,19 @@ export const homeHandlers = [
 
   http.get(HOME_ENDPOINTS.HOME.NEARBY_STORES, () => {
     const shouldFail = false;
-    if (shouldFail) { //실패시
+    if (shouldFail) {
       return createErrorResponse('주변매장 조회 실패', 400);
     }
 
     return createResponse(mockNearbyStoresData, "주변 매장 조회 성공")
   }),
 
-  // 4. 멤버십 혜택
-  // /home/benefits?grade=VIP 같은 요청을 보냄
   http.get(HOME_ENDPOINTS.HOME.BENEFITS, ({ request }) => {
     const url = new URL(request.url);
     const grade = url.searchParams.get("grade");
 
     const shouldFail = false;
-    if (shouldFail) { //실패시
+    if (shouldFail) {
       return createErrorResponse('등급 혜택 조회 실패', 400);
     }
 

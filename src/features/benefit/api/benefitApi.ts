@@ -8,7 +8,6 @@ import type {
 import { client } from '@/shared/client';
 import type { ApiResponse } from '@/shared/client/client.type';
 
-// 제휴처 목록 페이지 api
 export const getBrandList = async (
   params?: BrandListParams
 ): Promise<BrandListRes> => {
@@ -23,7 +22,6 @@ export const getBrandList = async (
   return res.data.data;
 };
 
-// 제휴처 정보 상세 조회 api
 export const getBrandDetail = async (
   brandId: number
 ): Promise<BrandDetailRes> => {

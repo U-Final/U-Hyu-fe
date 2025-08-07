@@ -34,15 +34,13 @@ export const ShareModal = ({ uuid }: ShareModalProps) => {
           setCopyStatus('success');
           toast.success('클립보드에 링크가 복사되었습니다.');
         })
-        .catch(err => {
+        .catch(() => {
           setCopyStatus('error');
           toast.error('링크 복사 중 오류가 발생했습니다.');
-          console.error('클립보드 복사 실패:', err);
         });
     } else {
       setCopyStatus('error');
       toast.error('클립보드 API가 지원되지 않습니다.');
-      console.error('클립보드 API가 지원되지 않습니다');
     }
   };
 

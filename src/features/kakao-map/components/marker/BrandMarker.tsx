@@ -21,14 +21,11 @@ const BrandMarker: FC<BrandMarkerProps> = ({
   const { trackMapInteraction } = useGA();
   const brandImageSrc = store.logoImage;
 
-  // 항상 매장의 실제 카테고리 색상 사용
   const categoryColor = getCategoryColorFromFilter(store.categoryName);
 
   const handleMarkerClick = () => {
-    // GA 추적: 마커 클릭
     trackMapInteraction('marker_click', store.storeId, store.categoryName);
 
-    // 기존 onClick 핸들러 실행
     if (onClick) {
       onClick();
     }
@@ -40,7 +37,6 @@ const BrandMarker: FC<BrandMarkerProps> = ({
       onClick={handleMarkerClick}
       style={{ userSelect: 'none', WebkitUserSelect: 'none' }}
     >
-      {/* 추천 매장 강조 효과 */}
       {isRecommended && (
         <div
           className="absolute inset-0 w-16 h-16 -translate-x-1 -translate-y-1 rounded-full border-2 border-yellow-400 opacity-60 animate-pulse"
@@ -50,9 +46,7 @@ const BrandMarker: FC<BrandMarkerProps> = ({
         />
       )}
 
-      {/* 마커 전체 컨테이너 */}
       <div className="relative">
-        {/* 메인 마커 몸체 - 원형 */}
         <div
           className={`
             relative 
@@ -76,7 +70,6 @@ const BrandMarker: FC<BrandMarkerProps> = ({
               : `0 6px 20px -6px ${categoryColor}50, 0 4px 8px -2px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.15)`,
           }}
         >
-          {/* 브랜드 로고 */}
           <div className="absolute inset-1 bg-white rounded-full overflow-hidden shadow-inner">
             <img
               src={brandImageSrc}
@@ -88,7 +81,6 @@ const BrandMarker: FC<BrandMarkerProps> = ({
             />
           </div>
 
-          {/* 추천 매장 뱃지 - 깔끔한 디자인 */}
           {isRecommended && (
             <div className="absolute -top-1.5 -right-1.5 w-7 h-7 rounded-full border-2 border-white shadow-lg flex items-center justify-center bg-yellow-400 z-100">
               <div className="w-2 h-2 bg-white rounded-full"></div>
@@ -96,7 +88,6 @@ const BrandMarker: FC<BrandMarkerProps> = ({
           )}
         </div>
 
-        {/* 마커 꼬리 - 자연스러운 삼각형 */}
         <div
           className="absolute top-full left-1/2 transform -translate-x-1/2 -translate-y-1"
           style={{
@@ -109,7 +100,6 @@ const BrandMarker: FC<BrandMarkerProps> = ({
           }}
         />
 
-        {/* 꼬리 테두리 효과 */}
         <div
           className="absolute top-full left-1/2 transform -translate-x-1/2 -translate-y-1"
           style={{
@@ -123,7 +113,6 @@ const BrandMarker: FC<BrandMarkerProps> = ({
         />
       </div>
 
-      {/* 선택 상태 링 효과 */}
       {isSelected && (
         <>
           <div

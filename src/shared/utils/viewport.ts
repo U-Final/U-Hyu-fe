@@ -21,30 +21,23 @@ export function setViewportHeight(): void {
 export function initViewportHeight(): void {
   if (isInitialized) return;
   
-  // 초기 설정
   setViewportHeight();
-  
-  // 리사이즈 이벤트 리스너
+ 
   window.addEventListener('resize', setViewportHeight);
-  
-  // 방향 변경 이벤트 리스너 (모바일)
+    
   window.addEventListener('orientationchange', () => {
-    // orientationchange 후 약간의 지연을 두고 설정
-    // 브라우저가 실제 크기를 계산할 시간 제공
     setTimeout(setViewportHeight, 100);
   });
-  
-  // iOS Safari의 주소창 토글을 감지하기 위한 추가 처리
+    
   let lastHeight = window.innerHeight;
   const checkHeightChange = () => {
     const currentHeight = window.innerHeight;
-    if (Math.abs(currentHeight - lastHeight) > 50) { // 50px 이상 변화 시
+    if (Math.abs(currentHeight - lastHeight) > 50) {
       setViewportHeight();
       lastHeight = currentHeight;
     }
   };
   
-  // 주기적으로 높이 변화 체크 (iOS Safari 주소창 토글 대응)
   setInterval(checkHeightChange, 500);
   
   isInitialized = true;

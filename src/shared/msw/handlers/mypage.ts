@@ -20,16 +20,9 @@ const createResponse = <T>(result: T, message: string): ApiResponse<T> => ({
 });
 
 export const mypageHandlers = [
-  // 개인정보 수정
   http.patch(MYPAGE_ENDPOINTS.UPDATE_USER, async ({ request }) => {
     const body = (await request.json()) as Partial<UpdateUserRequest>;
 
-    if (import.meta.env.MODE === 'development') {
-      console.log('🔧 MSW PATCH 요청 받음:', body);
-      console.log('🔧 현재 mockUserInfoData:', mockUserInfoData);
-    }
-
-    // 에러 케이스: 잘못된 등급
     if (
       body.updatedGrade &&
       !['VVIP', 'VIP', 'GOOD'].includes(body.updatedGrade)
@@ -44,7 +37,6 @@ export const mypageHandlers = [
       );
     }
 
-    // 닉네임 필수 검증 (필요한 경우)
     if (body.updatedNickName !== undefined && !body.updatedNickName?.trim()) {
       return new HttpResponse(
         JSON.stringify({
@@ -56,34 +48,19 @@ export const mypageHandlers = [
       );
     }
 
-    // mockUserInfoData 복사본 생성 및 업데이트
     const updatedData = { ...mockUserInfoData };
     if (body.updatedNickName) {
       updatedData.nickName = body.updatedNickName;
-      if (import.meta.env.MODE === 'development') {
-        console.log('✅ 닉네임 업데이트:', body.updatedNickName);
-      }
     }
     if (body.updatedGrade) {
       updatedData.grade = body.updatedGrade;
-      if (import.meta.env.MODE === 'development') {
-        console.log('✅ 등급 업데이트:', body.updatedGrade);
-      }
     }
     if (body.updatedBrandIdList) {
       updatedData.interestedBrandList = body.updatedBrandIdList;
-      if (import.meta.env.MODE === 'development') {
-        console.log('✅ 브랜드 업데이트:', body.updatedBrandIdList);
-      }
     }
     updatedData.updatedAt = new Date().toISOString();
 
-    // 전역 mock 데이터 업데이트
     Object.assign(mockUserInfoData, updatedData);
-
-    if (import.meta.env.MODE === 'development') {
-      console.log('🔧 업데이트 후 mockUserInfoData:', mockUserInfoData);
-    }
 
     await delay(300);
     return HttpResponse.json(
@@ -91,17 +68,12 @@ export const mypageHandlers = [
     );
   }),
 
-  // 개인정보 조회
   http.get(MYPAGE_ENDPOINTS.USER_INFO, () => {
-    if (import.meta.env.MODE === 'development') {
-      console.log('🔧 MSW GET 요청 - 현재 mockUserInfoData:', mockUserInfoData);
-    }
     return HttpResponse.json(
       createResponse(mockUserInfoData, '정상 처리 되었습니다.')
     );
   }),
 
-  // --- 액티비티: 활동내역 조회 ---
   http.get(MYPAGE_ENDPOINTS.STATISTICS, async () => {
     await delay(200);
     return HttpResponse.json(
@@ -109,7 +81,6 @@ export const mypageHandlers = [
     );
   }),
 
-  // --- 액티비티: 즐겨찾기 리스트 조회 ---
   http.get(MYPAGE_ENDPOINTS.BOOKMARK_LIST, async ({ request }) => {
     const url = new URL(request.url);
     const page = parseInt(url.searchParams.get('page') || '1', 10);
@@ -121,10 +92,8 @@ export const mypageHandlers = [
     return HttpResponse.json(createResponse(paged, '정상 처리 되었습니다.'));
   }),
 
-  // --- 액티비티: 즐겨찾기 삭제 ---
   http.delete(MYPAGE_ENDPOINTS.BOOKMARK_DETAIL(), async ({ params }) => {
     const { bookmarkId } = params;
-    // 실제로 mockBookmarks에서 해당 id를 삭제
     const idx = mockBookmarks.findIndex(
       b => b.bookmarkId === Number(bookmarkId)
     );

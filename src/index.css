@@ -327,6 +327,34 @@
     }
   }
 
+  .desktop-menu-button {
+    @media (min-width: 1024px) {
+      left: calc((100vw - 500px) / 2 + 1rem) !important;
+    }
+    @media (min-width: 1280px) {
+      left: calc((100vw - 600px) / 2 + 1rem) !important;
+    }
+    @media (min-width: 1536px) {
+      left: calc((100vw - 700px) / 2 + 1rem) !important;
+    }
+  }
+
+  /* 지도 페이지를 제외한 페이지들의 더 넓은 여백 */
+  .desktop-padding-non-map {
+    @media (min-width: 1024px) {
+      padding-left: calc((100vw - 460px) / 2);
+      padding-right: calc((100vw - 460px) / 2);
+    }
+    @media (min-width: 1280px) {
+      padding-left: calc((100vw - 560px) / 2);
+      padding-right: calc((100vw - 560px) / 2);
+    }
+    @media (min-width: 1536px) {
+      padding-left: calc((100vw - 660px) / 2);
+      padding-right: calc((100vw - 660px) / 2);
+    }
+  }
+
   /* Text Color Utilities */
   .text-primary {
     color: var(--text-primary);

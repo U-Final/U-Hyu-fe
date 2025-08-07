@@ -11,10 +11,12 @@ export const formatUsageText = (text: string | null): string => {
   decoded = decoded.replace(/(\\n|\n|<br\s*\/?>)/g, '');
 
   decoded = decoded
+    .replace(/\s*●\s*/g, '\n● ')
     .replace(/\s*■\s*/g, '\n■ ')
     .replace(/\s*▶\s*/g, '\n▶ ')
     .replace(/\s*\*\s*/g, '\n* ')
-    .replace(/(?<!\d)\s*-\s*/g, '\n- ');
+    .replace(/(?<!\d)\s*-\s*/g, '\n- ')
+    .replace(/(^|\s)([1-5])\.\s*/g, '\n$2. ');
 
   decoded = decoded.replace(/\s{2,}/g, ' ');
 

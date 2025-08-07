@@ -36,7 +36,7 @@ const ActivityBenefit = () => {
     <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 relative z-0">
       <div className="mb-6">
         <h3 className="text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">
-          <div className="w-6 h-6 bg-purple-star rounded-full flex items-center justify-center">
+          <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
             <Gift className="w-4 h-4 text-white" />
           </div>
           혜택 현황
@@ -85,7 +85,7 @@ const ActivityBenefit = () => {
               style={{ animationDelay: '0.9s' }}
             ></div>
             <div
-              className="absolute top-3 right-2 w-1 h-1 bg-purple-star rounded-full animate-bounce"
+              className="absolute top-3 right-2 w-1 h-1 bg-primary rounded-full animate-bounce"
               style={{ animationDelay: '1.2s' }}
             ></div>
             <div

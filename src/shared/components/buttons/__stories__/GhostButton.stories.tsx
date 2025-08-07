@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+
 import { GhostButton } from '../GhostButton';
 
 const meta: Meta<typeof GhostButton> = {
@@ -27,7 +28,7 @@ export const Default: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<GhostButton size=\"md\">Ghost Button</GhostButton>`,
+        code: `<GhostButton size="md">Ghost Button</GhostButton>`,
       },
     },
   },

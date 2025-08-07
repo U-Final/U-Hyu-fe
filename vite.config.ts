@@ -1,31 +1,37 @@
 /// <reference types="vitest/config" />
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import tailwindcss from "@tailwindcss/vite";
+import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
+import tailwindcss from '@tailwindcss/vite';
+import react from '@vitejs/plugin-react';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { defineConfig } from 'vite';
 
-// https://vite.dev/config/
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
-
-// ES Module 환경에서 __dirname 대신 사용
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src"),
-      "@shared": path.resolve(__dirname, "src/shared"),
-      "@components": path.resolve(__dirname, "src/shared/components"),
-      "@constants": path.resolve(__dirname, "src/shared/constants"),
-      "@client": path.resolve(__dirname, "src/shared/client"),
-      "@features": path.resolve(__dirname, "src/features"),
-      "@extra-info": path.resolve(__dirname, "src/features/extra-info"),
-      "@benefit": path.resolve(__dirname, "src/features/benefit"),
-      "@pages": path.resolve(__dirname, "src/pages"),
-      "@paths": path.resolve(__dirname, "src/routes/path.ts"),
+      '@': path.resolve(__dirname, 'src'),
+      '@extra-info': path.resolve(__dirname, 'src/features/extra-info'),
+      '@benefit': path.resolve(__dirname, 'src/features/benefit'),
+      '@home': path.resolve(__dirname, 'src/features/home'),
+      '@paths': path.resolve(__dirname, 'src/routes/path.ts'),
+      '@user': path.resolve(__dirname, 'src/features/user'),
+      '@mypage': path.resolve(__dirname, 'src/features/mypage'),
+      '@mymap': path.resolve(__dirname, 'src/features/mymap'),
+      '@admin': path.resolve(__dirname, 'src/features/admin'),
+      '@kakao-map': path.resolve(__dirname, 'src/features/kakao-map'),
+      '@recommendation': path.resolve(__dirname, 'src/features/recommendation'),
+      '@barcode': path.resolve(__dirname, 'src/features/barcode'),
+    },
+  },
+  build: {
+    rollupOptions: {
+      input: {
+        main: './index.html',
+        sw: './sw.js',
+      },
     },
   },
   test: {
@@ -33,25 +39,23 @@ export default defineConfig({
       {
         extends: true,
         plugins: [
-          // The plugin will run tests for the stories defined in your Storybook config
-          // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
           storybookTest({
-            configDir: path.join(dirname, ".storybook"),
+            configDir: path.join(dirname, '.storybook'),
           }),
         ],
         test: {
-          name: "storybook",
+          name: 'storybook',
           browser: {
             enabled: true,
             headless: true,
-            provider: "playwright",
+            provider: 'playwright',
             instances: [
               {
-                browser: "chromium",
+                browser: 'chromium',
               },
             ],
           },
-          setupFiles: [".storybook/vitest.setup.ts"],
+          setupFiles: ['.storybook/vitest.setup.ts'],
         },
       },
     ],

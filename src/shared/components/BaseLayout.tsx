@@ -1,10 +1,18 @@
 interface BaseLayoutProps {
   children: React.ReactNode;
+  isMap?: boolean;
 }
 
-const BaseLayout = ({ children }: BaseLayoutProps) => {
+const BaseLayout = ({ children, isMap = false }: BaseLayoutProps) => {
   return (
-    <div className="flex-1 bg-white scrollbar-hidden overflow-hidden px-4 pt-[60px] pb-[40px] w-full max-w-[360px] mx-auto h-full overflow-y-auto">
+    <div
+      id="main-content"
+      className={
+        isMap
+          ? 'flex-1 bg-white w-full h-full min-w-0 desktop-padding'
+          : 'flex-1 bg-white px-4 pt-[60px] pb-[50px] w-full h-full overflow-y-auto desktop-padding-non-map'
+      }
+    >
       {children}
     </div>
   );

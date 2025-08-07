@@ -1,39 +1,164 @@
-import type { FilterTabProps } from '@components/filter_tabs/FilterTabs.types';
+import type { FC } from 'react';
+import { useRef, useState, useEffect } from 'react';
+
+import { useDrag } from '@use-gesture/react';
+import clsx from 'clsx';
+
+import type { FilterTabProps } from '@/shared/components/filter_tabs/FilterTabs.types';
 import {
   FILTER_TABS,
   filterTabVariants,
-} from '@components/filter_tabs/FilterTabs.variants';
-import clsx from 'clsx';
-import type { FC } from 'react';
-import { useState } from 'react';
+} from '@/shared/components/filter_tabs/FilterTabs.variants';
+import { trackFilterUsed } from '@/shared/utils/actionlogTracker';
 
 const FilterTabs: FC<FilterTabProps> = ({
   tabs = FILTER_TABS,
+  value,
   onChange,
   variant = 'gray',
 }) => {
-  const [active, setActive] = useState(tabs[0]?.value ?? '');
+  const [internalActive, setInternalActive] = useState(tabs[0]?.value ?? '');
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
 
-  const handleClick = (value: string) => {
-    setActive(value);
-    onChange?.(value);
+  const active = value !== undefined ? value : internalActive;
+
+  const handleClick = (clickedValue: string) => {
+    if (isDragging.current) return;
+
+    const currentValue = value !== undefined ? value : internalActive;
+
+    let nextValue = clickedValue;
+
+    if (clickedValue === currentValue) {
+      nextValue = 'all';
+    }
+
+    if (value === undefined) {
+      setInternalActive(nextValue);
+    }
+
+    onChange?.(nextValue);
+
+    if (nextValue !== 'all') {
+      trackFilterUsed(nextValue);
+    }
   };
 
+  const bind = useDrag(
+    ({ active, delta: [dx], first, last, event }) => {
+      if (!scrollContainerRef.current) return;
+
+      if (first) {
+        isDragging.current = false;
+      }
+
+      if (active && Math.abs(dx) > 3) {
+        isDragging.current = true;
+        event?.preventDefault();
+        event?.stopPropagation();
+
+        const currentScrollLeft = scrollContainerRef.current.scrollLeft;
+        scrollContainerRef.current.scrollLeft = currentScrollLeft - dx;
+      }
+
+      if (last) {
+        setTimeout(() => {
+          isDragging.current = false;
+        }, 50);
+      }
+    },
+    {
+      threshold: 3,
+      axis: 'x',
+      preventScroll: true,
+      pointer: { touch: true },
+      from: () => [scrollContainerRef.current?.scrollLeft || 0, 0],
+    }
+  );
+
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      scrollContainer.scrollLeft += e.deltaY;
+    };
+
+    scrollContainer.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      scrollContainer.removeEventListener('wheel', handleWheel);
+    };
+  }, []);
+
   return (
-    <div className="scrollbar-hidden flex overflow-x-auto whitespace-nowrap gap-2">
-      {tabs.map(({ label, value }) => (
+    <div
+      ref={scrollContainerRef}
+      {...bind()}
+      className="flex overflow-x-auto gap-2 py-1 whitespace-nowrap select-none touch-pan-x"
+      style={
+        variant === 'white'
+          ? {
+              width: '100vw',
+              marginLeft: 'calc(-50vw + 50%)',
+              paddingLeft: 'calc(50vw - 50% + 1rem)',
+              paddingRight: 'calc(50vw - 50% + 1rem)',
+              overscrollBehavior: 'contain',
+            }
+          : {
+              overscrollBehavior: 'contain',
+            }
+      }
+
+      onTouchStart={e => {
+        e.stopPropagation();
+      }}
+      onTouchMove={e => {
+        if (isDragging.current) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }}
+    >
+      {tabs.map(({ label, value, icon: IconComponent, color }) => (
         <button
           key={value}
           onClick={() => handleClick(value)}
           className={clsx(
             filterTabVariants[variant].base,
-            'cursor-pointer',
+            'filter-tab-button cursor-pointer gap-1',
             active === value
               ? filterTabVariants[variant].active
               : filterTabVariants[variant].inactive
           )}
+          style={
+            active === value && color
+              ? {
+                  backgroundColor: `${color}15`,
+                  borderColor: `${color}15`,
+                }
+              : {}
+          }
         >
-          {label}
+          {IconComponent && (
+            <IconComponent
+              className="w-3.5 h-3.5 flex-shrink-0"
+              style={{
+                color: color || '#6b7280',
+              }}
+            />
+          )}
+          <span
+            className="whitespace-nowrap"
+            style={{
+              color: color || '#6b7280',
+            }}
+          >
+            {label}
+          </span>
         </button>
       ))}
     </div>

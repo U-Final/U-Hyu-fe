@@ -5,10 +5,11 @@ export interface MembershipGrade {
 
 export interface SignupData {
   membershipGrade: string;
-  recentBrands: string[];
-  selectedBrands: string[];
-  email: string;
-  emailVerified: boolean;
+  recentBrands: number[];
+  selectedBrands: number[];
+  age: number;
+  gender: string;
+  grade: string;
 }
 
 export interface CompletedStep {
@@ -24,12 +25,13 @@ export interface StepValidation {
 export interface StepTitleProps {
   children: React.ReactNode;
 }
+
 export interface StepContentProps {
   step: number;
   data: SignupData;
   onUpdateData: (updates: Partial<SignupData>) => void;
   onToggleBrand: (
-    brandId: string,
+    brandId: number,
     field: 'recentBrands' | 'selectedBrands'
   ) => void;
   disabled?: boolean;
@@ -41,12 +43,13 @@ export interface PrimaryButtonProps {
   children: React.ReactNode;
   className?: string;
 }
+
 export interface CurrentStepProps {
   currentStep: number;
   data: SignupData;
   onUpdateData: (updates: Partial<SignupData>) => void;
   onToggleBrand: (
-    brandId: string,
+    brandId: number,
     field: 'recentBrands' | 'selectedBrands'
   ) => void;
   onReset: () => void;
@@ -64,4 +67,42 @@ export interface ActionButtonsProps {
   isStepValid: boolean;
   onNext: () => void;
   onPrev: () => void;
+  isSubmitting?: boolean;
+  submitError?: Error | null;
+}
+
+export interface SignupFlowState {
+  isSubmitting: boolean;
+  submitError: Error | null;
+  submitSuccess: boolean;
+}
+
+export interface SignupCompleteCallback {
+  (success: boolean, message?: string): void;
+}
+
+export interface UseSignupFlowReturn {
+  data: SignupData;
+  currentStep: number;
+  completedSteps: CompletedStep[];
+  updateData: (updates: Partial<SignupData>) => void;
+  updateCompletedStepData: (
+    stepNumber: number,
+    updates: Partial<SignupData>
+  ) => void;
+  toggleBrand: (
+    brandId: number,
+    field: 'recentBrands' | 'selectedBrands'
+  ) => void;
+  toggleCompletedStepBrand: (
+    stepNumber: number,
+    brandId: number,
+    field: 'recentBrands' | 'selectedBrands'
+  ) => void;
+  goToNextStep: () => Promise<void>;
+  goToPrevStep: () => void;
+  resetFlow: () => void;
+  isStepValid: (step: number) => boolean;
+  isSubmitting: boolean;
+  submitError: Error | null;
 }

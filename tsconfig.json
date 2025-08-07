@@ -5,7 +5,7 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-
+    "types": ["kakao.maps.d.ts"],
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -18,21 +18,19 @@
     // 경로가 깊은 순서대로, 최신순으로 위에서부터 추가해주세요!
     "baseUrl": ".",
     "paths": {
-      // 공통 경로 설정
-      "@components/*": ["./src/shared/components/*"],
-      "@constants/*": ["./src/shared/constants/*"],
-      "@client/*": ["./src/shared/client/*"],
-      "@shared/*": ["./src/shared/*"],
-
       // 각 도메인 별 경로 설정
+      "@barcode/*": ["./src/features/barcode/*"],
+      "@recommendation/*": ["./src/features/recommendation/*"],
+      "@home/*": ["./src/features/home/*"],
       "@user/*": ["./src/features/user/*"],
+      "@kakao-map/*": ["./src/features/kakao-map/*"],
       "@extra-info/*": ["./src/features/extra-info/*"],
       "@benefit/*": ["./src/features/benefit/*"],
-      "@features/*": ["./src/features/*"],
-
-      "@pages/*": ["./src/pages/*"],
+      "@mypage/*": ["./src/features/mypage/*"],
+      "@mymap/*": ["./src/features/mymap/*"],
+      "@admin/*": ["./src/features/admin/*"],
       "@paths": ["./src/routes/path.ts"],
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
     },
 
     /* Linting */

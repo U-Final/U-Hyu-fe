@@ -1,5 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
+
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
 import { SelectionBottomSheet } from '../SelectionBottomSheet';
 
 const meta: Meta<typeof SelectionBottomSheet> = {
@@ -62,7 +64,6 @@ const SelectionBottomSheetWrapper = (
         selectedItems={selectedItems}
         onItemSelect={handleItemSelect}
         onApply={() => {
-          console.log('Applied:', selectedItems);
           setIsOpen(false);
         }}
       />

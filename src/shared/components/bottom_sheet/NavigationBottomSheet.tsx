@@ -1,7 +1,9 @@
-import { GhostButton } from '@components/buttons/GhostButton';
-import { PrimaryButton } from '@components/buttons/PrimaryButton';
-import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect } from 'react';
+
+import { AnimatePresence, motion } from 'framer-motion';
+
+import { GhostButton, PrimaryButton } from '@/shared/components';
+
 import { BaseBottomSheet } from './BaseBottomSheet';
 import type { NavigationBottomSheetProps } from './bottomSheet.type';
 import { useBottomSheetNavigation } from './hooks/useBottomSheetNavigation.ts';

@@ -1,8 +1,9 @@
-import { cn } from '@shared/lib/utils';
 import type { ButtonHTMLAttributes } from 'react';
 
+import { cn } from '@/shared/lib/utils';
+
 interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  icon: React.ReactNode; // 꼭 아이콘만
+  icon: React.ReactNode;
   className?: string;
 }
 

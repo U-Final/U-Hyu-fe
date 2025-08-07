@@ -1,7 +1,10 @@
-import { IconButton } from '@components/buttons/IconButton';
+import React, { useEffect } from 'react';
+
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronLeft, X } from 'lucide-react';
-import React, { useEffect } from 'react';
+
+import { IconButton } from '@/shared/components/buttons/IconButton';
+
 import type { BaseBottomSheetProps } from './bottomSheet.type';
 
 export const BaseBottomSheet: React.FC<BaseBottomSheetProps> = ({
@@ -18,10 +21,8 @@ export const BaseBottomSheet: React.FC<BaseBottomSheetProps> = ({
   showHandle = true,
   showCloseButton = true,
 }) => {
-  // body 스크롤 제어
   useEffect(() => {
     if (isOpen) {
-      // 현재 스크롤 위치 저장
       const scrollY = window.scrollY;
       document.body.style.position = 'fixed';
       document.body.style.top = `-${scrollY}px`;
@@ -29,7 +30,6 @@ export const BaseBottomSheet: React.FC<BaseBottomSheetProps> = ({
       document.body.style.overflow = 'hidden';
 
       return () => {
-        // cleanup: 스크롤 위치 복원
         document.body.style.position = '';
         document.body.style.top = '';
         document.body.style.width = '';
@@ -59,16 +59,17 @@ export const BaseBottomSheet: React.FC<BaseBottomSheetProps> = ({
     <AnimatePresence>
       {isOpen && (
         <>
-          <motion.div
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+          <div
+            role="button"
+            tabIndex={0}
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[9998]"
+            style={{ backdropFilter: 'blur(4px)' }}
             onClick={closeOnBackdrop ? onClose : undefined}
+            onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && onClose?.()}
           />
 
           <motion.div
-            className={`fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-2xl z-50 flex flex-col border border-light-gray ${getHeightClass()} ${className}`}
+            className={`fixed bottom-0 left-0 right-0 lg:left-[calc((100vw-500px)/2)] lg:right-auto lg:w-[500px] xl:left-[calc((100vw-600px)/2)] xl:w-[600px] 2xl:left-[calc((100vw-700px)/2)] 2xl:w-[700px] bg-white rounded-t-2xl shadow-sm z-[9999] flex flex-col border border-light-gray ${getHeightClass()} ${className}`}
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}

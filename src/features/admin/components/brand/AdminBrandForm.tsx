@@ -1,0 +1,413 @@
+import { useState, useEffect } from 'react';
+
+import { Button } from '@/shared/components/shadcn/ui/button';
+import { Input } from '@/shared/components/shadcn/ui/input';
+import { Label } from '@/shared/components/shadcn/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/shadcn/ui/select';
+import { Textarea } from '@/shared/components/shadcn/ui/textarea';
+import { PlusIcon, TrashIcon, XMarkIcon, CheckIcon } from '@heroicons/react/24/outline';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { adminApi } from '@admin/api/adminApi';
+import type { AdminBrand, AdminBrandBenefit, AdminBrandUpdateRequest } from '@admin/api/types';
+import { ADMIN_CATEGORIES } from '@admin/constants/categories';
+import { 
+  INITIAL_BENEFIT, 
+  GRADE_BADGES, 
+  BENEFIT_TYPE_OPTIONS, 
+  CATEGORY_STYLES, 
+  STORE_TYPE_OPTIONS,
+  FORM_PLACEHOLDERS,
+  FILE_UPLOAD_CONFIG
+} from '@admin/constants/brandForm';
+import { getErrorMessage } from '@/shared/utils/getErrorMessage';
+
+interface AdminBrandFormProps {
+  editingBrand: AdminBrand | null;
+  onCancel: () => void;
+  onSuccess: () => void;
+}
+
+export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrandFormProps) {
+  const [formData, setFormData] = useState({
+    brandName: '',
+    brandImg: '',
+    categoryId: 1,
+    usageLimit: '',
+    usageMethod: '',
+    storeType: 'OFFLINE' as 'ONLINE' | 'OFFLINE',
+    data: [INITIAL_BENEFIT],
+  });
+  const [previewUrl, setPreviewUrl] = useState<string>('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const queryClient = useQueryClient();
+
+  const createMutation = useMutation({
+    mutationFn: adminApi.createAdminBrand,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['adminBrandList'] });
+      queryClient.removeQueries({ queryKey: ['adminBrandList'] });
+      toast.success('브랜드가 성공적으로 추가되었습니다.');
+      onSuccess();
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ brandId, data }: { brandId: number; data: AdminBrandUpdateRequest }) => adminApi.updateAdminBrand(brandId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['adminBrandList'] });
+      queryClient.removeQueries({ queryKey: ['adminBrandList'] });
+      toast.success('브랜드가 성공적으로 수정되었습니다.');
+      onSuccess();
+    },
+  });
+
+  useEffect(() => {
+    if (editingBrand) {
+      setFormData({
+        brandName: editingBrand.brandName || '',
+        brandImg: editingBrand.brandImg || '',
+        categoryId: editingBrand.categoryId || 1,
+        usageLimit: editingBrand.usageLimit || '',
+        usageMethod: editingBrand.usageMethod || '',
+        storeType: editingBrand.storeType || 'OFFLINE',
+        data: editingBrand.data && editingBrand.data.length > 0 ? editingBrand.data : [INITIAL_BENEFIT],
+      });
+      setPreviewUrl(editingBrand.brandImg || '');
+      setSelectedFile(null);
+    } else {
+      setFormData({
+        brandName: '',
+        brandImg: '',
+        categoryId: 1,
+        usageLimit: '',
+        usageMethod: '',
+        storeType: 'OFFLINE',
+        data: [INITIAL_BENEFIT],
+      });
+      setPreviewUrl('');
+      setSelectedFile(null);
+    }
+  }, [editingBrand]);
+
+  const convertFileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+      setFormData(prev => ({ ...prev, brandImg: url }));
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const invalidBenefits = formData.data.filter(benefit => !benefit.description.trim());
+    if (invalidBenefits.length > 0) {
+      alert('모든 혜택의 설명을 입력해주세요.');
+      return;
+    }
+    
+    try {
+      let finalImageUrl = formData.brandImg;
+      if (selectedFile) {
+        finalImageUrl = await convertFileToBase64(selectedFile);
+      }
+    
+      const finalData = {
+        ...formData,
+        brandImg: finalImageUrl,
+      };
+      
+      if (editingBrand) {
+        const changedFields: AdminBrandUpdateRequest = {};
+        if (finalData.brandName !== editingBrand.brandName) {
+          changedFields.brandName = finalData.brandName;
+        }
+        if (selectedFile || finalData.brandImg !== editingBrand.brandImg) {
+          changedFields.brandImg = finalData.brandImg;
+        }
+        if (finalData.categoryId !== editingBrand.categoryId) {
+          changedFields.categoryId = finalData.categoryId;
+        }
+        if (finalData.usageLimit !== editingBrand.usageLimit) {
+          changedFields.usageLimit = finalData.usageLimit;
+        }
+        if (finalData.usageMethod !== editingBrand.usageMethod) {
+          changedFields.usageMethod = finalData.usageMethod;
+        }
+        if (finalData.storeType !== editingBrand.storeType) {
+          changedFields.storeType = finalData.storeType;
+        }
+        if (JSON.stringify(finalData.data) !== JSON.stringify(editingBrand.data)) {
+          changedFields.data = finalData.data;
+        }
+        if (Object.keys(changedFields).length > 0) {
+          await updateMutation.mutateAsync({ brandId: editingBrand.brandId, data: changedFields });
+        } else {
+          toast.info('변경된 내용이 없습니다.');
+        }
+      } else {
+        await createMutation.mutateAsync(finalData);
+      }
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      toast.error(`브랜드 저장 실패: ${errorMessage}`);
+    }
+  };
+
+  const addBenefit = () => {
+    setFormData(prev => ({
+      ...prev,
+      data: [...prev.data, { ...INITIAL_BENEFIT }],
+    }));
+  };
+
+  const removeBenefit = (index: number) => {
+    if (formData.data.length > 1) {
+      setFormData(prev => ({
+        ...prev,
+        data: prev.data.filter((_, i) => i !== index),
+      }));
+    }
+  };
+
+  const updateBenefit = (index: number, field: keyof AdminBrandBenefit, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      data: prev.data.map((benefit, i) => 
+        i === index ? { ...benefit, [field]: value } : benefit
+      ),
+    }));
+  };
+
+  const isSubmitting = createMutation.isPending || updateMutation.isPending;
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-gray-900">
+          {editingBrand ? '브랜드 수정' : '브랜드 추가'}
+        </h3>
+        <Button variant="ghost" size="sm" onClick={onCancel}>
+          <XMarkIcon className="h-4 w-4" />
+        </Button>
+      </div>
+      <div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="brandName">브랜드명 *</Label>
+              <Input
+                id="brandName"
+                value={formData.brandName}
+                onChange={(e) => setFormData(prev => ({ ...prev, brandName: e.target.value }))}
+                required
+                placeholder={FORM_PLACEHOLDERS.brandName}
+              />
+            </div>
+            
+            <div>
+              <Label>카테고리 *</Label>
+              <div className="mt-2">
+                <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto p-2 border rounded-lg bg-gray-50">
+                  {ADMIN_CATEGORIES.map(category => (
+                    <button
+                      key={category.id}
+                      type="button"
+                      onClick={() => setFormData(prev => ({ ...prev, categoryId: category.id }))}
+                      className={`px-2 sm:px-3 py-2 rounded-lg border text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-center ${
+                        formData.categoryId === category.id
+                          ? `${CATEGORY_STYLES[category.id]?.selected} border-2 border-current shadow-md`
+                          : `${CATEGORY_STYLES[category.id]?.unselected} bg-white text-gray-600 border-gray-300`
+                      }`}
+                    >
+                      {formData.categoryId === category.id && (
+                        <CheckIcon className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                      )}
+                      <span className="truncate">{category.name}</span>
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  브랜드의 카테고리를 선택해주세요
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <Label>브랜드 이미지 *</Label>
+            <div className="mt-2 space-y-3">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <Input
+                  type="file"
+                  accept={FILE_UPLOAD_CONFIG.accept}
+                  onChange={handleFileChange}
+                  className="flex-1 w-full"
+                />
+                {previewUrl && (
+                  <img 
+                    src={previewUrl} 
+                    alt="미리보기" 
+                    className="w-16 h-16 rounded-lg object-cover border border-gray-200 flex-shrink-0"
+                  />
+                )}
+              </div>
+              <p className="text-xs text-gray-500">
+                {FILE_UPLOAD_CONFIG.description}
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="usageLimit">사용 제한 *</Label>
+              <Input
+                id="usageLimit"
+                value={formData.usageLimit}
+                onChange={(e) => setFormData(prev => ({ ...prev, usageLimit: e.target.value }))}
+                placeholder={FORM_PLACEHOLDERS.usageLimit}
+                required
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="storeType">매장 타입 *</Label>
+              <Select
+                value={formData.storeType}
+                onValueChange={(value: 'ONLINE' | 'OFFLINE') => setFormData(prev => ({ ...prev, storeType: value }))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="매장 타입을 선택하세요" />
+                </SelectTrigger>
+                <SelectContent>
+                  {STORE_TYPE_OPTIONS.map(option => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div>
+            <Label htmlFor="usageMethod">사용 방법 *</Label>
+            <Textarea
+              id="usageMethod"
+              value={formData.usageMethod}
+              onChange={(e) => setFormData(prev => ({ ...prev, usageMethod: e.target.value }))}
+              placeholder={FORM_PLACEHOLDERS.usageMethod}
+              required
+              rows={3}
+              className="min-h-[80px]"
+            />
+          </div>
+
+          <div>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-3">
+              <Label className="text-base font-medium">혜택 정보 *</Label>
+              <Button type="button" onClick={addBenefit} variant="outline" size="sm" className="flex-shrink-0">
+                <PlusIcon className="h-4 w-4 mr-1" />
+                혜택 추가
+              </Button>
+            </div>
+            
+            <div className="space-y-4">
+              {formData.data.map((benefit, index) => (
+                <div key={index} className="border rounded-lg p-4 md:p-6 bg-gray-50">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="font-medium text-base">혜택 {index + 1}</h4>
+                    {formData.data.length > 1 && (
+                      <Button
+                        type="button"
+                        onClick={() => removeBenefit(index)}
+                        variant="outline"
+                        size="sm"
+                        className="text-red-600 hover:text-red-700 flex-shrink-0"
+                      >
+                        <TrashIcon className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                  
+                  <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-4">
+                    <div className="lg:col-span-1 md:col-span-2">
+                      <Label className="block mb-2">등급 *</Label>
+                      <div className="flex flex-wrap gap-2">
+                        {GRADE_BADGES.map((badge) => (
+                          <button
+                            key={badge.value}
+                            type="button"
+                            onClick={() => updateBenefit(index, 'grade', badge.value)}
+                            className={`px-3 py-1 rounded-full border text-sm font-medium transition-colors whitespace-nowrap ${
+                              benefit.grade === badge.value
+                                ? badge.color
+                                : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
+                            }`}
+                          >
+                            {benefit.grade === badge.value && (
+                              <CheckIcon className="h-3 w-3 inline mr-1" />
+                            )}
+                            {badge.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="lg:col-span-1 md:col-span-1">
+                      <Label>혜택 타입 *</Label>
+                      <Select
+                        value={benefit.benefitType}
+                        onValueChange={(value: 'DISCOUNT' | 'GIFT') => updateBenefit(index, 'benefitType', value)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="혜택 타입을 선택하세요" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {BENEFIT_TYPE_OPTIONS.map(option => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="lg:col-span-1 md:col-span-1">
+                      <Label>설명 *</Label>
+                      <Input
+                        value={benefit.description}
+                        onChange={(e) => updateBenefit(index, 'description', e.target.value)}
+                        placeholder={FORM_PLACEHOLDERS.benefitDescription}
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex justify-end gap-3 pt-4 border-t">
+            <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>
+              취소
+            </Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? '저장 중...' : (editingBrand ? '수정하기' : '추가하기')}
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+} 

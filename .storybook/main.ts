@@ -20,6 +20,17 @@ const config: StorybookConfig = {
     config.resolve.alias = {
       ...config.resolve.alias,
       '@': path.resolve(__dirname, '../src'),
+      '@extra-info': path.resolve(__dirname, '../src/features/extra-info'),
+      '@benefit': path.resolve(__dirname, '../src/features/benefit'),
+      '@home': path.resolve(__dirname, '../src/features/home'),
+      '@paths': path.resolve(__dirname, '../src/routes/path.ts'),
+      '@user': path.resolve(__dirname, '../src/features/user'),
+      '@mypage': path.resolve(__dirname, '../src/features/mypage'),
+      '@mymap': path.resolve(__dirname, '../src/features/mymap'),
+      '@admin': path.resolve(__dirname, '../src/features/admin'),
+      '@kakao-map': path.resolve(__dirname, '../src/features/kakao-map'),
+      '@recommendation': path.resolve(__dirname, '../src/features/recommendation'),
+      '@barcode': path.resolve(__dirname, '../src/features/barcode'),
     };
 
     config.publicDir = path.resolve(__dirname, '../public');

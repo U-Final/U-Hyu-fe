@@ -7,21 +7,48 @@
 @custom-variant dark (&:is(.dark *));
 
 #root {
-  display: flex;
-  justify-content: center;
-  box-sizing: border-box;
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
-/* src/index.css */
 .scrollbar-hidden::-webkit-scrollbar {
   display: none;
+  width: 0;
+  height: 0;
+}
+
+/* Swiper pagination 고정 위치 스타일 */
+.swiper-pagination {
+  position: relative !important;
+  bottom: auto !important;
+  left: auto !important;
+  transform: none !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin-bottom: 1rem !important;
+  gap: 0.5rem !important;
+}
+
+.swiper-pagination-bullet {
+  width: 8px !important;
+  height: 8px !important;
+  background: #d1d5db !important;
+  opacity: 1 !important;
+  transition: all 0.3s ease !important;
+}
+
+.swiper-pagination-bullet-active {
+  background: #3b82f6 !important;
+  transform: scale(1.2) !important;
 }
 
 .scrollbar-hidden {
-  -ms-overflow-style: none; /* IE, Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  scrollbar-color: transparent transparent;
 }
 
 /* Pretendard 폰트 로드 - 로컬 파일 사용 */
@@ -99,18 +126,18 @@
 
 /* Tailwind CSS v4 테마 설정 */
 @theme {
-  --color-primary-50: #f0f7ff;
-  --color-primary-100: #e6ebff;
-  --color-primary-200: #dfeeff;
-  --color-primary-400: #b0b8c1;
-  --color-primary-600: #0064ff;
-  --color-primary-700: #0052d9;
-  --color-primary-800: #202632;
-  --color-primary-900: #1a1f2e;
+  --color-primary-50: #fdf2f8;
+  --color-primary-100: #fce7f3;
+  --color-primary-200: #fbcfe8;
+  --color-primary-400: #f9a8d4;
+  --color-primary-600: #e6007e;
+  --color-primary-700: #be185d;
+  --color-primary-800: #9d174d;
+  --color-primary-900: #831843;
 
-  --color-brand-blue: #0064ff;
-  --color-brand-blueLight: #dfeeff;
-  --color-brand-blueMuted: #e6ebff;
+  --color-brand-blue: #e6007e;
+  --color-brand-blueLight: #fce7f3;
+  --color-brand-blueMuted: #fdf2f8;
   --color-brand-dark: #202632;
   --color-brand-darkMuted: #b0b8c1;
   --color-brand-light: #f5f5f5;
@@ -121,13 +148,13 @@
 
   --color-text-primary: #202632;
   --color-text-secondary: #4e5867;
-  --color-text-accent: #3182f6;
+  --color-text-accent: #e6007e;
 
-  --color-button-primary: #0064ff;
+  --color-button-primary: #e6007e;
   --color-button-secondary: #d1d6da;
 
   --color-etc-BG-blue: #f2f4f6;
-  --color-etc-TXT-blue: #3182f6;
+  --color-etc-TXT-blue: #e6007e;
   --color-etc-TXT-gray: #4e5867;
   --color-etc-BT-blue: #d1d6da;
 
@@ -185,9 +212,9 @@
 /* 기본 변수 설정 */
 :root {
   /* BG Colors */
-  --bg-primary: #0064ff;
-  --bg-primary-hover: #0053d8;
-  --bg-primary-loading: #4d93ff;
+  --bg-primary: #e6007e;
+  --bg-primary-hover: #cc0066;
+  --bg-primary-loading: #ff4da6;
   --bg-black: #17171b;
   --bg-white: #ffffff;
   --bg-white-hover: #f2f6fc;
@@ -196,6 +223,7 @@
   --bg-blue: #eff6ff;
   --bg-purple: #faf5ff;
   --bg-star: #ffe500;
+  --bg-sparkle: #ffd700;
   --bg-secondary: #e6f0ff;
   --bg-secondary-hover: #d6e7ff;
   --bg-gray: #b0b8c1;
@@ -203,26 +231,130 @@
 
   /* Border Colors */
   --border-ghost: #f2f4f6;
-  --border-primary: #d0e4ff;
-  --border-primary-hover: #b0cce6;
+  --border-primary: #e6007e;
+  --border-primary-hover: #cc0066;
   --border-gray: #d1d6da;
   --border-light-gray: #eceef0;
 
   /* Text Colors */
-  --text-primary: #3182f6;
+  --text-primary: #e6007e;
   --text-black: #202632;
   --text-tertiary: #d9d9d9;
   --text-secondary: #71717a;
   --text-gray: #b0b8c1;
-  --text-red: #dc2625;
+  --text-red: #ff3b30;
+  --text-orange: #ff9500;
+  --text-yellow: #ffcc00;
+  --text-green: #34c759;
   --text-white: #ffffff;
   --text-success: #2db745;
   --text-warning: #feb93f;
   --text-brown: #b4630a;
   --text-purple: #7e22ce;
+
+  /* 관리자 페이지 통계 탭 색상 */
+  --admin-bookmark: #ef4444; /* 즐겨찾기 - 빨간색 */
+  --admin-filtering: #22c55e; /* 필터링 - 초록색 */
+  --admin-recommendation: #f59e0b; /* 추천 - 주황색 */
+  --admin-recommendation-light: #fbbf24; /* 추천 - 밝은 주황색 */
+  --admin-membership: #8b5cf6; /* 멤버십 - 보라색 */
+  --admin-membership-light: #a855f7; /* 멤버십 - 밝은 보라색 */
+
+  /* 차트 기본 색상 */
+  --chart-primary: #8884d8; /* 기본 보라색 */
+  --chart-secondary: #82ca9d; /* 기본 초록색 */
+  --chart-tertiary: #ffc658; /* 기본 노란색 */
+  --chart-quaternary: #ff7300; /* 기본 주황색 */
+
+  /* 관리자 카테고리 색상 */
+  --category-app: #6366f1; /* APP/기기 - 인디고색 */
+  --category-movie: #ef4444; /* 영화/미디어 - 빨간색 */
+  --category-themepark: #22c55e; /* 테마파크 - 초록색 */
+  --category-waterpark: #f59e0b; /* 워터파크/아쿠아리움 - 주황색 */
+  --category-activity: #8b5cf6; /* 액티비티 - 보라색 */
+  --category-beauty: #ec4899; /* 뷰티 - 핑크색 */
+  --category-health: #06b6d4; /* 건강 - 청록색 */
+  --category-shopping: #f97316; /* 쇼핑 - 진한 주황색 */
+  --category-convenience: #10b981; /* 생활/편의 - 에메랄드색 */
+  --category-bakery: #fbbf24; /* 베이커리/디저트 - 노란색 */
+  --category-restaurant: #dc2626; /* 음식점 - 진한 빨간색 */
+  --category-performance: #7c3aed; /* 공연/전시 - 진한 보라색 */
+  --category-education: #059669; /* 교육 - 진한 초록색 */
+  --category-travel: #0891b2; /* 여행/교통 - 진한 청록색 */
 }
 
 @layer utilities {
+  /* Desktop responsive padding utilities */
+  .desktop-padding {
+    @media (min-width: 1024px) {
+      padding-left: calc((100vw - 500px) / 2);
+      padding-right: calc((100vw - 500px) / 2);
+    }
+    @media (min-width: 1280px) {
+      padding-left: calc((100vw - 600px) / 2);
+      padding-right: calc((100vw - 600px) / 2);
+    }
+    @media (min-width: 1536px) {
+      padding-left: calc((100vw - 700px) / 2);
+      padding-right: calc((100vw - 700px) / 2);
+    }
+  }
+
+  .desktop-padding-sheet {
+    @media (min-width: 1024px) {
+      left: calc((100vw - 500px) / 2) !important;
+      width: 350px !important;
+    }
+    @media (min-width: 1280px) {
+      left: calc((100vw - 600px) / 2) !important;
+      width: 420px !important;
+    }
+    @media (min-width: 1536px) {
+      left: calc((100vw - 700px) / 2) !important;
+      width: 490px !important;
+    }
+  }
+
+  .desktop-content-position {
+    @media (min-width: 1024px) {
+      left: calc(((100vw - 500px) / 2) + 1rem) !important;
+    }
+    @media (min-width: 1280px) {
+      left: calc(((100vw - 600px) / 2) + 1rem) !important;
+    }
+    @media (min-width: 1536px) {
+      left: calc(((100vw - 700px) / 2) + 1rem) !important;
+    }
+  }
+
+  .desktop-menu-button {
+    @media (min-width: 1024px) {
+      left: calc((100vw - 500px) / 2 + 1rem) !important;
+    }
+    @media (min-width: 1280px) {
+      left: calc((100vw - 600px) / 2 + 1rem) !important;
+    }
+    @media (min-width: 1536px) {
+      left: calc((100vw - 700px) / 2 + 1rem) !important;
+    }
+  }
+
+  /* 지도 페이지를 제외한 페이지들의 더 넓은 여백 */
+  .desktop-padding-non-map {
+    @media (min-width: 1024px) {
+      padding-left: calc((100vw - 460px) / 2);
+      padding-right: calc((100vw - 460px) / 2);
+    }
+    @media (min-width: 1280px) {
+      padding-left: calc((100vw - 560px) / 2);
+      padding-right: calc((100vw - 560px) / 2);
+    }
+    @media (min-width: 1536px) {
+      padding-left: calc((100vw - 660px) / 2);
+      padding-right: calc((100vw - 660px) / 2);
+    }
+  }
+
   /* Text Color Utilities */
   .text-primary {
     color: var(--text-primary);
@@ -242,6 +374,18 @@
   .text-red {
     color: var(--text-red);
   }
+  .text-orange {
+    color: var(--text-orange);
+  }
+  .text-yellow {
+    color: var(--text-yellow);
+  }
+  .text-sparkle {
+    color: var(--bg-sparkle);
+  }
+  .text-green {
+    color: var(--text-green);
+  }
   .text-white {
     color: var(--text-white);
   }
@@ -256,6 +400,76 @@
   }
   .text-purple {
     color: var(--text-purple);
+  }
+
+  /* 관리자 페이지 통계 탭 색상 유틸리티 */
+  .admin-bookmark {
+    color: var(--admin-bookmark);
+  }
+  .admin-filtering {
+    color: var(--admin-filtering);
+  }
+  .admin-recommendation {
+    color: var(--admin-recommendation);
+  }
+  .admin-membership {
+    color: var(--admin-membership);
+  }
+
+  /* 관리자 페이지 통계 탭 배경색 유틸리티 */
+  .bg-admin-bookmark {
+    background-color: var(--admin-bookmark);
+  }
+  .bg-admin-filtering {
+    background-color: var(--admin-filtering);
+  }
+  .bg-admin-recommendation {
+    background-color: var(--admin-recommendation);
+  }
+  .bg-admin-membership {
+    background-color: var(--admin-membership);
+  }
+
+  /* 관리자 페이지 통계 탭 호버 배경색 유틸리티 */
+  .hover\:bg-admin-bookmark:hover {
+    background-color: var(--admin-bookmark);
+  }
+  .hover\:bg-admin-filtering:hover {
+    background-color: var(--admin-filtering);
+  }
+  .hover\:bg-admin-recommendation:hover {
+    background-color: var(--admin-recommendation);
+  }
+  .hover\:bg-admin-membership:hover {
+    background-color: var(--admin-membership);
+  }
+
+  /* 차트 색상 유틸리티 */
+  .chart-primary {
+    color: var(--chart-primary);
+  }
+  .chart-secondary {
+    color: var(--chart-secondary);
+  }
+  .chart-tertiary {
+    color: var(--chart-tertiary);
+  }
+  .chart-quaternary {
+    color: var(--chart-quaternary);
+  }
+
+  /* 차트 배경색 유틸리티 */
+  .bg-chart-primary {
+    background-color: var(--chart-primary);
+  }
+  .bg-chart-secondary {
+    background-color: var(--chart-secondary);
+  }
+  .bg-chart-tertiary {
+    background-color: var(--chart-tertiary);
+  }
+  .bg-chart-quaternary {
+    background-color: var(--chart-quaternary);
   }
 
   /* Background Color Utilities */
@@ -295,6 +509,9 @@
   .bg-star {
     background-color: var(--bg-star);
   }
+  .bg-sparkle {
+    background-color: var(--bg-sparkle);
+  }
   .bg-secondary {
     background-color: var(--bg-secondary);
   }
@@ -306,6 +523,21 @@
   }
   .hover\:bg-gray-hover:hover {
     background-color: var(--bg-gray-hover);
+  }
+  .bg-red-star {
+    background-color: var(--bg-red-star);
+  }
+  .bg-orange-star {
+    background-color: var(--bg-orange-star);
+  }
+  .bg-yellow-star {
+    background-color: var(--bg-yellow-star);
+  }
+  .bg-green-star {
+    background-color: var(--bg-green-star);
+  }
+  .bg-purple-star {
+    background-color: var(--bg-purple-star);
   }
 
   /* Border Color Utilities */
@@ -345,8 +577,17 @@
 @layer base {
   * {
     box-sizing: border-box;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
   }
 
+  *::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  html,
   body {
     font-family: 'Pretendard', system-ui, sans-serif;
     background-color: var(--color-background);
@@ -356,6 +597,7 @@
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    touch-action: manipulation;
   }
 
   /* 기본 요소 스타일링 */
@@ -554,4 +796,44 @@
 
 .shadow-nav {
   box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* 필터탭 스크롤 강제 적용 */
+.filter-tabs-scroll {
+  overflow-x: scroll !important;
+  overflow-y: visible !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-x !important;
+  will-change: scroll-position !important;
+  position: relative !important;
+}
+
+.filter-tabs-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-tab-button {
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  min-width: fit-content !important;
+}
+
+/* 모바일에서 지정된 스크롤 영역만 스크롤 허용 */
+@media (max-width: 640px) {
+  /* 바텀시트 콘텐츠 영역 스크롤 허용 */
+  [data-scrollable] {
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
+  }
+
+  /* 메인 콘텐츠 영역 스크롤 허용 */
+  #main-content {
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
+    height: 100vh !important;
+  }
 }

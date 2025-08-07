@@ -23,10 +23,15 @@ interface AddStoreProps {
 }
 
 const AddStoreModal: FC<AddStoreProps> = ({ storeId }) => {
-  const { data, isLoading, isError } = useStoreBookmarkStatusQuery(storeId);
+  const { data, refetch, isLoading, isError } =
+    useStoreBookmarkStatusQuery(storeId);
   const toggleMutation = useToggleMyMapStoreMutation();
   const toggleFavoriteMutation = useToggleFavoriteMutation();
   const closeModal = useModalStore(state => state.closeModal);
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   // my map 초기 체크 상태 저장용
   const [initialCheckedMap, setInitialCheckedMap] = useState<

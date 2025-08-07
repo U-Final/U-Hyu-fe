@@ -160,47 +160,64 @@
 
 ## 관리자(Admin)
 
-<table>
-  <tr>
-    <td style="border:1px solid #ccc; border-radius:8px; padding:8px; text-align:center;">
-      <img src="docs/gif/admin.gif" alt="Admin" width="400" />
-      <div style="margin-top:6px; font-size:14px;">관리자 대시보드</div>
-    </td>
-  </tr>
-</table>
+### 관리자(LG U+) 통계 시스템
+- 저장된 매장 통계 조회 기능
+- 즐겨찾기 + My Map에 추가한 개수를 카테고리별, 브랜드별로 조회
+- 필터링 통계 조회 기능
+- 사용자들이 필터링을 사용한 횟수를 카테고리 별로 조회
+- 추천 통계 조회 기능
+- 멤버십 사용 통계 조회 기능
 
-### 브랜드 제휴 관리
-- 제휴 브랜드 추가
-- 제휴 브랜드 정보 수정
-- 제휴 브랜드 삭제
+- 전체 통계 조회 기능
+- 전체 사용자의 저장된 매장 수 합계 조회
+- 전체 사용자의 필터링 합계 조회
+- 전체 사용자의 멤버십 사용 합계 조회
 
-### 플랫폼 통계
-- DAU / MAU
-- 카테고리, 브랜드별 추천 횟수 통계
-- 카테고리, 브랜드별 멤버십 사용 횟수 통계
-- 카테고리별 필터링 수 통계
-- 카테고리, 브랜드별 즐겨찾기 수 통계
+<img width="977" height="426" alt="전체 통계" src="https://github.com/user-attachments/assets/3c8beb33-a7eb-40d1-8cc1-ecae03ad7da7" />
 
-### 즐겨찾기 분석
-- 전체 즐겨찾기 수
-- 매장별 즐겨찾기 순위
-- 카테고리 및 지역 분포
 
-### 브랜드 성과 비교
-- 방문률 / 할인 사용률 기반 비교
+### 관리자(LG U+) 기능
+- 제휴처 관리 시스템
+- 제휴처 추가,조회,수정,삭제 기능
+  
+<img width="460" height="502" alt="조회" src="https://github.com/user-attachments/assets/822610bc-57f3-463b-9d60-2ad0198063ad" />
+<img width="848" height="466" alt="추가, 수정, 삭제" src="https://github.com/user-attachments/assets/18fb234b-0e91-4abc-be7c-d61a79d7239f" />
 
-### 사용자 맞춤 통계
-- 받은 혜택 금액, 관심 브랜드 분석 등
+<br/>
+
+## Progressive Web App (PWA) 
+- 앱 설치 가능: 별도 앱 마켓 없이도 홈 화면에 추가하여 빠르게 접근
+- 지도 앱에 최적화된 경험: 위치 기반 기능을 자주 사용하는 사용자에게 앱 수준의 빠른 진입과 사용성을 제공
+- 재방문율 향상: 설치된 앱은 사용자 유입을 꾸준히 유도
+
+<img width="910" height="582" alt="스크린샷 2025-08-07 오후 2 00 52" src="https://github.com/user-attachments/assets/48a196c7-1055-4bbb-8a70-0a684b507920" />
 
 <br/>
 
 ## 기술 스택
-- React 19
-- TypeScript
-- Tailwind CSS
-- Zustand, Tanstack-query
-- Storybook
-- Prettier, ESLint, Husky
+
+### 프레임워크 & 스타일
+<p>
+  <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white"/>
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white"/>
+  <img src="https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white"/>
+  <img src="https://img.shields.io/badge/shadcn/ui-111827?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/Radix_UI-161618?style=for-the-badge"/>
+</p>
+### 상태관리 & 통신
+<p>
+  <img src="https://img.shields.io/badge/Zustand-000000?style=for-the-badge&logo=zotero&logoColor=white"/>
+  <img src="https://img.shields.io/badge/TanStack_Query-FF4154?style=for-the-badge&logo=react-query&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white"/>
+</p>
+### 개발 도구
+<p>
+  <img src="https://img.shields.io/badge/Storybook-FF4785?style=for-the-badge&logo=storybook&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Recharts-8884D8?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white"/>
+  <img src="https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=black"/>
+</p>
 
 <br/>
 
@@ -255,8 +272,12 @@ src/
 ## 로컬 실행 방법
 
 ```bash
-npm run build
+# 1. 의존성 설치
+npm install
+
+# 2. 개발 서버 실행
 npm run dev
+
 ```
 
 <br/>

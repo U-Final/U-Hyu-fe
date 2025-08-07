@@ -137,14 +137,16 @@
 
 ## 마이페이지 (MyPage)
 
-- 사용자 정보 조회 및 수정
-- 관심 브랜드 및 카테고리 설정
+- 사용자 정보 조회 및 관리
+- 멤버십 등급 및 관심 브랜드 선택/해제
 
 <img width="479" height="480" alt="마이페이지" src="https://github.com/user-attachments/assets/e18a70ae-305a-4cb8-aa20-2281aa515808" />
 
-- 개인화된 통계 확인
+- 개인별 활동내역 확인 (총 멤버십 사용 혜택 금액, 사용자 클릭 패턴 관심사 결과, 최근 방문 기록)
+- 즐겨찾기 목록 조회 및 관리 (즐겨찾기 내역이 없을 시, 지도 페이지로 이동 유도 UI)
+- UX/UI 기반 반응형 토글 탭 화면 전환 기능
 
-<img width="610" height="438" alt="개인화된 통계 확인" src="https://github.com/user-attachments/assets/4645552b-e695-4273-b1f2-c34299c93521" />
+<img width="1728" height="972" alt="image" src="https://github.com/user-attachments/assets/783c3b80-f034-4e07-ba9a-f424a6c5a37f" />
 
 <br/>
 
@@ -161,24 +163,25 @@
 ## 관리자(Admin)
 
 ### 관리자(LG U+) 통계 시스템
-- 저장된 매장 통계 조회 기능
-- 즐겨찾기 + My Map에 추가한 개수를 카테고리별, 브랜드별로 조회
-- 필터링 통계 조회 기능
-- 사용자들이 필터링을 사용한 횟수를 카테고리 별로 조회
-- 추천 통계 조회 기능
-- 멤버십 사용 통계 조회 기능
 
-- 전체 통계 조회 기능
-- 전체 사용자의 저장된 매장 수 합계 조회
+- U-HYU 전체 통계 조회 기능
+- 전체 사용자의 저장된 매장 수 합계 조회 (즐겨찾기 + MyMap) 
 - 전체 사용자의 필터링 합계 조회
 - 전체 사용자의 멤버십 사용 합계 조회
+
+- 저장된 매장 통계 상세 조회 기능 (저장된 매장, 필터링, 추천, 멤버십)
+- 카테고리별 브랜드 상세 조회
+- 차트 시각화와 데이터 크기순 정렬로 인한 직관적 분석 (tooltip 적용)
+- 카테고리 및 해당 브랜드별 정확한 수치 나열
 
 <img width="977" height="426" alt="전체 통계" src="https://github.com/user-attachments/assets/3c8beb33-a7eb-40d1-8cc1-ecae03ad7da7" />
 
 
 ### 관리자(LG U+) 기능
 - 제휴처 관리 시스템
+- 검색 및 필터링으로 인한 실시간 조회
 - 제휴처 추가,조회,수정,삭제 기능
+- UX/UI 기반 반응형 토글 탭 화면 전환 기능
   
 <img width="460" height="502" alt="조회" src="https://github.com/user-attachments/assets/822610bc-57f3-463b-9d60-2ad0198063ad" />
 <img width="848" height="466" alt="추가, 수정, 삭제" src="https://github.com/user-attachments/assets/18fb234b-0e91-4abc-be7c-d61a79d7239f" />

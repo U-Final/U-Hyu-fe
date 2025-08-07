@@ -23,7 +23,6 @@ export const SearchResultSummary: React.FC<SearchResultSummaryProps> = ({
   category,
   className = '',
 }) => {
-  // 카테고리 한글 매핑
   const getCategoryName = (cat?: string) => {
     const categoryMap: { [key: string]: string } = {
       'all': '전체',

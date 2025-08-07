@@ -15,7 +15,6 @@ interface AdminBrandCardProps {
   onSuccessEdit?: () => void;
 }
 
-// 혜택 타입을 한글로 변환하는 함수
 const getBenefitTypeLabel = (benefitType: string) => {
   switch (benefitType) {
     case 'DISCOUNT':
@@ -27,7 +26,6 @@ const getBenefitTypeLabel = (benefitType: string) => {
   }
 };
 
-// 매장 타입을 한글로 변환하는 함수
 const getStoreTypeLabel = (storeType: string) => {
   switch (storeType) {
     case 'ONLINE':
@@ -39,7 +37,6 @@ const getStoreTypeLabel = (storeType: string) => {
   }
 };
 
-// 매장 타입별 뱃지 스타일
 const getStoreTypeBadgeStyle = (storeType: string) => {
   switch (storeType) {
     case 'ONLINE':
@@ -66,7 +63,6 @@ export function AdminBrandCard({ brand, onEdit, onDelete, isEditing, onCancelEdi
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-4">
-        {/* 기본 정보 */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
             <div className="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center flex-shrink-0">
@@ -128,7 +124,6 @@ export function AdminBrandCard({ brand, onEdit, onDelete, isEditing, onCancelEdi
           </div>
         </div>
 
-        {/* 확장된 상세 정보 */}
         {isExpanded && (
           <div className="mt-4 pt-4 border-t border-gray-200">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -158,7 +153,6 @@ export function AdminBrandCard({ brand, onEdit, onDelete, isEditing, onCancelEdi
               </div>
             </div>
 
-            {/* 혜택 정보 */}
             <div className="mt-4">
               <h4 className="font-medium text-gray-900 mb-3">혜택 상세</h4>
               <div className="space-y-3">
@@ -178,7 +172,6 @@ export function AdminBrandCard({ brand, onEdit, onDelete, isEditing, onCancelEdi
           </div>
         )}
 
-        {/* 수정 폼 */}
         {isEditing && (
           <div className="mt-4 pt-4 border-t border-gray-200">
             <AdminBrandForm

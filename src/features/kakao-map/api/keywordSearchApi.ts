@@ -133,7 +133,6 @@ export const getKeywordSearch = async (
     throw new Error('검색 키워드가 필요합니다.');
   }
 
-  // API 요청 파라미터 구성
   const params = new URLSearchParams();
   params.append('query', keyword.trim());
 
@@ -174,7 +173,6 @@ export const getKeywordSearch = async (
   const url = `https://dapi.kakao.com/v2/local/search/keyword.json?${params.toString()}`;
 
   try {
-    // 카카오 API 전용 인증 헤더 사용
     const headers = createKakaoAuthHeaders();
 
     const response = await fetch(url, {
@@ -194,7 +192,6 @@ export const getKeywordSearch = async (
     const data: KakaoKeywordSearchResponse = await response.json();
     const normalizedPlaces = data.documents.map(normalizeKakaoPlace);
 
-    // 페이지네이션 정보 구성
     const pagination: KakaoPagination | null =
       data.meta.total_count > 0
         ? {

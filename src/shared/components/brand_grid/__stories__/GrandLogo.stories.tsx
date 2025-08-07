@@ -49,27 +49,21 @@ const meta: Meta<typeof BrandLogo> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// 기본 스토리 (CGV)
 export const Default: Story = {
   args: {
-    brand: BRANDS[0], // CGV
+    brand: BRANDS[0],
     isSelected: false,
-    onClick: () => {
-      // 브랜드 클릭 처리
-    },
+    onClick: () => {},
     delay: 0,
     disabled: false,
   },
 };
 
-// 선택된 상태
 export const Selected: Story = {
   args: {
-    brand: BRANDS[1], // 베스킨라빈스
+    brand: BRANDS[1],
     isSelected: true,
-    onClick: () => {
-      // 브랜드 클릭 처리
-    },
+    onClick: () => {},
     delay: 0,
     disabled: false,
   },
@@ -83,14 +77,11 @@ export const Selected: Story = {
   },
 };
 
-// 비활성화된 상태
 export const Disabled: Story = {
   args: {
-    brand: BRANDS[2], // 파리바게뜨
+    brand: BRANDS[2],
     isSelected: false,
-    onClick: () => {
-      // 브랜드 클릭 처리
-    },
+    onClick: () => {},
     delay: 0,
     disabled: true,
   },
@@ -104,14 +95,11 @@ export const Disabled: Story = {
   },
 };
 
-// 선택된 상태 + 비활성화
 export const SelectedDisabled: Story = {
   args: {
-    brand: BRANDS[3], // GS25
+    brand: BRANDS[3],
     isSelected: true,
-    onClick: () => {
-      // 브랜드 클릭 처리
-    },
+    onClick: () => {},
     delay: 0,
     disabled: true,
   },
@@ -124,14 +112,11 @@ export const SelectedDisabled: Story = {
   },
 };
 
-// 애니메이션 지연 효과
 export const WithDelay: Story = {
   args: {
-    brand: BRANDS[4], // 롯데시네마
+    brand: BRANDS[4],
     isSelected: false,
-    onClick: () => {
-      // 브랜드 클릭 처리
-    },
+    onClick: () => {},
     delay: 0.5,
     disabled: false,
   },
@@ -145,12 +130,11 @@ export const WithDelay: Story = {
   },
 };
 
-// 클릭 불가능한 상태 (읽기 전용)
 export const ReadOnly: Story = {
   args: {
-    brand: BRANDS[5], // 굽네치킨
+    brand: BRANDS[5],
     isSelected: true,
-    onClick: undefined, // 클릭 핸들러 없음
+    onClick: undefined,
     delay: 0,
     disabled: false,
   },
@@ -164,7 +148,6 @@ export const ReadOnly: Story = {
   },
 };
 
-// 모든 브랜드 미리보기
 export const AllBrands: Story = {
   render: () => (
     <div
@@ -179,10 +162,8 @@ export const AllBrands: Story = {
         <BrandLogo
           key={brand.id}
           brand={brand}
-          isSelected={index % 3 === 0} // 일부만 선택된 상태로 표시
-          onClick={() => {
-            // 브랜드 클릭 처리
-          }}
+          isSelected={index % 3 === 0}
+          onClick={() => {}}
           delay={index * 0.1}
           disabled={false}
         />
@@ -200,7 +181,6 @@ export const AllBrands: Story = {
   },
 };
 
-// 이미지 로드 실패 테스트
 export const ImageLoadError: Story = {
   args: {
     brand: {
@@ -209,12 +189,10 @@ export const ImageLoadError: Story = {
       color: '#000000',
       bgColor: 'bg-black',
       textColor: 'text-white',
-      imagePath: '/non-existent-image.png', // 존재하지 않는 이미지
+      imagePath: '/non-existent-image.png',
     },
     isSelected: false,
-    onClick: () => {
-      // 브랜드 클릭 처리
-    },
+    onClick: () => {},
     delay: 0,
     disabled: false,
   },
@@ -227,7 +205,6 @@ export const ImageLoadError: Story = {
   },
 };
 
-// 긴 브랜드명 테스트
 export const LongBrandName: Story = {
   args: {
     brand: {
@@ -239,9 +216,7 @@ export const LongBrandName: Story = {
       imagePath: '/images/brands/CGV.png',
     },
     isSelected: false,
-    onClick: () => {
-      // 브랜드 클릭 처리
-    },
+    onClick: () => {},
     delay: 0,
     disabled: false,
   },
@@ -254,7 +229,6 @@ export const LongBrandName: Story = {
   },
 };
 
-// 다양한 상태 비교
 export const StateComparison: Story = {
   render: () => (
     <div
@@ -271,7 +245,6 @@ export const StateComparison: Story = {
           brand={BRANDS[0]}
           isSelected={false}
           onClick={() => {
-            // 기본 상태 클릭 처리
           }}
           delay={0}
           disabled={false}
@@ -283,7 +256,6 @@ export const StateComparison: Story = {
           brand={BRANDS[0]}
           isSelected={true}
           onClick={() => {
-            // 선택된 상태 클릭 처리
           }}
           delay={0}
           disabled={false}
@@ -295,7 +267,6 @@ export const StateComparison: Story = {
           brand={BRANDS[0]}
           isSelected={false}
           onClick={() => {
-            // 비활성화 상태 클릭 처리
           }}
           delay={0}
           disabled={true}
@@ -307,7 +278,6 @@ export const StateComparison: Story = {
           brand={BRANDS[0]}
           isSelected={true}
           onClick={() => {
-            // 선택됨 + 비활성화 상태 클릭 처리
           }}
           delay={0}
           disabled={true}

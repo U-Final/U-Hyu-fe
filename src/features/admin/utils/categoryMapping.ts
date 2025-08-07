@@ -19,18 +19,14 @@ export const filterDataByCategory = <T extends { categoryName: string; categoryI
   data: T[],
   selectedCategory: string
 ): T[] => {
-  // 전체 선택시 모든 데이터 반환
   if (selectedCategory === 'all') {
     return data;
   }
-  
-  // 숫자 카테고리 ID로 직접 필터링
   const categoryId = parseInt(selectedCategory, 10);
   if (!isNaN(categoryId)) {
     return data.filter(item => item.categoryId === categoryId);
   }
   
-  // 카테고리 이름으로 매핑하여 필터링
   const categoryMap = getCategoryMapping();
   const categoryNames = categoryMap[selectedCategory];
   if (categoryNames) {

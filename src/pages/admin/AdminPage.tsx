@@ -25,7 +25,6 @@ import type { CategoryId } from '@admin/constants/categories';
 
 type TabKey = 'bookmark' | 'filtering' | 'recommendation' | 'membership';
 
-// 통계 탭 정의
 const STATS_TABS = [
   { label: '저장된 매장', value: 'bookmark', icon: BookmarkIcon, color: 'var(--admin-bookmark)' },
   { label: '필터링', value: 'filtering', icon: FunnelIcon, color: 'var(--admin-filtering)' },
@@ -38,10 +37,8 @@ export default function AdminPage() {
   const [selectedStatsTab, setSelectedStatsTab] = useState<TabKey>('bookmark');
   const [selectedCategory, setSelectedCategory] = useState<CategoryId>('all');
 
-  // 전체 통계는 항상 로드 (탭 변경 시마다 재호출)
   const { data: totalStats, isLoading: totalLoading, refetch: refetchTotalStats } = useAdminTotalStatsQuery();
 
-  // 선택된 통계 탭에 따라 해당 API만 호출
   const { data: bookmarkStats, isLoading: bookmarkLoading, refetch: refetchBookmarkStats } = useAdminBookmarkStatsQuery({
     enabled: mainTab === 'stats' && selectedStatsTab === 'bookmark'
   });
@@ -60,7 +57,6 @@ export default function AdminPage() {
 
 
 
-  // 통계 탭 변경 핸들러
   const handleStatsTabChange = (tab: string) => {
     const newTab = tab as TabKey;
     setSelectedStatsTab(newTab);
@@ -83,7 +79,6 @@ export default function AdminPage() {
     }
   };
 
-  // 메인 탭 변경 핸들러
   const handleMainTabChange = (tab: string) => {
     const newTab = tab as 'stats' | 'brands';
     setMainTab(newTab);

@@ -9,25 +9,21 @@ interface RecommendedStoreInfoWindowProps {
   position: { lat: number; lng: number };
 }
 
-// 텍스트 길이 제한 상수
 const TEXT_LIMITS = {
-  benefit: 80, // 혜택 설명을 더 길게 허용
-  address: 40, // 주소도 약간 더 길게
-  storeName: 25, // 매장명도 약간 더 길게
+  benefit: 80,
+  address: 40,
+  storeName: 25,
 };
 
-// 텍스트가 제한을 초과하는지 확인하는 헬퍼 함수
 const shouldShowExpand = (text: string, limit: number): boolean => {
   return text.length > limit;
 };
 
-// 축약된 텍스트를 반환하는 헬퍼 함수
 const getTruncatedText = (text: string, limit: number): string => {
   if (text.length <= limit) return text;
   return text.substring(0, limit) + '...';
 };
 
-// 더보기 버튼 컴포넌트
 const ExpandButton: React.FC<{
   isExpanded: boolean;
   onClick: () => void;
@@ -78,7 +74,6 @@ const ExpandButton: React.FC<{
   );
 };
 
-// StoreInfoWindow와 동일한 애니메이션 설정
 const bubbleVariants = {
   hidden: {
     opacity: 0,
@@ -256,7 +251,6 @@ export const RecommendStoreInfoWindow: React.FC<
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // 섹션 확장/축소 토글 함수
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections(prev => ({
       ...prev,
@@ -272,7 +266,6 @@ export const RecommendStoreInfoWindow: React.FC<
       zIndex={1000}
     >
       <div className="relative perspective-1000">
-        {/* 베이스 그림자 (가장 넓고 흐린 그림자) */}
         <motion.div
           className="absolute inset-0 rounded-2xl"
           variants={baseShadowVariants}
@@ -287,7 +280,6 @@ export const RecommendStoreInfoWindow: React.FC<
           }}
         />
 
-        {/* 메인 그림자 (중간 깊이) */}
         <motion.div
           className="absolute inset-0 rounded-2xl"
           variants={mainShadowVariants}
@@ -302,7 +294,6 @@ export const RecommendStoreInfoWindow: React.FC<
           }}
         />
 
-        {/* 가까운 그림자 (선명한 그림자) */}
         <motion.div
           className="absolute inset-0 rounded-2xl"
           variants={nearShadowVariants}
@@ -317,7 +308,6 @@ export const RecommendStoreInfoWindow: React.FC<
           }}
         />
 
-        {/* 메인 버블 컨테이너 */}
         <motion.div
           className="relative z-50"
           variants={bubbleVariants}
@@ -346,7 +336,6 @@ export const RecommendStoreInfoWindow: React.FC<
             e.stopPropagation();
           }}
         >
-          {/* 내용 컨테이너 */}
           <motion.div
             variants={contentVariants}
             initial="hidden"
@@ -468,7 +457,6 @@ export const RecommendStoreInfoWindow: React.FC<
                         `📍 ${store.addressDetail}`
                       )}
                     </div>
-                    {/* 브랜드 정보 추가 */}
                     <div className="text-xs text-gray-500">
                       {store.brandName} • {store.categoryName}
                     </div>
@@ -516,7 +504,6 @@ export const RecommendStoreInfoWindow: React.FC<
             </div>
           </motion.div>
 
-          {/* 글로우 효과 */}
           <motion.div
             className="absolute inset-0 rounded-2xl opacity-20"
             initial={{ opacity: 0, scale: 0.8 }}
@@ -536,7 +523,6 @@ export const RecommendStoreInfoWindow: React.FC<
             }}
           />
 
-          {/* 하이라이트 효과 */}
           <motion.div
             className="absolute top-0 left-1/4 right-1/4 h-px rounded-full"
             initial={{ opacity: 0, scaleX: 0 }}
@@ -556,7 +542,6 @@ export const RecommendStoreInfoWindow: React.FC<
             }}
           />
 
-          {/* 삼각형 꼬리 */}
           <motion.div
             className="absolute left-1/2 -bottom-4 -translate-x-1/2 w-8 h-8 z-0"
             variants={tailVariants}

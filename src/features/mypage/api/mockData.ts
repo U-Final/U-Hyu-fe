@@ -2,7 +2,6 @@ import type { UpdateUserResponseData, UserInfoData } from '@mypage/api/types';
 
 import type { ApiResponse } from '@/shared/client/client.type';
 
-// 실제 API 응답 구조에 맞춘 목업 데이터
 export const mockUserInfoData: UserInfoData = {
   profileImage:
     'http://img1.kakaocdn.net/thumb/R640x640.q70/?fname=http://t1.kakaocdn.net/account_images/default_profile.jpeg',
@@ -13,17 +12,14 @@ export const mockUserInfoData: UserInfoData = {
   gender: 'MALE',
   grade: 'VIP',
   role: 'ADMIN',
-  // role: 'USER',    // 마이페이지 확인하려면 유저 타입 변경
   interestedBrandList: [2, 15, 25],
   updatedAt: '2025-07-28T02:25:39.470165',
 };
 
-// 개인정보 수정 API 응답 목업 데이터
 export const mockUpdateUserResponse: UpdateUserResponseData = {
   userId: 9,
 };
 
-// 공통 응답 형식을 사용한 목업 데이터
 export const mockUserInfoResponse: ApiResponse<UserInfoData> = {
   statusCode: 0,
   message: '정상 처리 되었습니다.',

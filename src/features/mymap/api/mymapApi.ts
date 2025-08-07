@@ -17,7 +17,6 @@ import type {
   StoreBookmarkStatusRes,
 } from './types';
 
-// My Map 목록 조회 api
 export const getMyMapList = async (): Promise<MyMapListRes[]> => {
   const res = await client.get<ApiResponse<MyMapListRes[]>>(
     MYMAP_ENDPOINTS.MYMAP.LIST
@@ -26,7 +25,6 @@ export const getMyMapList = async (): Promise<MyMapListRes[]> => {
   return res.data.data ?? [];
 };
 
-// My Map 추가 API
 export const addMyMap = async (
   body: MyMapStoreAddReq
 ): Promise<MyMapStoreAddRes> => {
@@ -40,7 +38,6 @@ export const addMyMap = async (
   return res.data.data;
 };
 
-// My Map 수정 api
 export const updateMyMap = async (
   body: MyMapListUpdateReq
 ): Promise<MyMapListUpdateRes> => {
@@ -55,7 +52,6 @@ export const updateMyMap = async (
   return res.data.data;
 };
 
-// My Map 삭제 API
 export const deleteMyMap = async (
   myMapListId: MyMapListDeleteParams['myMapListId']
 ): Promise<MyMapListDeleteRes> => {
@@ -69,7 +65,6 @@ export const deleteMyMap = async (
   return res.data.data;
 };
 
-// My Map에 매장 추가/삭제
 export const postToggleMyMap = async (
   myMapListId: MyMapToggleStoreParams['myMapListId'],
   store_id: MyMapToggleStoreParams['store_id']
@@ -84,7 +79,6 @@ export const postToggleMyMap = async (
   return res.data.data;
 };
 
-// My Map 매장 등록 유무 조회
 export const getStoreBookmarkStatus = async (
   storeId: StoreBookmarkStatusParams['store_id']
 ): Promise<StoreBookmarkStatusRes> => {
@@ -99,7 +93,6 @@ export const getStoreBookmarkStatus = async (
   return res.data.data;
 };
 
-// My Map 상세 조회 API (UUID 기반)
 export const getMyMapUuid = async (uuid: string): Promise<MymapUuidRes> => {
   const res = await client.get<ApiResponse<MymapUuidRes>>(
     MYMAP_ENDPOINTS.MYMAP.VIEW(uuid)
@@ -111,7 +104,6 @@ export const getMyMapUuid = async (uuid: string): Promise<MymapUuidRes> => {
   return res.data.data;
 };
 
-// My Map 상세 조회 API (UUID 기반, 비회원)
 export const getMyMapUuidGuest = async (
   uuid: string
 ): Promise<MymapUuidRes> => {

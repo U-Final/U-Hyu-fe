@@ -32,7 +32,6 @@ export function AdminBrandList() {
     setSearchTerm(params.brand_name ?? '');
   }, [params.brand_name]);
 
-  // 브랜드 목록 조회
   const { data: brandListResponse, isLoading, error, refetch } = useQuery({
     queryKey: ['adminBrandList', params],
     queryFn: () => adminApi.getAdminBrandList(params),
@@ -41,7 +40,6 @@ export function AdminBrandList() {
     gcTime: 0,
   });
 
-  // 브랜드 삭제 mutation
   const deleteMutation = useMutation({
     mutationFn: adminApi.deleteAdminBrand,
     onSuccess: () => {
@@ -51,13 +49,12 @@ export function AdminBrandList() {
     },
   });
 
-  // 카테고리 필터 탭 설정
   const categoryTabs = [
     { key: 'all', label: '전체', value: 'all' },
     ...ADMIN_CATEGORIES.map(cat => ({
       key: cat.id.toString(),
       label: cat.name,
-      value: cat.name // 카테고리 이름을 value로 사용
+      value: cat.name 
     }))
   ];
 
@@ -98,7 +95,6 @@ export function AdminBrandList() {
   const handleFormSuccess = () => {
     setShowForm(false);
     setEditingBrand(null);
-    // 브랜드 목록을 즉시 새로고침
     refetch();
   };
 
@@ -173,7 +169,6 @@ export function AdminBrandList() {
             </div>
           </div>
 
-          {/* 브랜드 목록 */}
           <div className="space-y-4">
             {brandList.length === 0 ? (
               <div className="text-center py-12">
@@ -203,7 +198,6 @@ export function AdminBrandList() {
             )}
           </div>
 
-          {/* 페이지네이션 */}
           {totalPages > 1 && (
             <AdminBrandPagination
               currentPage={currentPage + 1}
@@ -214,7 +208,6 @@ export function AdminBrandList() {
         </CardContent>
       </Card>
 
-      {/* 삭제 확인 모달 */}
       <AdminBrandDeleteModal
         isOpen={deleteModalOpen}
         onClose={() => {

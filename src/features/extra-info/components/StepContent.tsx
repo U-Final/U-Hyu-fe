@@ -23,7 +23,6 @@ export const StepContent: React.FC<StepContentProps> = ({
   const [isMembershipSheetOpen, setIsMembershipSheetOpen] = useState(false);
   const [isGenderSheetOpen, setIsGenderSheetOpen] = useState(false);
 
-  // 나이 옵션 생성 (20세부터 80세까지)
   const ageOptions = Array.from({ length: 61 }, (_, i) => ({
     value: (10 + i).toString(),
     label: `${10 + i}세`,

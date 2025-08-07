@@ -40,7 +40,6 @@ export function useScrollPrevention(options: UseScrollPreventionOptions = {}) {
 
   useEffect(() => {
     if (!enabled) {
-      // 비활성화 시 기존 클린업 실행
       if (cleanupRef.current) {
         cleanupRef.current();
         cleanupRef.current = null;
@@ -48,14 +47,12 @@ export function useScrollPrevention(options: UseScrollPreventionOptions = {}) {
       return;
     }
 
-    // 스크롤 방지 활성화
     cleanupRef.current = enableScrollPrevention({
       preventAll,
       preventVerticalOnly,
       scrollableSelectors,
     });
 
-    // 컴포넌트 언마운트 시 클린업
     return () => {
       if (cleanupRef.current) {
         cleanupRef.current();
@@ -64,7 +61,6 @@ export function useScrollPrevention(options: UseScrollPreventionOptions = {}) {
     };
   }, [enabled, preventAll, preventVerticalOnly, scrollableSelectors]);
 
-  // 수동 제어 함수들 반환
   return {
     enable: () => {
       if (cleanupRef.current) {

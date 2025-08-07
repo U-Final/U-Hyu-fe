@@ -51,9 +51,7 @@ type Story = StoryObj<typeof SearchInput>;
 export const Default: Story = {
   args: {
     value: '',
-    onChange: () => {
-      // 검색 입력 변경 처리
-    },
+    onChange: () => {},
   },
   parameters: {
     docs: {
@@ -105,10 +103,8 @@ export const Cancel: Story = {
   args: {
     value: 'GS25',
     onChange: () => {
-      // 검색 입력 변경 처리
     },
     onCancel: () => {
-      // 검색 취소 처리
     },
     placeholder: '브랜드 검색',
     variant: 'gray',

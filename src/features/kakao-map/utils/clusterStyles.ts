@@ -1,15 +1,13 @@
-/* 프라이머리 톤 */
 const P_LIGHT = '#f9c4de';
 const P_BASE = '#ef5aa7';
 const P_DEEP = '#e6007e';
 
-/* 공통 텍스트(딥핑크·화이트 두 세트) */
 const textLightBG = {
-  color: P_DEEP, // 💡 딥핑크
+  color: P_DEEP,
   textAlign: 'center',
   fontWeight: 700,
   letterSpacing: '-0.15px',
-  textShadow: '0 0 1px rgba(0,0,0,0.05)', // 살짝 테두리
+  textShadow: '0 0 1px rgba(0,0,0,0.05)',
 };
 const textDarkBG = {
   color: '#fafafa',
@@ -18,9 +16,7 @@ const textDarkBG = {
   letterSpacing: '-0.15px',
 };
 
-/* 단계별 클러스터 스타일 */
 export const clusterStyles = [
-  /* ① count < 10  */
   {
     width: '36px',
     height: '36px',
@@ -29,10 +25,9 @@ export const clusterStyles = [
     borderRadius: '50%',
     fontSize: '13px',
     lineHeight: '36px',
-    ...textLightBG, // ← 대비 높은 텍스트
+    ...textLightBG,
   },
 
-  /* ② 10 ≤ count < 30 */
   {
     width: '44px',
     height: '44px',
@@ -44,7 +39,6 @@ export const clusterStyles = [
     ...textDarkBG,
   },
 
-  /* ③ count ≥ 30 */
   {
     width: '54px',
     height: '54px',

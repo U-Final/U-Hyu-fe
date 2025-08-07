@@ -1,6 +1,6 @@
 import type { Preview } from "@storybook/react-vite";
 import { createElement } from "react";
-import "../src/index.css"; // TailwindCSS 스타일 추가
+import "../src/index.css";
 
 const preview: Preview = {
   parameters: {
@@ -11,17 +11,12 @@ const preview: Preview = {
       },
     },
     a11y: {
-      // 'todo' - show a11y violations in the test UI only
-      // 'error' - fail CI on a11y violations
-      // 'off' - skip a11y checks entirely
       test: "todo",
     },
     docs: {
-      // autodocs 설정
       autodocs: "tag",
     },
     backgrounds: {
-      // 테마별 배경색 설정
       default: "light",
       values: [
         {

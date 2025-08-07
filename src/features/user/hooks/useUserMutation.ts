@@ -5,7 +5,6 @@ import { toast } from 'sonner';
 
 import { userKeys } from './useUserQuery';
 
-// 이메일 중복확인 훅 (Mutation)
 export const useCheckEmailMutation = () => {
   return useMutation<
     { statusCode: number; message: string },
@@ -19,7 +18,6 @@ export const useCheckEmailMutation = () => {
   });
 };
 
-// 사용자 추가 정보 입력 훅 (Mutation)
 export const useSubmitExtraInfo = () => {
   const queryClient = useQueryClient();
 
@@ -35,12 +33,11 @@ export const useSubmitExtraInfo = () => {
   });
 };
 
-// 로그아웃 훅 (Mutation)
 export const useLogout = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => userStore.getState().logout(), // 스토어 액션 호출
+    mutationFn: () => userStore.getState().logout(),
     onSuccess: () => {
       queryClient.removeQueries({ queryKey: userKeys.all });
       window.location.href = '/';

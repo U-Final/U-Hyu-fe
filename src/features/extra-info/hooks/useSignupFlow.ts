@@ -34,7 +34,6 @@ export const useSignupFlow = (
   const [currentStep, setCurrentStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState<CompletedStep[]>([]);
 
-  // API 요청을 위한 mutation hook
   const submitExtraInfo = useSubmitExtraInfo();
 
   const updateData = useCallback((updates: Partial<SignupData>) => {
@@ -91,15 +90,12 @@ export const useSignupFlow = (
     [toggleBrand]
   );
 
-  // API 연동이 포함된 다음 스텝 진행 함수
   const goToNextStep = useCallback(async () => {
     const completedStep: CompletedStep = {
       id: `step-${currentStep}-${Date.now()}`,
       step: currentStep,
       data: { ...data },
     };
-
-    // 마지막 단계(4단계)에서 API 요청 수행
     if (currentStep === 4) {
       try {
         const apiData = {
@@ -109,18 +105,13 @@ export const useSignupFlow = (
           recentBrands: data.recentBrands,
           interestedBrands: data.selectedBrands,
         };
-
-        // API 요청 실행 (로딩 상태는 mutation에서 자동 관리)
         await submitExtraInfo.mutateAsync(apiData);
 
-        // 성공 시 완료 단계로 이동
         setCompletedSteps(prev => [completedStep, ...prev]);
         setCurrentStep(currentStep + 1);
 
-        // 성공 콜백 호출
         onComplete?.(true, '회원가입이 성공적으로 완료되었습니다!');
       } catch (error) {
-        // 에러 처리 - 콜백으로 에러 메시지 전달
         const errorMessage =
           error instanceof Error
             ? error.message
@@ -129,7 +120,6 @@ export const useSignupFlow = (
         onComplete?.(false, errorMessage);
       }
     } else {
-      // 일반 스텝 진행
       setCompletedSteps(prev => [completedStep, ...prev]);
       setCurrentStep(currentStep + 1);
     }
@@ -171,7 +161,6 @@ export const useSignupFlow = (
     goToPrevStep,
     resetFlow,
     isStepValid,
-    // API 관련 상태들 추가로 노출
     isSubmitting: submitExtraInfo.isPending,
     submitError: submitExtraInfo.error,
   };

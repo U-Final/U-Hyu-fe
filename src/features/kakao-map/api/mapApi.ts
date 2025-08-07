@@ -83,7 +83,6 @@ export const mapApi = {
   },
 };
 
-// 타입 가드 함수들 (런타임 안전성을 위한 추가 보안)
 export const isValidStoreId = (storeId: unknown): storeId is number => {
   return typeof storeId === 'number' && storeId > 0;
 };

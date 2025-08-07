@@ -16,7 +16,6 @@ interface StoreInfoWindowProps {
   handleToggleFavorite?: () => void;
 }
 
-// 고급 버블 애니메이션 설정
 const bubbleVariants = {
   hidden: {
     opacity: 0,
@@ -51,7 +50,6 @@ const bubbleVariants = {
   },
 };
 
-// 다층 그림자 효과 애니메이션
 const baseShadowVariants = {
   hidden: {
     opacity: 0,
@@ -77,7 +75,6 @@ const baseShadowVariants = {
   },
 };
 
-// 주요 그림자 효과
 const mainShadowVariants = {
   hidden: {
     opacity: 0,
@@ -104,7 +101,6 @@ const mainShadowVariants = {
   },
 };
 
-// 가까운 그림자 효과
 const nearShadowVariants = {
   hidden: {
     opacity: 0,
@@ -131,7 +127,6 @@ const nearShadowVariants = {
   },
 };
 
-// 내용 요소들의 스태거 애니메이션
 const contentVariants = {
   hidden: {
     opacity: 0,
@@ -155,7 +150,6 @@ const contentVariants = {
   },
 };
 
-// 꼬리 애니메이션
 const tailVariants = {
   hidden: {
     opacity: 0,
@@ -215,7 +209,6 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
         zIndex={1000}
       >
         <div className="relative perspective-1000">
-          {/* 베이스 그림자 (가장 넓고 흐린 그림자) */}
           <motion.div
             className="absolute inset-0 rounded-2xl"
             variants={baseShadowVariants}
@@ -229,7 +222,6 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
             }}
           />
 
-          {/* 메인 그림자 (중간 깊이) */}
           <motion.div
             className="absolute inset-0 rounded-2xl"
             variants={mainShadowVariants}
@@ -243,7 +235,6 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
             }}
           />
 
-          {/* 메인 버블 컨테이너 */}
           <motion.div
             className="relative z-50"
             variants={bubbleVariants}
@@ -254,7 +245,6 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
                 'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1)) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.08))',
             }}
           >
-            {/* 스켈레톤 컨테이너 */}
             <motion.div
               variants={contentVariants}
               initial="hidden"
@@ -267,7 +257,6 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
               <InfoWindowSkeleton type="store" position={position} />
             </motion.div>
 
-            {/* 삼각형 꼬리 */}
             <motion.div
               className="absolute left-1/2 -bottom-4 -translate-x-1/2 w-8 h-8 z-0"
               variants={tailVariants}
@@ -306,7 +295,6 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
       zIndex={1000}
     >
       <div className="relative perspective-1000">
-        {/* 베이스 그림자 (가장 넓고 흐린 그림자) */}
         <motion.div
           className="absolute inset-0 rounded-2xl"
           variants={baseShadowVariants}
@@ -321,7 +309,6 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
           }}
         />
 
-        {/* 메인 그림자 (중간 깊이) */}
         <motion.div
           className="absolute inset-0 rounded-2xl"
           variants={mainShadowVariants}
@@ -336,7 +323,6 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
           }}
         />
 
-        {/* 가까운 그림자 (선명한 그림자) */}
         <motion.div
           className="absolute inset-0 rounded-2xl"
           variants={nearShadowVariants}
@@ -351,7 +337,6 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
           }}
         />
 
-        {/* 메인 버블 컨테이너 */}
         <motion.div
           className="relative z-50"
           variants={bubbleVariants}
@@ -361,7 +346,7 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
           style={{
             filter:
               'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1)) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.08))',
-            pointerEvents: 'auto', // 터치 이벤트 허용
+            pointerEvents: 'auto',
           }}
           whileHover={{
             y: -2,
@@ -380,7 +365,6 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
             e.stopPropagation();
           }}
         >
-          {/* 내용 컨테이너 */}
           <motion.div
             variants={contentVariants}
             initial="hidden"
@@ -402,7 +386,6 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
             />
           </motion.div>
 
-          {/* 글로우 효과 */}
           <motion.div
             className="absolute inset-0 rounded-2xl opacity-20"
             initial={{ opacity: 0, scale: 0.8 }}
@@ -422,7 +405,6 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
             }}
           />
 
-          {/* 하이라이트 효과 */}
           <motion.div
             className="absolute top-0 left-1/4 right-1/4 h-px rounded-full"
             initial={{ opacity: 0, scaleX: 0 }}
@@ -442,7 +424,6 @@ const StoreInfoWindow: React.FC<StoreInfoWindowProps> = ({
             }}
           />
 
-          {/* 삼각형 꼬리 */}
           <motion.div
             className="absolute left-1/2 -bottom-4 -translate-x-1/2 w-8 h-8 z-0"
             variants={tailVariants}

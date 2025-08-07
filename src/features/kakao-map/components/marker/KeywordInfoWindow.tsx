@@ -5,24 +5,20 @@ import { CustomOverlayMap } from 'react-kakao-maps-sdk';
 
 import type { NormalizedPlace } from '../../api/types';
 
-// 텍스트 길이 제한 상수
 const TEXT_LIMITS = {
   name: 15,
   category: 20,
 };
 
-// 텍스트가 제한을 초과하는지 확인하는 헬퍼 함수
 const shouldShowExpand = (text: string, limit: number): boolean => {
   return text.length > limit;
 };
 
-// 축약된 텍스트를 반환하는 헬퍼 함수
 const getTruncatedText = (text: string, limit: number): string => {
   if (text.length <= limit) return text;
   return text.substring(0, limit) + '...';
 };
 
-// 더보기 버튼 컴포넌트
 const ExpandButton: React.FC<{
   isExpanded: boolean;
   onClick: () => void;
@@ -50,16 +46,9 @@ const ExpandButton: React.FC<{
   );
 };
 
-/**
- * 간단한 버전의 키워드 인포윈도우
- * 장소명, 카테고리, 닫기 버튼만 포함
- */
 interface KeywordInfoWindowProps {
-  /** 장소 정보 */
   place: NormalizedPlace;
-  /** 닫기 핸들러 */
   onClose: () => void;
-  /** 클릭 핸들러 */
   onClick?: (place: NormalizedPlace) => void;
 }
 
@@ -74,7 +63,6 @@ export const KeywordInfoWindow: React.FC<KeywordInfoWindowProps> = ({
     category: false,
   });
 
-  // 섹션 확장/축소 토글 함수
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections(prev => ({
       ...prev,
@@ -105,12 +93,10 @@ export const KeywordInfoWindow: React.FC<KeywordInfoWindowProps> = ({
       zIndex={1000}
     >
       <div className="relative z-50">
-        {/* 말풍선 꼬리 */}
         <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full">
           <div className="w-0 h-0 border-l-6 border-r-6 border-t-8 border-transparent border-t-white drop-shadow-sm" />
         </div>
 
-        {/* 메인 콘텐츠 */}
         <div
           className="bg-white rounded-lg shadow-lg border border-gray-200 p-2 sm:p-3 cursor-pointer hover:bg-gray-50 transition-colors w-[200px] sm:w-[240px] md:w-[260px] max-w-[85vw]"
           onClick={handleClick}

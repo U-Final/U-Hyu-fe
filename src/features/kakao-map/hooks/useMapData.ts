@@ -22,8 +22,6 @@ import {
  * MapStore의 상태와 React Query를 연결하여 백엔드 API 기반 필터링 제공
  */
 export const useMapData = () => {
-  // Zustand store에서 개별 상태와 액션을 선택적으로 구독
-  // 무한 리렌더링 방지를 위해 필요한 것만 구독
   const stores = useMapStore(state => state.stores);
   const selectedStore = useMapStore(state => state.selectedStore);
   const storeDetail = useMapStore(state => state.storeDetail);
@@ -32,14 +30,11 @@ export const useMapData = () => {
   const loading = useMapStore(state => state.loading);
   const errors = useMapStore(state => state.errors);
 
-  // 추천 매장 상태 추가
   const recommendedStores = useRecommendedStores();
   const showRecommendedStores = useShowRecommendedStores();
 
-  // 줌 레벨 기반 동적 검색 반경
   const dynamicSearchRadius = useSearchRadius();
 
-  // 액션 함수들을 개별적으로 구독
   const setStoresFromQuery = useMapStore(state => state.setStoresFromQuery);
   const setStoreDetail = useMapStore(state => state.setStoreDetail);
   const selectStore = useMapStore(state => state.selectStore);
@@ -47,7 +42,6 @@ export const useMapData = () => {
   const isBookmarkMode = useBookmarkMode();
   const toggleBookmarkMode = useMapStore(state => state.toggleBookmarkMode);
   const setMapCenter = useMapStore(state => state.setMapCenter);
-  // 추천 매장 액션들 추가
   const fetchRecommendedStores = useMapStore(
     state => state.fetchRecommendedStores
   );
@@ -58,7 +52,6 @@ export const useMapData = () => {
     state => state.toggleRecommendedStores
   );
 
-  // UI 상태에서 필터 관련 상태 가져오기
   const { state: uiState } = useMapUIContext();
 
   /**
@@ -68,11 +61,9 @@ export const useMapData = () => {
   const mapCategoryToBackend = useCallback(
     (frontendCategory: string): string | undefined => {
       if (!frontendCategory || frontendCategory === 'all') {
-        return undefined; // 전체 선택 시 필터 파라미터 제외
+        return undefined;
       }
 
-      // FilterTabs의 value를 백엔드 API의 category 값으로 매핑 (필터탭 label과 동일하게)
-      // 새로운 14개 비즈니스 카테고리에 맞춤 (APP/기기는 지도에서 제외)
       const categoryMapping: Record<string, string> = {
         테마파크: '테마파크',
         '워터파크/아쿠아리움': '워터파크/아쿠아리움',
@@ -87,7 +78,6 @@ export const useMapData = () => {
         '공연/전시': '공연/전시',
         교육: '교육',
         '여행/교통': '여행/교통',
-        // 기존 호환성을 위한 매핑 (구 카테고리가 있을 수 있음)
         activity: '액티비티',
         beauty: '뷰티',
         shopping: '쇼핑',
@@ -105,7 +95,6 @@ export const useMapData = () => {
     []
   );
 
-  // 검색 실행을 위한 별도 상태 (재검색 버튼 클릭시에만 업데이트)
   const searchParams = useMapStore(state => state.searchParams);
   const setSearchParams = useMapStore(state => state.setSearchParams);
 
@@ -120,13 +109,11 @@ export const useMapData = () => {
       radius: searchParams?.radius ?? dynamicSearchRadius,
     };
 
-    // 카테고리 필터 파라미터 추가 (값이 있을 때만)
     const mappedCategory = mapCategoryToBackend(uiState.activeCategoryFilter);
     if (mappedCategory) {
       baseParams.category = mappedCategory;
     }
 
-    // 브랜드 필터 파라미터 추가 (향후 구현)
     if (uiState.selectedBrand && uiState.selectedBrand !== '') {
       baseParams.brand = uiState.selectedBrand;
     }
@@ -144,7 +131,6 @@ export const useMapData = () => {
     mapCategoryToBackend,
   ]);
 
-  // React Query 훅들
   const storeListQuery = useStoreListQuery(storeListParams);
   const storeDetailQuery = useStoreDetailQuery(selectedStore?.storeId ?? null);
   const toggleFavoriteMutation = useToggleFavoriteMutation();
@@ -174,7 +160,6 @@ export const useMapData = () => {
    * HTTP 개발 환경에서는 위치 정보 요청 비활성화
    */
   useEffect(() => {
-    // HTTP 개발 환경에서는 위치 정보 요청 비활성화
     if (!window.isSecureContext && import.meta.env.MODE === 'development') {
       return;
     }
@@ -182,7 +167,6 @@ export const useMapData = () => {
     const initializeLocation = async () => {
       const { userLocation, mapCenter, searchParams } = useMapStore.getState();
 
-      // 초기 검색 파라미터가 없으면 설정
       if (!searchParams) {
         setSearchParams({
           lat: mapCenter.lat,
@@ -191,12 +175,10 @@ export const useMapData = () => {
         });
       }
 
-      // 이미 사용자 위치가 있으면 스킵
       if (userLocation) {
         return;
       }
 
-      // 현재 지도 중심이 기본값(강남역)이면 현재 위치 시도
       const defaultLat = parseFloat(
         import.meta.env.VITE_MAP_INITIAL_LAT || '37.54699'
       );
@@ -211,7 +193,6 @@ export const useMapData = () => {
       if (isDefaultLocation) {
         try {
           await getCurrentLocation();
-          // 위치를 가져온 후 검색 파라미터 업데이트
           const newState = useMapStore.getState();
           if (newState.userLocation) {
             setSearchParams({
@@ -226,9 +207,8 @@ export const useMapData = () => {
       }
     };
 
-    // 컴포넌트 마운트시 한 번만 실행
     initializeLocation();
-  }, [getCurrentLocation, setSearchParams, dynamicSearchRadius]); // 의존성 추가
+  }, [getCurrentLocation, setSearchParams, dynamicSearchRadius]);
 
   /**
    * 지도 중심점 변경 시 주변 매장 새로고침
@@ -239,7 +219,6 @@ export const useMapData = () => {
       if (newCenter) {
         setMapCenter(newCenter);
       }
-      // storeListParams가 변경되면 React Query가 자동으로 재요청
     },
     [setMapCenter]
   );
@@ -266,7 +245,6 @@ export const useMapData = () => {
     const regionInfo = getRegionInfo(uiState.activeRegionFilter);
 
     if (regionInfo && regionInfo.key !== 'all') {
-      // '전체'가 아닌 특정 지역 선택 시 해당 지역 중심으로 이동
       setMapCenter(regionInfo.center);
     }
   }, [uiState.activeRegionFilter, setMapCenter]);
@@ -284,19 +262,15 @@ export const useMapData = () => {
   ]);
 
   return {
-    // 상태 데이터 (백엔드에서 이미 필터링됨)
-    stores, // 필터링된 매장 목록
+    stores,
     selectedStore,
     storeDetail,
 
-    // 위치 관련 상태
     userLocation,
     mapCenter,
-    // 추천 매장 상태 추가
     recommendedStores,
     showRecommendedStores,
 
-    // 로딩 상태 (React Query + MapStore 조합)
     loading: {
       ...loading,
       stores: storeListQuery.isLoading,
@@ -304,7 +278,6 @@ export const useMapData = () => {
       favorite: toggleFavoriteMutation.isPending,
     },
 
-    // 에러 상태 (React Query + MapStore 조합)
     errors: {
       ...errors,
       stores: storeListQuery.error?.message ?? null,
@@ -312,7 +285,6 @@ export const useMapData = () => {
       favorite: toggleFavoriteMutation.error?.message ?? null,
     },
 
-    // 액션 함수들
     fetchNearbyStores,
     selectStore,
     getCurrentLocation,
@@ -320,18 +292,16 @@ export const useMapData = () => {
     toggleBookmarkMode,
     setMapCenter,
     toggleFavorite,
-    // 추천 매장 액션들 추가
     fetchRecommendedStores,
     setShowRecommendedStores,
     toggleRecommendedStores,
 
-    // 디버깅 및 모니터링 정보
     queryStatus: {
       storeList: {
         isFetching: storeListQuery.isFetching,
         isStale: storeListQuery.isStale,
         dataUpdatedAt: storeListQuery.dataUpdatedAt,
-        queryParams: storeListParams, // 현재 사용 중인 쿼리 파라미터
+        queryParams: storeListParams,
       },
       storeDetail: {
         isFetching: storeDetailQuery.isFetching,

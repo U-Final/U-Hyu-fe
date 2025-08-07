@@ -1,4 +1,3 @@
-// 혜택 상세보기 타입 -> 추후 api types로
 export interface BrandDetail {
   brand_id: number;
   brand_name: string;

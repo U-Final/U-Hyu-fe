@@ -51,7 +51,6 @@ const MyMapUuid = ({ uuid, onStoreClick }: MyMapUuidProps) => {
     }
   }, [data, setSharedMap]);
 
-  // 매장 삭제 모달
   const handleDelete = (store_id: number) => {
     openModal('base', {
       title: '매장 삭제',
@@ -59,7 +58,6 @@ const MyMapUuid = ({ uuid, onStoreClick }: MyMapUuidProps) => {
     });
   };
 
-  // 공유 모달
   const handleShare = (uuid: string) => {
     openModal('base', {
       title: 'My Map 공유',
@@ -142,7 +140,6 @@ const MyMapUuid = ({ uuid, onStoreClick }: MyMapUuidProps) => {
               </BrandCard>
             </div>
           ))}
-          {/* 매장 없을 때 */}
           { stores.length === 0 && isMine && (
             <div className="flex  flex-col text-center items-center justify-center">
               <img

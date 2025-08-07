@@ -62,7 +62,6 @@ export interface CompletedStepsProps {
   completedSteps: CompletedStep[];
 }
 
-// 확장된 ActionButtons Props
 export interface ActionButtonsProps {
   currentStep: number;
   isStepValid: boolean;
@@ -72,7 +71,6 @@ export interface ActionButtonsProps {
   submitError?: Error | null;
 }
 
-// 새로운 API 관련 타입들
 export interface SignupFlowState {
   isSubmitting: boolean;
   submitError: Error | null;
@@ -83,7 +81,6 @@ export interface SignupCompleteCallback {
   (success: boolean, message?: string): void;
 }
 
-// useSignupFlow 반환 타입
 export interface UseSignupFlowReturn {
   data: SignupData;
   currentStep: number;

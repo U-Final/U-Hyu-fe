@@ -33,7 +33,6 @@ const MyPageUserInfo = ({
       [field]: field === 'age' ? (value === '' ? null : Number(value)) : value,
     }));
 
-    // pendingChanges에 추가
     if (field === 'nickName') {
       setPendingChanges(prev => ({
         ...prev,
@@ -49,7 +48,6 @@ const MyPageUserInfo = ({
   };
 
   const handleSave = async () => {
-    // 저장 전 검증
     const validationErrors: string[] = [];
 
     if (localEdit.nickName && !validateField('nickName', localEdit.nickName)) {

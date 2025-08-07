@@ -13,24 +13,16 @@ import type { MapDragBottomSheetRef } from '../components/controls/MapDragBottom
  * 비즈니스 로직과 분리된 UI 상태만 관리
  */
 interface MapUIState {
-  // 검색 UI 상태
   searchValue: string;
   isSearchFocused: boolean;
-
-  // 바텀시트 네비게이션 상태
   currentBottomSheetStep: 'list' | 'category' | 'brand' | 'mymap';
-
-  // 필터 UI 상태
   selectedCategory: string;
   selectedBrand: string;
   activeRegionFilter: string;
-  activeCategoryFilter: string; // FilterTabs에서 선택된 카테고리
-
-  // 지도 UI 상태
+  activeCategoryFilter: string;
   selectedMarkerId: number | null;
   showLocationMarker: boolean;
 
-  // 인터랙션 상태
   showFilterDropdown: boolean;
   isMapDragging: boolean;
 }
@@ -39,30 +31,21 @@ interface MapUIState {
  * UI 상태 변경을 위한 액션 타입 정의
  */
 type MapUIAction =
-  // 검색 관련 액션
   | { type: 'SET_SEARCH_VALUE'; payload: string }
   | { type: 'SET_SEARCH_FOCUSED'; payload: boolean }
   | { type: 'CLEAR_SEARCH' }
-
-  // 바텀시트 관련 액션
   | {
       type: 'SET_BOTTOM_SHEET_STEP';
       payload: 'list' | 'category' | 'brand' | 'mymap';
     }
-
-  // 필터 관련 액션
   | { type: 'SET_SELECTED_CATEGORY'; payload: string }
   | { type: 'SET_SELECTED_BRAND'; payload: string }
   | { type: 'SET_REGION_FILTER'; payload: string }
   | { type: 'SET_CATEGORY_FILTER'; payload: string }
   | { type: 'RESET_FILTERS' }
-
-  // 지도 UI 관련 액션
   | { type: 'SET_SELECTED_MARKER'; payload: number | null }
   | { type: 'TOGGLE_LOCATION_MARKER' }
   | { type: 'SET_MAP_DRAGGING'; payload: boolean }
-
-  // 기타 UI 액션
   | { type: 'TOGGLE_FILTER_DROPDOWN' }
   | { type: 'RESET_ALL_UI' };
 
@@ -72,24 +55,19 @@ type MapUIAction =
  */
 const mapUIReducer = (state: MapUIState, action: MapUIAction): MapUIState => {
   switch (action.type) {
-    // 검색 관련 상태 변경
     case 'SET_SEARCH_VALUE':
       return { ...state, searchValue: action.payload };
     case 'SET_SEARCH_FOCUSED':
       return { ...state, isSearchFocused: action.payload };
     case 'CLEAR_SEARCH':
       return { ...state, searchValue: '', isSearchFocused: false };
-
-    // 바텀시트 관련 상태 변경
     case 'SET_BOTTOM_SHEET_STEP':
       return { ...state, currentBottomSheetStep: action.payload };
-
-    // 필터 관련 상태 변경
     case 'SET_SELECTED_CATEGORY':
       return {
         ...state,
         selectedCategory: action.payload,
-        selectedBrand: '', // 카테고리 변경 시 브랜드 초기화
+        selectedBrand: '',
       };
     case 'SET_SELECTED_BRAND':
       return { ...state, selectedBrand: action.payload };
@@ -106,16 +84,12 @@ const mapUIReducer = (state: MapUIState, action: MapUIAction): MapUIState => {
         activeCategoryFilter: 'all',
         searchValue: '',
       };
-
-    // 지도 UI 관련 상태 변경
     case 'SET_SELECTED_MARKER':
       return { ...state, selectedMarkerId: action.payload };
     case 'TOGGLE_LOCATION_MARKER':
       return { ...state, showLocationMarker: !state.showLocationMarker };
     case 'SET_MAP_DRAGGING':
       return { ...state, isMapDragging: action.payload };
-
-    // 기타 UI 상태 변경
     case 'TOGGLE_FILTER_DROPDOWN':
       return { ...state, showFilterDropdown: !state.showFilterDropdown };
     case 'RESET_ALL_UI':
@@ -134,29 +108,20 @@ interface MapUIContextValue {
   state: MapUIState;
   bottomSheetRef: React.RefObject<MapDragBottomSheetRef | null>;
   actions: {
-    // 검색 관련 액션
     setSearchValue: (value: string) => void;
     setSearchFocused: (focused: boolean) => void;
     clearSearch: () => void;
-
-    // 바텀시트 관련 액션 (네비게이션만)
     setBottomSheetStep: (step: 'list' | 'category' | 'brand' | 'mymap') => void;
-    // setBottomSheetExpanded: (expanded: boolean) => void;
-    // toggleBottomSheet: () => void;
-
-    // 필터 관련 액션
     setSelectedCategory: (category: string) => void;
     setSelectedBrand: (brand: string) => void;
     setRegionFilter: (region: string) => void;
     setCategoryFilter: (category: string) => void;
     resetFilters: () => void;
 
-    // 지도 UI 관련 액션
     setSelectedMarker: (markerId: number | null) => void;
     toggleLocationMarker: () => void;
     setMapDragging: (dragging: boolean) => void;
 
-    // 기타 UI 액션
     toggleFilterDropdown: () => void;
     resetAllUI: () => void;
   };
@@ -194,9 +159,7 @@ export const MapUIProvider: React.FC<{ children: React.ReactNode }> = ({
   const [state, dispatch] = useReducer(mapUIReducer, initialUIState);
   const bottomSheetRef = useRef<MapDragBottomSheetRef>(null);
 
-  // 메모이제이션된 액션 함수들
   const actions = {
-    // 검색 관련 액션
     setSearchValue: useCallback((value: string) => {
       dispatch({ type: 'SET_SEARCH_VALUE', payload: value });
     }, []),
@@ -209,7 +172,6 @@ export const MapUIProvider: React.FC<{ children: React.ReactNode }> = ({
       dispatch({ type: 'CLEAR_SEARCH' });
     }, []),
 
-    // 바텀시트 관련 액션
     setBottomSheetStep: useCallback(
       (step: 'list' | 'category' | 'brand' | 'mymap') => {
         dispatch({ type: 'SET_BOTTOM_SHEET_STEP', payload: step });
@@ -217,7 +179,6 @@ export const MapUIProvider: React.FC<{ children: React.ReactNode }> = ({
       []
     ),
 
-    // 필터 관련 액션
     setSelectedCategory: useCallback((category: string) => {
       dispatch({ type: 'SET_SELECTED_CATEGORY', payload: category });
     }, []),
@@ -238,7 +199,6 @@ export const MapUIProvider: React.FC<{ children: React.ReactNode }> = ({
       dispatch({ type: 'RESET_FILTERS' });
     }, []),
 
-    // 지도 UI 관련 액션
     setSelectedMarker: useCallback((markerId: number | null) => {
       dispatch({ type: 'SET_SELECTED_MARKER', payload: markerId });
     }, []),
@@ -251,7 +211,6 @@ export const MapUIProvider: React.FC<{ children: React.ReactNode }> = ({
       dispatch({ type: 'SET_MAP_DRAGGING', payload: dragging });
     }, []),
 
-    // 기타 UI 액션
     toggleFilterDropdown: useCallback(() => {
       dispatch({ type: 'TOGGLE_FILTER_DROPDOWN' });
     }, []),

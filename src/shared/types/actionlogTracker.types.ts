@@ -5,6 +5,6 @@ export interface UserAction {
 }
 
 export interface CounterData {
-  markerClicks: Record<number, number>; //<storeId, count>
-  filterClicks: Record<number, number>; //<categoryId, count>
+  markerClicks: Record<number, number>;
+  filterClicks: Record<number, number>;
 }

@@ -6,6 +6,6 @@ export const useBenefitsQuery = (grade: string) => {
   return useQuery<Benefit[]>({
     queryKey: ['benefits', grade],
     queryFn: () => fetchBenefits(grade),
-    enabled: !!grade, // grade가 있어야 요청함
+    enabled: !!grade,
   });
 };

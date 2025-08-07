@@ -22,7 +22,7 @@ export interface StoreDetail {
   storeName: string;
   isFavorite: boolean;
   favoriteCount: number;
-  benefits: StoreBenefit; // API 응답에서는 단일 객체로 옴
+  benefits: StoreBenefit;
   usageLimit: string;
   usageMethod: string;
 }

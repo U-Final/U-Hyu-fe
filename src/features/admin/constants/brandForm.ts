@@ -1,26 +1,22 @@
 import type { AdminBrandBenefit } from '@admin/api/types';
 
-// 초기 혜택 데이터
 export const INITIAL_BENEFIT: AdminBrandBenefit = {
   grade: 'GOOD',
   description: '',
   benefitType: 'DISCOUNT',
 };
 
-// 등급 뱃지 옵션
 export const GRADE_BADGES = [
   { value: 'VVIP', label: 'VVIP', color: 'bg-purple-100 text-purple-800 border-purple-200' },
   { value: 'VIP', label: 'VIP', color: 'bg-blue-100 text-blue-800 border-blue-200' },
   { value: 'GOOD', label: 'GOOD', color: 'bg-green-100 text-green-800 border-green-200' },
 ] as const;
 
-// 혜택 타입 옵션
 export const BENEFIT_TYPE_OPTIONS = [
   { value: 'DISCOUNT', label: '할인' },
   { value: 'GIFT', label: '증정품' },
 ] as const;
 
-// 카테고리별 미리 정의된 스타일 클래스
 export const CATEGORY_STYLES: Record<number, { selected: string; unselected: string }> = {
   1: { selected: 'bg-blue-100 text-blue-800 border-blue-300', unselected: 'hover:bg-blue-50 hover:border-blue-200' },
   2: { selected: 'bg-purple-100 text-purple-800 border-purple-300', unselected: 'hover:bg-purple-50 hover:border-purple-200' },
@@ -38,13 +34,11 @@ export const CATEGORY_STYLES: Record<number, { selected: string; unselected: str
   14: { selected: 'bg-sky-100 text-sky-800 border-sky-300', unselected: 'hover:bg-sky-50 hover:border-sky-200' },
 } as const;
 
-// 매장 타입 옵션
 export const STORE_TYPE_OPTIONS = [
   { value: 'ONLINE', label: '온라인' },
   { value: 'OFFLINE', label: '오프라인' },
 ] as const;
 
-// 폼 필드 플레이스홀더
 export const FORM_PLACEHOLDERS = {
   brandName: '브랜드명을 입력하세요',
   usageLimit: '예: 일 1회, 월 2회',
@@ -52,7 +46,6 @@ export const FORM_PLACEHOLDERS = {
   benefitDescription: '혜택 설명',
 } as const;
 
-// 파일 업로드 관련
 export const FILE_UPLOAD_CONFIG = {
   accept: 'image/*',
   maxSize: '5MB',

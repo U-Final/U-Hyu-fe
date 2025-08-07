@@ -11,7 +11,6 @@ import { StepTitle } from '../components/StepTitle';
 import { STEP_TITLES } from '../constants';
 import { type CurrentStepProps } from '../types';
 
-// 확장된 Props 타입
 interface EnhancedCurrentStepProps extends CurrentStepProps {
   isSubmitting?: boolean;
   submitError?: Error | null;
@@ -66,7 +65,6 @@ export const CurrentStep: React.FC<EnhancedCurrentStepProps> = ({
     </motion.div>
   );
 
-  // 성공 상태 렌더링
   const renderSuccessState = () => (
     <motion.div
       key="success"
@@ -114,7 +112,6 @@ export const CurrentStep: React.FC<EnhancedCurrentStepProps> = ({
     </motion.div>
   );
 
-  // 완료 상태 결정
   const renderCompletionState = () => {
     if (submitError) {
       return renderErrorState();

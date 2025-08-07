@@ -102,14 +102,12 @@ export const useMapBounds = () => {
 
     if (places.length === 1) {
       const place = places[0];
-      // 단일 장소인 경우 적당한 줌 레벨로 중심 맞춤
       return {
         center: { lat: place.latitude, lng: place.longitude },
-        level: 3, // 카카오맵 줌 레벨 (1~14, 낮을수록 확대)
+        level: 3,
       };
     }
 
-    // 여러 장소인 경우 모든 장소를 포함하는 범위 계산
     const latitudes = places.map(p => p.latitude);
     const longitudes = places.map(p => p.longitude);
 
@@ -118,7 +116,6 @@ export const useMapBounds = () => {
     const minLng = Math.min(...longitudes);
     const maxLng = Math.max(...longitudes);
 
-    // 패딩을 위해 범위를 약간 확장
     const latPadding = (maxLat - minLat) * 0.1;
     const lngPadding = (maxLng - minLng) * 0.1;
 
@@ -166,7 +163,6 @@ export const useMarkerClustering = (
       return;
     }
 
-    // 간단한 그리드 기반 클러스터링 알고리즘
     const processed = new Set<string>();
     const clustered: { places: NormalizedPlace[]; center: { lat: number; lng: number } }[] = [];
     const individual: NormalizedPlace[] = [];
@@ -177,7 +173,6 @@ export const useMarkerClustering = (
       const nearby: NormalizedPlace[] = [marker];
       processed.add(marker.id);
 
-      // 근처의 다른 마커들 찾기
       markers.forEach((otherMarker) => {
         if (processed.has(otherMarker.id) || marker.id === otherMarker.id) return;
 
@@ -186,8 +181,7 @@ export const useMarkerClustering = (
           { lat: otherMarker.latitude, lng: otherMarker.longitude }
         );
 
-        // gridSize를 미터로 변환 (대략적인 계산)
-        const gridSizeInMeters = gridSize * 50; // 픽셀당 약 50미터로 가정
+        const gridSizeInMeters = gridSize * 50;
 
         if (distance <= gridSizeInMeters) {
           nearby.push(otherMarker);
@@ -196,7 +190,6 @@ export const useMarkerClustering = (
       });
 
       if (nearby.length >= minimumClusterSize) {
-        // 클러스터 중심점 계산
         const center = {
           lat: nearby.reduce((sum, p) => sum + p.latitude, 0) / nearby.length,
           lng: nearby.reduce((sum, p) => sum + p.longitude, 0) / nearby.length,
@@ -224,7 +217,7 @@ const calculateDistance = (
   pos1: { lat: number; lng: number },
   pos2: { lat: number; lng: number }
 ): number => {
-  const R = 6371e3; // 지구 반지름 (미터)
+  const R = 6371e3;
   const φ1 = (pos1.lat * Math.PI) / 180;
   const φ2 = (pos2.lat * Math.PI) / 180;
   const Δφ = ((pos2.lat - pos1.lat) * Math.PI) / 180;

@@ -7,18 +7,14 @@ import { filterDataByCategory } from '@admin/utils/categoryMapping';
 import { ChartEmptyState } from '@admin/components/common';
 
 export function FilteringChart({ data, selectedCategory = 'all' }: FilteringChartProps) {
-  // 카테고리 필터링 적용
   const filteredData = filterDataByCategory(data, selectedCategory);
 
-  // 차트 데이터 준비 - 큰 값부터 정렬
   const chartData = [...filteredData]
     .sort((a, b) => (b.sumStatisticsFilterByCategory || 0) - (a.sumStatisticsFilterByCategory || 0))
     .map((category) => ({
       name: category.categoryName,
       필터링: category.sumStatisticsFilterByCategory || 0,
     }));
-
-  // 데이터가 없거나 모든 값이 0인 경우
   const hasData = chartData.length > 0 && chartData.some(item => item.필터링 > 0);
 
   return (
@@ -31,7 +27,6 @@ export function FilteringChart({ data, selectedCategory = 'all' }: FilteringChar
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
-          {/* 바 차트 */}
           <div>
             <h4 className="text-sm font-medium mb-8">
               {selectedCategory === 'all' ? '필터링 트렌드' : `${getCategoryDisplayName(selectedCategory)} 상세`}
@@ -60,14 +55,11 @@ export function FilteringChart({ data, selectedCategory = 'all' }: FilteringChar
               />
             )}
           </div>
-
-          {/* 상세 데이터 */}
           {hasData && (
             <div>
               <h4 className="text-sm font-medium mb-4">카테고리별 상세</h4>
               <div className="space-y-2">
                 {selectedCategory === 'all' ? (
-                  // 전체 선택시: 모든 카테고리 표시
                   [...filteredData]
                     .sort((a, b) => (b.sumStatisticsFilterByCategory || 0) - (a.sumStatisticsFilterByCategory || 0))
                     .map((category, index) => (
@@ -81,10 +73,8 @@ export function FilteringChart({ data, selectedCategory = 'all' }: FilteringChar
                       </div>
                     ))
                 ) : (
-                  // 특정 카테고리 선택시: 카테고리 이름을 크게 하고 스타일링
                   filteredData.map((category, index) => (
                     <div key={`filtering-selected-${category.categoryId}-${index}`} className="space-y-3">
-                      {/* 카테고리 헤더 */}
                       <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border-l-4" style={{ borderLeftColor: 'var(--admin-filtering)' }}>
                         <span className="font-semibold text-lg text-gray-800">{category.categoryName}</span>
                         <span className="text-sm text-muted-foreground font-medium">

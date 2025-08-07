@@ -43,11 +43,9 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
 
   const queryClient = useQueryClient();
 
-  // 브랜드 생성/수정 mutation
   const createMutation = useMutation({
     mutationFn: adminApi.createAdminBrand,
     onSuccess: () => {
-      // 모든 adminBrandList 관련 쿼리를 무효화
       queryClient.invalidateQueries({ queryKey: ['adminBrandList'] });
       queryClient.removeQueries({ queryKey: ['adminBrandList'] });
       toast.success('브랜드가 성공적으로 추가되었습니다.');
@@ -58,7 +56,6 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
   const updateMutation = useMutation({
     mutationFn: ({ brandId, data }: { brandId: number; data: AdminBrandUpdateRequest }) => adminApi.updateAdminBrand(brandId, data),
     onSuccess: () => {
-      // 모든 adminBrandList 관련 쿼리를 무효화
       queryClient.invalidateQueries({ queryKey: ['adminBrandList'] });
       queryClient.removeQueries({ queryKey: ['adminBrandList'] });
       toast.success('브랜드가 성공적으로 수정되었습니다.');
@@ -66,7 +63,6 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
     },
   });
 
-  // 편집 모드일 때 폼 데이터 초기화
   useEffect(() => {
     if (editingBrand) {
       setFormData({
@@ -79,7 +75,7 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
         data: editingBrand.data && editingBrand.data.length > 0 ? editingBrand.data : [INITIAL_BENEFIT],
       });
       setPreviewUrl(editingBrand.brandImg || '');
-      setSelectedFile(null); //새 파일 선택을 위해 초기화 (기존 이미지는 formData.brandImg에 유지됨)
+      setSelectedFile(null);
     } else {
       setFormData({
         brandName: '',
@@ -95,7 +91,6 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
     }
   }, [editingBrand]);
 
-  // 파일을 Base64로 변환하는 함수
   const convertFileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -111,7 +106,6 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
       setSelectedFile(file);
       const url = URL.createObjectURL(file);
       setPreviewUrl(url);
-      // 임시로 blob URL을 설정하지만, 실제 제출 시에는 Base64로 교체
       setFormData(prev => ({ ...prev, brandImg: url }));
     }
   };
@@ -119,7 +113,6 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // 혜택 정보 검증
     const invalidBenefits = formData.data.filter(benefit => !benefit.description.trim());
     if (invalidBenefits.length > 0) {
       alert('모든 혜택의 설명을 입력해주세요.');
@@ -128,28 +121,20 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
     
     try {
       let finalImageUrl = formData.brandImg;
-      
-      // 새로 선택된 파일이 있으면 Base64로 변환
-      // selectedFile이 null이면 기존 이미지 URL을 그대로 사용
       if (selectedFile) {
         finalImageUrl = await convertFileToBase64(selectedFile);
       }
-      
-      // 최종 데이터 준비
+    
       const finalData = {
         ...formData,
         brandImg: finalImageUrl,
       };
       
       if (editingBrand) {
-        // PATCH 메소드에 맞게 변경된 필드만 전송
         const changedFields: AdminBrandUpdateRequest = {};
-        
-        // 각 필드가 변경되었는지 확인하고 변경된 필드만 포함
         if (finalData.brandName !== editingBrand.brandName) {
           changedFields.brandName = finalData.brandName;
         }
-        // 이미지 변경 감지: 새 파일이 선택되었거나 기존 이미지 URL이 변경된 경우
         if (selectedFile || finalData.brandImg !== editingBrand.brandImg) {
           changedFields.brandImg = finalData.brandImg;
         }
@@ -168,8 +153,6 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
         if (JSON.stringify(finalData.data) !== JSON.stringify(editingBrand.data)) {
           changedFields.data = finalData.data;
         }
-        
-        // 변경된 필드가 있으면 업데이트 실행
         if (Object.keys(changedFields).length > 0) {
           await updateMutation.mutateAsync({ brandId: editingBrand.brandId, data: changedFields });
         } else {
@@ -223,7 +206,6 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
       </div>
       <div>
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* 기본 정보 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="brandName">브랜드명 *</Label>
@@ -265,7 +247,6 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
             </div>
           </div>
 
-          {/* 이미지 업로드 */}
           <div>
             <Label>브랜드 이미지 *</Label>
             <div className="mt-2 space-y-3">
@@ -335,7 +316,6 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
             />
           </div>
 
-          {/* 혜택 정보 */}
           <div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-3">
               <Label className="text-base font-medium">혜택 정보 *</Label>
@@ -386,8 +366,6 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
                         ))}
                       </div>
                     </div>
-                    
-                    {/* 혜택 타입 */}
                     <div className="lg:col-span-1 md:col-span-1">
                       <Label>혜택 타입 *</Label>
                       <Select
@@ -406,8 +384,6 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
                         </SelectContent>
                       </Select>
                     </div>
-                    
-                    {/* 설명 */}
                     <div className="lg:col-span-1 md:col-span-1">
                       <Label>설명 *</Label>
                       <Input
@@ -422,8 +398,6 @@ export function AdminBrandForm({ editingBrand, onCancel, onSuccess }: AdminBrand
               ))}
             </div>
           </div>
-
-          {/* 버튼 */}
           <div className="flex justify-end gap-3 pt-4 border-t">
             <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>
               취소

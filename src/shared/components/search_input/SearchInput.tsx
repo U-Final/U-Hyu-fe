@@ -41,7 +41,6 @@ const SearchInput: FC<SearchInputProps> = ({
         className={clsx(SearchInputVariants({ variant }))}
       />
       {value ? (
-        // X 버튼
         <button
           type="button"
           onClick={handleCancel}
@@ -63,7 +62,6 @@ const SearchInput: FC<SearchInputProps> = ({
           </svg>
         </button>
       ) : (
-        // 돋보기 아이콘
         <div className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -5,7 +5,7 @@ export default {
   theme: {
     extend: {
       fill: {
-        star: "var(--bg-star)", // SVG 내부 fill 색상
+        star: "var(--bg-star)",
       },
     },
   },

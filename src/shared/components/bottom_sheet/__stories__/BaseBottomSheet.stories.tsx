@@ -67,7 +67,6 @@ export const WithBackButton: Story = {
     subtitle: '이 시트는 뒤로가기 버튼이 있습니다',
     showBackButton: true,
     onBack: () => {
-      // 뒤로가기 버튼 클릭 처리
     },
     children: (
       <div className="space-y-4">

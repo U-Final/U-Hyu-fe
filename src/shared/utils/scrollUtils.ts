@@ -38,15 +38,12 @@ export function enableScrollPrevention(options: ScrollPreventionOptions = {}) {
     scrollableSelectors = DEFAULT_SCROLLABLE_SELECTORS,
   } = options;
 
-  // 현재 스크롤 위치 저장
   const scrollY = window.scrollY;
   const scrollX = window.scrollX;
 
-  // html과 body 스타일 설정
   const htmlElement = document.documentElement;
   const bodyElement = document.body;
 
-  // 현재 스타일 백업
   const originalHtmlOverflow = htmlElement.style.overflow;
   const originalBodyOverflow = bodyElement.style.overflow;
   const originalBodyOverflowY = bodyElement.style.overflowY;
@@ -57,7 +54,6 @@ export function enableScrollPrevention(options: ScrollPreventionOptions = {}) {
   const originalBodyLeft = bodyElement.style.left;
   const originalBodyHeight = bodyElement.style.height;
 
-  // 스크롤 방지 스타일 적용
   htmlElement.style.overflow = 'hidden';
 
   if (preventAll) {
@@ -73,7 +69,6 @@ export function enableScrollPrevention(options: ScrollPreventionOptions = {}) {
   bodyElement.style.top = `-${scrollY}px`;
   bodyElement.style.left = `-${scrollX}px`;
 
-  // 터치 이벤트 처리를 위한 변수들
   const touchState = {
     startX: 0,
     startY: 0,
@@ -92,13 +87,11 @@ export function enableScrollPrevention(options: ScrollPreventionOptions = {}) {
   const handleTouchMove = (e: TouchEvent) => {
     const target = e.target as HTMLElement;
 
-    // 스크롤 가능한 영역인지 확인 (더 정확한 검사)
     const isScrollableArea = scrollableSelectors.some(selector => {
       try {
         const element = target.closest(selector);
         if (!element) return false;
 
-        // 실제로 스크롤 가능한지 확인
         const computedStyle = window.getComputedStyle(element);
         const hasVerticalScroll = element.scrollHeight > element.clientHeight;
         const hasHorizontalScroll = element.scrollWidth > element.clientWidth;
@@ -119,16 +112,14 @@ export function enableScrollPrevention(options: ScrollPreventionOptions = {}) {
     });
 
     if (isScrollableArea) {
-      return; // 스크롤 가능한 영역은 허용
+      return;
     }
 
-    // 전체 스크롤 방지
     if (preventAll) {
       e.preventDefault();
       return;
     }
 
-    // 세로 스크롤만 방지
     if (preventVerticalOnly) {
       const touch = e.touches[0];
       if (touch) {
@@ -136,13 +127,10 @@ export function enableScrollPrevention(options: ScrollPreventionOptions = {}) {
         const deltaY = Math.abs(touch.clientY - touchState.startY);
         const timeElapsed = Date.now() - touchState.startTime;
 
-        // 더 정확한 방향 감지
         if (timeElapsed > 50) {
-          // 50ms 이후에만 검사
-          const isVerticalSwipe = deltaY > deltaX && deltaY > 15; // 임계값 증가
+          const isVerticalSwipe = deltaY > deltaX && deltaY > 15;
           const isHorizontalSwipe = deltaX > deltaY && deltaX > 15;
 
-          // 세로 스와이프만 방지, 가로 스와이프는 허용
           if (isVerticalSwipe && !isHorizontalSwipe) {
             e.preventDefault();
           }
@@ -151,7 +139,6 @@ export function enableScrollPrevention(options: ScrollPreventionOptions = {}) {
     }
   };
 
-  // Wheel 이벤트 처리 (마우스 휠)
   const handleWheel = (e: WheelEvent) => {
     const target = e.target as HTMLElement;
 
@@ -185,14 +172,11 @@ export function enableScrollPrevention(options: ScrollPreventionOptions = {}) {
     }
   };
 
-  // 이벤트 리스너 등록
   document.addEventListener('touchstart', handleTouchStart, { passive: true });
   document.addEventListener('touchmove', handleTouchMove, { passive: false });
   document.addEventListener('wheel', handleWheel, { passive: false });
 
-  // 클린업 함수 반환
   return () => {
-    // 스타일 복원
     htmlElement.style.overflow = originalHtmlOverflow;
     bodyElement.style.overflow = originalBodyOverflow;
     bodyElement.style.overflowY = originalBodyOverflowY;
@@ -203,10 +187,8 @@ export function enableScrollPrevention(options: ScrollPreventionOptions = {}) {
     bodyElement.style.top = originalBodyTop;
     bodyElement.style.left = originalBodyLeft;
 
-    // 스크롤 위치 복원
     window.scrollTo(scrollX, scrollY);
 
-    // 이벤트 리스너 제거
     document.removeEventListener('touchstart', handleTouchStart);
     document.removeEventListener('touchmove', handleTouchMove);
     document.removeEventListener('wheel', handleWheel);
@@ -217,11 +199,9 @@ export function enableScrollPrevention(options: ScrollPreventionOptions = {}) {
  * 스크롤 방지를 비활성화하는 함수 (enableScrollPrevention의 클린업 함수와 동일)
  */
 export function disableScrollPrevention() {
-  // 저장된 스크롤 위치 가져오기
   const scrollY = Math.abs(parseInt(document.body.style.top || '0', 10));
   const scrollX = Math.abs(parseInt(document.body.style.left || '0', 10));
 
-  // body 스타일 복원
   document.body.style.overflow = '';
   document.body.style.overflowY = '';
   document.body.style.overflowX = '';
@@ -230,7 +210,6 @@ export function disableScrollPrevention() {
   document.body.style.top = '';
   document.body.style.left = '';
 
-  // 스크롤 위치 복원
   window.scrollTo(scrollX, scrollY);
 }
 
@@ -258,7 +237,6 @@ export function useScrollPrevention(
   };
 
   useEffect(() => {
-    // 초기 설정
     if (enabled && !cleanupRef.current) {
       enable();
     } else if (!enabled && cleanupRef.current) {

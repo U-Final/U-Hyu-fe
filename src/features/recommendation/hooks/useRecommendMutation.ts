@@ -12,8 +12,6 @@ export const useRecommendExcludeMutation = () => {
     mutationFn: (brandId: number) => postRecommendExclude(brandId),
     onSuccess: res => {
       toast.success(res.message || '추천 목록에서 제외했습니다.');
-
-      // 캐시 무효화 → 서버에서 최신 데이터 재요청
       queryClient.invalidateQueries({
         queryKey: ['recommendStoresByLocation'],
       });

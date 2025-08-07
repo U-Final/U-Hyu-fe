@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { adminApi } from '@admin/api/adminApi';
 
-// 전체 통계 조회
 export const useAdminTotalStatsQuery = () => {
   return useQuery({
     queryKey: ['adminTotalStats'],
@@ -11,7 +10,6 @@ export const useAdminTotalStatsQuery = () => {
   });
 };
 
-// 즐겨찾기 통계 조회
 export const useAdminBookmarkStatsQuery = (options?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: ['adminBookmarkStats'],
@@ -22,7 +20,6 @@ export const useAdminBookmarkStatsQuery = (options?: { enabled?: boolean }) => {
   });
 };
 
-// 필터링 통계 조회
 export const useAdminFilteringStatsQuery = (options?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: ['adminFilteringStats'],
@@ -33,7 +30,6 @@ export const useAdminFilteringStatsQuery = (options?: { enabled?: boolean }) => 
   });
 };
 
-// 추천 통계 조회
 export const useAdminRecommendStatsQuery = (options?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: ['adminRecommendStats'],
@@ -44,7 +40,6 @@ export const useAdminRecommendStatsQuery = (options?: { enabled?: boolean }) => 
   });
 };
 
-// 멤버십 통계 조회
 export const useAdminMembershipStatsQuery = (options?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: ['adminMembershipStats'],

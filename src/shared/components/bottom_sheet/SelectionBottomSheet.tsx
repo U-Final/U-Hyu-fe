@@ -34,7 +34,6 @@ export const SelectionBottomSheet: React.FC<SelectionBottomSheetProps> = ({
   };
 
   const renderBrandIcon = (item: SelectionItem) => {
-    // 브랜드 로고 렌더링 함수
     const getSizeClasses = (size: string = 'medium') => {
       switch (size) {
         case 'small':

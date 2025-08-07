@@ -10,7 +10,6 @@ import { useMapUIContext } from '../context/MapUIContext';
 export const useMapUI = () => {
   const { state, actions } = useMapUIContext();
 
-  // 복합 액션들: 여러 UI 상태를 조합한 복잡한 동작들
 
   /**
    * mymap 화면으로 이동
@@ -36,7 +35,7 @@ export const useMapUI = () => {
   const selectCategoryAndNavigate = useCallback(
     (category: string) => {
       actions.setSelectedCategory(category);
-      actions.setSelectedBrand(''); // 이전 브랜드 선택 초기화
+      actions.setSelectedBrand('');
       actions.setBottomSheetStep('brand');
     },
     [actions]
@@ -72,18 +71,15 @@ export const useMapUI = () => {
   }, [actions]);
 
   return {
-    // UI 상태 노출
     searchValue: state.searchValue,
     isSearchFocused: state.isSearchFocused,
     currentBottomSheetStep: state.currentBottomSheetStep,
     selectedCategory: state.selectedCategory,
     selectedBrand: state.selectedBrand,
     selectedMarkerId: state.selectedMarkerId,
-    // 필터 상태
     activeRegionFilter: state.activeRegionFilter,
     activeCategoryFilter: state.activeCategoryFilter,
 
-    // 기본 액션들 (Context에서 가져온 것)
     setSearchValue: actions.setSearchValue,
     setSearchFocused: actions.setSearchFocused,
     clearSearch: actions.clearSearch,
@@ -99,7 +95,6 @@ export const useMapUI = () => {
     toggleFilterDropdown: actions.toggleFilterDropdown,
     resetAllUI: actions.resetAllUI,
 
-    // 복합 액션들 (이 훅에서 정의한 것)
     showMymap,
     showFilter,
     selectCategoryAndNavigate,

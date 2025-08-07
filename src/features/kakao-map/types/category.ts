@@ -1,21 +1,19 @@
-// types/category.ts
 export type StoreCategory =
   | 'all'
-  | 'app'                // APP/기기
-  | 'themepark'           // 테마파크
-  | 'waterpark'           // 워터파크/아쿠아리움
-  | 'activity'            // 액티비티
-  | 'beauty'              // 뷰티
-  | 'health'              // 건강
-  | 'shopping'            // 쇼핑
-  | 'lifestyle'           // 생활/편의
-  | 'bakery'              // 베이커리/디저트
-  | 'food'                // 음식점
-  | 'media'               // 영화/미디어
-  | 'performance'         // 공연/전시
-  | 'education'           // 교육
-  | 'travel'              // 여행/교통
-  // 기존 호환성 유지용
+  | 'app'
+  | 'themepark'
+  | 'waterpark'
+  | 'activity'
+  | 'beauty'
+  | 'health'
+  | 'shopping'
+  | 'lifestyle'
+  | 'bakery'
+  | 'food'
+  | 'media'
+  | 'performance'
+  | 'education'
+  | 'travel'
   | 'culture'
   | 'cafe'
   | 'restaurant'
@@ -33,9 +31,7 @@ export interface CategoryInfo {
   description?: string;
 }
 
-// 통합된 카테고리 설정
 export const CATEGORY_CONFIGS: Record<StoreCategory, CategoryInfo> = {
-  // 메인 카테고리
   all: {
     key: 'all',
     name: '전체',
@@ -157,7 +153,6 @@ export const CATEGORY_CONFIGS: Record<StoreCategory, CategoryInfo> = {
     description: 'SK렌터카, 야놀자, 티웨이항공, 롯데렌터카 등',
   },
 
-  // 호환성을 위한 별칭 카테고리들
   culture: {
     key: 'culture',
     name: '영화/미디어',
@@ -216,25 +211,23 @@ export const CATEGORY_CONFIGS: Record<StoreCategory, CategoryInfo> = {
   },
 };
 
-// 메인 카테고리만 포함하는 배열 (필터링용) - 매장이 있는 카테고리만
 export const MAIN_CATEGORIES: CategoryInfo[] = [
-  CATEGORY_CONFIGS.app,         // APP/기기 (1)
-  CATEGORY_CONFIGS.media,       // 영화/미디어 (2)
-  CATEGORY_CONFIGS.waterpark,   // 워터파크/아쿠아리움 (3)
-  CATEGORY_CONFIGS.activity,    // 액티비티 (4)
-  CATEGORY_CONFIGS.beauty,      // 뷰티 (5)
-  CATEGORY_CONFIGS.health,      // 건강 (6)
-  CATEGORY_CONFIGS.lifestyle,   // 생활/편의 (7)
-  CATEGORY_CONFIGS.shopping,    // 쇼핑 (8)
-  CATEGORY_CONFIGS.food,        // 음식점 (9)
-  CATEGORY_CONFIGS.bakery,      // 베이커리/디저트 (10)
-  CATEGORY_CONFIGS.themepark,   // 테마파크 (11)
-  CATEGORY_CONFIGS.performance, // 공연/전시 (12)
-  CATEGORY_CONFIGS.education,   // 교육 (13)
-  CATEGORY_CONFIGS.travel,      // 여행/교통 (14)
+  CATEGORY_CONFIGS.app,
+  CATEGORY_CONFIGS.media,
+  CATEGORY_CONFIGS.waterpark,
+  CATEGORY_CONFIGS.activity,
+  CATEGORY_CONFIGS.beauty,
+  CATEGORY_CONFIGS.health,
+  CATEGORY_CONFIGS.lifestyle,
+  CATEGORY_CONFIGS.shopping,
+  CATEGORY_CONFIGS.food,
+  CATEGORY_CONFIGS.bakery,
+  CATEGORY_CONFIGS.themepark,
+  CATEGORY_CONFIGS.performance,
+  CATEGORY_CONFIGS.education,
+  CATEGORY_CONFIGS.travel,
 ];
 
-// 세부 카테고리만 포함하는 배열 (호환성을 위한 별칭들)
 export const DETAIL_CATEGORIES: CategoryInfo[] = [
   CATEGORY_CONFIGS.culture,
   CATEGORY_CONFIGS.pharmacy,
@@ -244,6 +237,5 @@ export const DETAIL_CATEGORIES: CategoryInfo[] = [
   CATEGORY_CONFIGS.convenience,
 ];
 
-// 기존 호환성을 위한 타입 별칭
 export type Category = CategoryInfo;
 export const CATEGORIES = MAIN_CATEGORIES;

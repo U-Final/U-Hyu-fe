@@ -17,7 +17,6 @@ const MyPageBrand = ({
   pendingChanges,
   setPendingChanges,
 }: Props) => {
-  // API에서 브랜드 목록 가져오기
   const { data: apiBrands } = useQuery({
     queryKey: ['interest-brands'],
     queryFn: getInterestBrands,
@@ -26,29 +25,24 @@ const MyPageBrand = ({
   const handleBrandToggle = (brandId: number) => {
     if (!isEditMode) return;
 
-    // 현재 선택된 브랜드 ID 목록 (pendingChanges 우선, 없으면 user.interestedBrandList)
     const currentBrandIds =
       pendingChanges.updatedBrandIdList || user.interestedBrandList || [];
     const newBrandIds = currentBrandIds.includes(brandId)
       ? currentBrandIds.filter(id => id !== brandId)
       : [...currentBrandIds, brandId];
 
-    // pendingChanges에 추가
     setPendingChanges(prev => ({
       ...prev,
       updatedBrandIdList: newBrandIds,
     }));
   };
 
-  // API 브랜드 ID로 매핑된 현재 선택된 브랜드 ID 목록
   const currentBrandIds = (() => {
     const userSelectedIds =
       pendingChanges.updatedBrandIdList || user.interestedBrandList || [];
 
-    // API 브랜드가 로드되지 않았으면 원본 ID 사용
     if (!apiBrands) return userSelectedIds;
 
-    // API 브랜드 ID와 매핑
     return userSelectedIds.filter(id =>
       apiBrands.some(apiBrand => apiBrand.brandId === id)
     );

@@ -83,24 +83,20 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
 
   const { calculateBounds } = useMapBounds();
 
-  // 지도 드래그 기반 재검색 관련 상태
   const [lastSearchCenter, setLastSearchCenter] = useState(center);
   const [showManualSearchButton, setShowManualSearchButton] = useState(false);
   const [manualSearchLoading, setManualSearchLoading] = useState(false);
 
-  // 초기 검색어 설정
   useEffect(() => {
     if (initialKeyword && !keyword) {
       setKeyword(initialKeyword);
     }
   }, [initialKeyword, keyword, setKeyword]);
 
-  // 자동 검색 설정 업데이트
   useEffect(() => {
     setAutoSearch(enableAutoSearch);
   }, [enableAutoSearch, setAutoSearch]);
 
-  // 검색 결과를 마커로 설정
   useEffect(() => {
     if (
       results.length > 0 &&
@@ -112,20 +108,17 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
     }
   }, [results, setMarkers, displayMode]);
 
-  // 검색 완료 콜백 호출
   useEffect(() => {
     if (hasSearched && onSearchComplete) {
       onSearchComplete(results);
     }
   }, [hasSearched, results, onSearchComplete]);
 
-  // 지도 범위 자동 조정
   useEffect(() => {
     if (shouldFitBounds && map && markers.length > 0) {
       const bounds = calculateBounds(markers);
       if (bounds) {
         if ('bounds' in bounds && bounds.bounds) {
-          // 여러 장소인 경우 범위 설정
           const kakaoSW = new kakao.maps.LatLng(
             bounds.bounds.sw.lat,
             bounds.bounds.sw.lng
@@ -137,7 +130,6 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
           const kakaoBounds = new kakao.maps.LatLngBounds(kakaoSW, kakaoNE);
           map.setBounds(kakaoBounds);
         } else if ('center' in bounds && bounds.center) {
-          // 단일 장소인 경우 중심과 줌 레벨 설정
           map.setCenter(
             new kakao.maps.LatLng(bounds.center.lat, bounds.center.lng)
           );
@@ -149,22 +141,19 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
       boundsAdjusted();
     }
   }, [shouldFitBounds, map, markers, calculateBounds, boundsAdjusted]);
-
-  // 지도 중심 변경 감지 및 재검색 버튼 표시 여부 결정
   useEffect(() => {
     if (!autoSearchOnDrag && hasSearched) {
       const distance = calculateDistance(center, lastSearchCenter);
-      const threshold = searchRadius * 0.3; // 검색 반경의 30% 이동 시 재검색 버튼 표시
+      const threshold = searchRadius * 0.3;
 
       setShowManualSearchButton(distance > threshold);
     }
   }, [center, lastSearchCenter, autoSearchOnDrag, hasSearched, searchRadius]);
 
-  // 자동 재검색 (지도 드래그 시)
   useEffect(() => {
     if (autoSearchOnDrag && hasSearched && keyword) {
       const distance = calculateDistance(center, lastSearchCenter);
-      const threshold = searchRadius * 0.5; // 검색 반경의 50% 이동 시 자동 재검색
+      const threshold = searchRadius * 0.5;
 
       if (distance > threshold) {
         searchByLocation(keyword, center, searchRadius)
@@ -241,14 +230,10 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
       selectMarker(place);
       onPlaceSelect?.(place);
 
-      // 선택된 장소로 지도 중심 이동 (부드러운 애니메이션)
       if (map) {
-        // 인포윈도우가 화면 중앙에 오도록 오프셋 적용
         const offset = 0.0017;
         const targetLat = place.latitude + offset;
         const targetLng = place.longitude;
-
-        // 부드러운 이동을 위해 panTo 사용
         map.panTo(new kakao.maps.LatLng(targetLat, targetLng));
       }
     },
@@ -270,7 +255,6 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
 
   return (
     <div className={`w-full h-full ${className}`}>
-      {/* 검색 입력 */}
       {(displayMode === 'list' || displayMode === 'both') && (
         <div className="absolute top-4 left-4 right-4 z-10">
           <MapSearchInput
@@ -297,7 +281,6 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
         </div>
       )}
 
-      {/* 재검색 버튼 */}
       <ManualSearchButton
         visible={showManualSearchButton && !autoSearchOnDrag}
         loading={manualSearchLoading}
@@ -305,7 +288,6 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
         className="z-20"
       />
 
-      {/* 검색 결과 리스트 */}
       {(displayMode === 'list' || displayMode === 'both') && hasSearched && (
         <div className="absolute bottom-0 left-0 right-0 z-10 max-h-96 bg-white rounded-t-lg shadow-lg overflow-hidden">
           {meta && (
@@ -333,7 +315,6 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
         </div>
       )}
 
-      {/* 검색 결과 마커들 */}
       {(displayMode === 'markers' || displayMode === 'both') &&
         markersVisible && (
           <>
@@ -355,7 +336,6 @@ export const KeywordSearchContainer: React.FC<KeywordSearchContainerProps> = ({
           </>
         )}
 
-      {/* 선택된 장소의 인포윈도우 */}
       {selectedPlace && (
         <KeywordInfoWindow
           place={selectedPlace}

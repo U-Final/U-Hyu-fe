@@ -20,12 +20,12 @@ export function BarcodeCropModal() {
   const closeModal = useModalStore(state => state.closeModal);
   const cropperRef = useRef<CropperRef | null>(null);
   const { imageSrc, setImageSrc, setCroppedImage } = useImageCropStore();
-  const { data: imageUrl, isLoading, error } = useBarcodeImageQuery(); //기존에 업로드된 이미지 인데 만약에 없으면?
+  const { data: imageUrl, isLoading, error } = useBarcodeImageQuery();
 
   const { mutate: uploadBarcodeImage } = useUploadBarcodeMutation();
   const { mutate: patchBarcodeImage } = usePatchBarcodeImageMutation();
 
-  const isInitialUpload = imageUrl == null; // 바코드 최초 업로드로 판단.
+  const isInitialUpload = imageUrl == null;
 
   const handleCropConfirm = () => {
     const canvas = cropperRef.current?.getCanvas?.();

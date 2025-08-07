@@ -8,7 +8,6 @@ export const mockBenefit: ActivityBenefit = {
   benefitType: 'DISCOUNT'
 };
 
-// 마커 클릭 횟수 기반 top3 브랜드
 export const mockBestBrands: ActivityBrand[] = [
   {
     bestBrandId: 1,
@@ -33,7 +32,6 @@ export const mockBestBrands: ActivityBrand[] = [
   }
 ];
 
-// 최근 방문한 매장 목록
 export const mockRecentStores = [
   {
     recentStoreId: 1,
@@ -106,11 +104,10 @@ export const mockBookmarks: Bookmark[] = [
 
 export const mockActivityStatistics: ActivityStatistics = {
   discountMoney: 1500,
-  bestBrandList: mockBestBrands, // 마커 클릭 횟수 기반 top3 브랜드
-  recentStoreList: mockRecentStores // 최근 방문한 매장 목록
+  bestBrandList: mockBestBrands,
+  recentStoreList: mockRecentStores
 };
 
-// mockBrands 별칭 추가 (기존 코드 호환성)
 export const mockBrands = mockBestBrands;
 
 export const mockFavoriteBrands = [

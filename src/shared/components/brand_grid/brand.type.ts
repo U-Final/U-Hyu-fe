@@ -32,7 +32,7 @@ export interface BrandLogoProps {
 export const convertApiBrandToBrand = (apiBrand: ApiBrand): Brand => ({
   id: apiBrand.brandId,
   name: apiBrand.brandName,
-  color: '#3182CE', // 기본 색상
+  color: '#3182CE',
   bgColor: 'bg-blue-500',
   textColor: 'text-white',
   imagePath: apiBrand.logoImage,

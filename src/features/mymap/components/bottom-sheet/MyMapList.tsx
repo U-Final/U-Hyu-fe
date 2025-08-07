@@ -30,7 +30,6 @@ const MyMapList: FC = () => {
   const openModal = useModalStore(state => state.openModal);
   const navigate = useNavigate();
 
-  // 삭제 모달
   const handleDelete = (mapId: number) => {
     openModal('base', {
       title: 'My Map 삭제',
@@ -38,7 +37,6 @@ const MyMapList: FC = () => {
     });
   };
 
-  // 추후 uuid를 받아서 보내는 기능 추가
   const handleShare = (uuid: string) => {
     openModal('base', {
       title: 'My Map 공유',
@@ -46,7 +44,6 @@ const MyMapList: FC = () => {
     });
   };
 
-  // 수정 모달
   const handleUpdate = (
     myMapListId: number,
     myMapTitle: string,
@@ -65,7 +62,6 @@ const MyMapList: FC = () => {
     });
   };
 
-  // 생성 모달
   const handleCreate = () => {
     openModal('base', {
       title: '새 지도 만들기',
@@ -73,23 +69,19 @@ const MyMapList: FC = () => {
     });
   };
 
-  // 마이페이지 이동
   const handleGoToMypage = () => {
     navigate('/mypage/activity');
   };
 
   return (
     <div className="flex flex-col w-full mx-auto p-4 divide-y divide-gray-200">
-      {/* 새 지도 만들기 */}
       <AddMyMapButton onCreateNewMap={handleCreate} />
 
-      {/* 즐겨찾기 */}
       <div className="flex items-center py-3" onClick={handleGoToMypage}>
         <MdStars className="w-5 h-5 text-primary mr-2" />
         <span className="text-body2 font-semibold">즐겨찾기</span>
       </div>
 
-      {/* map 리스트 */}
       {isPending ? (
         <div className="flex flex-col gap-2 mt-4 mb-7">
           {[...Array(9)].map((_, i) => (
@@ -133,7 +125,6 @@ const MyMapList: FC = () => {
               />
               <span className="ml-2 text-body2 font-semibold">{map.title}</span>
             </div>
-            {/* 수정, 삭제, 공유 드롭다운 버튼 */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <BsThreeDotsVertical className="flex-1 w-4 h-4 cursor-pointer" />

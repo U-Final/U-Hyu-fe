@@ -11,7 +11,6 @@ export function useFirstVisit(key: string) {
     const storageKey = `first-visit-${key}`;
     
     try {
-      // 개발 환경에서는 항상 첫 방문으로 처리
       if (process.env.NODE_ENV === 'development') {
         setIsFirstVisit(true);
         setIsLoading(false);

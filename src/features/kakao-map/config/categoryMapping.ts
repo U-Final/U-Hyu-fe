@@ -26,44 +26,41 @@
  * FilterTabs 카테고리를 카카오 카테고리 그룹 코드로 매핑
  */
 export const FILTER_TAB_TO_KAKAO_CATEGORY: Record<string, string[]> = {
-  'all': [], // 전체 - 필터링 없음
-  'shopping': ['MT1', 'CS2'], // 쇼핑 - 대형마트, 편의점
-  'food': ['FD6', 'CE7'], // 푸드 - 음식점, 카페  
-  'life': ['CS2', 'BK9', 'AG2', 'PO3'], // 생활/편의 - 편의점, 은행, 중개업소, 공공기관
-  'culture': ['CT1', 'AT4'], // 문화/여가 - 문화시설, 관광명소
-  'beauty': ['HP8', 'PM9'], // 뷰티/건강 - 병원, 약국
-  'activity': ['PK6', 'SW8'], // 액티비티 - 주차장, 지하철역 (이동 관련)
-  'education': ['SC4', 'AC5', 'PS3'], // 교육 - 학교, 학원, 어린이집/유치원
-  'travel': ['AD5', 'SW8', 'OL7'], // 여행/교통 - 숙박, 지하철역, 주유소/충전소
+  'all': [],
+  'shopping': ['MT1', 'CS2'],
+  'food': ['FD6', 'CE7'],
+  'life': ['CS2', 'BK9', 'AG2', 'PO3'],
+  'culture': ['CT1', 'AT4'],
+  'beauty': ['HP8', 'PM9'],
+  'activity': ['PK6', 'SW8'],
+  'education': ['SC4', 'AC5', 'PS3'],
+  'travel': ['AD5', 'SW8', 'OL7'],
 };
 
 /**
  * 카카오 카테고리 그룹 코드를 FilterTabs 카테고리로 역매핑
  */
 export const KAKAO_CATEGORY_TO_FILTER_TAB: Record<string, string> = {
-  'MT1': 'shopping', // 대형마트 → 쇼핑
-  'CS2': 'shopping', // 편의점 → 쇼핑 (생활/편의와 겹치지만 쇼핑을 우선)
-  'PS3': 'education', // 어린이집, 유치원 → 교육
-  'SC4': 'education', // 학교 → 교육
-  'AC5': 'education', // 학원 → 교육
-  'PK6': 'activity', // 주차장 → 액티비티
-  'OL7': 'travel', // 주유소, 충전소 → 여행/교통
-  'SW8': 'travel', // 지하철역 → 여행/교통 (액티비티와 겹치지만 여행/교통을 우선)
-  'BK9': 'life', // 은행 → 생활/편의
-  'CT1': 'culture', // 문화시설 → 문화/여가
-  'AG2': 'life', // 중개업소 → 생활/편의
-  'PO3': 'life', // 공공기관 → 생활/편의
-  'AT4': 'culture', // 관광명소 → 문화/여가
-  'AD5': 'travel', // 숙박 → 여행/교통
-  'FD6': 'food', // 음식점 → 푸드
-  'CE7': 'food', // 카페 → 푸드
-  'HP8': 'beauty', // 병원 → 뷰티/건강
-  'PM9': 'beauty', // 약국 → 뷰티/건강
+  'MT1': 'shopping',
+  'CS2': 'shopping',
+  'PS3': 'education',
+  'SC4': 'education',
+  'AC5': 'education',
+  'PK6': 'activity',
+  'OL7': 'travel',
+  'SW8': 'travel',
+  'BK9': 'life',
+  'CT1': 'culture',
+  'AG2': 'life',
+  'PO3': 'life',
+  'AT4': 'culture',
+  'AD5': 'travel',
+  'FD6': 'food',
+  'CE7': 'food',
+  'HP8': 'beauty',
+  'PM9': 'beauty',
 };
 
-/**
- * FilterTabs 카테고리별 설명
- */
 export const FILTER_TAB_DESCRIPTIONS: Record<string, string> = {
   'all': '모든 카테고리',
   'shopping': '대형마트, 편의점 등 쇼핑 관련 장소',
@@ -111,7 +108,7 @@ export const STORE_CATEGORY_TO_FILTER_TAB: Record<string, string> = {
   'activity': '액티비티',
   'beauty': '뷰티',
   'health': '건강',
-  'pharmacy': '건강',           // 건강/영양제 → 건강
+  'pharmacy': '건강',
   'shopping': '쇼핑',
   'lifestyle': '생활/편의',
   'convenience': '생활/편의',
@@ -121,7 +118,7 @@ export const STORE_CATEGORY_TO_FILTER_TAB: Record<string, string> = {
   'restaurant': '음식점',
   'fastfood': '음식점',
   'media': '영화/미디어',
-  'culture': '영화/미디어',   // 호환성을 위한 별칭
+  'culture': '영화/미디어',
   'performance': '공연/전시',
   'education': '교육',
   'travel': '여행/교통',

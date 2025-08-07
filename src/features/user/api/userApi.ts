@@ -9,7 +9,6 @@ import type {
 } from './types';
 
 export const userApi = {
-  // 사용자 추가 정보 입력
   submitExtraInfo: async (
     data: UserExtraInfoRequest
   ): Promise<{ statusCode: number; message: string }> => {
@@ -23,7 +22,6 @@ export const userApi = {
     };
   },
 
-  // 이메일 중복 확인
   checkEmail: async ({
     email,
   }: CheckEmailRequest): Promise<{ statusCode: number; message: string }> => {
@@ -37,7 +35,6 @@ export const userApi = {
     };
   },
 
-  // 유저 정보 조회
   getUserInfo: async (): Promise<ApiResponse<UserInfomation>> => {
     const res = await client.get<ApiResponse<UserInfomation>>(
       USER_ENDPOINTS.USER.ROOT
@@ -45,7 +42,6 @@ export const userApi = {
     return res.data;
   },
 
-  // 로그아웃
   logout: async (): Promise<{ statusCode: number; message: string }> => {
     const res = await client.post<ApiResponse>(USER_ENDPOINTS.LOGOUT);
     return {
@@ -60,7 +56,7 @@ export const userApi = {
     email: string;
   }): Promise<{ statusCode: number; message: string }> => {
     const res = await client.patch<ApiResponse>(
-      USER_ENDPOINTS.USER.ROOT, // ← /api/user 같은 기본 URL
+      USER_ENDPOINTS.USER.ROOT,
       data
     );
     return {

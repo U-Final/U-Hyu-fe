@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router-dom';
 import { SheetClose } from '@/shared/components/shadcn/ui/sheet';
 import { useBarcodeStore } from '@/shared/store/barcodeStore';
 
-// 메뉴 아이템 타입 정의
 interface MenuItem {
   type: 'page' | 'modal';
   icon: React.ComponentType<{ size?: number; className?: string }>;
@@ -63,7 +62,6 @@ const LoggedInContent = () => {
 
   return (
     <div className="space-y-4">
-      {/* 프로필 카드 */}
       <div className="rounded-2xl p-4 bg-white">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white shadow-md">
@@ -81,7 +79,6 @@ const LoggedInContent = () => {
         </div>
       </div>
 
-      {/* 빠른 메뉴 */}
       <div className="space-y-4">
         <div className="space-y-2">
           <h4 className="text-h4 font-bold px-1">바로가기 메뉴</h4>

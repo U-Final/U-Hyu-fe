@@ -22,7 +22,6 @@ const BottomNavigation = () => {
   const { isOpen, open, close } = useBarcodeStore();
   const { trackNavigationInteraction } = useGA();
 
-  // URL 기반으로 활성 탭 결정
   const getActiveTab = (pathname: string) => {
     if (pathname === PATH.HOME) return '홈';
     if (pathname.startsWith(PATH.MAP)) return '지도';
@@ -41,7 +40,6 @@ const BottomNavigation = () => {
       e?.preventDefault();
       checkAuthAndExecuteModal(() => {});
     } else {
-      // GA 추적: 마이페이지 탭 클릭
       trackNavigationInteraction('tab_clicked', activeTab, '마이페이지');
     }
   };
@@ -51,13 +49,11 @@ const BottomNavigation = () => {
       e?.preventDefault();
       checkAuthAndExecuteModal(() => {});
     } else {
-      // GA 추적: 마이맵 탭 클릭
       trackNavigationInteraction('tab_clicked', activeTab, '마이맵');
     }
   };
 
   const handleBarcodeClick = () => {
-    // GA 추적: 바코드 버튼 클릭
     trackNavigationInteraction(
       'barcode_button_clicked',
       activeTab,
@@ -67,12 +63,10 @@ const BottomNavigation = () => {
   };
 
   const handleMapClick = () => {
-    // GA 추적: 지도 탭 클릭
     trackNavigationInteraction('tab_clicked', activeTab, '지도');
   };
 
   const handleBenefitClick = () => {
-    // GA 추적: 혜택 탭 클릭
     trackNavigationInteraction('tab_clicked', activeTab, '혜택');
   };
 

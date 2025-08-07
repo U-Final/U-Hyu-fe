@@ -20,7 +20,6 @@ export const Default: Story = {
   args: {
     children: '파일 업로드',
     onFileSelect: () => {
-      // 파일 선택 처리
     },
   },
   parameters: {

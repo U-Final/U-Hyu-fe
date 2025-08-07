@@ -70,7 +70,6 @@ export const Variants: Story = {
           tabs: FILTER_TABS,
           variant: 'gray',
           onChange: () => {
-            // gray variant 선택 처리
           },
         })
       ),
@@ -86,7 +85,6 @@ export const Variants: Story = {
           tabs: FILTER_TABS,
           variant: 'white',
           onChange: () => {
-            // White variant 선택 처리
           },
         })
       )

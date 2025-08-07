@@ -37,20 +37,13 @@ export const MapContainer: React.FC<MapContainerProps> = ({
   const { bottomSheetRef } = useMapUIContext();
   const { activeCategoryFilter } = useMapUI();
 
-  // 지도 인스턴스를 저장할 ref
   const [map, setMap] = React.useState<kakao.maps.Map | null>(null);
-
-  // 매장 데이터는 이미 useMapData에서 백엔드 API를 통해 필터링됨
-  // 추가 프론트엔드 필터링 불필요
-
-  // 카테고리 필터가 적용된 키워드 검색 결과
   const filteredKeywordResults = useMemo(() => {
     if (activeCategoryFilter === 'all') {
       return keywordResults;
     }
 
     return keywordResults.filter(place => {
-      // 카카오 카테고리 그룹 코드가 있는 경우
       if (place.categoryGroupCode) {
         const filterCategory = getFilterCategoryForKakao(
           place.categoryGroupCode
@@ -58,8 +51,6 @@ export const MapContainer: React.FC<MapContainerProps> = ({
         return filterCategory === activeCategoryFilter;
       }
 
-      // 카테고리 그룹 코드가 없는 경우 category 문자열로 판단
-      // 간단한 키워드 매칭으로 필터링
       const category = place.category.toLowerCase();
       switch (activeCategoryFilter) {
         case 'shopping':
@@ -112,30 +103,25 @@ export const MapContainer: React.FC<MapContainerProps> = ({
     });
   }, [keywordResults, activeCategoryFilter]);
 
-  // setMapCenter 함수를 상위 컴포넌트로 전달
   useEffect(() => {
     if (onMapCenterUpdate) {
       onMapCenterUpdate(setMapCenter);
     }
   }, [onMapCenterUpdate, setMapCenter]);
 
-  // 지도 중심 변경을 상위 컴포넌트에 알림
   useEffect(() => {
     if (onMapCenterChange) {
       onMapCenterChange(mapCenter);
     }
   }, [mapCenter, onMapCenterChange]);
 
-  // 지도 마커 클릭시 ref를 통해 바텀시트 제어
   const handleMarkerClickWithBottomSheet = useCallback(
     (store: Store) => {
-      // 바텀시트 명시적 닫힘 플래그 설정 후 닫기
       if (bottomSheetRef && bottomSheetRef.current) {
         bottomSheetRef.current.setExplicitlyClosed(true);
         bottomSheetRef.current.close();
       }
 
-      // 매장 선택 처리
       handleMapMarkerClick(store);
     },
     [bottomSheetRef, handleMapMarkerClick]

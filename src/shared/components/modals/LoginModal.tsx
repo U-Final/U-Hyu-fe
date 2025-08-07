@@ -11,14 +11,12 @@ const LoginModal = () => {
   const { trackAuthInteraction } = useGA();
 
   const handleLogin = () => {
-    // GA 추적: 로그인 시도
     trackAuthInteraction('login_attempted');
     closeModal();
     login();
   };
 
   const handleCancel = () => {
-    // GA 추적: 로그인 모달 취소
     trackAuthInteraction('login_modal_cancelled');
     closeModal();
   };
@@ -46,7 +44,6 @@ const LoginModal = () => {
   return (
     <BaseModal title=" ">
       <div className="flex flex-col gap-4">
-        {/* 로그인 필요성 설명 */}
         <div className="space-y-4">
           <p className="text-lg text-black font-bold leading-relaxed text-center">
             지금 로그인하고
@@ -54,7 +51,6 @@ const LoginModal = () => {
             U-HYU만의 혜택을 누려보세요
           </p>
 
-          {/* 제공 기능 리스트 */}
           <div className="flex bg-primary/5 justify-center rounded-lg p-4 space-y-3">
             <div className="flex flex-col gap-6">
               <FeatureItem
@@ -91,7 +87,6 @@ const LoginModal = () => {
           </div>
         </div>
 
-        {/* 버튼 영역 */}
         <div className="flex flex-col gap-3 pt-2">
           <KakaoLoginButton
             onClick={handleLogin}

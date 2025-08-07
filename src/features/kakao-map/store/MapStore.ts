@@ -23,30 +23,24 @@ const parseCoordinate = (
  * MapStore 초기 상태
  */
 const initialState: MapStoreState = {
-  // 위치 관련 상태
   userLocation: null,
   mapCenter: {
     lat: parseCoordinate(import.meta.env.VITE_MAP_INITIAL_LAT, 37.54699),
     lng: parseCoordinate(import.meta.env.VITE_MAP_INITIAL_LNG, 127.09598),
   },
 
-  // 줄 레벨 및 검색 반경 초기 상태
-  zoomLevel: 4, // 기본 줌 레벨
-  searchRadius: getSearchRadiusByZoomLevel(4), // 기본 검색 반경
+  zoomLevel: 4,
+  searchRadius: getSearchRadiusByZoomLevel(4),
 
-  // 검색 실행 파라미터 (재검색 버튼 클릭시에만 업데이트)
   searchParams: null,
 
-  // 매장 관련 상태
   stores: [],
   selectedStore: null,
   storeDetail: null,
 
-  // 추천 매장 초기 상태
   recommendedStores: [],
-  showRecommendedStores: true, // 기본적으로 마커 표시
+  showRecommendedStores: true,
 
-  // 로딩 상태
   loading: {
     location: false,
     stores: false,
@@ -55,7 +49,6 @@ const initialState: MapStoreState = {
     recommendedStores: false,
   },
 
-  // 에러 상태
   errors: {
     location: null,
     stores: null,
@@ -63,12 +56,10 @@ const initialState: MapStoreState = {
     favorite: null,
   },
 
-  // 필터 관련 상태 (백엔드 필터링으로 변경되어 사용하지 않음)
   currentFilters: {},
   lastFetchParams: null,
   lastFetchTime: null,
 
-  // 즐겨찾기 모드
   bookmarkMode: false,
   bookmarkStores: [],
 };
@@ -88,9 +79,8 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
        */
       getCurrentLocation: async (force = false) => {
         const { loading } = get();
-        if (loading.location && !force) return; // force가 true가 아니면 로딩 중일 때 중복 실행 방지
+        if (loading.location && !force) return;
 
-        // 로딩 상태 시작
         set(state => ({
           loading: { ...state.loading, location: true },
           errors: { ...state.errors, location: null },
@@ -102,7 +92,7 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
               navigator.geolocation.getCurrentPosition(resolve, reject, {
                 enableHighAccuracy: true,
                 timeout: 10000,
-                maximumAge: 0, // 항상 새로운 위치 정보 요청
+                maximumAge: 0,
               });
             }
           );
@@ -112,14 +102,12 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
             lng: position.coords.longitude,
           };
 
-          // 위치 정보 업데이트 및 지도 중심점 이동
           set(state => ({
             userLocation: newLocation,
             mapCenter: newLocation,
             loading: { ...state.loading, location: false },
           }));
         } catch (error) {
-          // 위치 접근 에러 처리
           let errorMessage = '위치를 가져올 수 없습니다.';
           if (error instanceof GeolocationPositionError) {
             switch (error.code) {
@@ -210,7 +198,6 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
         set({ searchParams: params });
       },
 
-      //추천 매장 관련 액션 추가
       setRecommendedStores: (stores: Store[]) => {
         set({ recommendedStores: stores });
       },
@@ -229,7 +216,6 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
         const { mapCenter, userLocation, searchRadius } = get();
         const position = userLocation || mapCenter;
 
-        // 로딩 시작
         set(state => ({
           loading: { ...state.loading, recommendedStores: true },
           errors: { ...state.errors, recommendedStores: null },
@@ -239,10 +225,9 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
           const params = {
             lat: position.lat,
             lon: position.lng,
-            radius: searchRadius, // 동적 검색 반경 사용
+            radius: searchRadius,
           };
 
-          // API 호출 (가정)
           const recommendedStores = await getRecommendedStores(params);
 
           set(state => ({
@@ -276,7 +261,6 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
       setStoresFromQuery: (queryData: StoreListResponse | undefined) => {
         const newStores = queryData?.data?.map(store => ({ ...store })) ?? [];
 
-        // 현재 스토어와 비교해서 실제로 변경된 경우에만 업데이트
         const currentStores = get().stores;
         const hasChanged =
           newStores.length !== currentStores.length ||
@@ -298,12 +282,10 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
       selectStore: (store: Store | null) => {
         const currentSelected = get().selectedStore;
 
-        // 같은 스토어를 다시 선택하는 경우 중복 업데이트 방지
         if (currentSelected?.storeId === store?.storeId) return;
 
         set({ selectedStore: store });
 
-        // 매장 선택 시 해당 위치로 지도 중심점 이동
         if (store) {
           set({ mapCenter: { lat: store.latitude, lng: store.longitude } });
         }
@@ -316,7 +298,6 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
       setStoreDetail: (detail: StoreDetail | null) => {
         const currentDetail = get().storeDetail;
 
-        // 같은 상세 정보인 경우 중복 업데이트 방지
         if (currentDetail === detail) return;
 
         set({ storeDetail: detail });
@@ -357,7 +338,6 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
         }));
       },
 
-      // 🛠️ 유틸리티 액션들
       /**
        * 특정 타입의 에러 상태 초기화
        */
@@ -389,11 +369,10 @@ export const useMapStore = create<MapStoreState & MapStoreActions>()(
         set(initialState);
       },
     })),
-    { name: 'map-store' } // Redux DevTools에서 표시될 이름
+    { name: 'map-store' }
   )
 );
 
-// 특정 상태만 구독하여 불필요한 리렌더링 방지
 export const useMapCenter = () => useMapStore(state => state.mapCenter);
 export const useStores = () => useMapStore(state => state.stores);
 export const useFilteredStores = () => useMapStore(state => state.stores);
@@ -402,7 +381,6 @@ export const useUserLocation = () => useMapStore(state => state.userLocation);
 export const useMapLoading = () => useMapStore(state => state.loading);
 export const useMapErrors = () => useMapStore(state => state.errors);
 
-// 줌 레벨 및 검색 반경 관련 селекторы
 export const useZoomLevel = () => useMapStore(state => state.zoomLevel);
 export const useSearchRadius = () => useMapStore(state => state.searchRadius);
 

@@ -81,13 +81,11 @@ const MapTopControls: FC<MapTopControlsProps> = ({
   map,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  // 검색 중이거나, 검색 결과가 있거나, 검색이 완료되었지만 결과가 없는 경우 표시
   const isSearchResultsVisible =
     isSearching ||
     keywordResults.length > 0 ||
     (hasSearched && keywordResults.length === 0);
 
-  // 외부 클릭 시 검색 결과 닫기
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -108,7 +106,6 @@ const MapTopControls: FC<MapTopControlsProps> = ({
     }
   }, [isSearchResultsVisible, onCloseSearchResults]);
 
-  // ESC 키 눌렀을 때 검색 결과 닫기
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (
@@ -132,7 +129,6 @@ const MapTopControls: FC<MapTopControlsProps> = ({
       ref={containerRef}
       className="absolute top-4 left-14 right-4 z-10 space-y-0.5 pointer-events-none"
     >
-      {/* 바텀시트 토글 버튼 - 오른쪽 고정 위치 */}
       <div className="absolute top-0 right-0 z-20 pointer-events-auto">
         <BottomSheetToggleButton
           isOpen={isBottomSheetOpen}
@@ -140,9 +136,7 @@ const MapTopControls: FC<MapTopControlsProps> = ({
         />
       </div>
 
-      {/* 상단 라인: 검색바 + 지역 필터 */}
       <div className="flex items-stretch gap-1 ml-0 mr-[40px] pointer-events-auto relative">
-        {/* 검색바 - 대부분 공간 사용 */}
         <div className="flex-1 h-[36px]">
           <MapSearchInput
             value={searchValue}
@@ -154,7 +148,6 @@ const MapTopControls: FC<MapTopControlsProps> = ({
           />
         </div>
 
-        {/* 지역 필터 드롭다운 - 고정 크기 */}
         <div className="flex-shrink-0 h-[36px]">
           <RegionFilterDropdown
             value={activeRegionFilter}
@@ -162,7 +155,6 @@ const MapTopControls: FC<MapTopControlsProps> = ({
           />
         </div>
 
-        {/* 검색 결과 리스트 - 전체 너비 차지 */}
         {isSearchResultsVisible && (
           <div
             className="absolute top-full mt-2
@@ -188,12 +180,10 @@ const MapTopControls: FC<MapTopControlsProps> = ({
         )}
       </div>
 
-      {/* 하단 라인: 카테고리 필터탭 전체 너비 사용 */}
       <div className="-ml-14 -mr-4 overflow-x-auto pointer-events-auto">
         <FilterTabs variant="white" onChange={onCategoryFilterChange} />
       </div>
 
-      {/* 줌 레벨 표시 UI - 필터탭 아래에 위치 */}
       <div className="flex justify-start pointer-events-none -ml-14 pl-4">
         <MapZoomLevelIndicator map={map ?? null} />
       </div>

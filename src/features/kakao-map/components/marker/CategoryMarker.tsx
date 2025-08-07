@@ -31,7 +31,7 @@ export const CategoryMarker: React.FC<CategoryMarkerProps> = ({
   };
 
   const backgroundColor = getCategoryColorFromFilter(place.category);
-  const selectedBackgroundColor = '#3b82f6'; // blue-500
+  const selectedBackgroundColor = '#3b82f6';
 
   return (
     <div
@@ -52,7 +52,6 @@ export const CategoryMarker: React.FC<CategoryMarkerProps> = ({
       }}
       aria-label={`${place.name} 마커`}
     >
-      {/* 마커 아이콘 컨테이너 */}
       <div
         className={`
           relative w-10 h-10 rounded-full
@@ -71,7 +70,6 @@ export const CategoryMarker: React.FC<CategoryMarkerProps> = ({
             : `0 8px 25px -5px ${backgroundColor}40, 0 10px 10px -5px ${backgroundColor}30`,
         }}
       >
-        {/* 카테고리 아이콘 - 마커 내부에서는 흰색으로 표시 */}
         <CategoryIcon
           category={place.category}
           categoryGroupCode={place.categoryGroupCode}
@@ -80,7 +78,6 @@ export const CategoryMarker: React.FC<CategoryMarkerProps> = ({
         />
       </div>
 
-      {/* 마커 하단의 작은 포인터 */}
       <div
         className={`
           absolute top-full left-1/2 transform -translate-x-1/2 -translate-y-1
@@ -95,7 +92,6 @@ export const CategoryMarker: React.FC<CategoryMarkerProps> = ({
         }}
       />
 
-      {/* 선택 상태일 때 펄스 효과 */}
       {isSelected && (
         <>
           <div className="absolute inset-0 w-10 h-10 rounded-full bg-blue-400 opacity-20 animate-ping" />

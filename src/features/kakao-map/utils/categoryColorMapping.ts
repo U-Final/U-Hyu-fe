@@ -7,7 +7,6 @@ const DEFAULT_PRIMARY_COLOR = '#e6007e';
  * 백엔드 카테고리명과 FilterTabs 카테고리를 연결하는 매핑 테이블
  */
 const CATEGORY_MAPPINGS: Record<string, string> = {
-  // 실제 백엔드 카테고리명 기반 정확한 매핑
   '베이커리/디저트': '베이커리/디저트',
   '영화/미디어': '영화/미디어',
   음식점: '음식점',
@@ -22,7 +21,6 @@ const CATEGORY_MAPPINGS: Record<string, string> = {
   테마파크: '테마파크',
   '워터파크/아쿠아리움': '워터파크/아쿠아리움',
 
-  // 카카오 API 카테고리 매핑
   카페: '베이커리/디저트',
   베이커리: '베이커리/디저트',
   디저트: '베이커리/디저트',
@@ -98,18 +96,15 @@ const colorCache = new Map<string, string>();
  * @returns FilterTabs에 정의된 색상 또는 기본 프라이머리 색상
  */
 export const getCategoryColorFromFilter = (categoryStr: string): string => {
-  // 입력 유효성 검사
   if (!categoryStr || categoryStr.trim() === '') {
     return DEFAULT_PRIMARY_COLOR;
   }
 
-  // 캐시에서 먼저 확인
   const cached = colorCache.get(categoryStr);
   if (cached) return cached;
 
-  let resultColor = DEFAULT_PRIMARY_COLOR; // 기본값: 프라이머리 컬러
+  let resultColor = DEFAULT_PRIMARY_COLOR;
 
-  // 카테고리 매칭 시도 (정확한 매칭)
   const categoryParts = categoryStr.split(' > ');
   for (const part of categoryParts) {
     const trimmedPart = part.trim();
@@ -123,7 +118,6 @@ export const getCategoryColorFromFilter = (categoryStr: string): string => {
     }
   }
 
-  // 정확한 매칭이 없는 경우 키워드 매칭 시도 (부분 문자열 포함)
   if (resultColor === DEFAULT_PRIMARY_COLOR) {
     for (const [keyword, filterCategory] of Object.entries(CATEGORY_MAPPINGS)) {
       if (categoryStr.includes(keyword)) {
@@ -136,7 +130,6 @@ export const getCategoryColorFromFilter = (categoryStr: string): string => {
     }
   }
 
-  // 결과를 캐시에 저장
   colorCache.set(categoryStr, resultColor);
 
   return resultColor;

@@ -14,7 +14,6 @@ const CurrentLocationMarker: FC<CurrentLocationMarkerProps> = ({
   animated = true,
   className = '',
 }) => {
-  // 크기별 스타일 정의 (모든 크기를 더 크게 조정)
   const sizeStyles = {
     small: {
       dot: 'w-5 h-5',
@@ -37,7 +36,6 @@ const CurrentLocationMarker: FC<CurrentLocationMarkerProps> = ({
 
   return (
     <div className={`relative select-none ${className}`} style={{ userSelect: 'none', WebkitUserSelect: 'none' }}>
-      {/* 메인 마커 도트 */}
       <div
         className={`
           ${styles.dot}
@@ -51,11 +49,9 @@ const CurrentLocationMarker: FC<CurrentLocationMarkerProps> = ({
           ${animated ? 'animate-bounce' : ''}
         `}
       >
-        {/* 내부 하이라이트 */}
         <div className="absolute inset-1 bg-primary/40 rounded-full opacity-80" />
       </div>
 
-      {/* 리플 효과 1 */}
       {animated && (
         <div
           className={`
@@ -76,7 +72,6 @@ const CurrentLocationMarker: FC<CurrentLocationMarkerProps> = ({
         />
       )}
 
-      {/* 리플 효과 2 */}
       {animated && (
         <div
           className={`
@@ -97,7 +92,6 @@ const CurrentLocationMarker: FC<CurrentLocationMarkerProps> = ({
         />
       )}
 
-      {/* 리플 효과 3 */}
       {animated && (
         <div
           className={`
@@ -118,7 +112,6 @@ const CurrentLocationMarker: FC<CurrentLocationMarkerProps> = ({
         />
       )}
 
-      {/* 배경 그림자 */}
       <div
         className={`
           absolute 

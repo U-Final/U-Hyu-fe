@@ -9,9 +9,7 @@ import type {
   ToggleFavoriteResponse,
 } from './types';
 
-// 목데이터: 주변 매장 목록 (실제 카테고리 및 브랜드 기반)
 export const MOCK_STORES: StoreSummary[] = [
-  // 영화/미디어 (culture)
   {
     storeId: 1,
     storeName: 'CGV 강남점',
@@ -46,8 +44,6 @@ export const MOCK_STORES: StoreSummary[] = [
     latitude: 37.5038,
     longitude: 127.0502,
   },
-
-  // 액티비티 (activity)
   {
     storeId: 4,
     storeName: '스카이라인 루지 강남점',
@@ -81,8 +77,6 @@ export const MOCK_STORES: StoreSummary[] = [
     latitude: 37.5047,
     longitude: 127.0511,
   },
-
-  // 뷰티/클리닉 (beauty)
   {
     storeId: 7,
     storeName: '오가나셀 피부과 의원 청담점',
@@ -116,8 +110,6 @@ export const MOCK_STORES: StoreSummary[] = [
     latitude: 37.5056,
     longitude: 127.052,
   },
-
-  // 건강/영양제 (pharmacy)
   {
     storeId: 10,
     storeName: '동아제약 디몰 강남점',
@@ -151,8 +143,6 @@ export const MOCK_STORES: StoreSummary[] = [
     latitude: 37.5065,
     longitude: 127.0529,
   },
-
-  // 생활/편의 (lifestyle)
   {
     storeId: 13,
     storeName: 'GS25 강남점',
@@ -186,8 +176,6 @@ export const MOCK_STORES: StoreSummary[] = [
     latitude: 37.5074,
     longitude: 127.0538,
   },
-
-  // 쇼핑 (shopping)
   {
     storeId: 16,
     storeName: 'GS THE FRESH 강남점',
@@ -221,8 +209,6 @@ export const MOCK_STORES: StoreSummary[] = [
     latitude: 37.5083,
     longitude: 127.0547,
   },
-
-  // 음식점 (food)
   {
     storeId: 19,
     storeName: 'VIPS 강남점',
@@ -256,8 +242,6 @@ export const MOCK_STORES: StoreSummary[] = [
     latitude: 37.5092,
     longitude: 127.0556,
   },
-
-  // 베이커리/디저트 (bakery)
   {
     storeId: 22,
     storeName: '파리바게뜨 강남점',
@@ -291,8 +275,6 @@ export const MOCK_STORES: StoreSummary[] = [
     latitude: 37.5101,
     longitude: 127.0565,
   },
-
-  // 추가 영화/미디어 매장 (문화/여가)
   {
     storeId: 25,
     storeName: '씨네폭스 강남점',
@@ -304,8 +286,6 @@ export const MOCK_STORES: StoreSummary[] = [
     latitude: 37.5104,
     longitude: 127.0568,
   },
-
-  // 테마파크 (문화/여가)
   {
     storeId: 26,
     storeName: '뽀로로파크 강남점',
@@ -328,8 +308,6 @@ export const MOCK_STORES: StoreSummary[] = [
     latitude: 37.511,
     longitude: 127.0574,
   },
-
-  // 워터파크/아쿠아리움 (액티비티)
   {
     storeId: 28,
     storeName: '아쿠아필드 강남점',
@@ -352,8 +330,6 @@ export const MOCK_STORES: StoreSummary[] = [
     latitude: 37.5116,
     longitude: 127.058,
   },
-
-  // 추가 액티비티
   {
     storeId: 30,
     storeName: 'SEOUL SKY',
@@ -376,8 +352,6 @@ export const MOCK_STORES: StoreSummary[] = [
     latitude: 37.5122,
     longitude: 127.0586,
   },
-
-  // 추가 뷰티/건강
   {
     storeId: 32,
     storeName: '유엔아이피부과의원',
@@ -389,8 +363,6 @@ export const MOCK_STORES: StoreSummary[] = [
     latitude: 37.5125,
     longitude: 127.0589,
   },
-
-  // 추가 쇼핑
   {
     storeId: 33,
     storeName: 'U+콕 강남점',
@@ -413,8 +385,6 @@ export const MOCK_STORES: StoreSummary[] = [
     latitude: 37.5131,
     longitude: 127.0595,
   },
-
-  // 추가 생활/편의
   {
     storeId: 35,
     storeName: '다락 강남점',
@@ -437,8 +407,6 @@ export const MOCK_STORES: StoreSummary[] = [
     latitude: 37.5137,
     longitude: 127.0601,
   },
-
-  // 추가 베이커리/디저트 (푸드)
   {
     storeId: 37,
     storeName: '파리크라상 강남점',
@@ -461,8 +429,6 @@ export const MOCK_STORES: StoreSummary[] = [
     latitude: 37.5143,
     longitude: 127.0607,
   },
-
-  // 추가 음식점 (푸드)
   {
     storeId: 39,
     storeName: '굽네치킨 강남점',
@@ -485,8 +451,6 @@ export const MOCK_STORES: StoreSummary[] = [
     latitude: 37.5149,
     longitude: 127.0613,
   },
-
-  // 공연/전시 (문화/여가)
   {
     storeId: 41,
     storeName: '빛의 벙커',
@@ -509,8 +473,6 @@ export const MOCK_STORES: StoreSummary[] = [
     latitude: 37.5155,
     longitude: 127.0619,
   },
-
-  // 교육
   {
     storeId: 43,
     storeName: '월스트리트 잉글리시 강남점',
@@ -533,8 +495,6 @@ export const MOCK_STORES: StoreSummary[] = [
     latitude: 37.5161,
     longitude: 127.0625,
   },
-
-  // 여행/교통
   {
     storeId: 45,
     storeName: 'SK렌터카 강남점',
@@ -558,8 +518,6 @@ export const MOCK_STORES: StoreSummary[] = [
     longitude: 127.0631,
   },
 ];
-
-// 목데이터: 매장 상세 정보 (실제 카테고리 및 브랜드 기반)
 export const MOCK_STORE_DETAILS: Record<number, StoreDetail> = {
   1: {
     storeName: 'CGV 강남점',
@@ -832,20 +790,18 @@ export const MOCK_STORE_DETAILS: Record<number, StoreDetail> = {
   },
 };
 
-// 목데이터: 즐겨찾기 상태 (실제 매장 기반)
 export const MOCK_FAVORITES: Record<number, boolean> = {
-  2: true, // 롯데시네마 강남역점
-  3: true, // 메가박스 강남대로점
-  5: true, // 클룩 강남센터
-  8: true, // 데이원클리닉 강남점
-  11: true, // LG생활건강샵 U+패밀리샵 강남점
-  14: true, // 펫생각 강남점
-  17: true, // VYVY 강남점
-  19: true, // VIPS 강남점
-  22: true, // 파리바게뜨 강남점
+  2: true,
+  3: true,
+  5: true,
+  8: true,
+  11: true,
+  14: true,
+  17: true,
+  19: true,
+  22: true,
 };
 
-// 목데이터 응답 헬퍼 함수들
 export const createMockStoreListResponse = (
   stores: StoreSummary[]
 ): ApiResponse<StoreSummary[]> => ({
@@ -895,89 +851,74 @@ export const createMockToggleFavoriteResponse = (
   };
 };
 
-// 목데이터: 카테고리별 브랜드 목록 (매장이 있는 카테고리만)
 export const MOCK_CATEGORY_BRANDS: Record<number, CategoryBrand[]> = {
   2: [
-    // 영화/미디어
     { brandId: 1, brandName: 'CGV' },
     { brandId: 2, brandName: '롯데시네마' },
     { brandId: 3, brandName: '메가박스' },
   ],
   3: [
-    // 워터파크/아쿠아리움
     { brandId: 4, brandName: '아쿠아필드' },
     { brandId: 5, brandName: '스파랜드' },
     { brandId: 6, brandName: '클럽디 오아시스' },
   ],
   4: [
-    // 액티비티
     { brandId: 7, brandName: '스카이라인 루지' },
     { brandId: 8, brandName: '클룩' },
     { brandId: 9, brandName: '부산 엑스 더 스카이' },
   ],
   5: [
-    // 뷰티(피부과, 클리닉)
     { brandId: 10, brandName: '오가나셀 피부과 의원 청담점' },
     { brandId: 11, brandName: '데이원클리닉' },
     { brandId: 12, brandName: '포쉬네일' },
   ],
   6: [
-    // 건강(제약, 영양제 등)
     { brandId: 13, brandName: '동아제약 디몰' },
     { brandId: 14, brandName: 'LG생활건강샵 U+패밀리샵' },
     { brandId: 15, brandName: '필리' },
   ],
   7: [
-    // 생활/편의
     { brandId: 16, brandName: 'GS25' },
     { brandId: 17, brandName: '펫생각' },
     { brandId: 18, brandName: '셸로' },
   ],
   8: [
-    // 쇼핑
     { brandId: 19, brandName: 'GS THE FRESH' },
     { brandId: 20, brandName: 'VYVY' },
     { brandId: 21, brandName: '롯데백화점몰' },
   ],
   9: [
-    // 음식점
     { brandId: 22, brandName: 'VIPS' },
     { brandId: 23, brandName: '더플레이스' },
     { brandId: 24, brandName: '제일제면소' },
   ],
   10: [
-    // 베이커리/디저트
     { brandId: 25, brandName: '파리바게트' },
     { brandId: 26, brandName: '뚜레쥬르' },
     { brandId: 27, brandName: '베스킨라빈스' },
   ],
   11: [
-    // 테마파크
     { brandId: 31, brandName: '뽀로로파크' },
     { brandId: 32, brandName: '아르떼 키즈파크 제주' },
     { brandId: 33, brandName: '원더빌리지' },
   ],
   12: [
-    // 공연/전시
     { brandId: 34, brandName: '빛의 벙커' },
     { brandId: 35, brandName: '빛의 시어터' },
     { brandId: 36, brandName: '그라운드시소' },
   ],
   13: [
-    // 교육
     { brandId: 37, brandName: '젠지' },
     { brandId: 38, brandName: '월스트리트 잉글리시' },
     { brandId: 39, brandName: 'DBR동아비즈니스리뷰' },
   ],
   14: [
-    // 여행/교통
     { brandId: 40, brandName: 'SK렌터카' },
     { brandId: 41, brandName: '야놀자글로벌 해외 숙박' },
     { brandId: 42, brandName: '티웨이항공' },
   ],
 };
 
-// 목데이터 응답 헬퍼 함수: 카테고리별 브랜드 목록
 export const createMockCategoryBrandsResponse = (
   categoryId: number
 ): CategoryBrandsResponse => {

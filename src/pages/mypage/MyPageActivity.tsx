@@ -45,7 +45,7 @@ const MyPageActivity = () => {
 
   return (
     <div className="min-h-screen">
-      <div className="pb-[6rem]">
+      <div className="pb-[10rem]">
         <MyPageHeader user={user} />
         <ActivityTabs activeTab={activeTab} setActiveTab={handleTabClick} />
         <div

@@ -52,7 +52,7 @@ const MyPage = () => {
 
   return (
     <div className="min-h-screen">
-      <div className="space-y-[1.5rem] pb-[6rem]">
+      <div className="space-y-[1.5rem] pb-[10rem]">
         <MyPageHeader user={localUser} />
         <MyPageUserInfo
           user={localUser}
